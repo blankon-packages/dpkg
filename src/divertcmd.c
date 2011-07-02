@@ -210,18 +210,20 @@ check_rename(struct file *src, struct file *dst)
 	return true;
 }
 
-static int
-file_copy(const char *src, const char *dst)
+static void
+file_copy(const char *src, const char *realdst)
 {
+	char *dst;
 	int srcfd, dstfd;
 
 	srcfd = open(src, O_RDONLY);
 	if (srcfd < 0)
-		return -1;
+		ohshite(_("unable to open file '%s'"), src);
 
+	m_asprintf(&dst, "%s%s", realdst, ".dpkg-divert.tmp");
 	dstfd = creat(dst, 0600);
 	if (dstfd < 0)
-		return -1;
+		ohshite(_("unable to create file '%s'"), dst);
 
 	/* FIXME: leaves a dangling destination file on error. */
 
@@ -230,36 +232,16 @@ file_copy(const char *src, const char *dst)
 	close(srcfd);
 
 	if (fsync(dstfd))
-		return -1;
+		ohshite(_("unable to sync file '%s'"), dst);
 	if (close(dstfd))
-		return -1;
+		ohshite(_("unable to close file '%s'"), dst);
 
 	file_copy_perms(src, dst);
 
-	return 0;
-}
+	if (rename(dst, realdst) != 0)
+		ohshite(_("cannot rename '%s' to '%s'"), dst, realdst);
 
-static int
-rename_mv(const char *src, const char *dst)
-{
-	char *tmpdst;
-
-	if (rename(src, dst) == 0)
-		return 0;
-
-	m_asprintf(&tmpdst, "%s%s", dst, ".dpkg-divert.tmp");
-
-	/* If a simple rename didn't work try an atomic copy, rename, unlink
-	 * instead. */
-	if (file_copy(src, tmpdst) != 0)
-		return -1;
-
-	if (rename(tmpdst, dst) != 0)
-		return -1;
-
-	free(tmpdst);
-
-	return -1;
+	free(dst);
 }
 
 static void
@@ -273,9 +255,15 @@ file_rename(struct file *src, struct file *dst)
 			ohshite(_("rename: remove duplicate old link '%s'"),
 			        src->name);
 	} else {
-		if (rename_mv(src->name, dst->name))
-			ohshite(_("cannot rename '%s' to '%s'"),
-			        src->name, dst->name);
+		if (rename(src->name, dst->name) == 0)
+			return;
+
+		/* If a rename didn't work try moving the file instead. */
+		file_copy(src->name, dst->name);
+
+		if (unlink(src->name))
+			ohshite(_("unable to remove copied source file '%s'"),
+			        src->name);
 	}
 }
 
@@ -739,11 +727,11 @@ int
 main(int argc, const char * const *argv)
 {
 	const char *env_pkgname;
-	int (*actionfunction)(const char *const *argv);
 	int ret;
 	enum modstatdb_rw msdb_status;
 
-	setlocale(LC_ALL, "");
+        if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+           setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 
@@ -759,8 +747,6 @@ main(int argc, const char * const *argv)
 	if (!cipaction)
 		setaction(&cmdinfo_add, NULL);
 
-	actionfunction = (int (*)(const char *const *))cipaction->arg_func;
-
 	setvbuf(stdout, NULL, _IONBF, 0);
 
 	msdb_status = modstatdb_open(msdbrw_readonly);
@@ -768,7 +754,7 @@ main(int argc, const char * const *argv)
 	filesdbinit();
 	ensure_diversions();
 
-	ret = actionfunction(argv);
+	ret = cipaction->action(argv);
 
 	modstatdb_shutdown();
 	standard_shutdown();

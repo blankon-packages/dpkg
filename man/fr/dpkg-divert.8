@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 18\-08\-2008 "Projet Debian" "Utilitaires de dpkg"
+.TH dpkg\-divert 8 2010\-10\-12 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
 dpkg\-divert \- remplacer la version d'un fichier contenu dans un paquet.
 .
@@ -114,6 +114,16 @@ dpkg\-divert \-\-package wibble \-\-divert /usr/bin/example.foo \-\-rename
 Pour supprimer ce détournement\ :
 .HP
 dpkg\-divert \-\-package wibble \-\-rename \-\-remove /usr/bin/example
+.
+.SH ENVIRONNEMENT
+.TP 
+\fBDPKG_ADMINDIR\fP
+If set and the \fB\-\-admindir\fP option has not been specified, it will be used
+as the dpkg data directory.
+.TP 
+\fBDPKG_MAINTSCRIPT_PACKAGE\fP
+If set and the \fI\-\-local\fP and \fI\-\-package\fP options have not been specified,
+\fBdpkg\-divert\fP will use it as the package name.
 .
 .SH FICHIERS
 .TP 

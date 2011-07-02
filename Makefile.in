@@ -39,7 +39,7 @@ DIST_COMMON = README $(am__configure_deps) $(dist_pkgdata_DATA) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in $(top_srcdir)/configure \
 	$(top_srcdir)/doc/Doxyfile.in ABOUT-NLS AUTHORS COPYING \
-	ChangeLog INSTALL NEWS THANKS TODO build-aux/config.guess \
+	ChangeLog NEWS THANKS TODO build-aux/config.guess \
 	build-aux/config.rpath build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/missing build-aux/ylwrap
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4

@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2010\-10\-10 Debianprojektet Dpkg\-sviten
+.TH dpkg 1 2011\-02\-05 Debianprojektet Dpkg\-sviten
 .SH NAMN
 dpkg \- en mellannivåpakethanterare för Debian
 .
@@ -330,20 +330,20 @@ Aktiverar felsökning. \fIoktalvärde\fPt skapas genom att utföra bitvis logisk
 kan ändras i framtida versioner). \fB\-Dh\fP eller \fB\-\-debug=help\fP visar dessa
 felsökningsvärden.
 
-    tal   beskrivning
-      1   Allmänt hjälpsam förloppsinformation
-      2   Anrop och status för utvecklarskript
-     10   Utdata för varje fil som hanteras
-    100   Massvis med utdata för varje fil som hanteras
-     20   Utdata för varje konfigurationsfil
-    200   Massvis med utdata för varje konfigurationsfil
-     40   Beroenden och konflikter
-    400   Massvis av beroende\-/konfliktutdata
-  10000   Aktivering och hantering av utlösare
-  20000   Massvis av utdata om utlösare
-  40000   Dumma mängder utdata om utlösare
-   1000   Massvis av pladder om bl.a dpkg/info\-katalogen
-   2000   Knäppa mängder pladder
+    Number   Description
+         1   Generally helpful progress information
+         2   Invocation and status of maintainer scripts
+        10   Output for each file processed
+       100   Lots of output for each file processed
+        20   Output for each configuration file
+       200   Lots of output for each configuration file
+        40   Dependencies and conflicts
+       400   Lots of dependencies/conflicts output
+     10000   Trigger activation and processing
+     20000   Lots of output regarding triggers
+     40000   Silly amounts of output regarding triggers
+      1000   Lots of drivel about e.g. the dpkg/info dir
+      2000   Insane amounts of drivel
 .TP 
 \fB\-\-force\-\fP\fIsaker\fP | \fB\-\-no\-force\-\fP\fIsaker\fP | \fB\-\-refuse\-\fP\fIsaker\fP
 
@@ -436,7 +436,7 @@ inte utför synkronisering före atomära namnbyten.
 \fIVarning: Den här flaggan kan ge bättre prestanda på bekostnad av
 dataförluster, använd med tillförsikt.\fP
 
-\fBarchitecture\fP: Hantera även paket med fel maskinvaruarkitektur.
+\fBarchitecture\fP: Process even packages with wrong or no architecture.
 
 \fBbad\-path\fP: Sökvägen i \fBPATH\fP saknar viktiga program, så problem är
 troliga.
@@ -561,9 +561,8 @@ för rad, i följande format:
 Paketstatus ändrad; \fIstatus\fP är som i statusfilen.
 .TP 
 \fBstatus: \fP\fIpaket\fP\fB : error : \fP\fIutökat\-felmeddelande\fP
-Ett fel uppstod. Tyvärr kan \fIutökat\-felmeddelande\fP för närvarande innehålla
-nyradstecken, även om i lokaler där översättarna inte har gjort några fel
-kommer varje nyradstecken att efterföljas av åtminstone ett nyradstecken.
+An error occurred. Any possible newlines in \fIextended\-error\-message\fP will
+be converted to spaces before output.
 .TP 
 \fBstatus: \fP\fIfil\fP\fB : conffile\-prompt : '\fP\fIriktig\-gammal\fP\fB' '\fP\fIriktig\-ny\fP\fB' \fP\fIanvändarredigerad\fP\fB \fP\fIdistredigerad\fP
 Användaren får en fråga om konfigurationsfiler.
@@ -572,6 +571,12 @@ Användaren får en fråga om konfigurationsfiler.
 Sänds precis innan ett hanteringsskede påbörjas. \fISkede\fP är något av
 \fBupgrade\fP, \fBinstall\fP (båda sänds innan paketet packas upp), \fBconfigure\fP,
 \fBtrigproc\fP, \fBdisappear\fP, \fBremove\fP, \fBpurge\fP.
+.RE
+.TP 
+\fB\-\-status\-logger\fP=\fIcommand\fP
+Send machine\-readable package status and progress information to the shell
+\fIcommand\fP's standard input. This option can be specified multiple
+times. The output format used is the same as in \fB\-\-status\-fd.\fP
 .RE
 .TP 
 \fB\-\-log=\fP\fIfilnamn\fP
@@ -714,7 +719,7 @@ För att installera ett paket måste du först leta på det i ett arkiv eller på
 en cd\-rom. Filen "available" visar att vim\-paketet finns i sektionen
 "editors":
 .br
-     \fBcd /cdrom/pool/main/v/vim\fP
+     \fBcd /media/cdrom/pool/main/v/vim\fP
      \fBdpkg \-i vim_4.5\-3.deb\fP
 .br
 

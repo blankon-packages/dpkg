@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2010\-10\-10 Debian\-Projekt dpkg\-Programmsammlung
+.TH dpkg 1 2011\-02\-05 Debian\-Projekt dpkg\-Programmsammlung
 .SH NAME
 dpkg \- Paketverwalter für Debian
 .
@@ -233,7 +233,7 @@ in Funktion zu bringen.
 \fB\-\-get\-selections\fP [\fIPaket\-Name\-Muster\fP...]
 Hole Liste von Paketauswahlen und schreibe sie auf die Standardausgabe. Ohne
 Muster werden nicht\-installierte Pakete (d.h. solche, die vorher
-»vollständig gelöscht« wurden) werden nicht angezeigt.
+»vollständig gelöscht« wurden) nicht angezeigt.
 .TP 
 \fB\-\-set\-selections\fP
 Setze die Paketauswahl durch Einlesen einer Datei von der
@@ -468,7 +468,8 @@ werden.
 allerdings können dabei Daten verloren gehen. Verwenden Sie die Option
 vorsichtig.\fP
 
-\fBarchitecture\fP: Verarbeite sogar Pakete mit der falschen Architektur.
+\fBarchitecture\fP: Verarbeite sogar Pakete mit der falschen oder keiner
+Architektur.
 
 \fBbad\-path\fP: Im \fBPATH\fP fehlen wichtige Programme, daher sind Probleme
 wahrscheinlich.
@@ -605,11 +606,9 @@ folgendem Format:
 Paketstatus geändert; \fIStatus\fP entsprechend der Statusdatei.
 .TP 
 \fBstatus: \fP\fIPaket\fP\fB : error : \fP\fIausführliche\-Fehlermeldung\fP
-Ein Fehler ist aufgetreten. Unglücklicherweise kann zum Zeitpunkt der
-Erstellung dieser Informationen \fIausführliche\-Fehlermeldung\fP Zeilenumbrüche
-enthalten. In Standorteinstellungen (»locales«), in denen Übersetzer
-sorgfältig gearbeitet haben, wird allerdings jeder Zeilenumbruch von einem
-Leerzeichen gefolgt.
+Ein Fehler ist aufgetreten. Alle möglichen Zeilenumbrüche in
+\fIausführliche\-Fehlermeldung\fP werden vor der Ausgabe in Leerzeichen
+gewandelt.
 .TP 
 \fBstatus: \fP\fIDatei\fP\fB : conffile\-prompt : »\fP\fIecht\-alt\fP\fB« »\fP\fIecht\-neu\fP\fB« \fP\fIbenutzer\-edit\fP\fB \fP\fIdist\-edit\fP
 Dem Benutzer wird eine Conffile\-Frage gestellt.
@@ -618,6 +617,13 @@ Dem Benutzer wird eine Conffile\-Frage gestellt.
 Versandt genau bevor eine Verarbeitungsstufe beginnt. \fIStufe\fP ist eine der
 folgenden: \fBupgrade\fP, \fBinstall\fP (beide werden vor dem Entpacken versandt),
 \fBconfigure\fP, \fBtrigproc\fP, \fBdisappear\fP, \fBremove\fP, \fBpurge\fP.
+.RE
+.TP 
+\fB\-\-status\-logger\fP=\fIBefehl\fP
+Schicke maschinenlesbare Paketstatus\- und Fortschrittsinformationen an die
+Standardeingabe des \fIBefehl\fPs der Shell. Diese Option kann mehrfach
+angegeben werden. Das verwandte Ausgabeformat ist identisch zu dem in
+\fB\-\-status\-fd.\fP
 .RE
 .TP 
 \fB\-\-log=\fP\fIDateiname\fP
@@ -765,7 +771,7 @@ Um ein Paket zu installieren, müssen Sie es erst in einem Archiv oder auf
 einer CD\-ROM finden. Die »available«\-Datei zeigt, dass das vim\-Paket im
 Bereich »editors« ist:
 .br
-     \fBcd /cdrom/pool/main/v/vim\fP
+     \fBcd /media/cdrom/pool/main/v/vim\fP
      \fBdpkg \-i vim_4.5\-3.deb\fP
 .br
 
@@ -796,7 +802,7 @@ Zusätzliche Funktionalität kann durch die Installation jedes der folgenden
 Pakete erhalten werden: \fBapt\fP, \fBaptitude\fP und \fBdebsums\fP.
 .
 .SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2010 von Helge Kreutzmann
+Die deutsche Übersetzung wurde 2004, 2006-2011 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
 angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die

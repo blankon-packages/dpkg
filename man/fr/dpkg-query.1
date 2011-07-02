@@ -16,7 +16,7 @@ connus par la base de données de \fBdpkg\fP.
 .
 .SH COMMANDES
 .TP 
-\fB\-l\fP, \fB\-\-list\fP \fImotif\-de\-nom\-de\-paquet\fP...
+\fB\-l\fP, \fB\-\-list\fP [\fIpackage\-name\-pattern\fP...]
 Affiche les paquets correspondants au motif donné. Si aucun
 \fInom\-paquet\-motif\fP n'est indiqué, affiche tous les paquets de
 \fI/var/lib/dpkg/status\fP, sauf ceux qui ne sont pas installés (c'est à dire
@@ -70,7 +70,7 @@ automatiquement à la largeur du terminal. Ce format est destiné aux humains
 et la machine le lit mal. Voyez \fB\-W\fP (\fB\-\-show\fP) et \fB\-\-showformat\fP pour
 une possible configuration de ce format.
 .TP 
-\fB\-W\fP, \fB\-\-show\fP \fImotif\-de\-nom\-de\-paquet\fP...
+\fB\-W\fP, \fB\-\-show\fP [\fIpackage\-name\-pattern\fP...]
 Tout comme l'option \fB\-\-list\fP, cette option affiche la liste des paquets qui
 correspondent au motif donné. La sortie peut cependant être formatée en
 utilisant l'option \fB\-\-showformat\fP. Le format de sortie par défaut est le
@@ -199,6 +199,10 @@ bien pendant l'exécution de la requête. Cela peut être une absence de
 fichier ou de paquet (sauf pour \-\-control\-path).
 .
 .SH ENVIRONNEMENT
+.TP 
+\fBDPKG_ADMINDIR\fP
+If set and the \fB\-\-admindir\fP option has not been specified, it will be used
+as the dpkg data directory.
 .TP 
 \fBCOLUMNS\fP
 Ce réglage influence la sortie de l'option \fB\-\-list\fP en modifiant la largeur

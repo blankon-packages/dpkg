@@ -718,10 +718,10 @@ static const struct cmdinfo cmdinfos[]= {
 };
 
 int main(int argc, const char *const *argv) {
-  int (*actionfunction)(const char *const *argv);
   int ret;
 
-  setlocale(LC_ALL, "");
+  if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+     setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
 
@@ -735,9 +735,7 @@ int main(int argc, const char *const *argv) {
   setvbuf(stdout, NULL, _IONBF, 0);
   filesdbinit();
 
-  actionfunction = (int (*)(const char *const *))cipaction->arg_func;
-
-  ret = actionfunction(argv);
+  ret = cipaction->action(argv);
 
   standard_shutdown();
 

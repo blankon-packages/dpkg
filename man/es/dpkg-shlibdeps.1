@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-shlibdeps 1 "8 de Marzo de 2009" "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-shlibdeps 1 2011\-03\-04 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-shlibdeps \- Genera dependencias de bibliotecas compartidas de
 sustitución de variables
@@ -51,10 +51,9 @@ de otros paquetes binarios.
 Información de redefinición de bibliotecas compartidas por cada
 sistema. \fIarquitectura\fP es la arquitectura del sistema actual (obtenido
 mediante \fBdpkg\-architecture \- qDEB_HOST_ARCH\fP).
-.IP \fIdirectorio\-adminstración\fP/info/\fIpaquete\fP.symbols
-Información de dependencias de bibliotecas compartidas proporcionadas por el
-paquete. A menos que se redefina, \fIdirectorio\-administración\fP es
-«/var/lib/dpkg».
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP symbols\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .P
 \fBdpkg\-shlibdeps\fP recuerda la versión mínima (más grande) necesaria para
 cada biblioteca al analizar los símbolos usados por todos los binarios. Al
@@ -86,10 +85,9 @@ construcción actual, que \fBdpkg\-shlibdeps\fP también invoca. Sólo se usa si la
 biblioteca se encuentra en el árbol de construcción del paquete. El fichero
 «shlibs» en el árbol de construcción tiene prioridad sobre otros ficheros
 «shlibs» de otros paquetes binarios.
-.IP \fIdirectorio\-adminstración\fP/info/\fIpaquete\fP.shlibs
-Información de dependencias de bibliotecas compartidas proporcionadas por el
-paquete. A menos que se redefina, \fIdirectorio\-administración\fP es
-«/var/lib/dpkg».
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP shlibs\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .IP /etc/dpkg/shlibs.default
 Información del sistema acerca de las dependencias predefinidas de
 bibliotecas compartidas.

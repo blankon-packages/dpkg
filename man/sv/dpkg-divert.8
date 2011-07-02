@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 2008\-08\-18 Debianprojektet dpkg\-verktygen
+.TH dpkg\-divert 8 2010\-10\-12 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-divert \- överstyr ett pakets version av en fil
 .
@@ -113,6 +113,16 @@ dpkg\-divert \-\-package wibble \-\-divert /usr/bin/exempel.foo \-\-rename
 För att ta bort omdirigeringen:
 .HP
 dpkg\-divert \-\-package wibble \-\-rename \-\-remove /usr/bin/exempel
+.
+.SH MILJÖVARIABLER
+.TP 
+\fBDPKG_ADMINDIR\fP
+If set and the \fB\-\-admindir\fP option has not been specified, it will be used
+as the dpkg data directory.
+.TP 
+\fBDPKG_MAINTSCRIPT_PACKAGE\fP
+If set and the \fI\-\-local\fP and \fI\-\-package\fP options have not been specified,
+\fBdpkg\-divert\fP will use it as the package name.
 .
 .SH FILER
 .TP 

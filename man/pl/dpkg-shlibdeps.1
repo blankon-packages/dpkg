@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-shlibdeps 1 2009\-03\-08 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-shlibdeps 1 2011\-03\-04 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-shlibdeps \- generowanie zale¿no¶ci podstawieñ wspó³dzielonych bibliotek
 .
@@ -48,10 +48,9 @@ plikami symboli z innych pakietów binarnych.
 Informacje o zasiêgu systemu, które nadpisuj± informacje o zale¿no¶ciach
 bibliotek wspó³dzielonych. \fIarch\fP jest architektur± bie¿±cego systemu
 (okre¶lon± przez \fBdpkg\-architecture \-qDEB_HOST_ARCH\fP).
-.IP \fIkatalog_admin\fP/info/\fIpakiet\fP.symbols
-Dostarczane przez pakiet informacje o zale¿no¶ciach bibliotek
-wspó³dzielonych. O ile nie jest nadpisany, \fIadmindir\fP ma warto¶æ
-/var/lib/dpkg.
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP symbols\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .P
 Podczas przeszukiwania symboli u¿ywanych przez wszystkie pliki binarne,
 \fBdpkg\-shlibdeps\fP zapamiêtuje (najwiêksz±) minimaln± wersjê wymagan± dla
@@ -83,10 +82,9 @@ procesie budowy, który wywo³a³ równie¿ \fBdpkg\-shlibdeps\fP. S± u¿ywane tylko,
 gdy biblioteka znajduje siê w drzewie budowania pakietu. Plik "shlibs" z
 tego drzewa ma pierwszeñstwo nad plikami shlibs z innych pakietów
 binarnych."
-.IP \fIkatalog_admin\fP/info/\fIpackage\fP.shlibs
-Dostarczane przez pakiet informacje o zale¿no¶ciach bibliotek
-wspó³dzielonych. O ile nie jest nadpisany, \fIadmindir\fP ma warto¶æ
-/var/lib/dpkg.
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP shlibs\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .IP /etc/dpkg/shlibs.default
 Domy¶lna informacja o zale¿no¶ciach bibliotek wspó³dzielonych, o zakresie
 systemu.

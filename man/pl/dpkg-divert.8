@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 2008\-08\-18 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-divert 8 2010\-10\-12 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-divert \- nadpisywanie plików z pakietów
 .
@@ -115,6 +115,16 @@ dpkg\-divert \-\-package wibble \-\-divert /usr/bin/przyk³ad.bla \-\-rename
 Aby usun±æ to nadpisanie:
 .HP
 dpkg\-divert \-\-package wibble \-\-rename \-\-remove /usr/bin/przyk³ad
+.
+.SH ¦RODOWISKO
+.TP 
+\fBDPKG_ADMINDIR\fP
+If set and the \fB\-\-admindir\fP option has not been specified, it will be used
+as the dpkg data directory.
+.TP 
+\fBDPKG_MAINTSCRIPT_PACKAGE\fP
+If set and the \fI\-\-local\fP and \fI\-\-package\fP options have not been specified,
+\fBdpkg\-divert\fP will use it as the package name.
 .
 .SH PLIKI
 .TP 

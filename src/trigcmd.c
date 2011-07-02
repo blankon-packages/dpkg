@@ -186,7 +186,8 @@ main(int argc, const char *const *argv)
 	enum trigdef_updateflags tduf;
 	struct pkg_spec pkgspec = PKG_SPEC_INIT(psf_def_native | psf_no_check);
 
-	setlocale(LC_ALL, "");
+        if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+           setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 

@@ -91,9 +91,35 @@ URL till uppströmsprojektets hemsida.
 Lista över märken som beskriver paketets egenskaper. En beskrivningen och
 förteckning över kända märken finns i paketet \fBdebtags\fP.
 .TP 
+\fBMulti\-Arch:\fP <same|foreign|allowed>
+This field is used to indicate how this package should behave on a
+multi\-arch installations. The value `same' means that the package is
+co\-installable with itself, but it must not be used to satisfy the
+dependency of any package of a different architecture from itself. The value
+`foreign' means that the package is not co\-installable with itself, but
+should be allowed to satisfy the dependency of a package of a different arch
+from itself. The value `allowed` allows reverse\-dependencies to indicate in
+their Depends field that they need a package from a foreign architecture,
+but has no effect otherwise. This field should not be present in packages
+with the Architecture: all field.
+.TP 
 \fBSource:\fP <källkodsnamn>
 Namnet på det källkodspaket som binärpaketet kommer från, om det skiljer sig
 från namnet på själva paketet.
+
+.TP 
+.PD 0
+\fBSubarchitecture:\fP <value>
+.TP 
+.PD 0
+\fBKernel\-Version:\fP <value>
+.TP 
+.PD
+\fBInstaller\-Menu\-Item:\fP <value>
+These fields are used by the debian\-installer and are usually not needed.
+See /usr/share/doc/debian\-installer/devel/modules.txt from the
+\fBdebian\-installer\fP package for more details about them.
+
 .TP 
 \fBDepends:\fP <paketlista>
 Lista över paket som krävs för att paketet skall kunna tillhandahålla en
@@ -169,6 +195,16 @@ lista över paketnamn avdelade med komman (och eventuella blanktecken). I
 fälten \fBBreaks\fP och \fBConflicts\fP läses kommatecknet som "ELLER". En
 eventuellt versionsnumret kan även anges, med samma syntax som ovan för
 fälten \fBBreaks\fP, \fBConflicts\fP och \fBReplaces\fP.
+.
+.TP 
+\fBBuilt\-Using:\fP <package list>
+This field lists extra source packages that were used during the build of
+this binary package.  This is an indication to the archive maintenance
+software that these extra source packages must be kept whilst this binary
+package is maintained.  This field must be a list of source package names
+with strict (=)  version relationships.  Note that the archive maintenance
+software is likely to refuse to accept an upload which declares a
+\fBBuilt\-Using\fP relationship which cannot be satisfied within the archive.
 .
 .SH EXEMPEL
 .\" .RS

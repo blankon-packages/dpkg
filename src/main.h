@@ -148,7 +148,7 @@ struct invoke_hook {
 
 /* from archives.c */
 
-void archivefiles(const char *const *argv);
+int archivefiles(const char *const *argv);
 void process_archive(const char *filename);
 bool wanttoinstall(struct pkginfo *pkg);
 struct fileinlist *newconff_append(struct fileinlist ***newconffileslastp_io,
@@ -156,36 +156,36 @@ struct fileinlist *newconff_append(struct fileinlist ***newconffileslastp_io,
 
 /* from update.c */
 
-void forgetold(const char *const *argv);
-void updateavailable(const char *const *argv);
+int forgetold(const char *const *argv);
+int updateavailable(const char *const *argv);
 
 /* from enquiry.c */
 
-void audit(const char *const *argv);
-void unpackchk(const char *const *argv);
-void assertepoch(const char *const *argv);
-void assertpredep(const char *const *argv);
-void assertlongfilenames(const char *const *argv);
-void assertmulticonrep(const char *const *argv);
-void assertmultiarch(const char *const *argv);
-void predeppackage(const char *const *argv);
-void printarch(const char *const *argv);
-void printinstarch(const char *const *argv);
-void print_foreign_archs(const char *const *argv);
-void cmpversions(const char *const *argv) DPKG_ATTR_NORET;
+int audit(const char *const *argv);
+int unpackchk(const char *const *argv);
+int assertepoch(const char *const *argv);
+int assertpredep(const char *const *argv);
+int assertlongfilenames(const char *const *argv);
+int assertmulticonrep(const char *const *argv);
+int assertmultiarch(const char *const *argv);
+int predeppackage(const char *const *argv);
+int printarch(const char *const *argv);
+int printinstarch(const char *const *argv);
+int print_foreign_archs(const char *const *argv);
+int cmpversions(const char *const *argv);
 
 /* from select.c */
 
-void getselections(const char *const *argv);
-void setselections(const char *const *argv);
-void clearselections(const char *const *argv);
+int getselections(const char *const *argv);
+int setselections(const char *const *argv);
+int clearselections(const char *const *argv);
 
 /* from packages.c, remove.c and configure.c */
 
 void md5hash(struct pkginfo *pkg, char *hashbuf, const char *fn, int fd);
 void add_to_queue(struct pkginfo *pkg);
 void process_queue(void);
-void packages(const char *const *argv);
+int packages(const char *const *argv);
 void removal_bulk(struct pkginfo *pkg);
 int conffderef(struct pkginfo *pkg, struct varbuf *result, const char *in);
 
@@ -212,7 +212,7 @@ void cu_prermremove(int argc, void **argv);
 
 void print_error_perpackage(const char *emsg, const char *arg);
 void forcibleerr(int forceflag, const char *format, ...) DPKG_ATTR_PRINTF(2);
-int reportbroken_retexitstatus(void);
+int reportbroken_retexitstatus(int ret);
 bool skip_due_to_hold(struct pkginfo *pkg);
 
 /* from help.c */

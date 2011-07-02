@@ -113,11 +113,10 @@ uppgradering eller installation byter \fBpostrm\fP tillbaka namnet från
 .
 .SH "INTEGRERA I PAKET"
 .P
-Givet att \fBdpkg\-maintscript\-helper\fP används i \fBpreinst\fP så innebär detta
-villkorslöst att ett förhandsberoende ("pre\-dependency") krävs för att
-försäkra att den nödvändiga versionen av dpkg redan har konfigurerats. Den
-version som krävs beror på vilket kommando som används, för \fBrm_conffile\fP
-och \fBmv_conffile\fP är det 1.15.7.2:
+Given that \fBdpkg\-maintscript\-helper\fP is used in the \fBpreinst\fP, using it
+unconditionally requires a pre\-dependency to ensure that the required
+version of dpkg has been unpacked before. The required version depends on
+the command used, for \fBrm_conffile\fP and \fBmv_conffile\fP it is 1.15.7.2:
 .P
     Pre\-Depends: dpkg (>= 1.15.7.2)
 .P

@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2010\-10\-10 "Projekt Debiana" "u¿ytki dpkg"
+.TH dpkg 1 2011\-02\-05 "Projekt Debiana" "u¿ytki dpkg"
 .SH NAZWA
 dpkg \- mened¿er pakietów Debiana
 .
@@ -344,20 +344,20 @@ logiczn± bitów opcji debuggera z poni¿szej listy (te warto¶ci mog± siê
 zmieniæ w przysz³o¶ci). Parametr \fB\-Dh\fP lub \fB\-\-debug=help\fP wy¶wietla te
 warto¶ci.
 
-      numer  opis
-         1   Ogólnie przydatne informacje o postêpie
-         2   Wywo³anie i stan skryptów kontrolnych
-        10   Informacje o ka¿dym przetwarzanym pliku
-       100   Wiêcej informacji o ka¿dym przetwarzanym pliku
-        20   Informacje o ka¿dym pliku konfiguracyjnym
-       200   Wiêcej informacji o ka¿dym pliku konfiguracyjnym
-        40   Zale¿no¶ci i konflikty
-       400   Wiêcej informacji o zale¿no¶ciach i konfliktach
-     10000   Informacje o aktywacji i przetwarzaniu wyzwalaczy
-     20000   Wiêcej informacji dotycz±cych wyzwalaczy
-     40000   Szczegó³owe informacje dotycz±ce wyzwalaczy
-      1000   Mnóstwo informacji m.in. o plikach info z bazy danych dpkg
-      2000   Reszta szczegó³owych informacji
+    Number   Description
+         1   Generally helpful progress information
+         2   Invocation and status of maintainer scripts
+        10   Output for each file processed
+       100   Lots of output for each file processed
+        20   Output for each configuration file
+       200   Lots of output for each configuration file
+        40   Dependencies and conflicts
+       400   Lots of dependencies/conflicts output
+     10000   Trigger activation and processing
+     20000   Lots of output regarding triggers
+     40000   Silly amounts of output regarding triggers
+      1000   Lots of drivel about e.g. the dpkg/info dir
+      2000   Insane amounts of drivel
 .TP 
 \fB\-\-force\-\fP\fIdzia³ania\fP, \fB\-\-no\-force\-\fP\fIdzia³ania\fP, \fB\-\-refuse\-\fP\fIdzia³ania\fP
 
@@ -454,7 +454,7 @@ before atomic renames.
 \fIWarning: Using this option might improve performance at the cost of losing
 data, use with care.\fP
 
-\fBarchitecture\fP: Dzia³anie obejmie pakiety z niepoprawn± architektur±.
+\fBarchitecture\fP: Process even packages with wrong or no architecture.
 
 \fBbad\-path\fP: Zignorowanie braku pewnych programów w ¶cie¿ce zmiennej
 systemowej \fBPATH\fP.
@@ -587,10 +587,8 @@ Nast±pi³a zmiana statusu pakietu, \fIstatus\fP jest taki jak w pliku statusu
 pakietu.
 .TP 
 \fBstatus: \fP\fIpakiet\fP\fB : error : \fP\fIrozszerzony\-komunikat\-b³êdu\fP
-Nast±pi³ b³±d. Niefortunnie na czas pisania tego
-\fIrozszerzony\-komunikat\-b³êdu\fP mo¿e zawieraæ znaki nowej linii, aczkolwiek w
-jêzykach gdzie t³umacze nie pope³nili b³êdów, po ka¿dym znak nowej linii
-nastêpuje przynajmniej jedna spacja.
+An error occurred. Any possible newlines in \fIextended\-error\-message\fP will
+be converted to spaces before output.
 .TP 
 \fBstatus: \fP\fIplik\fP\fB : conffile\-prompt : '\fP\fIprawdziwy\-stary\fP\fB' '\fP\fIprawdziwy\-nowy\fP\fB' \fP\fIzmiany\-u¿ytkownika\fP\fB \fP\fIzmiany\-dystrybucyjne\fP
 U¿ytkownikowi zostanie przedstawione pytanie odno¶nie pliku
@@ -600,6 +598,12 @@ konfiguracyjnego.
 Sent just before a processing stage starts. \fIstage\fP is one of \fBupgrade\fP,
 \fBinstall\fP (both sent before unpacking), \fBconfigure\fP, \fBtrigproc\fP,
 \fBdisappear\fP, \fBremove\fP, \fBpurge\fP.
+.RE
+.TP 
+\fB\-\-status\-logger\fP=\fIcommand\fP
+Send machine\-readable package status and progress information to the shell
+\fIcommand\fP's standard input. This option can be specified multiple
+times. The output format used is the same as in \fB\-\-status\-fd.\fP
 .RE
 .TP 
 \fB\-\-log=\fP\fInazwa\-pliku\fP
@@ -742,7 +746,7 @@ Wykasowanie zainstalowanego pakietu elvis:
 Aby zainstalowaæ pakiet, nale¿y wpierw znale¼æ go w archiwum lub na
 CDROM. Plik "available" pokazuje, ¿e pakiet vim jest w sekcji "editors":
 .br
-     \fBcd /cdrom/pool/main/v/vim\fP
+     \fBcd /media/cdrom/pool/main/v/vim\fP
      \fBdpkg \-i vim_4.5\-3.deb\fP
 .br
 

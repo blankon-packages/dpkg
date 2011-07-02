@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 10\-10\-2010 "Projet Debian" "suite dpkg"
+.TH dpkg 1 2011\-02\-05 "Projet Debian" "suite dpkg"
 .SH NOM
 dpkg \- un gestionnaire de paquet pour Debian
 .
@@ -349,25 +349,20 @@ des valeurs souhaitées appartenant à la liste ci\-dessous (notez que ces
 valeurs pourront changer dans les prochaines versions). \fB\-Dh\fP ou
 \fB\-\-debug=help\fP affiche ces valeurs de débogage.
 
- nombre  description
-    1   Informations de progression
-        en général utiles
-    2   Appel et état des scripts du responsable
-   10   Sortie pour chaque fichier traité
-  100   De nombreuses sorties pour chaque fichier
-        traité
-   20   Sortie pour chaque fichier de configuration
-  200   De nombreuses sorties pour chaque fichier
-        de configuration
-   40   Dépendances et conflits
-  400   De nombreuses sorties pour les dépendances
-        et les conflits
-10000   Sortie sur l'activation et le traitement des actions différées
-20000   De nombreuses sorties sur les actions différées
-40000   Quantité stupide de sorties sur les actions différées
- 1000   Beaucoup de radotage à propos du répertoire
-        dpkg/info
- 2000   Quantité stupide de radotage
+    Number   Description
+         1   Generally helpful progress information
+         2   Invocation and status of maintainer scripts
+        10   Output for each file processed
+       100   Lots of output for each file processed
+        20   Output for each configuration file
+       200   Lots of output for each configuration file
+        40   Dependencies and conflicts
+       400   Lots of dependencies/conflicts output
+     10000   Trigger activation and processing
+     20000   Lots of output regarding triggers
+     40000   Silly amounts of output regarding triggers
+      1000   Lots of drivel about e.g. the dpkg/info dir
+      2000   Insane amounts of drivel
 .TP 
 \fB\-\-force\-\fP\fIquelque\-chose\fP, \fB\-\-no\-force\-\fP\fIquelque\-chose\fP, \fB\-\-refuse\-\fP\fIquelque\-chose\fP
 
@@ -467,7 +462,7 @@ avant chaque renommage.
 performance mais augmente le risque de perte de données. Elle est donc à
 utiliser avec précautions.\fP
 
-\fBarchitecture\fP\ : Traite même les paquets d'une autre architecture
+\fBarchitecture\fP: Process even packages with wrong or no architecture.
 
 \fBbad\-path\fP\ : Programmes importants non visibles par la variable \fBPATH\fP, ce
 qui va poser des problèmes.
@@ -606,10 +601,8 @@ L'état du paquet a changé\ ; le \fIstatus\fP est tel que dans le fichier d'état
 (\ «status file\ »).
 .TP 
 \fBstatus: \fP\fIpaquet\fP\fB : error : \fP\fImessage\-d'erreur\-complet\fP
-Une erreur s'est produite. Malheureusement, lors de l'écriture il se trouve
-que \fImessage\-d'erreur\-complet\fP peut contenir des retour à la ligne, alors
-que dans les locales où les traducteurs n'ont pas fait d'erreurs, chaque
-nouvelle ligne est suivie par au moins une espace.
+An error occurred. Any possible newlines in \fIextended\-error\-message\fP will
+be converted to spaces before output.
 .TP 
 \fBstatus: \fP\fIfichier\fP\fB : conffile\-prompt : '\fP\fIreal\-old\fP\fB' '\fP\fIreal\-new\fP\fB' \fP\fIuseredited\fP\fB \fP\fIdistedited\fP
 Une question pour un fichier de configuration va être posée à l'utilisateur.
@@ -618,6 +611,12 @@ Une question pour un fichier de configuration va être posée à l'utilisateur.
 Envoyé juste avant le début du traitement d'un stage. Les \fIstages\fP sont
 \fBupgrade\fP, \fBinstall\fP (les deux sont envoyés avant le dépaquetage),
 \fBconfigure\fP, \fBtrigproc\fP, \fBdisappear\fP, \fBremove\fP, \fBpurge\fP.
+.RE
+.TP 
+\fB\-\-status\-logger\fP=\fIcommand\fP
+Send machine\-readable package status and progress information to the shell
+\fIcommand\fP's standard input. This option can be specified multiple
+times. The output format used is the same as in \fB\-\-status\-fd.\fP
 .RE
 .TP 
 \fB\-\-log=\fP\fIfichier\fP
@@ -771,7 +770,7 @@ Pour installer un paquet, vous devez d'abord le trouver dans une archive ou
 sur un CD. Le fichier «\ available\ » montre que le paquet vim se trouve dans
 la section «\ editors\ »\ :
 .br
-     \fBcd /cdrom/pool/main/v/vim\fP
+     \fBcd /media/cdrom/pool/main/v/vim\fP
      \fBdpkg \-i vim_4.5\-3.deb\fP
 .br
 

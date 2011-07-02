@@ -26,6 +26,7 @@
 #include <compat.h>
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/stat.h>
 
 #include <assert.h>
@@ -33,7 +34,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <time.h>
-#include <utime.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <unistd.h>
@@ -245,23 +245,41 @@ does_replace(struct pkginfo *newpigp, struct pkgbin *newpifp,
 }
 
 static void
-newtarobject_utime(const char *path, struct file_stat *st)
+tarobject_set_mtime(struct tar_entry *te, const char *path)
 {
-  struct utimbuf utb;
-  utb.actime= currenttime;
-  utb.modtime = st->mtime;
-  if (utime(path,&utb))
-    ohshite(_("error setting timestamps of `%.255s'"), path);
+  struct timeval tv[2];
+
+  tv[0].tv_sec = currenttime;
+  tv[0].tv_usec = 0;
+  tv[1].tv_sec = te->mtime;
+  tv[1].tv_usec = 0;
+
+  if (te->type == tar_filetype_symlink) {
+#ifdef HAVE_LUTIMES
+    if (lutimes(path, tv) && errno != ENOSYS)
+      ohshite(_("error setting timestamps of `%.255s'"), path);
+#endif
+  } else {
+    if (utimes(path, tv))
+      ohshite(_("error setting timestamps of `%.255s'"), path);
+  }
 }
 
 static void
-newtarobject_allmodes(const char *path, struct file_stat *st)
+tarobject_set_perms(struct tar_entry *te, const char *path, struct file_stat *st)
 {
-  if (chown(path, st->uid, st->gid))
-    ohshite(_("error setting ownership of `%.255s'"), path);
-  if (chmod(path, st->mode & ~S_IFMT))
-    ohshite(_("error setting permissions of `%.255s'"), path);
-  newtarobject_utime(path, st);
+  if (te->type == tar_filetype_file)
+    return; /* Already handled using the file descriptor. */
+
+  if (te->type == tar_filetype_symlink) {
+    if (lchown(path, st->uid, st->gid))
+      ohshite(_("error setting ownership of symlink `%.255s'"), path);
+  } else {
+    if (chown(path, st->uid, st->gid))
+      ohshite(_("error setting ownership of `%.255s'"), path);
+    if (chmod(path, st->mode & ~S_IFMT))
+      ohshite(_("error setting permissions of `%.255s'"), path);
+  }
 }
 
 static void
@@ -535,12 +553,10 @@ tarobject(void *ctx, struct tar_entry *ti)
     }
   }
 
-  if (nifd->namenode->statoverride) {
+  if (nifd->namenode->statoverride)
     st = nifd->namenode->statoverride;
-    st->mtime = ti->stat.mtime;
-  } else {
+  else
     st = &ti->stat;
-  }
 
   usenode = namenodetouse(nifd->namenode, tc->pkg);
   usename = usenode->name + 1; /* Skip the leading '/'. */
@@ -832,25 +848,21 @@ tarobject(void *ctx, struct tar_entry *ti)
     pop_cleanup(ehflag_normaltidy); /* fd = open(fnamenewvb.buf) */
     if (close(fd))
       ohshite(_("error closing/writing `%.255s'"), ti->name);
-    newtarobject_utime(fnamenewvb.buf, st);
     break;
   case tar_filetype_fifo:
     if (mkfifo(fnamenewvb.buf,0))
       ohshite(_("error creating pipe `%.255s'"), ti->name);
     debug(dbg_eachfiledetail, "tarobject fifo");
-    newtarobject_allmodes(fnamenewvb.buf, st);
     break;
   case tar_filetype_chardev:
     if (mknod(fnamenewvb.buf, S_IFCHR, ti->dev))
       ohshite(_("error creating device `%.255s'"), ti->name);
     debug(dbg_eachfiledetail, "tarobject chardev");
-    newtarobject_allmodes(fnamenewvb.buf, st);
     break;
   case tar_filetype_blockdev:
     if (mknod(fnamenewvb.buf, S_IFBLK, ti->dev))
       ohshite(_("error creating device `%.255s'"), ti->name);
     debug(dbg_eachfiledetail, "tarobject blockdev");
-    newtarobject_allmodes(fnamenewvb.buf, st);
     break;
   case tar_filetype_hardlink:
     varbuf_reset(&hardlinkfn);
@@ -864,22 +876,18 @@ tarobject(void *ctx, struct tar_entry *ti)
     if (link(hardlinkfn.buf,fnamenewvb.buf))
       ohshite(_("error creating hard link `%.255s'"), ti->name);
     debug(dbg_eachfiledetail, "tarobject hardlink");
-    newtarobject_allmodes(fnamenewvb.buf, st);
     break;
   case tar_filetype_symlink:
-    /* We've already cheched for an existing directory. */
+    /* We've already checked for an existing directory. */
     if (symlink(ti->linkname, fnamenewvb.buf))
       ohshite(_("error creating symbolic link `%.255s'"), ti->name);
     debug(dbg_eachfiledetail, "tarobject symlink creating");
-    if (lchown(fnamenewvb.buf, st->uid, st->gid))
-      ohshite(_("error setting ownership of symlink `%.255s'"), ti->name);
     break;
   case tar_filetype_dir:
     /* We've already checked for an existing directory. */
     if (mkdir(fnamenewvb.buf,0))
       ohshite(_("error creating directory `%.255s'"), ti->name);
     debug(dbg_eachfiledetail, "tarobject directory creating");
-    newtarobject_allmodes(fnamenewvb.buf, st);
     break;
   default:
     internerr("unknown tar type '%d', but already checked", ti->type);
@@ -888,6 +896,8 @@ tarobject(void *ctx, struct tar_entry *ti)
   if (ensuresamefile && !statr && ti->type != tar_filetype_file)
     ensure_same_file(tc->pkg, fnamevb.buf, -1, &stab, fnamenewvb.buf, -1, ti);
 
+  tarobject_set_perms(ti, fnamenewvb.buf, st);
+  tarobject_set_mtime(ti, fnamenewvb.buf);
   set_selinux_path_context(fnamevb.buf, fnamenewvb.buf, st->mode);
 
   /*
@@ -1346,7 +1356,9 @@ void cu_fileslist(int argc, void **argv) {
   destroyobstack();
 }
 
-void archivefiles(const char *const *argv) {
+int
+archivefiles(const char *const *argv)
+{
   const char *volatile thisarg;
   const char *const *volatile argp;
   jmp_buf ejbuf;
@@ -1487,6 +1499,8 @@ void archivefiles(const char *const *argv) {
 
   trigproc_run_deferred();
   modstatdb_shutdown();
+
+  return 0;
 }
 
 /**

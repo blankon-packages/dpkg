@@ -220,13 +220,15 @@ if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
 
     # Scan control info of source package
     my $src_fields = $control->get_source();
+    my $src_sect = $src_fields->{'Section'} || "unknown";
+    my $src_prio = $src_fields->{'Priority'} || "unknown";
     foreach $_ (keys %{$src_fields}) {
 	my $v = $src_fields->{$_};
 	if (m/^Source$/i) {
 	    set_source_package($v);
 	    $fields->{$_} = $v;
 	} elsif (m/^Uploaders$/i) {
-	    ($fields->{$_} = $v) =~ s/[\r\n]/ /g; # Merge in a single-line
+	    ($fields->{$_} = $v) =~ s/\s*[\r\n]\s*/ /g; # Merge in a single-line
 	} elsif (m/^Build-(Depends|Conflicts)(-Indep)?$/i) {
 	    my $dep;
 	    my $type = field_get_dep_type($_);
@@ -242,8 +244,16 @@ if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
     }
 
     # Scan control info of binary packages
+    my @pkglist;
     foreach my $pkg ($control->get_packages()) {
 	my $p = $pkg->{'Package'};
+	my $sect = $pkg->{'Section'} || $src_sect;
+	my $prio = $pkg->{'Priority'} || $src_prio;
+	my $type = $pkg->{'Package-Type'} ||
+	        $pkg->get_custom_field('Package-Type') || 'deb';
+	my $arch = $pkg->{'Architecture'};
+	$arch =~ s/\s+/,/g;
+	push @pkglist, sprintf("%s %s %s %s %s", $p, $type, $sect, $prio, $arch);
 	push(@binarypackages,$p);
 	foreach $_ (keys %{$pkg}) {
 	    my $v = $pkg->{$_};
@@ -277,6 +287,11 @@ if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
         @sourcearch = ('any');
     }
     $fields->{'Architecture'} = join(' ', @sourcearch);
+    $fields->{'Package-List'} = sprintf("\n%s source %s %s %s", $sourcepackage,
+                                        $src_sect, $src_prio,
+                                        join(',', @sourcearch));
+    $fields->{'Package-List'} .= "\n" . join("\n", sort @pkglist);
+    delete $fields->{'Package-List'};
 
     # Scan fields of dpkg-parsechangelog
     foreach $_ (keys %{$changelog}) {

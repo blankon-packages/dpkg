@@ -16,7 +16,7 @@ listados en la base de datos de \fBdpkg\fP.
 .
 .SH ÓRDENES
 .TP 
-\fB\-l\fP, \fB\-\-list\fP \fIpatrón\-nombre\-paquete\fP...
+\fB\-l\fP, \fB\-\-list\fP [\fIpackage\-name\-pattern\fP...]
 Lista los paquetes que encajan con el patrón dado. Si no se entrega un
 \fIpatrón\-nombre\-paquete\fP, lista los paquetes en \fI/var/lib/dpkg/status\fP,
 excluyendo aquellos marcados como no instalados (esto es, aquellos
@@ -70,7 +70,7 @@ lectores humanos, pero no facilita su lectura por el sistema. Consulte \fB\-W\fP
 (\fB\-\-show\fP) y \fB\-\-showformat\fP  para ver una manera de configurar el formato
 de la salida.
 .TP 
-\fB\-W\fP, \fB\-\-show\fP \fIpatrón\-nombre\-paquete\fP...
+\fB\-W\fP, \fB\-\-show\fP [\fIpackage\-name\-pattern\fP...]
 Al igual que la opción \fB\-\-list\fP, esto lista todos los paquetes que encajan
 con el patrón dado. Por otra parte, puede configurar la salida usando la
 opción \fB\-\-showformat\fP. El formato predefinido de la salida da una línea por
@@ -201,6 +201,10 @@ consulta requerida, además de que no se han encontrado ningún fichero o
 paquete (a excepción de «\-\-control\-path»).
 .
 .SH ENTORNO
+.TP 
+\fBDPKG_ADMINDIR\fP
+If set and the \fB\-\-admindir\fP option has not been specified, it will be used
+as the dpkg data directory.
 .TP 
 \fBCOLUMNS\fP
 Esta opción influencia la salida de \fB\-\-list\fP al modificar el ancho de la

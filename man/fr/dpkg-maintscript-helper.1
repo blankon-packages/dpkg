@@ -124,12 +124,10 @@ indispensable.
 .
 .SH "INTÉGRATION DANS LES PAQUETS"
 .P
-Comme \fBdpkg\-maintscript\-helper\fP est utilisé dans le script \fBpreinst\fP,
-l'utiliser sans conditions impose une pré\-dépendance afin de garantir que la
-version minimale nécessaire de dpkg et bien été préalablement configurée. La
-version nécessaire dépend de la commande utilisée. La version minimale
-dépend de la commande à utiliser\ : ainsi pour \fBrm_conffile\fP et
-\fBmw_conffile\fP, cette version est 1.15.7.2\ :
+Given that \fBdpkg\-maintscript\-helper\fP is used in the \fBpreinst\fP, using it
+unconditionally requires a pre\-dependency to ensure that the required
+version of dpkg has been unpacked before. The required version depends on
+the command used, for \fBrm_conffile\fP and \fBmv_conffile\fP it is 1.15.7.2:
 .P
     Pre\-Depends: dpkg (>= 1.15.7.2)
 .P

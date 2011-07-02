@@ -196,9 +196,6 @@ my $abi;
 $v{DEB_BUILD_MULTIARCH} = debarch_to_multiarch($v{DEB_BUILD_ARCH});
 $v{DEB_HOST_MULTIARCH} = debarch_to_multiarch($v{DEB_HOST_ARCH});
 
-$v{DEB_BUILD_MULTIARCH} = debarch_to_multiarch($v{DEB_BUILD_ARCH});
-$v{DEB_HOST_MULTIARCH} = debarch_to_multiarch($v{DEB_HOST_ARCH});
-
 for my $k (@ordered) {
     $v{$k} = $ENV{$k} if (defined ($ENV{$k}) && !$force);
 }

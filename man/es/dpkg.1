@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 "10 de Octubre del 2010" "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg 1 2011\-02\-05 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg \- Gestor de paquetes de Debian
 .
@@ -344,20 +344,20 @@ valores de la siguiente lista mediante la operación \fIor\fP a nivel de bits
 (tenga en cuenta que estos valores podrían cambiar en futuras
 versiones). \fB\-Dh\fP o \fB\-\-debug=help\fP muestran estos valores.
 
- número  descripción
-     1   Información de progreso generalmente útil
-     2   Invocación y estado de los scripts del paquete
-    10   Salida por cada fichero procesado
-   100   Mucha salida por cada fichero procesado
-    20   Salida por cada «conffile»
-   200   Mucha salida por cada «conffile»
-    40   Dependencias y conflictos
-   400   Mucha salida sobre dependencias y conflictos
- 10000   Activación de los disparadores y procesado
- 20000   Una gran información de los disparadores
- 40000   Niveles ridículos de información de los disparadores
-  1000   Parrafadas sobre el directorio dpkg/info
-  2000   Montañas de parrafadas (perjudica la salud)
+    Number   Description
+         1   Generally helpful progress information
+         2   Invocation and status of maintainer scripts
+        10   Output for each file processed
+       100   Lots of output for each file processed
+        20   Output for each configuration file
+       200   Lots of output for each configuration file
+        40   Dependencies and conflicts
+       400   Lots of dependencies/conflicts output
+     10000   Trigger activation and processing
+     20000   Lots of output regarding triggers
+     40000   Silly amounts of output regarding triggers
+      1000   Lots of drivel about e.g. the dpkg/info dir
+      2000   Insane amounts of drivel
 .TP 
 \fB\-\-force\-\fP\fIcosas\fP, \fB\-\-no\-force\-\fP\fIcosas\fP, \fB\-\-refuse\-\fP\fIcosas\fP
 
@@ -458,8 +458,7 @@ sincronización antes de los renombres atómicos.
 \fIAdvertencia: Usar esta opción puede aumentar el rendimiento a costa de la
 pérdida de datos. Úselo con cuidado.\fP
 
-\fBarchitecture\fP: Continua el proceso, incluso si los paquetes no son de la
-arquitectura adecuada.
+\fBarchitecture\fP: Process even packages with wrong or no architecture.
 
 \fBbad\-path\fP: \fBPATH\fP no contiene algunos programas importantes, así que es
 bastante posible que haya problemas.
@@ -593,10 +592,8 @@ El estado del paquete ha cambiado; el \fIestado\fP es el que aparece en el
 fichero de estado.
 .TP 
 \fBstatus: \fP\fIpaquete\fP\fB : error : \fP\fImensaje\-de\-fallo\-detallado\fP
-Se ha detectado un fallo. Desafortunadamente, en el momento de impresión el
-\fImensaje\-de\-fallo\-detallado\fP puede contener saltos de línea, aunque en
-aquellas traducciones en las que el traductor no cometió ningún fallo cada
-salto de línea va seguido de un espacio.
+An error occurred. Any possible newlines in \fIextended\-error\-message\fP will
+be converted to spaces before output.
 .TP 
 \fBstatus: \fP\fIfichero\fP\fB : conffile\-prompt : '\fP\fIreal\-old\fP\fB' '\fP\fIreal\-new\fP\fB' \fP\fIedición\-usuario\fP\fB \fP\fIedición\-distribución\fP
 El usuario tiene que responder a una pregunta de un fichero de configuración
@@ -606,6 +603,12 @@ El usuario tiene que responder a una pregunta de un fichero de configuración
 Se envía justo después del inicio del estado de procesamiento. El \fIestado\fP
 puede ser \fBupgrade\fP, \fBinstall\fP (ambos se envían antes de desempaquetar),
 \fBconfigure\fP, \fBtrigproc\fP, \fBdisappear\fP, \fBremove\fP o \fBpurge\fP.
+.RE
+.TP 
+\fB\-\-status\-logger\fP=\fIcommand\fP
+Send machine\-readable package status and progress information to the shell
+\fIcommand\fP's standard input. This option can be specified multiple
+times. The output format used is the same as in \fB\-\-status\-fd.\fP
 .RE
 .TP 
 \fB\-\-log=\fP\fIfichero\fP
@@ -755,7 +758,7 @@ Para instalar un paquete, éste tiene que estar disponible en un archivo o
 disco óptico. El fichero «available» muestra que el paquete vim está en la
 sección «editors»:
 .br
-     \fBcd /cdrom/pool/main/v/vim\fP
+     \fBcd /media/cdrom/pool/main/v/vim\fP
      \fBdpkg \-i vim_4.5\-3.deb\fP
 .br
 

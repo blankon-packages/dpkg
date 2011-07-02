@@ -131,7 +131,7 @@ enqueue_specified(const char *const *argv)
   pkg_spec_reset(&pkgspec);
 }
 
-void
+int
 packages(const char *const *argv)
 {
   enum modstatdb_rw msdb_status;
@@ -163,6 +163,8 @@ packages(const char *const *argv)
   trigproc_run_deferred();
 
   modstatdb_shutdown();
+
+  return 0;
 }
 
 void process_queue(void) {
@@ -358,8 +360,6 @@ deppossi_ok_found(struct pkginfo *possdependee, struct pkginfo *requiredby,
     }
 
     *matched = true;
-    if (fc_depends)
-      thisf = (dependtry >= 4) ? found_forced : found_defer;
     debug(dbg_depcondetail,"      removing possdependee, returning %d",thisf);
     return thisf;
   }
@@ -461,9 +461,6 @@ deppossi_ok_found(struct pkginfo *possdependee, struct pkginfo *requiredby,
   }
 
 unsuitable:
-  if (fc_depends)
-    thisf = (dependtry >= 4) ? found_forced : found_defer;
-
   debug(dbg_depcondetail, "        returning %d", thisf);
   (*interestingwarnings)++;
 
@@ -615,6 +612,13 @@ dependencies_ok(struct pkginfo *pkg, struct pkginfo *removing,
         }
       }
       debug(dbg_depcondetail,"    found %d",found);
+    }
+    if (fc_depends) {
+      thisf = (dependtry >= 4) ? found_forced : found_defer;
+      if (thisf > found) {
+        found = thisf;
+        debug(dbg_depcondetail, "  rescued by force-depends, found %d", found);
+      }
     }
     debug(dbg_depcondetail, "  found %d matched %d possfixbytrig %s",
           found, matched,

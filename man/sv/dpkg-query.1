@@ -16,7 +16,7 @@ dpkg\-query \- ett verktyg för att fråga dpkg\-databasen
 .
 .SH KOMMANDON
 .TP 
-\fB\-l\fP, \fB\-\-list\fP \fIpaketnamnsmönster\fP ...
+\fB\-l\fP, \fB\-\-list\fP [\fIpackage\-name\-pattern\fP...]
 Lista paket som matchar det givna mönstret. Om inget \fIpaketnamnsmönster\fP
 anges listas alla paket i \fI/var/lib/dpkg/status\fP, förutom de paket som
 markerats som ej installerade (dvs. de som tidigare har helt tagits
@@ -68,7 +68,7 @@ automatiskt för att passa terminalbredden. Det är avsett för mänskliga
 läsare, och är inte enkelt maskinläsbart. Se \fB\-W\fP (\fB\-\-show\fP) och
 \fB\-\-showformat\fP för hur du konfigurerar utdataformatet.
 .TP 
-\fB\-W\fP, \fB\-\-show\fP \fIpaketnamnsmönster\fP ...
+\fB\-W\fP, \fB\-\-show\fP [\fIpackage\-name\-pattern\fP...]
 Precis som flaggan \fB\-\-list\fP kommer att paket som matchar det givna mönstret
 att visas. Utdatat kan dock skräddarsys med flaggan
 \fB\-\-showformat\fP. Standardutdataformatet är en rad per paket som träffas, där
@@ -190,6 +190,10 @@ utföras, till exempel att ingen fil eller paket hittades (förutom för
 \-\-control\-path).
 .
 .SH MILJÖVARIABLER
+.TP 
+\fBDPKG_ADMINDIR\fP
+If set and the \fB\-\-admindir\fP option has not been specified, it will be used
+as the dpkg data directory.
 .TP 
 \fBCOLUMNS\fP
 Inställningen påverkar utdata från kommandot \fB\-\-list\fP genom att ändra

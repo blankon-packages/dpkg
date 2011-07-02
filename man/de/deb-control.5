@@ -96,9 +96,36 @@ Liste der unterstützten Markierungen (»Tags«), die die Eigenschaften des
 Pakets beschreiben. Die Beschreibung und die Liste der unterstützten
 Markierungen kann in dem Paket \fBdebtags\fP gefunden werden.
 .TP 
+\fBMulti\-Arch:\fP <same|foreign|allowed>
+Das Feld wird dazu verwandt, anzugeben, wie sich dieses Paket in einer
+Multi\-Arch\-Installation verhalten soll. Der Wert »same« bedeutet, dass das
+Paket mit sich selbst koinstallierbar ist, aber nicht dazu verwandt werden
+darf, die Abhängigkeit eines Pakets von einer anderen Architektur mit ihm
+selbst zu erfüllen. Der Wert »foreign« bedeutet, dass das Paket nicht mit
+sich selbst koinstallierbar ist, aber es erlaubt sein soll, die Abhängigkeit
+eines Pakets von einer anderen Architektur mit ihm selbst zu erfüllen. Der
+Wert »allowed« erlaubt es invers Abhängigen in ihrem Feld »Depends«
+anzuzeigen, dass sie ein Paket von einer fremden Architektur benötigen, hat
+aber ansonsten keinen Effekt. Dieses Feld sollte in Paketen mit dem Feld
+»Architecture: all« nicht verwandt werden.
+.TP 
 \fBSource:\fP <Quell\-Name>
 Der Name des Quellpakets, aus dem dieses Binärpaket abstammt, falls es sich
 vom Namen dieses Paketes unterscheidet.
+
+.TP 
+.PD 0
+\fBSubarchitecture:\fP <Wert>
+.TP 
+.PD 0
+\fBKernel\-Version:\fP <Wert>
+.TP 
+.PD
+\fBInstaller\-Menu\-Item:\fP <Wert>
+Diese Felder werden im Debian\-Installer verwandt und werden normalerweise
+nicht benötigt. Lesen Sie /usr/share/doc/debian\-installer/devel/modules.txt
+aus dem Paket \fBdebian\-installer\fP für weitere Informationen über sie.
+
 .TP 
 \fBDepends:\fP <Paketliste>
 Liste von Paketen, die benötigt werden, damit dieses Paket eine
@@ -184,6 +211,18 @@ Leerzeichen). Im \fBBreaks\fP\- und \fBConflicts\fP\-Feld sollte das Komma als
 Syntax wie oben für die \fBBreaks\fP\-, \fBConflicts\fP\- und \fBReplaces\fP\-Felder
 angegeben werden.
 .
+.TP 
+\fBBuilt\-Using:\fP <Paketliste>
+Dieses Feld führt zusätzliche Quellpakete auf, die während des Baus des
+Binärpakets verwandt wurden. Dies dient als Hinweis für die
+Archivverwaltungssoftware, dass zusätzliche Quellpakete vorhanden bleiben
+müssen, während dieses Binärpaket betreut wird. Dieses Feld muss eine Liste
+von Quellpaketnamen enthalten, bei denen eine strenge Versionsbeziehung (=)
+angegeben ist. Beachten Sie, dass die Archivverwaltungssoftware
+wahrscheinlich einen Upload ablehnen wird, bei dem eine
+\fBBuilt\-Using\fP\-Beziehung angegeben wurde, die innerhalb des Archivs nicht
+erfüllt werden kann.
+.
 .SH BEISPIEL
 .\" .RS
 .nf
@@ -212,7 +251,7 @@ Description: GNU grep, egrep und fgrep.
 .\" .RE
 .
 .SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2010 von Helge Kreutzmann
+Die deutsche Übersetzung wurde 2004, 2006-2011 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
 angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die

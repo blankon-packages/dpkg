@@ -1,8 +1,8 @@
 Source: dpkg
 Section: admin
 Priority: required
-Maintainer: BlankOn Developers <blankon-dev@googlegroups.com>
-XSBC-Original-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>, Dpkg Developers <debian-dpkg@lists.debian.org>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Dpkg Developers <debian-dpkg@lists.debian.org>
 Uploaders: Guillem Jover <guillem@debian.org>, Raphaël Hertzog <hertzog@debian.org>
 Origin: debian
 Bugs: debbugs://bugs.debian.org

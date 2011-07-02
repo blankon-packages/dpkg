@@ -294,9 +294,9 @@ statoverride_remove(const char *const *argv)
 		if (opt_verbose)
 			warning(_("No override present."));
 		if (opt_force)
-			exit(0);
+			return 0;
 		else
-			exit(2);
+			return 2;
 	}
 
 	if (opt_update && opt_verbose)
@@ -362,10 +362,10 @@ static const struct cmdinfo cmdinfos[] = {
 int
 main(int argc, const char *const *argv)
 {
-	int (*actionfunction)(const char *const *argv);
 	int ret;
 
-	setlocale(LC_ALL, "");
+        if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+           setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 
@@ -382,8 +382,7 @@ main(int argc, const char *const *argv)
 	filesdbinit();
 	ensure_statoverrides();
 
-	actionfunction = (int (*)(const char *const *))cipaction->arg_func;
-	ret = actionfunction(argv);
+	ret = cipaction->action(argv);
 
 	standard_shutdown();
 

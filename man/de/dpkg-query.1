@@ -16,7 +16,7 @@ in der \fBdpkg\fP\-Datenbank aufgeführt sind.
 .
 .SH BEFEHLE
 .TP 
-\fB\-l\fP, \fB\-\-list\fP \fIPaketname\-Muster\fP ...
+\fB\-l\fP, \fB\-\-list\fP [\fIPaketname\-Muster\fP ...]
 Liste Pakete auf, deren Namen auf ein bestimmtes Muster passt. Falls kein
 \fIPaketname\-Muster\fP angegeben ist, liste alle Pakete in
 \fI/var/lib/dpkg/status\fP auf. Dabei werden alle Pakete ausgeschlossen, die
@@ -70,7 +70,7 @@ Leser gedacht und nicht leicht maschinenlesbar. Lesen Sie über die Optionen
 \fB\-W\fP (\fB\-\-show\fP) und \fB\-\-showformat\fP, um das Ausgabeformat zu
 konfigurieren.
 .TP 
-\fB\-W\fP, \fB\-\-show\fP \fIPaketname\-Muster\fP ...
+\fB\-W\fP, \fB\-\-show\fP [\fIPaketname\-Muster\fP ...]
 Genau wie die \fB\-\-list\fP\-Option wird dies alle Pakete, die auf das angegebene
 Muster passen, aufführen. Allerdings kann die Ausgabe mit der
 \fB\-\-showformat\fP\-Option angepasst werden. Im Standardausgabeformat wird eine
@@ -203,6 +203,10 @@ auf. Dazu gehören auch keine Datei oder Paket gefunden (außer für
 .
 .SH UMGEBUNG
 .TP 
+\fBDPKG_ADMINDIR\fP
+Falls gesetzt und die Option \fB\-\-admindir\fP nicht verwandt wurde, wird dies
+als Datenverzeichnis von Dpkg verwandt.
+.TP 
 \fBCOLUMNS\fP
 Diese Einstellung beeinflusst die Ausgabe der \fB\-\-list\fP\-Option durch
 Verändern der Breite ihrer Ausgabe.
@@ -214,7 +218,7 @@ Dies ist Freie Software; lesen Sie die GNU General Public License Version 2
 oder neuer für die Kopierbedingungen. Es gibt KEINE Haftung.
 .
 .SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2010 von Helge Kreutzmann
+Die deutsche Übersetzung wurde 2004, 2006-2011 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
 angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die

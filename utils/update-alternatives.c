@@ -2027,8 +2027,9 @@ main(int argc, char **argv)
 	struct dirent **table;
 	const char *new_choice = NULL;
 	int i = 0, count;
-
-	setlocale(LC_ALL, "");
+        
+        if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+           setlocale(LC_ALL, "");
 	bindtextdomain("dpkg", LOCALEDIR);
 	textdomain("dpkg");
 

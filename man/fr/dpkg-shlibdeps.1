@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-shlibdeps 1 08\-03\-2009 "Projet Debian" "Utilitaires de dpkg"
+.TH dpkg\-shlibdeps 1 2011\-03\-04 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
 dpkg\-shlibdeps \- générateur de variables de substitution de dépendances pour
 bibliothèques partagées
@@ -51,10 +51,9 @@ binaires.
 L'information de dépendance des bibliothèques partagées associée aux
 systèmes. \fIarch\fP est l'architecture du système actuel (obtenu par
 \fBdpkg\-architecture \-qDEB_HOST_ARCH\fP).
-.IP \fIadmindir\fP/info/\fIpaquet\fP.symbols
-Paquet fournissant des informations concernant les dépendances envers des
-bibliothèques partagées. Sauf indication contraire, \fIadmindir\fP est par
-défaut «\ /var/lib/dpkg\ ».
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP symbols\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .P
 Lors de l'analyse des symboles utilisés par tous les binaires,
 \fBdpkg\-shlibdeps\fP retient la (plus grande) version minimale nécessaire pour
@@ -87,10 +86,9 @@ construction qui invoque aussi \fBdpkg\-shlibdeps\fP. Il n'est utilisé que si la
 bibliothèque se trouve dans l'arbre de construction du paquet. Le fichier
 shlibs qui construit l'arbre a priorité sur les fichiers shlibs des autres
 paquets binaires.
-.IP \fIadmindir\fP/info/\fIpaquet\fP.shlibs
-Paquet fournissant des informations concernant les dépendances envers des
-bibliothèques partagées. Sauf indication contraire, \fIadmindir\fP est par
-défaut «\ /var/lib/dpkg\ ».
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP shlibs\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .IP /etc/dpkg/shlibs.default
 Fichier système par défaut concernant les informations de dépendance envers
 des bibliothèques partagées.

@@ -540,15 +540,15 @@ static void setforce(const struct cmdinfo *cip, const char *value) {
   }
 }
 
-void execbackend(const char *const *argv) DPKG_ATTR_NORET;
-void commandfd(const char *const *argv);
+int execbackend(const char *const *argv) DPKG_ATTR_NORET;
+int commandfd(const char *const *argv);
 
 /* This table has both the action entries in it and the normal options.
  * The action entries are made with the ACTION macro, as they all
  * have a very similar structure. */
 static const struct cmdinfo cmdinfos[]= {
 #define ACTIONBACKEND(longopt, shortopt, backend) \
- { longopt, shortopt, 0, NULL, NULL, setaction, 0, (void *)backend, (void_func *)execbackend }
+ { longopt, shortopt, 0, NULL, NULL, setaction, 0, (void *)backend, execbackend }
 
   ACTION( "install",                        'i', act_install,              archivefiles    ),
   ACTION( "unpack",                          0,  act_unpack,               archivefiles    ),
@@ -632,7 +632,9 @@ static const struct cmdinfo cmdinfos[]= {
   { NULL,                0,   0, NULL,          NULL,      NULL,          0 }
 };
 
-void execbackend(const char *const *argv) {
+int
+execbackend(const char *const *argv)
+{
   struct command cmd;
   char *arg;
 
@@ -650,16 +652,18 @@ void execbackend(const char *const *argv) {
   command_exec(&cmd);
 }
 
-void commandfd(const char *const *argv) {
+int
+commandfd(const char *const *argv)
+{
   struct varbuf linevb = VARBUF_INIT;
   const char * pipein;
   const char **newargs = NULL;
   char *ptr, *endptr;
   FILE *in;
   unsigned long infd;
+  int ret = 0;
   int c, lno, i;
   bool skipchar;
-  void (*actionfunction)(const char *const *argv);
 
   pipein = *argv++;
   if (pipein == NULL)
@@ -741,17 +745,19 @@ void commandfd(const char *const *argv) {
     myopt((const char *const**)&newargs,cmdinfos);
     if (!cipaction) badusage(_("need an action option"));
 
-    actionfunction = (void (*)(const char *const *))cipaction->arg_func;
-    actionfunction(newargs);
+    ret |= cipaction->action(newargs);
 
     pop_error_context(ehflag_normaltidy);
   }
+
+  return ret;
 }
 
 int main(int argc, const char *const *argv) {
-  void (*actionfunction)(const char *const *argv);
+  int ret;
 
-  setlocale(LC_ALL, "");
+  if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+     setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
 
@@ -779,14 +785,12 @@ int main(int argc, const char *const *argv) {
 
   filesdbinit();
 
-  actionfunction = (void (*)(const char *const *))cipaction->arg_func;
-
-  actionfunction(argv);
+  ret = cipaction->action(argv);
 
   if (is_invoke_action(cipaction->arg_int))
     run_invoke_hooks(cipaction->olong, post_invoke_hooks);
 
   standard_shutdown();
 
-  return reportbroken_retexitstatus();
+  return reportbroken_retexitstatus(ret);
 }

@@ -78,6 +78,11 @@ our %FIELDS = (
         dependency => 'normal',
         dep_order => 2,
     },
+    'Built-Using' => {
+        allowed => ALL_PKG,
+        dependency => 'union',
+        dep_order => 10,
+    },
     'Changed-By' => {
         allowed => CTRL_FILE_CHANGES,
     },
@@ -155,6 +160,9 @@ our %FIELDS = (
     },
     'Package' => {
         allowed => ALL_PKG,
+    },
+    'Package-List' => {
+        allowed => ALL_SRC & ~CTRL_INFO_SRC,
     },
     'Package-Type' => {
         allowed => ALL_PKG,
@@ -274,8 +282,8 @@ my @sum_fields = map { $_ eq "md5" ? "MD5sum" : field_capitalize($_) }
 
 our %FIELD_ORDER = (
     CTRL_PKG_DEB() => [
-        qw(Package Package-Type Source Version Kernel-Version Architecture
-        Subarchitecture Installer-Menu-Item Essential Origin Bugs
+        qw(Package Package-Type Source Version Built-Using Kernel-Version
+        Architecture Subarchitecture Installer-Menu-Item Essential Origin Bugs
         Maintainer Installed-Size), &field_list_pkg_dep(),
         qw(Section Priority Multi-Arch Homepage Description Tag Task)
     ],
@@ -283,7 +291,8 @@ our %FIELD_ORDER = (
         qw(Format Source Binary Architecture Version Origin Maintainer
         Uploaders Homepage Standards-Version Vcs-Browser
         Vcs-Arch Vcs-Bzr Vcs-Cvs Vcs-Darcs Vcs-Git Vcs-Hg Vcs-Mtn
-        Vcs-Svn), &field_list_src_dep(), @checksum_fields, qw(Files)
+        Vcs-Svn), &field_list_src_dep(), qw(Package-List),
+        @checksum_fields, qw(Files)
     ],
     CTRL_FILE_CHANGES() => [
         qw(Format Date Source Binary Architecture Version Distribution

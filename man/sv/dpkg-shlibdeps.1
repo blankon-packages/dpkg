@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-shlibdeps 1 2009\-03\-08 Debianprojektet dpkg\-verktygen
+.TH dpkg\-shlibdeps 1 2011\-03\-04 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-shlibdeps \- skapar substvar\-beroenden för delade bibliotek
 .
@@ -46,9 +46,9 @@ binärpaket.
 Överstyrningsfil för beroendeinformation för delade bibliotek, per
 system. \fIarkitektur\fP är det aktuella systemets arkitektur (hämtas från
 \fBdpkg\-architecture \-qDEB_HOST_ARCH\fP).
-.IP \fIadminkat\fP/info/\fIpaket\fP.symbols
-Paketlokal överstyrande beroendeinformation för delade bibliotek. Normalt är
-\fIadminkat\fP /var/lib/dpkg.
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP symbols\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .P
 \fBdpkg\-shlibs\fP kommer ihåg den (största) minimala version som behövs av
 varje bibliotek när den söker genom de symboler som används av alla
@@ -77,9 +77,9 @@ Information om delade bibliotek som skapats av den aktuella byggproceduren
 som också anropade \fBdpkg\-shlibdeps\fP. De genereras av
 \fBdpkg\-gensymbols\fP(1). De används bara om biblioteket finns i paketets
 byggträd. Filen shlibs i byggträdet går före shlibs\-filer från andra paket.
-.IP \fIadminkat\fP/info/\fIpaket\fP.shlibs
-Paketlokal överstyrande beroendeinformation för delade bibliotek. Normalt är
-\fIadminkat\fP /var/lib/dpkg.
+.IP "Output from \(lq\fBdpkg\-query \-\-control\-path\fP \fIpackage\fP shlibs\(rq"
+Package\-provided shared library dependency information.  Unless overridden
+by \-\-admindir, those files are located in /var/lib/dpkg.
 .IP /etc/dpkg/shlibs.default
 Systemspecifik standardberoendeinformation för delade bibliotek.
 .P

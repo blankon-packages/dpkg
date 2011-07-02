@@ -241,7 +241,7 @@ sub gnutriplet_to_debtriplet($)
 sub gnutriplet_to_multiarch($)
 {
     my ($gnu) = @_;
-    my ($cpu,$cdr) = split('-',$gnu,2);
+    my ($cpu, $cdr) = split('-', $gnu, 2);
 
     if ($cpu =~ /^i[456]86$/) {
 	return "i386-$cdr";
