@@ -221,7 +221,8 @@ $fields->{'Version'} = $forceversion if defined($forceversion);
 # initialized.
 
 my $facts = Dpkg::Deps::KnownFacts->new();
-$facts->add_installed_package($fields->{'Package'}, $fields->{'Version'});
+$facts->add_installed_package($fields->{'Package'}, $fields->{'Version'},
+                              $fields->{'Architecture'}, $fields->{'Multi-Arch'});
 if (exists $pkg->{"Provides"}) {
     my $provides = deps_parse($substvars->substvars($pkg->{"Provides"}, no_warn => 1),
                               reduce_arch => 1, union => 1);
@@ -301,7 +302,8 @@ if (!defined($substvars->get('Installed-Size'))) {
     if (!$c) {
         chdir("$packagebuilddir") ||
             syserr(_g("chdir for du to \`%s'"), $packagebuilddir);
-        exec("du", "-k", "-s", ".") or syserr(_g("unable to execute %s"), "du");
+        exec("du", "-k", "-s", "--apparent-size", ".") or
+            syserr(_g("unable to execute %s"), "du");
     }
     my $duo = '';
     while (<DU>) {
@@ -374,7 +376,7 @@ $fields->apply_substvars($substvars);
 $fields->output($fh_output);
 
 if (!$stdout) {
-    close($fh_output);
+    close($fh_output) || syserr(_g("cannot close %s"), "$cf.new");
     rename("$cf.new", "$cf") ||
         syserr(_g("cannot install output control file \`%s'"), $cf);
 }

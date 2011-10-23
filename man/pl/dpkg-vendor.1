@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-vendor 1 2009\-05\-10 "Projekt Debiana" "u¿ytki dpkg"
+.TH dpkg\-vendor 1 2011\-07\-04 "Projekt Debiana" "u¿ytki dpkg"
 .SH NAZWA
 dpkg\-vendor \- odczytuje informacjê o twórcach dystrybucji
 .
@@ -18,14 +18,13 @@ zawiera informacje dotycz±ce aktualnego twórcy.
 .SH POLECENIA
 .TP 
 \fB\-\-is\fP\fI twórca\fP
-Koñczy siê zwracaj±c 0 je¶li aktualny twórca to \fItwórca\fP. W przeciwnym
-wypadku koñczy siê zwracaj±c warto¶æ ró¿n± od zera.
+Exits with \fB0\fP if the current vendor is \fIvendor\fP. Otherwise exits with
+non\-zero.
 .TP 
 \fB\-\-derives\-from\fP\fI twórca\fP
-Koñczy siê zwracaj±c 0 je¶li aktualna dystrybucja twórcy jest pochodn±
-podanego \fItwórcy\fP, w przeciwnym wypadku koñczy siê zwracaj±c warto¶æ ró¿n±
-od zera. U¿ywa pola "Parent" aby zbadaæ wszystkich przodków bie¿±cego
-twórcy.
+Exits with \fB0\fP if the current vendor distribution is a derivative of
+\fIvendor\fP, otherwise exits with non\-zero. It uses the "Parent" field to
+browse all ancestors of the current vendor.
 .TP 
 \fB\-\-query\fP\fI pole\fP
 Wy¶wietla na standardowym wyj¶ciu warto¶æ okre¶lonego \fIpola\fP odczytanego z
@@ -40,8 +39,8 @@ Wy¶wietla informacjê o wersji i pomy¶lnie koñczy dzia³anie.
 .SH OPCJE
 .TP 
 \fB\-\-vendor\fP\fI twórca\fP
-Przyjmuje, ¿e aktualnym twórc± jest \fItwórca\fP, zamiast okre¶lania tego przez
-zmienn± ¶rodowiska DEB_VENDOR lub odczyt z \fB/etc/dpkg/origins/default\fP.
+Assumes the current vendor is \fIvendor\fP instead of discovering it with the
+\fBDEB_VENDOR\fP environment variable or \fB/etc/dpkg/origins/default\fP.
 .
 .SH ¦RODOWISKO
 .TP 

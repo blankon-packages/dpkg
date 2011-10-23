@@ -51,14 +51,13 @@
 #include <dpkg/i18n.h>
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "dselect.h"
 #include "bindings.h"
 #include "pkglist.h"
 
-const char thisname[]= DSELECT;
-const char printforhelp[]= N_("Type dselect --help for help.");
+static const char printforhelp[] = N_("Type dselect --help for help.");
 
 modstatdb_rw readwrite;
 int expertmode= 0;
@@ -386,7 +385,7 @@ dme(int i, int so)
           gettext(me->option),
           gettext(me->menuent));
 
-  int y,x;
+  int x, y DPKG_ATTR_UNUSED;
   getmaxyx(stdscr,y,x);
 
   attrset(so ? A_REVERSE : A_NORMAL);
@@ -401,7 +400,7 @@ refreshmenu(void)
 
   curseson(); cbreak(); noecho(); nonl(); keypad(stdscr,TRUE);
 
-  int y,x;
+  int x, y DPKG_ATTR_UNUSED;
   getmaxyx(stdscr,y,x);
 
   clear();
@@ -514,10 +513,12 @@ main(int, const char *const *argv)
   bindtextdomain(DSELECT, LOCALEDIR);
   textdomain(DSELECT);
 
+  dpkg_set_progname(DSELECT);
+
   push_error_context_func(dselect_catch_fatal_error, print_fatal_error, 0);
 
   loadcfgfile(DSELECT, cmdinfos);
-  myopt(&argv,cmdinfos);
+  myopt(&argv, cmdinfos, printforhelp);
 
   admindir = dpkg_db_set_dir(admindir);
 

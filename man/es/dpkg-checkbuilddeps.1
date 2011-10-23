@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-checkbuilddeps 1 "21 de Noviembre de 2009" "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-checkbuilddeps 1 2011\-07\-04 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-checkbuilddeps \- Comprueba las dependencias y conflictos de compilación
 .
 .SH SINOPSIS
-\fBdpkg\-checkbuilddeps\fP [\fIopciones\fP] [\fIfichero\-control\fP]
+\fBdpkg\-checkbuilddeps\fP [\fIoption\fP...] [\fIcontrol\-file\fP]
 .
 .SH DESCRIPCIÓN
 Este programa comprueba que los paquetes instalados en el sistema satisfacen
@@ -16,8 +16,8 @@ las dependencias y conflictos de compilación listados en el fichero de
 control del paquete. Si alguna de estas condiciones no se cumple avisa y
 finaliza el proceso devolviendo un código de error distinto de cero.
 .P
-Por omisión se lee \fBdebian/control\fP, pero se puede especificar un fichero
-de control alternativo en la línea de órdenes.
+By default, \fBdebian/control\fP is read, but an alternate control filename may
+be specified on the command line.
 .
 .SH OPCIONES
 .TP 

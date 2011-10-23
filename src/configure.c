@@ -44,8 +44,10 @@
 #include <dpkg/i18n.h>
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
+#include <dpkg/string.h>
 #include <dpkg/buffer.h>
 #include <dpkg/file.h>
+#include <dpkg/path.h>
 #include <dpkg/subproc.h>
 #include <dpkg/command.h>
 #include <dpkg/triglib.h>
@@ -85,7 +87,7 @@ deferred_configure_conffile(struct pkginfo *pkg, struct conffile *conff)
 		conff->hash = EMPTY_HASH;
 		return;
 	}
-	md5hash(pkg, currenthash, cdr.buf, -1);
+	md5hash(pkg, currenthash, cdr.buf);
 
 	varbuf_reset(&cdr2);
 	varbuf_add_str(&cdr2, cdr.buf);
@@ -103,7 +105,7 @@ deferred_configure_conffile(struct pkginfo *pkg, struct conffile *conff)
 		ohshite(_("unable to stat new distributed conffile '%.250s'"),
 		        cdr2.buf);
 	}
-	md5hash(pkg, newdisthash, cdr2.buf, -1);
+	md5hash(pkg, newdisthash, cdr2.buf);
 
 	/* Copy the permissions from the installed version to the new
 	 * distributed version. */
@@ -385,6 +387,7 @@ deferred_configure(struct pkginfo *pkg)
 	                           NULL);
 
 	pkg->eflag = eflag_ok;
+	pkg->trigpend_head = NULL;
 	post_postinst_tasks(pkg, stat_installed);
 }
 
@@ -404,7 +407,7 @@ conffderef(struct pkginfo *pkg, struct varbuf *result, const char *in)
 {
 	static struct varbuf target = VARBUF_INIT;
 	struct stat stab;
-	int r;
+	ssize_t r;
 	int loopprotect;
 
 	varbuf_reset(result);
@@ -451,13 +454,17 @@ conffderef(struct pkginfo *pkg, struct varbuf *result, const char *in)
 				        pkg_describe(pkg, pdo_foreign), in,
 				        result->buf, strerror(errno));
 				return -1;
+			} else if (r != stab.st_size) {
+				warning(_("symbolic link '%.250s' size has "
+				          "changed from %jd to %zd"),
+				        result->buf, stab.st_size, r);
+				return -1;
 			}
-			assert(r == stab.st_size); /* XXX: debug */
 			varbuf_trunc(&target, r);
 			varbuf_end_str(&target);
 
 			debug(dbg_conffdetail,
-			      "conffderef readlink gave %d, '%s'",
+			      "conffderef readlink gave %zd, '%s'",
 			      r, target.buf);
 
 			if (target.buf[0] == '/') {
@@ -501,24 +508,19 @@ conffderef(struct pkginfo *pkg, struct varbuf *result, const char *in)
  * @param[in] pkg The package to act on.
  * @param[out] hashbuf The buffer to store the generated hash.
  * @param[in] fn The filename.
- * @param[in] fd A file descriptor ready to use, or -1.
  */
 void
-md5hash(struct pkginfo *pkg, char *hashbuf, const char *fn, int fd)
+md5hash(struct pkginfo *pkg, char *hashbuf, const char *fn)
 {
-	bool close_fd = false;
+	static int fd;
 
-	if (fd < 0) {
-		fd = open(fn, O_RDONLY);
-		close_fd = true;
-	}
+	fd = open(fn, O_RDONLY);
 
 	if (fd >= 0) {
 		push_cleanup(cu_closefd, ehflag_bombout, NULL, 0, 1, &fd);
 		fd_md5(fd, hashbuf, -1, _("md5hash"));
 		pop_cleanup(ehflag_normaltidy); /* fd = open(cdr.buf) */
-		if (close_fd && close(fd))
-			ohshite(_("error closing %.250s"), fn);
+		close(fd);
 	} else if (errno == ENOENT) {
 		strcpy(hashbuf, NONEXISTENTFLAG);
 	} else {
@@ -550,7 +552,7 @@ showdiff(const char *old, const char *new)
 			pager = DEFAULTPAGER;
 
 		sprintf(cmdbuf, DIFF " -Nu %.250s %.250s | %.250s",
-		        old, new, pager);
+		        str_quote_meta(old), str_quote_meta(new), pager);
 
 		command_shell(cmdbuf, _("conffile difference visualizer"));
 	}
@@ -693,9 +695,7 @@ promptconfaction(struct pkginfo *pkg, const char *cfgfile,
 		else if (what & cfof_install)
 			fprintf(stderr, _(" The default action is to install the new version.\n"));
 
-		s = strrchr(cfgfile, '/');
-		if (!s || !*++s)
-			s = cfgfile;
+		s = path_basename(cfgfile);
 		fprintf(stderr, "*** %s (Y/I/N/O/D/Z) %s ? ",
 		        s,
 		        (what & cfof_keep) ? _("[default=N]") :

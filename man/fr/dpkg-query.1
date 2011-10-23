@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-query 1 07\-03\-2010 "Projet Debian" "suite dpkg"
+.TH dpkg\-query 1 2011\-08\-14 "Projet Debian" "suite dpkg"
 .SH NOM
 dpkg\-query \- Un outil pour interroger la base de données de dpkg
 .
@@ -78,13 +78,15 @@ suivant\ : une ligne pour chaque paquet, avec le nom et la version installée,
 séparé par une tabulation.
 .TP 
 \fB\-s\fP, \fB\-\-status\fP \fInom\-paquet\fP ...
-Donne l'état du paquet indiqué. C'est simplement l'affichage de l'entrée de
-la base de données concernant les états des paquets installés.
+Report status of specified package. This just displays the entry in the
+installed package status database. When multiple \fIpackage\-name\fP are listed,
+the requested status entries are separated by an empty line.
 .TP 
 \fB\-L\fP, \fB\-\-listfiles\fP \fInom\-paquet\fP...
-Affiche la liste des fichiers du \fInom\-paquet\fP installés sur le système. Il
-faut remarquer cependant que les fichiers créés par les scripts
-d'installation particuliers au paquet ne sont pas affichés.
+List files installed to your system from \fIpackage\-name\fP. When multiple
+\fIpackage\-name\fP are listed, the requested lists of files are separated by an
+empty line. However, note that files created by package\-specific
+installation\-scripts are not listed.
 .TP 
 \fB\-c\fP, \fB\-\-control\-path\fP \fInom\-paquet\fP [\fIfichier\-contrôle\fP]
 Affiche les chemins pour les fichiers de contrôle installés sur votre
@@ -97,16 +99,19 @@ interfaces sont mises en place ou si les défauts actuels d'architecture sont
 résolus.
 .TP 
 \fB\-S\fP, \fB\-\-search\fP \fImotif\-de\-nom\-a\-rechercher\fP...
-Recherche un nom de fichier dans les paquets installés. On peut utiliser
-dans le motif tous les métacaractères de l'interpréteur de commandes. Cette
-commande ne donne pas les fichiers supplémentaires créés par les scripts du
-responsable de paquet, ni les alternatives.
+Search for packages that own files corresponding to the given pattern.
+Standard shell wildchars can be used in the pattern.  This command will not
+list extra files created by maintainer scripts, nor will it list
+alternatives.
 .TP 
 \fB\-p\fP, \fB\-\-print\-avail\fP \fInom\-paquet\fP...
-Affiche les détails relatifs à \fInom\-paquet\fP, tels que présents dans
-\fI/var/lib/dpkg/available\fP. Les utilisateurs des outils basés sur APT
-devraient plutôt utiliser la commande \fBapt\-cache show\fP \fInom\-paquet\fP car le
-fichier \fIavailable\fP n'est tenu à jour que lorsque \fBdselect\fP est utilisé.
+Display details about \fIpackage\-name\fP, as found in
+\fI/var/lib/dpkg/available\fP. When multiple \fIpackage\-name\fP are listed, the
+requested \fIavailable\fP entries are separated by an empty line.
+
+Users of APT\-based frontends should use \fBapt\-cache show\fP \fIpackage\-name\fP
+instead as the \fIavailable\fP file is only kept up\-to\-date when using
+\fBdselect\fP.
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
 Affiche un message d'aide puis quitte.
@@ -146,19 +151,19 @@ conservés avec le paquet binaire le sont)\ :
 .nf
     \fBArchitecture\fP
     \fBBugs\fP
-    \fBConffiles\fP (interne)
-    \fBConfig\-Version\fP (interne)
+    \fBConffiles\fP (internal)
+    \fBConfig\-Version\fP (internal)
     \fBConflicts\fP
     \fBBreaks\fP
     \fBDepends\fP
     \fBDescription\fP
     \fBEnhances\fP
     \fBEssential\fP
-    \fBFilename\fP (interne, lié à dselect)
+    \fBFilename\fP (internal, front\-end related)
     \fBHomepage\fP
     \fBInstalled\-Size\fP
-    \fBMD5sum\fP (interne, lié à dselect)
-    \fBMSDOS\-Filename\fP (interne, lié à dselect)
+    \fBMD5sum\fP (internal, front\-end related)
+    \fBMSDOS\-Filename\fP (internal, front\-end related)
     \fBMaintainer\fP
     \fBOrigin\fP
     \fBPackage\fP
@@ -167,15 +172,15 @@ conservés avec le paquet binaire le sont)\ :
     \fBProvides\fP
     \fBRecommends\fP
     \fBReplaces\fP
-    \fBRevision\fP (obsolète)
+    \fBRevision\fP (obsolete)
     \fBSection\fP
-    \fBSize\fP (interne, lié à dselect)
+    \fBSize\fP (internal, front\-end related)
     \fBSource\fP
-    \fBStatus\fP (interne)
+    \fBStatus\fP (internal)
     \fBSuggests\fP
-    \fBTag\fP (pas dans le .deb mais dans les fichiers Packages d'APT)
-    \fBTriggers\-Awaited\fP (interne)
-    \fBTriggers\-Pending\fP (interne)
+    \fBTag\fP (usually not in the .deb but in the repository Packages files)
+    \fBTriggers\-Awaited\fP (internal)
+    \fBTriggers\-Pending\fP (internal)
     \fBVersion\fP
 .fi
 
@@ -191,9 +196,11 @@ version installée, exécutez par exemple\ :
 .fi
 .
 .SH "CODE DE SORTIE"
-.IP 0
+.TP 
+\fB0\fP
 La requête demandée s'est correctement déroulée.
-.IP 1
+.TP 
+\fB1\fP
 Des problèmes sont survenus lors de l'analyse de la ligne de commande ou
 bien pendant l'exécution de la requête. Cela peut être une absence de
 fichier ou de paquet (sauf pour \-\-control\-path).

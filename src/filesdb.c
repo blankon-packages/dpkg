@@ -83,8 +83,9 @@ pkgadminfile(struct pkginfo *pkg, struct pkgbin *pkgbin, const char *filetype)
 
   varbuf_reset(&vb);
   varbuf_add_str(&vb, infodir);
+  varbuf_add_char(&vb, '/');
   varbuf_add_str(&vb, pkg->set->name);
-  if (pkgbin->multiarch == multiarch_same && pkg_infodb_format() > 0) {
+  if (pkgbin->multiarch == multiarch_same && pkg_infodb_format() >= 1) {
     varbuf_add_char(&vb, ':');
     varbuf_add_str(&vb, pkgbin->arch->name);
   }
@@ -281,7 +282,7 @@ pkg_files_add_file(struct pkginfo *pkg, const char *filename,
 void
 ensure_packagefiles_available(struct pkginfo *pkg)
 {
-  int fd;
+  static int fd;
   const char *filelistfile;
   struct fileinlist **lendp;
   struct stat stat_buf;
@@ -298,6 +299,20 @@ ensure_packagefiles_available(struct pkginfo *pkg)
   if (pkg->status == stat_notinstalled) {
     pkg->clientdata->fileslistvalid = true;
     return;
+  }
+  /* In a package set that is not multiarch same, there's only
+   * one .list file. Don't read it multiple times. */
+  if (pkg->installed.multiarch != multiarch_same) {
+    struct pkginfo *otherpkg;
+    for (otherpkg = &pkg->set->pkg; otherpkg; otherpkg = otherpkg->arch_next) {
+      /* If we find a non-multiarch-same package in the set with a more
+       * advanced status, we assume the list file is not for this package. */
+      if (otherpkg->status > pkg->status &&
+          otherpkg->installed.multiarch != multiarch_same) {
+        pkg->clientdata->fileslistvalid = true;
+        return;
+      }
+    }
   }
 
   filelistfile = pkgadminfile(pkg, &pkg->installed, LISTFILE);
@@ -502,12 +517,12 @@ void ensure_allinstfiles_available_quiet(void) {
 }
 
 /*
- * If leaveout is nonzero, will not write any file whose filenamenode
- * has the fnnf_elide_other_lists flag set.
+ * If mask is nonzero, will not write any file whose filenamenode
+ * has any flag bits set in mask.
  */
 void
 write_filelist_except(struct pkginfo *pkg, struct pkgbin *pkgbin,
-                      struct fileinlist *list, bool leaveout)
+                      struct fileinlist *list, enum fnnflags mask)
 {
   static struct varbuf newvb;
   const char *listfile;
@@ -524,9 +539,9 @@ write_filelist_except(struct pkginfo *pkg, struct pkgbin *pkgbin,
   if (!file)
     ohshite(_("unable to create updated files list file for package %s"),
             pkg_describe(pkg, pdo_foreign));
-  push_cleanup(cu_closefile, ehflag_bombout, NULL, 0, 1, (void *)file);
+  push_cleanup(cu_closestream, ehflag_bombout, NULL, 0, 1, (void *)file);
   while (list) {
-    if (!(leaveout && (list->namenode->flags & fnnf_elide_other_lists))) {
+    if (!(mask && (list->namenode->flags & mask))) {
       fputs(list->namenode->name,file);
       putc('\n',file);
     }

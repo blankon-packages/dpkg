@@ -134,6 +134,7 @@ extern int fc_nonroot, fc_overwritedir, fc_conff_new, fc_conff_miss;
 extern int fc_conff_old, fc_conff_def;
 extern int fc_conff_ask;
 extern int fc_badverify;
+extern int fc_badversion;
 extern int fc_unsafe_io;
 
 extern bool abort_processing;
@@ -182,7 +183,7 @@ int clearselections(const char *const *argv);
 
 /* from packages.c, remove.c and configure.c */
 
-void md5hash(struct pkginfo *pkg, char *hashbuf, const char *fn, int fd);
+void md5hash(struct pkginfo *pkg, char *hashbuf, const char *fn);
 void add_to_queue(struct pkginfo *pkg);
 void process_queue(void);
 int packages(const char *const *argv);
@@ -222,8 +223,6 @@ struct stat;
 bool ignore_depends(struct pkginfo *pkg);
 bool force_breaks(struct deppossi *possi);
 bool force_depends(struct deppossi *possi);
-bool force_conff_new(struct deppossi *possi);
-bool force_conff_miss(struct deppossi *possi);
 bool force_conflicts(struct deppossi *possi);
 void oldconffsetflags(const struct conffile *searchconff);
 void ensure_pathname_nonexisting(const char *pathname);
@@ -253,8 +252,10 @@ void post_postinst_tasks_core(struct pkginfo *pkg);
 void post_postinst_tasks(struct pkginfo *pkg, enum pkgstatus new_status);
 
 void clear_istobes(void);
-bool isdirectoryinuse(struct filenamenode *namenode, struct pkginfo *pkg);
-bool hasdirectoryconffiles(struct filenamenode *namenode, struct pkginfo *pkg);
+bool dir_is_used_by_others(struct filenamenode *namenode, struct pkginfo *pkg);
+bool dir_is_used_by_pkg(struct filenamenode *namenode, struct pkginfo *pkg,
+                        struct fileinlist *list);
+bool dir_has_conffiles(struct filenamenode *namenode, struct pkginfo *pkg);
 
 void log_action(const char *action, struct pkginfo *pkg);
 
@@ -270,18 +271,19 @@ void trig_activate_packageprocessing(struct pkginfo *pkg);
 
 /* from depcon.c */
 
-enum what_pkgbin {
+enum which_pkgbin {
   wpb_installed,
   wpb_available,
   wpb_by_status,
 };
 
 bool depisok(struct dependency *dep, struct varbuf *whynot,
-             struct pkginfo **fixbyrm, bool allowunconfigd);
+             struct pkginfo **fixbyrm, struct pkginfo **fixbytrigaw,
+             bool allowunconfigd);
 struct cyclesofarlink;
 bool findbreakcycle(struct pkginfo *pkg);
 void describedepcon(struct varbuf *addto, struct dependency *dep);
-struct pkginfo *deppossi_get_pkg(struct deppossi *possi, enum what_pkgbin wpb,
+struct pkginfo *deppossi_get_pkg(struct deppossi *possi, enum which_pkgbin wpb,
                                  struct pkginfo *startpkg);
 
 #endif /* MAIN_H */

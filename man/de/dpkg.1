@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2011\-02\-05 Debian\-Projekt dpkg\-Programmsammlung
+.TH dpkg 1 2011\-08\-14 Debian\-Projekt dpkg\-Programmsammlung
 .SH NAME
 dpkg \- Paketverwalter für Debian
 .
 .SH ÜBERSICHT
-\fBdpkg\fP [\fIOptionen\fP] \fIAktionen\fP
+\fBdpkg\fP [\fIOption\fP...] \fIAktionen\fP
 .
 .SH WARNUNG
 Dieses Handbuch ist für Benutzer gedacht, die die Kommandozeilenoptionen und
@@ -28,21 +28,13 @@ gesteuert, die aus genau einer Aktion und Null oder mehreren Optionen
 bestehen. Der Aktionsparameter teilt \fBdpkg\fP mit, was zu tun ist, und die
 Optionen steuern die Aktionen in irgendeiner Weise.
 
-\fBdpkg\fP kann auch als Oberfläche für \fBdpkg\-deb\fP(1) verwendet werden. Die
-folgenden Aktionen gehören zu \fBdpkg\-deb\fP, und wenn sie angetroffen werden,
-startet \fBdpkg\fP einfach \fBdpkg\-deb\fP mit den übergebenen Parametern:
-.nf
-    \fB\-b\fP, \fB\-\-build\fP,
-    \fB\-c\fP, \fB\-\-contents\fP,
-    \fB\-I\fP, \fB\-\-info\fP,
-    \fB\-f\fP, \fB\-\-field\fP,
-    \fB\-e\fP, \fB\-\-control\fP,
-    \fB\-x\fP, \fB\-\-extract\fP,
-    \fB\-X\fP, \fB\-\-vextract\fP und
-    \fB\-\-fsys\-tarfile\fP.
-.fi
-Bitte lesen Sie \fBdpkg\-deb\fP(1) für weitere Informationen über diese
-Aktionen.
+\fBdpkg\fP kann auch als Oberfläche für \fBdpkg\-deb\fP(1) und \fBdpkg\-query\fP(1)
+verwendet werden. Die Liste der unterstützen Aktionen kann im Abschnitt
+\fBAKTIONEN\fP gefunden werden. Falls so eine Aktion angetroffen wird, führt
+\fBdpkg\fP einfach \fBdpkg\-deb\fP oder \fBdpkg\-query\fP mit den übergebenen
+Parametern aus, allerdings werden derzeit keine spezifischen Optionen an
+diese übergeben. Um solche Optionen zu verwenden, müssen die Backends direkt
+aufgerufen werden.
 .
 .SH "INFORMATIONEN ÜBER PAKETE"
 \fBdpkg\fP verwaltet einige nützliche Informationen über verfügbare Pakete. Die
@@ -237,10 +229,9 @@ Muster werden nicht\-installierte Pakete (d.h. solche, die vorher
 .TP 
 \fB\-\-set\-selections\fP
 Setze die Paketauswahl durch Einlesen einer Datei von der
-Standardeingabe. Diese Datei sollte im Format »<Paket>
-<Zustand>« sein, wobei Zustand einer aus »install«, »hold«,
-»deinstall« oder »purge« ist. Leerzeilen und Kommentarzeilen (beginnend mit
-»#«) sind auch erlaubt.
+Standardeingabe. Diese Datei sollte im Format »\fIPaket\fP \fIZustand\fP« sein,
+wobei Zustand einer aus \fBinstall\fP, \fBhold\fP, \fBdeinstall\fP oder \fBpurge\fP
+ist. Leerzeilen und Kommentarzeilen (beginnend mit »#«) sind auch erlaubt.
 .TP 
 \fB\-\-clear\-selections\fP
 Setze den erbetenen Zustand von jedem nicht\-essenziellen Paket auf
@@ -268,11 +259,11 @@ Version als älter als jede Version: \fBlt\-nl le\-nl ge\-nl gt\-nl\fP. Die
 folgenden sind nur aus Kompatibilität mit der Steuerdateisyntax
 bereitgestellt: \fB< << <= = >= >> >\fP.
 .TP 
-\fB\-\-command\-fd \fP\fI<n>\fP
-Akzeptiert eine Reihe von Befehlen an Eingabe\-Dateideskriptor
-\fI<n>\fP. Hinweis: Zusätzliche auf der Kommandozeile und durch diesen
-Dateideskriptor gesetzte Optionen werden nicht für nachfolgende Befehle, die
-im gleichen Lauf ausgeführt werden, zurückgesetzt.
+\fB\-\-command\-fd \fP\fIn\fP
+Akzeptiert eine Reihe von Befehlen an Eingabe\-Dateideskriptor \fIn\fP. Hinweis:
+Zusätzliche auf der Kommandozeile und durch diesen Dateideskriptor gesetzte
+Optionen werden nicht für nachfolgende Befehle, die im gleichen Lauf
+ausgeführt werden, zurückgesetzt.
 .TP 
 \fB\-\-help\fP
 Zeige eine kurze Hilfenachricht an.
@@ -471,6 +462,8 @@ vorsichtig.\fP
 \fBarchitecture\fP: Verarbeite sogar Pakete mit der falschen oder keiner
 Architektur.
 
+\fBbad\-version\fP: Verarbeite sogar Pakete mit falschen Versionen.
+
 \fBbad\-path\fP: Im \fBPATH\fP fehlen wichtige Programme, daher sind Probleme
 wahrscheinlich.
 
@@ -484,14 +477,6 @@ fehlschlägt.
 Ignoriere Abhängigkeitsüberprüfungen für ein bestimmtes Paket (tatsächlich
 wird die Überprüfung durchgeführt, aber nur Warnungen über Konflikte werden
 angezeigt, sonst nichts).
-.TP 
-\fB\-\-new\fP, \fB\-\-old\fP
-Wähle das alte oder neue Binärpaketformat. Dies ist eine
-\fBdpkg\-deb\fP(1)\-Option.
-.TP 
-\fB\-\-nocheck\fP
-Lese oder überprüfe den Inhalt der Steuerdatei beim Paketbau nicht. Dies ist
-eine \fBdpkg\-deb\fP(1)\-Option.
 .TP 
 \fB\-\-no\-act\fP, \fB\-\-dry\-run\fP, \fB\-\-simulate\fP
 Erledige alles, was gemacht werden soll, aber schreibe keine
@@ -631,13 +616,13 @@ Protokolliere Statusänderungsaktualisierungen und \-Aktionen in \fIDateiname\fP
 anstatt in die Standard\-Datei \fI/var/log/dpkg.log\fP. Falls diese Option
 mehrfach übergeben wird, wird der letzte Dateiname
 verwendet. Protokollnachrichten sind von der Form »JJJJ\-MM\-TT HH:MM:SS
-status <Zustand> <Pkt> <installierte\-Version>« für
-Statusänderungsaktualisierungen; »JJJJ\-MM\-TT HH:MM:SS <Aktion>
-<Pkt> <installierte\-Version> <verfügbare\-Version>«
-für Aktionen, wobei \fI<Aktion>\fP entweder install, upgrade, remove
-oder purge ist; und »YYYY\-MM\-DD HH:MM:SS conffile <Dateiname>
-<Entscheidung>« für Conffile\-Änderungen ist, wobei
-\fI<Entscheidung>\fP entweder install oder keep ist.
+status \fIZustand\fP \fIPkt\fP \fIinstallierte\-Version\fP« für
+Statusänderungsaktualisierungen; »JJJJ\-MM\-TT HH:MM:SS \fIAktion\fP \fIPkt\fP
+\fIinstallierte\-Version\fP \fIverfügbare\-Version\fP« für Aktionen, wobei \fIAktion\fP
+entweder \fBinstall\fP, \fBupgrade\fP, \fBremove\fP oder \fBpurge\fP ist; und
+»YYYY\-MM\-DD HH:MM:SS conffile \fIDateiname\fP \fIEntscheidung\fP« für
+Conffile\-Änderungen ist, wobei \fIEntscheidung\fP entweder \fBinstall\fP oder
+\fBkeep\fP ist.
 .TP 
 \fB\-\-no\-debsig\fP
 Versuche nicht, Paketsignaturen zu überprüfen.

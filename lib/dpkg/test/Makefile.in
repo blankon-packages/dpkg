@@ -34,10 +34,11 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 check_PROGRAMS = t-test$(EXEEXT) t-macros$(EXEEXT) t-string$(EXEEXT) \
-	t-buffer$(EXEEXT) t-path$(EXEEXT) t-command$(EXEEXT) \
-	t-varbuf$(EXEEXT) t-ar$(EXEEXT) t-arch$(EXEEXT) \
-	t-version$(EXEEXT) t-pkginfo$(EXEEXT) t-pkg-list$(EXEEXT) \
-	t-pkg-queue$(EXEEXT)
+	t-buffer$(EXEEXT) t-path$(EXEEXT) t-progname$(EXEEXT) \
+	t-subproc$(EXEEXT) t-command$(EXEEXT) t-varbuf$(EXEEXT) \
+	t-ar$(EXEEXT) t-arch$(EXEEXT) t-version$(EXEEXT) \
+	t-pkginfo$(EXEEXT) t-pkg-list$(EXEEXT) t-pkg-queue$(EXEEXT) \
+	t-mod-db$(EXEEXT)
 subdir = lib/dpkg/test
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -80,6 +81,10 @@ t_macros_SOURCES = t-macros.c
 t_macros_OBJECTS = t-macros.$(OBJEXT)
 t_macros_LDADD = $(LDADD)
 t_macros_DEPENDENCIES = ../libdpkg.a
+t_mod_db_SOURCES = t-mod-db.c
+t_mod_db_OBJECTS = t-mod-db.$(OBJEXT)
+t_mod_db_LDADD = $(LDADD)
+t_mod_db_DEPENDENCIES = ../libdpkg.a
 t_path_SOURCES = t-path.c
 t_path_OBJECTS = t-path.$(OBJEXT)
 t_path_LDADD = $(LDADD)
@@ -96,10 +101,18 @@ t_pkginfo_SOURCES = t-pkginfo.c
 t_pkginfo_OBJECTS = t-pkginfo.$(OBJEXT)
 t_pkginfo_LDADD = $(LDADD)
 t_pkginfo_DEPENDENCIES = ../libdpkg.a
+t_progname_SOURCES = t-progname.c
+t_progname_OBJECTS = t-progname.$(OBJEXT)
+t_progname_LDADD = $(LDADD)
+t_progname_DEPENDENCIES = ../libdpkg.a
 t_string_SOURCES = t-string.c
 t_string_OBJECTS = t-string.$(OBJEXT)
 t_string_LDADD = $(LDADD)
 t_string_DEPENDENCIES = ../libdpkg.a
+t_subproc_SOURCES = t-subproc.c
+t_subproc_OBJECTS = t-subproc.$(OBJEXT)
+t_subproc_LDADD = $(LDADD)
+t_subproc_DEPENDENCIES = ../libdpkg.a
 t_test_SOURCES = t-test.c
 t_test_OBJECTS = t-test.$(OBJEXT)
 t_test_LDADD = $(LDADD)
@@ -132,12 +145,13 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = t-ar.c t-arch.c t-buffer.c t-command.c t-macros.c t-path.c \
-	t-pkg-list.c t-pkg-queue.c t-pkginfo.c t-string.c t-test.c \
-	t-varbuf.c t-version.c
+SOURCES = t-ar.c t-arch.c t-buffer.c t-command.c t-macros.c t-mod-db.c \
+	t-path.c t-pkg-list.c t-pkg-queue.c t-pkginfo.c t-progname.c \
+	t-string.c t-subproc.c t-test.c t-varbuf.c t-version.c
 DIST_SOURCES = t-ar.c t-arch.c t-buffer.c t-command.c t-macros.c \
-	t-path.c t-pkg-list.c t-pkg-queue.c t-pkginfo.c t-string.c \
-	t-test.c t-varbuf.c t-version.c
+	t-mod-db.c t-path.c t-pkg-list.c t-pkg-queue.c t-pkginfo.c \
+	t-progname.c t-string.c t-subproc.c t-test.c t-varbuf.c \
+	t-version.c
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -287,6 +301,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = \
+	-DADMINDIR=\"$(admindir)\" \
 	-idirafter $(top_srcdir)/lib/compat \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/lib
@@ -345,6 +360,9 @@ t-command$(EXEEXT): $(t_command_OBJECTS) $(t_command_DEPENDENCIES)
 t-macros$(EXEEXT): $(t_macros_OBJECTS) $(t_macros_DEPENDENCIES) 
 	@rm -f t-macros$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(t_macros_OBJECTS) $(t_macros_LDADD) $(LIBS)
+t-mod-db$(EXEEXT): $(t_mod_db_OBJECTS) $(t_mod_db_DEPENDENCIES) 
+	@rm -f t-mod-db$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(t_mod_db_OBJECTS) $(t_mod_db_LDADD) $(LIBS)
 t-path$(EXEEXT): $(t_path_OBJECTS) $(t_path_DEPENDENCIES) 
 	@rm -f t-path$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(t_path_OBJECTS) $(t_path_LDADD) $(LIBS)
@@ -357,9 +375,15 @@ t-pkg-queue$(EXEEXT): $(t_pkg_queue_OBJECTS) $(t_pkg_queue_DEPENDENCIES)
 t-pkginfo$(EXEEXT): $(t_pkginfo_OBJECTS) $(t_pkginfo_DEPENDENCIES) 
 	@rm -f t-pkginfo$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(t_pkginfo_OBJECTS) $(t_pkginfo_LDADD) $(LIBS)
+t-progname$(EXEEXT): $(t_progname_OBJECTS) $(t_progname_DEPENDENCIES) 
+	@rm -f t-progname$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(t_progname_OBJECTS) $(t_progname_LDADD) $(LIBS)
 t-string$(EXEEXT): $(t_string_OBJECTS) $(t_string_DEPENDENCIES) 
 	@rm -f t-string$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(t_string_OBJECTS) $(t_string_LDADD) $(LIBS)
+t-subproc$(EXEEXT): $(t_subproc_OBJECTS) $(t_subproc_DEPENDENCIES) 
+	@rm -f t-subproc$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(t_subproc_OBJECTS) $(t_subproc_LDADD) $(LIBS)
 t-test$(EXEEXT): $(t_test_OBJECTS) $(t_test_DEPENDENCIES) 
 	@rm -f t-test$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(t_test_OBJECTS) $(t_test_LDADD) $(LIBS)
@@ -381,11 +405,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-buffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-command.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-macros.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-mod-db.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-path.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-pkg-list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-pkg-queue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-pkginfo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-progname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-string.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-subproc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-varbuf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-version.Po@am__quote@

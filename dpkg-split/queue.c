@@ -39,7 +39,7 @@
 #include <dpkg/dpkg-db.h>
 #include <dpkg/dir.h>
 #include <dpkg/buffer.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "dpkg-split.h"
 
@@ -95,11 +95,11 @@ void scandepot(void) {
     if (de->d_name[0] == '.') continue;
     pq= nfmalloc(sizeof(struct partqueue));
     pq->info.fmtversion= pq->info.package= pq->info.version= NULL;
+    pq->info.arch = NULL;
     pq->info.orglength= pq->info.thispartoffset= pq->info.thispartlen= 0;
     pq->info.headerlen= 0;
-    p = nfmalloc(strlen(opt_depotdir) + strlen(de->d_name) + 1);
-    strcpy(p, opt_depotdir);
-    strcat(p,de->d_name);
+    p = nfmalloc(strlen(opt_depotdir) + 1 + strlen(de->d_name) + 1);
+    sprintf(p, "%s/%s", opt_depotdir, de->d_name);
     pq->info.filename= p;
     if (!decompose_filename(de->d_name,pq)) {
       pq->info.md5sum= NULL;
@@ -170,8 +170,8 @@ do_auto(const char *const *argv)
     int ap;
     char *p, *q;
 
-    m_asprintf(&p, "%st.%lx", opt_depotdir, (long)getpid());
-    m_asprintf(&q, "%s%s.%jx.%x.%x", opt_depotdir, refi->md5sum,
+    m_asprintf(&p, "%s/t.%lx", opt_depotdir, (long)getpid());
+    m_asprintf(&q, "%s/%s.%jx.%x.%x", opt_depotdir, refi->md5sum,
                (intmax_t)refi->maxpartlen, refi->thispartn, refi->maxpartn);
 
     fd_src = open(partfile, O_RDONLY);

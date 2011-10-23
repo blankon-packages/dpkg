@@ -3,14 +3,14 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-maintscript\-helper 1 16\-04\-2010 "Projet Debian" "suite dpkg"
+.TH dpkg\-maintscript\-helper 1 2011\-08\-14 "Projet Debian" "suite dpkg"
 .SH NOM
 dpkg\-maintscript\-helper \- contournement des limitations connues de dpkg dans
 les scripts du responsable
 .
 .SH SYNOPSIS
-\fBdpkg\-maintscript\-helper\fP \fIcommande\fP [\fIparamètres\fP...] \-\-
-\fIparamètres\-script\-responsable\fP
+\fBdpkg\-maintscript\-helper\fP \fIcommand\fP [\fIparameter\fP...] \fB\-\-\fP
+\fImaint\-script\-parameter\fP...
 .
 .SH "COMMANDES ET PARAMÈTRES"
 .P
@@ -26,11 +26,12 @@ afin de réaliser certaines tâches que dpkg ne peut pas (encore) prendre en
 charge directement à cause de limites de conception ou de limitations
 actuelles.
 .P
-La plupart de ces tâches nécessitent la coordination de plusieurs script du
-responsable (\fBpreinst\fP, \fBpostinst\fP, \fBprerm\fP, \fBpostrm\fP). Pour éviter des
-erreurs, le même appel a simplement besoin d'être placé dans tous les
-scripts. Le programme adaptera alors con comportement en fonction de la
-variable d'environnement
+Many of those tasks require coordinated actions from several maintainer
+scripts (\fBpreinst\fP, \fBpostinst\fP, \fBprerm\fP, \fBpostrm\fP). To avoid mistakes
+the same call simply needs to be put in all scripts and the program will
+automatically adapt its behaviour based on the environment variable
+\fBDPKG_MAINTSCRIPT_NAME\fP and on the maintainer scripts arguments that you
+have to forward after a double dash.
 .
 .SH "TÂCHES LIÉES AUX FICHIERS DE CONFIGURATION"
 .P
@@ -129,15 +130,15 @@ unconditionally requires a pre\-dependency to ensure that the required
 version of dpkg has been unpacked before. The required version depends on
 the command used, for \fBrm_conffile\fP and \fBmv_conffile\fP it is 1.15.7.2:
 .P
-    Pre\-Depends: dpkg (>= 1.15.7.2)
+    \fBPre\-Depends:\fP dpkg (>= 1.15.7.2)
 .P
 Cependant, dans de nombreux cas, l'opération réalisée par le programme n'est
 pas critique pour le paquet et au lieu d'utiliser une pré\-dépendance, il est
 possible de ne lancer le programme que si on a la certitude que la commande
 nécessaire est gérée par la version actuellement installée de dpkg\ :
 .P
-    if dpkg\-maintscript\-helper supports <command>; then
-        dpkg\-maintscript\-helper <command> ...
+    if dpkg\-maintscript\-helper supports \fIcommand\fP; then
+        dpkg\-maintscript\-helper \fIcommand\fP ...
     fi
 .
 .SH AUTEURS

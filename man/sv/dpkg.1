@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2011\-02\-05 Debianprojektet Dpkg\-sviten
+.TH dpkg 1 2011\-08\-14 Debianprojektet Dpkg\-sviten
 .SH NAMN
 dpkg \- en mellannivåpakethanterare för Debian
 .
 .SH SYNOPS
-\fBdpkg\fP [\fIflaggor\fP] \fIåtgärd\fP
+\fBdpkg\fP [\fIflagga\fP...] \fIåtgärd\fP
 .
 .SH VARNING
 Manualen är avsedd för användare som vill få en mer detaljerad förståelse
@@ -27,20 +27,12 @@ kommandoradsparametrar, vilka består av exakt en åtgärd och noll eller fler
 flaggor. Åtgärdsparametern talar om för dpkg vad som skall göras, och
 flaggorna styr på vilket sätt åtgärden skall utföras.
 
-\fBdpkg\fP kan även användas som ett skal runt \fBdpkg\-deb\fP(1). Följande är
-åtgärder för \fBdpkg\-deb\fP, och om de upptäcks kör \fBdpkg\fP helt enkelt
-\fBdpkg\-deb\fP med de parametrar som angivits:
-.nf
-    \fB\-b\fP, \fB\-\-build\fP,
-    \fB\-c\fP, \fB\-\-contents\fP,
-    \fB\-I\fP, \fB\-\-info\fP,
-    \fB\-f\fP, \fB\-\-field\fP,
-    \fB\-e\fP, \fB\-\-control\fP,
-    \fB\-x\fP, \fB\-\-extract\fP,
-    \fB\-X\fP, \fB\-\-vextract\fP, och
-    \fB\-\-fsys\-tarfile\fP.
-.fi
-Se \fBdpkg\-deb\fP(1) för information om dessa åtgärder.
+\fBdpkg\fP kan också användas som ett skal runt \fBdpkg\-deb\fP(1) och
+\fBdpkg\-query\fP(1). En förteckning över tillgängliga åtgärder beskrivs nedan i
+stycket \fBÅTGÄRDER\fP. Om \fBdpkg\fP upptäcker en sådan åtgärd anropas bara
+\fBdpkg\-dpkg\fP eller \fBdpkg\-query\fP med de givna flaggorna, men inga specifika
+flaggor sänds direkt till dem, för att använda sådana flaggor måste
+bakgrundsprogrammen anropas direkt.
 .
 .SH "INFORMATION OM PAKET"
 \fBdpkg\fP upprätthåller viss användbar information om tillgängliga
@@ -222,8 +214,8 @@ visas om inte ett mönster anges.
 .TP 
 \fB\-\-set\-selections\fP
 Sätt paketvalslistan med den fil som läses från standard in. Filen måste
-vara på formatet "<paket> <status>", där status är en av
-install, hold, deinstall eller purge. Tomrader och kommentarsrader som
+vara på formatet "\fIpaket\fP \fIstatus\fP", där status är en av \fBinstall\fP,
+\fBhold\fP, \fBdeinstall\fP eller \fBpurge\fP. Tomrader och kommentarsrader som
 börjar med "#" är också tillåtna.
 .TP 
 \fB\-\-clear\-selections\fP
@@ -250,8 +242,8 @@ hanterar tom version som om den är senare än alla andra versioner: \fBlt\-nl
 le\-nl ge\-nl gt\-nl\fP. Dessa tillhandahålls endast för kompatibilitet med
 styrfilssyntaxen: \fB< << <= = >= >> >\fP.
 .TP 
-\fB\-\-command\-fd \fP\fI<n>\fP
-Läser en följd av kommandon från indatafilhandtag \fI<n>\fP. Observera:
+\fB\-\-command\-fd \fP\fIn\fP
+Läser en följd av kommandon från indatafilhandtag \fIn\fP. Observera:
 ytterligare flaggor som sätts på kommandoraden, och genom filhandtaget,
 återställs inte för kommandon som körs i en följd under samma körning.
 .TP 
@@ -330,20 +322,20 @@ Aktiverar felsökning. \fIoktalvärde\fPt skapas genom att utföra bitvis logisk
 kan ändras i framtida versioner). \fB\-Dh\fP eller \fB\-\-debug=help\fP visar dessa
 felsökningsvärden.
 
-    Number   Description
-         1   Generally helpful progress information
-         2   Invocation and status of maintainer scripts
-        10   Output for each file processed
-       100   Lots of output for each file processed
-        20   Output for each configuration file
-       200   Lots of output for each configuration file
-        40   Dependencies and conflicts
-       400   Lots of dependencies/conflicts output
-     10000   Trigger activation and processing
-     20000   Lots of output regarding triggers
-     40000   Silly amounts of output regarding triggers
-      1000   Lots of drivel about e.g. the dpkg/info dir
-      2000   Insane amounts of drivel
+    Tal   Beskrivning
+      1   Allmänt hjälpsam förloppsinformation
+      2   Anrop och status för utvecklarskript
+     10   Utdata för varje fil som hanteras
+    100   Massvis med utdata för varje fil som hanteras
+     20   Utdata för varje konfigurationsfil
+    200   Massvis med utdata för varje konfigurationsfil
+     40   Beroenden och konflikter
+    400   Massvis av beroende\-/konfliktutdata
+  10000   Aktivering och hantering av utlösare
+  20000   Massvis av utdata om utlösare
+  40000   Dumma mängder utdata om utlösare
+   1000   Massvis av pladder om bl.a dpkg/info\-katalogen
+   2000   Knäppa mängder pladder
 .TP 
 \fB\-\-force\-\fP\fIsaker\fP | \fB\-\-no\-force\-\fP\fIsaker\fP | \fB\-\-refuse\-\fP\fIsaker\fP
 
@@ -436,7 +428,10 @@ inte utför synkronisering före atomära namnbyten.
 \fIVarning: Den här flaggan kan ge bättre prestanda på bekostnad av
 dataförluster, använd med tillförsikt.\fP
 
-\fBarchitecture\fP: Process even packages with wrong or no architecture.
+\fBarchitecture\fP: Hantera även paket med fel eller saknad
+maskinvaruarkitektur.
+
+\fBbad\-version\fP: Hantera även paket med fel versioner.
 
 \fBbad\-path\fP: Sökvägen i \fBPATH\fP saknar viktiga program, så problem är
 troliga.
@@ -450,14 +445,6 @@ troliga.
 \fB\-\-ignore\-depends\fP=\fIpaket\fP,...
 Ignorera beroendekontroll för angivna paket (i verkligheten utförs
 kontrollen, men det ges endast varningar, ingenting annat).
-.TP 
-\fB\-\-new\fP, \fB\-\-old\fP
-Välj det nya eller gamla binärpaketformatet. Detta är en flagga till
-\fBdpkg\-deb\fP(1).
-.TP 
-\fB\-\-nocheck\fP
-Varken läs eller kontrollera innehållet i control\-filen när paket
-skapas. Detta är en flagga till \fBdpkg\-deb\fP(1).
 .TP 
 \fB\-\-no\-act\fP, \fB\-\-dry\-run\fP, \fB\-\-simulate\fP
 Gör allting som efterfrågas, men skriv inte några ändringar. Detta används
@@ -561,8 +548,8 @@ för rad, i följande format:
 Paketstatus ändrad; \fIstatus\fP är som i statusfilen.
 .TP 
 \fBstatus: \fP\fIpaket\fP\fB : error : \fP\fIutökat\-felmeddelande\fP
-An error occurred. Any possible newlines in \fIextended\-error\-message\fP will
-be converted to spaces before output.
+Ett fel uppstod. Eventuella nyradstecken i \fIutökat\-felmeddelanden\fP kommer
+ersättas med blanksteg innan de skrivs ut.
 .TP 
 \fBstatus: \fP\fIfil\fP\fB : conffile\-prompt : '\fP\fIriktig\-gammal\fP\fB' '\fP\fIriktig\-ny\fP\fB' \fP\fIanvändarredigerad\fP\fB \fP\fIdistredigerad\fP
 Användaren får en fråga om konfigurationsfiler.
@@ -573,22 +560,22 @@ Sänds precis innan ett hanteringsskede påbörjas. \fISkede\fP är något av
 \fBtrigproc\fP, \fBdisappear\fP, \fBremove\fP, \fBpurge\fP.
 .RE
 .TP 
-\fB\-\-status\-logger\fP=\fIcommand\fP
-Send machine\-readable package status and progress information to the shell
-\fIcommand\fP's standard input. This option can be specified multiple
-times. The output format used is the same as in \fB\-\-status\-fd.\fP
+\fB\-\-status\-logger\fP=\fIkommando\fP
+Sänd maskinläsbar paketstatus och förloppsinformation till
+skal\-\fIkommando\fPts standard in. Flaggan kan anges flera
+gånger. Utdataformatet som används är detsamma som för \fB\-\-status\-fd\fP.
 .RE
 .TP 
 \fB\-\-log=\fP\fIfilnamn\fP
 Logga statusändringsmeddelanden och kommandon till \fIfilnamn\fP, istället för
 förvalet \fI/var/log/dpkg.log\fP. Om flaggan ges flera gånger används det sista
 filnamnet. Loggmeddelanden är på formen "ÅÅÅÅ\-MM\-DD HH:MM:SS status
-<tillstånd> <paket> <installerad\-version>" för
-statusändringar; "ÅÅÅÅ\-MM\-DD HH:MM:SS <kommando> <paket>
-<installerad\-version> <tillgänglig\-version>" för kommandon
-där \fI<kommando>\fP är ett av install, upgrade, remove eller purge;
-samt "ÅÅÅÅ\-MM\-DD HH:MM:SS conffile <filnamn> <val>" för
-konfigurationsfilsändringar där \fI<val\fP antingen är install eller keep.
+\fItillstånd\fP \fIpaket\fP \fIinstallerad\-version\fP" för statusändringar;
+"ÅÅÅÅ\-MM\-DD HH:MM:SS \fIåtgärd\fP \fIpaket\fP \fIinstallerad\-versiont\fP
+\fItillgänglig\-version\fP" för åtgärder där \fIåtgärd\fP är ett av \fBinstall\fP,
+\fBupgrade\fP, \fBremove\fP, \fBpurge\fP; samt "ÅÅÅÅ\-MM\-DD HH:MM:SS conffile
+\fIfilnamn\fP \fIval\fP" för konfigurationsfilsändringar där \fIval\fP antingen är
+\fBinstall\fP eller \fBkeep\fP.
 .TP 
 \fB\-\-no\-debsig\fP
 Försök inte verifiera paketsignaturer.

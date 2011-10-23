@@ -3,15 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dselect 1 2010\-03\-07 Debianprojektet Debian
+.TH dselect 1 2011\-08\-14 Debianprojektet Debian
 .SH NAMN
 dselect \- Debians pakethanteringsskal
 .
 .SH SYNOPS
-\fBdselect\fP [\fB\-\-admindir\fP \fI<katalog>\fP] [\fB\-\-help\fP] [\fB\-\-version\fP]
-[\fB\-\-expert\fP] [\fB\-\-debug\fP|\fB\-D\fP\fI<fil>\fP] [\fI<handling>\fP]
-[\fB\-\-colour\fP|\fB\-\-color\fP
-\fIskärmdel\fP:[\fIförgrund\fP],[\fIbakgrund\fP][\fI:attr\fP[\fI+attr+..\fP]]]
+\fBdselect\fP [\fIflagga\fP...] [\fIåtgärd\fP]
 .
 .SH BESKRIVNING
 \fBdselect\fP
@@ -48,13 +45,13 @@ kommandoraden, men utan inledande bindestreck) eller en kommentar (om den
 börjar med ett \fB#\fP).
 .br
 .TP 
-\fB\-\-admindir\fP\fI <katalog>\fP
+\fB\-\-admindir\fP\fI katalog\fP
 Ändrar namnet på katalogen där dpkg letar efter filerna "status",
 "available" m.fl. Förval är \fI/var/lib/dpkg\fP och du bör normalt sett inte
 behöva ändra det.
 .TP 
-\fB\-\-debug\fP\fI <fil> \fP|\fI \fP\fB\-D\fP\fI<fil>\fP
-Slå på felsökningsläge. Felsökningsinformation lagras i \fI<fil>\fP.
+\fB\-\-debug\fP\fI fil \fP|\fI \fP\fB\-D\fP\fIfil\fP
+Slå på felsökningsläge. Felsökningsinformation lagras i \fIfil\fP.
 .TP 
 \fB\-\-expert\fP
 Slår på expertläge, dvs. visar inte hjälpmeddelanden som kanske kan vara
@@ -123,16 +120,17 @@ Visar en kort hjälptext och ger lyckat avslut.
 \fB\-\-version\fP
 Visar versionsinformation och ger lyckat avslut.
 .
-.SH ANVÄNDNING
-När \fBdselect\fP startas interaktivt visas en meny för användaren med
-tillgängliga handlingar:
+.SH ÅTGÄRDER
+När \fBdselect\fP startas kan det utföra följande åtgärder, antingen direkt om
+de anges på kommandoraden eller genom att fråga användaren med en meny om
+det körs interaktivt:
 .SS "Access (Åtkomst)"
 Väljer och konfigurerar en "åtkomstmetod" för att komma åt paketsamlingen.
 .sp
-Som standard ger \fBdselect\fP flera olika metoder, såsom \fIfloppy\fP (diskett),
-\fIharddisk\fP (hårddisk) och \fIcdrom\fP, men andra paket du installerar kan
-tillhandahålla ytterligare metoder, t.ex ges åtkomstmetoden \fIapt\fP av
-paketet \fBapt\fP och \fImulti_cd\fP av \fBdpkg\-multicd\fP.
+Som standard ger \fBdselect\fP flera olika metoder, såsom \fIcdrom\fP,
+\fImulti_cd\fP, \fInfs\fP, \fImulti_nfs\fP, \fIharddisk\fP, \fImounted\fP, \fImulti_mount\fP,
+\fIfloppy\fP och \fIftp\fP, men andra paket du installerar kan tillhandahålla
+ytterligare metoder, t.ex ges åtkomstmetoden \fIapt\fP av paketet \fBapt\fP.
 .sp
 Åtkomstmetoden \fIapt\fP rekommenderas starkt.
 .sp

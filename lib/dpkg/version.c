@@ -21,7 +21,7 @@
 #include <config.h>
 #include <compat.h>
 
-#include <dpkg/dpkg-db.h>
+#include <dpkg/version.h>
 
 void
 blankversion(struct versionrevision *version)
@@ -29,4 +29,12 @@ blankversion(struct versionrevision *version)
 	version->epoch = 0;
 	version->version = NULL;
 	version->revision = NULL;
+}
+
+bool
+informativeversion(const struct versionrevision *version)
+{
+	return (version->epoch ||
+	        (version->version && *version->version) ||
+	        (version->revision && *version->revision));
 }

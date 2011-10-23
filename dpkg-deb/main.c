@@ -42,7 +42,7 @@
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
 #include <dpkg/compress.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "dpkg-deb.h"
 
@@ -79,6 +79,8 @@ usage(const struct cmdinfo *cip, const char *value)
 "  -e|--control <deb> [<directory>] Extract control info.\n"
 "  -x|--extract <deb> <directory>   Extract files.\n"
 "  -X|--vextract <deb> <directory>  Extract & list files.\n"
+"  -R|--raw-extract <deb> <directory>\n"
+"                                   Extract control info and files.\n"
 "  --fsys-tarfile <deb>             Output filesystem tarfile.\n"
 "\n"));
 
@@ -96,6 +98,7 @@ usage(const struct cmdinfo *cip, const char *value)
   printf(_(
 "Options:\n"
 "  --showformat=<format>            Use alternative format for --show.\n"
+"  -v, --verbose                    Enable verbose output.\n"
 "  -D                               Enable debugging output.\n"
 "  --old, --new                     Select archive format.\n"
 "  --nocheck                        Suppress control file check (build bad\n"
@@ -125,12 +128,12 @@ usage(const struct cmdinfo *cip, const char *value)
   exit(0);
 }
 
-const char thisname[]= BACKEND;
-const char printforhelp[]=
+static const char printforhelp[] =
   N_("Type dpkg-deb --help for help about manipulating *.deb files;\n"
      "Type dpkg --help for help about installing and deinstalling packages.");
 
 int debugflag=0, nocheckflag=0, oldformatflag=BUILDOLDPKGFORMAT;
+int opt_verbose = 0;
 struct compressor *compressor = &compressor_gzip;
 int compress_level = -1;
 
@@ -166,12 +169,14 @@ static const struct cmdinfo cmdinfos[]= {
   ACTION("field",         'f', 0, do_field),
   ACTION("extract",       'x', 0, do_extract),
   ACTION("vextract",      'X', 0, do_vextract),
+  ACTION("raw-extract",   'R', 0, do_raw_extract),
   ACTION("fsys-tarfile",  0,   0, do_fsystarfile),
   ACTION("show",          'W', 0, do_showinfo),
 
   { "new",           0,   0, &oldformatflag, NULL,         NULL,          0 },
   { "old",           0,   0, &oldformatflag, NULL,         NULL,          1 },
   { "debug",         'D', 0, &debugflag,     NULL,         NULL,          1 },
+  { "verbose",       'v', 0, &opt_verbose,   NULL,         NULL,          1 },
   { "nocheck",       0,   0, &nocheckflag,   NULL,         NULL,          1 },
   { "compression",   'z', 1, NULL,           NULL,         set_compress_level },
   { "compress_type", 'Z', 1, NULL,           NULL,         setcompresstype  },
@@ -186,12 +191,13 @@ int main(int argc, const char *const *argv) {
 
   setlocale(LC_NUMERIC, "POSIX");
   if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
-     setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
 
+  dpkg_set_progname(BACKEND);
   standard_startup();
-  myopt(&argv, cmdinfos);
+  myopt(&argv, cmdinfos, printforhelp);
 
   if (!cipaction) badusage(_("need an action option"));
 

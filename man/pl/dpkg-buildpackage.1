@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-buildpackage 1 2010\-07\-29 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-buildpackage 1 2011\-08\-14 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-buildpackage \- buduje pakiety ¼ród³owe lub binarne ze ¼róde³
 .
 .SH SK£ADNIA
-\fBdpkg\-buildpackage\fP [\fIopcje\fP]
+\fBdpkg\-buildpackage\fP [\fIoption\fP...]
 .
 .SH OPIS
 \fBdpkg\-buildpackage\fP jest programem automatyzuj±cym proces budowania pakietu
@@ -29,11 +29,11 @@ siê opcji \fB\-nc\fP).
 It calls \fBdpkg\-source \-b\fP to generate the source package (unless a
 binary\-only build has been requested with \fB\-b\fP, \fB\-B\fP or \fB\-A\fP).
 .IP \fB5.\fP 3
-Wywo³uje \fBdebian/rules\fP \fBbuild\fP, a nastêpnie \fBfakeroot debian/rules\fP
-\fIbinary\-target\fP (chyba ¿e ¿±dano tylko zbudowania pakietu ¼ród³owego,
-podaj±c opcjê \fB\-S\fP). Proszê zauwa¿yæ, ¿e \fIbinary\-target\fP ma warto¶æ
-\fBbinary\fP (domy¶lnie, lub gdy podano \fB\-b\fP), \fBbinary\-arch\fP (je¶li podano
-\fB\-B\fP) lub \fBbinary\-indep\fP (je¶li podano \fB\-A\fP).
+It calls \fBdebian/rules\fP \fBbuild\fP followed by \fBfakeroot debian/rules\fP
+\fIbinary\-target\fP (unless a source\-only build has been requested with
+\fB\-S\fP). Note that \fIbinary\-target\fP is either \fBbinary\fP (default case, or if
+\fB\-b\fP is specified)  or \fBbinary\-arch\fP (if \fB\-B\fP is specified) or
+\fBbinary\-indep\fP (if \fB\-A\fP is specified).
 .IP \fB6.\fP 3
 Wywo³uje \fBgpg\fP aby podpisaæ plik \fB.dsc\fP (je¶li jest, chyba ¿e podano opcjê
 \fB\-us\fP).
@@ -217,25 +217,25 @@ Wy¶wietla informacjê o u¿ytkowaniu i koñczy dzia³anie.
 Wy¶wietla informacjê o wersji i pomy¶lnie koñczy dzia³anie.
 .
 .SH ¦RODOWISKO
-Even if \fBdpkg\-buildpackage\fP export some variables, \fBdebian/rules\fP should
+Even if \fBdpkg\-buildpackage\fP exports some variables, \fBdebian/rules\fP should
 not rely on their presence and should instead use the respective interface
 to retrieve the needed values.
 .SS "Zmienne ustawiane przez dpkg\-architecture"
 Wywo³uje program \fBdpkg\-architecture\fP z przekazaniem parametrów \fB\-a\fP oraz
 \fB\-t\fP. Wszystkie zmienne uzyskane na wyj¶ciu dziêki jego opcji \fB\-s\fP s±
 do³±czane do ¶rodowiska budowania.
-.SS "Flagi kompilatora"
-The \fBCFLAGS\fP, \fBCXXFLAGS\fP, \fBFFLAGS\fP, \fBCPPFLAGS\fP and \fBLDFLAGS\fP
-environment variables are set to the values that \fBdpkg\-buildflags\fP
-returned. See its manual page for more information.
+.SS "Compiler flags are no longer exported"
+Between versions 1.14.17 and 1.16.1, \fBdpkg\-buildpackage\fP exported compiler
+flags (\fBCFLAGS\fP, \fBCXXFLAGS\fP, \fBFFLAGS\fP, \fBCPPFLAGS\fP and \fBLDFLAGS\fP) with
+values as returned by \fBdpkg\-buildflags\fP. This is no longer the case.
 .
 .SH B£ÊDY
 Powinno byæ mo¿liwe podanie spacji, metaznaków pow³oki oraz argumentów dla
 \fIgain\-root\-command\fP oraz \fIsign\-command\fP.
 .
 .SH "ZOBACZ TAK¯E"
-\fBdpkg\-source\fP(1), \fBdpkg\-architecture\fP(1), \fBdpkg\-genchanges\fP(1),
-\fBfakeroot\fP(1), \fBgpg\fP(1).
+\fBdpkg\-source\fP(1), \fBdpkg\-architecture\fP(1), \fBdpkg\-buildflags\fP(1),
+\fBdpkg\-genchanges\fP(1), \fBfakeroot\fP(1), \fBgpg\fP(1).
 .
 .SH AUTORZY
 Copyright \(co 1995\-1996 Ian Jackson

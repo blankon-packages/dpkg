@@ -1,4 +1,4 @@
-# Copyright © 2008-2009 Raphaël Hertzog <hertzog@debian.org>
+# Copyright © 2008-2011 Raphaël Hertzog <hertzog@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,14 +29,13 @@ use Dpkg::ErrorHandling;
 use Dpkg::Source::Patch;
 use Dpkg::Source::Functions qw(erasedir fs_time);
 use Dpkg::IPC;
-use Dpkg::Vendor qw(get_current_vendor run_vendor_hook);
-use Dpkg::Control;
-use Dpkg::Changelog::Parse;
+use Dpkg::Vendor qw(get_current_vendor);
 
 use POSIX;
 use File::Basename;
 use File::Spec;
 use File::Path;
+use File::Copy;
 
 our $CURRENT_MINOR_VERSION = "0";
 
@@ -55,6 +54,8 @@ sub parse_cmdline_option {
     return 1 if $self->SUPER::parse_cmdline_option($opt);
     if ($opt =~ /^--single-debian-patch$/) {
         $self->{'options'}{'single-debian-patch'} = 1;
+        # For backwards compatibility.
+        $self->{'options'}{'auto_commit'} = 1;
         return 1;
     } elsif ($opt =~ /^--allow-version-of-quilt-db=(.*)$/) {
         push @{$self->{'options'}{'allow-version-of-quilt-db'}}, $1;
@@ -217,6 +218,15 @@ sub apply_patches {
     }
     return unless scalar(@$patches);
 
+    if ($opts{'usage'} eq "preparation") {
+        # We're applying the patches in --before-build, remember to unapply
+        # them afterwards in --after-build
+        my $pc_unapply = File::Spec->catfile($dir, ".pc", ".dpkg-source-unapply");
+        open(UNAPPLY, ">", $pc_unapply) ||
+            syserr(_g("cannot write %s"), $pc_unapply);
+        close(UNAPPLY);
+    }
+
     # Apply patches
     my $pc_applied = File::Spec->catfile($dir, ".pc", "applied-patches");
     my @applied = $self->read_patch_list($pc_applied);
@@ -262,7 +272,7 @@ sub prepare_build {
     # stamp file created by ourselves
     my $func = sub {
         return 1 if $_[0] =~ m{^debian/patches/series$} and -l $_[0];
-        return 1 if $_[0] =~ /^.pc(\/|$)/;
+        return 1 if $_[0] =~ /^\.pc(\/|$)/;
         return 1 if $_[0] =~ /$self->{'options'}{'diff_ignore_regexp'}/;
         return 0;
     };
@@ -292,6 +302,15 @@ sub do_build {
     $self->SUPER::do_build($dir);
 }
 
+sub after_build {
+    my ($self, $dir) = @_;
+    my $pc_unapply = File::Spec->catfile($dir, ".pc", ".dpkg-source-unapply");
+    if (-e $pc_unapply or $self->{'options'}{'unapply_patches'}) {
+        unlink($pc_unapply);
+        $self->unapply_patches($dir);
+    }
+}
+
 sub check_patches_applied {
     my ($self, $dir) = @_;
     my $pc_applied = File::Spec->catfile($dir, ".pc", "applied-patches");
@@ -307,16 +326,15 @@ sub check_patches_applied {
                                               $to_apply[0]);
         my $patch_obj = Dpkg::Source::Patch->new(filename => $first_patch);
         if ($patch_obj->check_apply($dir)) {
-            warning(_g("patches have not been applied, applying them now " .
-                       "(use --no-preparation to override)"));
+            info(_g("patches are not applied, applying them now"));
             $self->apply_patches($dir, usage => 'preparation', verbose => 1,
                                  patches => \@to_apply);
         }
     }
 }
 
-sub register_autopatch {
-    my ($self, $dir) = @_;
+sub register_patch {
+    my ($self, $dir, $tmpdiff, $patch_name) = @_;
 
     sub add_line {
         my ($file, $line) = @_;
@@ -335,81 +353,47 @@ sub register_autopatch {
         close(FILE);
     }
 
-    my $auto_patch = $self->get_autopatch_name();
     my @patches = $self->get_patches($dir);
-    my $has_patch = (grep { $_ eq $auto_patch } @patches) ? 1 : 0;
+    my $has_patch = (grep { $_ eq $patch_name } @patches) ? 1 : 0;
     my $series = $self->get_series_file($dir);
     $series ||= File::Spec->catfile($dir, "debian", "patches", "series");
     my $applied = File::Spec->catfile($dir, ".pc", "applied-patches");
-    my $patch = File::Spec->catfile($dir, "debian", "patches", $auto_patch);
+    my $patch = File::Spec->catfile($dir, "debian", "patches", $patch_name);
+
+    if (-s $tmpdiff) {
+        copy($tmpdiff, $patch) ||
+            syserr(_g("failed to copy %s to %s"), $tmpdiff, $patch);
+        chmod(0666 & ~ umask(), $patch) ||
+            syserr(_g("unable to change permission of `%s'"), $patch);
+    } elsif (-e $patch) {
+        unlink($patch) || syserr(_g("cannot remove %s"), $patch);
+    }
 
     if (-e $patch) {
         $self->create_quilt_db($dir);
-        # Add auto_patch to series file
+        # Add patch to series file
         if (not $has_patch) {
-            add_line($series, $auto_patch);
-            add_line($applied, $auto_patch);
+            add_line($series, $patch_name);
+            add_line($applied, $patch_name);
         }
         # Ensure quilt meta-data are created and in sync with some trickery:
         # reverse-apply the patch, drop .pc/$patch, re-apply it
         # with the correct options to recreate the backup files
         my $patch_obj = Dpkg::Source::Patch->new(filename => $patch);
         $patch_obj->apply($dir, add_options => ['-R', '-E'], verbose => 0);
-        erasedir(File::Spec->catdir($dir, ".pc", $auto_patch));
-        $self->apply_quilt_patch($dir, $auto_patch);
+        erasedir(File::Spec->catdir($dir, ".pc", $patch_name));
+        $self->apply_quilt_patch($dir, $patch_name);
     } else {
         # Remove auto_patch from series
         if ($has_patch) {
-            drop_line($series, $auto_patch);
-            drop_line($applied, $auto_patch);
-            erasedir(File::Spec->catdir($dir, ".pc", $auto_patch));
+            drop_line($series, $patch_name);
+            drop_line($applied, $patch_name);
+            erasedir(File::Spec->catdir($dir, ".pc", $patch_name));
         }
         # Clean up empty series
-        unlink($series) if not -s $series;
+        unlink($series) if -z $series;
     }
-}
-
-sub get_patch_header {
-    my ($self, $dir, $previous) = @_;
-    my $ph = File::Spec->catfile($dir, "debian", "source", "patch-header");
-    my $text;
-    if (-f $ph) {
-        open(PH, "<", $ph) || syserr(_g("cannot read %s"), $ph);
-        $text = join("", <PH>);
-        close(PH);
-        return $text;
-    }
-    my $ch_info = changelog_parse(offset => 0, count => 1,
-        file => File::Spec->catfile($dir, "debian", "changelog"));
-    return '' if not defined $ch_info;
-    return $self->SUPER::get_patch_header($dir, $previous)
-        if $self->{'options'}{'single-debian-patch'};
-    my $header = Dpkg::Control->new(type => CTRL_UNKNOWN);
-    $header->{'Description'} = "Upstream changes introduced in version " .
-                               $ch_info->{'Version'} . "\n";
-    $header->{'Description'} .=
-"This patch has been created by dpkg-source during the package build.
-Here's the last changelog entry, hopefully it gives details on why
-those changes were made:\n";
-    $header->{'Description'} .= $ch_info->{'Changes'} . "\n";
-    $header->{'Description'} .=
-"\nThe person named in the Author field signed this changelog entry.\n";
-    $header->{'Author'} = $ch_info->{'Maintainer'};
-    $text = "$header";
-    run_vendor_hook("extend-patch-header", \$text, $ch_info);
-    $text .= "\n---
-The information above should follow the Patch Tagging Guidelines, please
-checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
-are templates for supplementary fields that you might want to add:
-
-Origin: <vendor|upstream|other>, <url of original patch>
-Bug: <url in upstream bugtracker>
-Bug-Debian: http://bugs.debian.org/<bugnumber>
-Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
-Forwarded: <no|not-needed|url proving that it has been forwarded>
-Reviewed-By: <name and email of someone who approved the patch>
-Last-Update: <YYYY-MM-DD>\n\n";
-    return $text;
+    return $patch;
 }
 
 # vim:et:sw=4:ts=8

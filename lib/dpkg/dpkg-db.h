@@ -29,15 +29,10 @@
 
 #include <dpkg/macros.h>
 #include <dpkg/varbuf.h>
+#include <dpkg/version.h>
 #include <dpkg/arch.h>
 
 DPKG_BEGIN_DECLS
-
-struct versionrevision {
-  unsigned long epoch;
-  const char *version;
-  const char *revision;
-};
 
 enum deptype {
   dep_suggests,
@@ -268,7 +263,6 @@ void modstatdb_shutdown(void);
 void pkgset_blank(struct pkgset *set);
 void pkg_blank(struct pkginfo *pp);
 void pkgbin_blank(struct pkgbin *pifp, bool keep_arch);
-void blankversion(struct versionrevision*);
 bool pkg_is_informative(struct pkginfo *pkg, struct pkgbin *info);
 
 struct pkginfo *pkg_db_find_pkg(const char *name, const struct dpkg_arch *arch);
@@ -297,8 +291,10 @@ enum parsedbflags {
   pdb_ignorefiles = 010,
   /* Ignore packages with older versions already read. */
   pdb_ignoreolder = 020,
+  /* Perform laxer version parsing. */
+  pdb_lax_version_parser = 040,
   /* Perform laxer parsing, used to transition to stricter parsing. */
-  pdb_lax_parser = 040,
+  pdb_lax_parser = pdb_lax_version_parser,
 };
 
 const char *pkg_name_is_illegal(const char *p, const char **ep);
@@ -319,12 +315,13 @@ extern const struct namevalue statusinfos[];
 extern const struct namevalue eflaginfos[];
 extern const struct namevalue wantinfos[];
 
-bool informativeversion(const struct versionrevision *version);
+#include <dpkg/error.h>
 
 enum versiondisplayepochwhen { vdew_never, vdew_nonambig, vdew_always };
 void varbufversion(struct varbuf*, const struct versionrevision*,
                    enum versiondisplayepochwhen);
-const char *parseversion(struct versionrevision *rversion, const char*);
+int parseversion(struct versionrevision *rversion, const char *,
+                 struct dpkg_error *err);
 const char *versiondescribe(const struct versionrevision*,
                             enum versiondisplayepochwhen);
 
@@ -347,7 +344,14 @@ const char *pkg_describe(const struct pkginfo *pkg, enum pkg_describe_opts pdo);
 void writerecord(FILE*, const char*,
                  const struct pkginfo *, const struct pkgbin *);
 
-void writedb(const char *filename, bool available, bool mustsync);
+enum writedb_flags {
+  /* Dump ‘available’ in-core structures, not ‘status’. */
+  wdb_dump_available = 001,
+  /* Must sync the written file. */
+  wdb_must_sync = 002,
+};
+
+void writedb(const char *filename, enum writedb_flags flags);
 
 /* Note: The varbufs must have been initialized and will not be
  * NUL-terminated. */

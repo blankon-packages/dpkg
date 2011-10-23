@@ -38,21 +38,19 @@
 #include <dpkg/i18n.h>
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 #include <dpkg/trigdeferred.h>
 #include <dpkg/triglib.h>
 #include <dpkg/pkg-spec.h>
 
-const char thisname[] = "dpkg-trigger";
-
-const char printforhelp[] = N_(
+static const char printforhelp[] = N_(
 "Type dpkg-trigger --help for help about this utility.");
 
 static void DPKG_ATTR_NORET
 printversion(const struct cmdinfo *ci, const char *value)
 {
 	printf(_("Debian %s package trigger utility version %s.\n"),
-	       thisname, DPKG_VERSION_ARCH);
+	       dpkg_get_progname(), DPKG_VERSION_ARCH);
 
 	printf(_(
 "This is free software; see the GNU General Public License version 2 or\n"
@@ -69,7 +67,7 @@ usage(const struct cmdinfo *ci, const char *value)
 	printf(_(
 "Usage: %s [<options> ...] <trigger-name>\n"
 "       %s [<options> ...] <command>\n"
-"\n"), thisname, thisname);
+"\n"), dpkg_get_progname(), dpkg_get_progname());
 
 	printf(_(
 "Commands:\n"
@@ -153,11 +151,11 @@ do_check(void)
 	switch (uf) {
 	case tdus_error_no_dir:
 		fprintf(stderr, _("%s: triggers data directory not yet created\n"),
-		        thisname);
+		        dpkg_get_progname());
 		exit(1);
 	case tdus_error_no_deferred:
 		fprintf(stderr, _("%s: trigger records not yet in existence\n"),
-		        thisname);
+		        dpkg_get_progname());
 		exit(1);
 	case tdus_ok:
 	case tdus_error_empty_deferred:
@@ -186,13 +184,14 @@ main(int argc, const char *const *argv)
 	enum trigdef_updateflags tduf;
 	struct pkg_spec pkgspec = PKG_SPEC_INIT(psf_def_native | psf_no_check);
 
-        if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
-           setlocale(LC_ALL, "");
+	if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+		setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 
+	dpkg_set_progname("dpkg-trigger");
 	standard_startup();
-	myopt(&argv, cmdinfos);
+	myopt(&argv, cmdinfos, printforhelp);
 
 	admindir = dpkg_db_set_dir(admindir);
 

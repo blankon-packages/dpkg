@@ -1,11 +1,10 @@
-.TH start\-stop\-daemon 8 "2011-03-04" "Debian Project" "dpkg utilities"
+.TH start\-stop\-daemon 8 "2011-07-04" "Debian Project" "dpkg utilities"
 .SH NAME
 start\-stop\-daemon \- start and stop system daemon programs
 .
 .SH SYNOPSIS
 .B start\-stop\-daemon
-.RI [ options ]
-.I command
+.RI [ option "...] " command
 .
 .SH DESCRIPTION
 .B start\-stop\-daemon
@@ -68,6 +67,10 @@ is specified). If
 is specified, then
 .B start\-stop\-daemon
 will check that the process(es) have terminated.
+.TP
+.BR \-T ", " \-\-status
+Check for the existence of a specified process, and returns an exit status
+code, according to the LSB Init Script Actions.
 .TP
 .BR \-H ", " \-\-help
 Show usage information and exit.
@@ -172,7 +175,7 @@ Return exit status 0 instead of 1 if no actions are (would be) taken.
 .BR \-q ", " \-\-quiet
 Do not print informational messages; only display error messages.
 .TP
-.BR \-c ", " \-\-chuid " \fIusername\fR|\fIuid\fP"
+.BR \-c ", " \-\-chuid " \fIusername\fR|\fIuid\fP[\fB:\fP\fIgroup\fR|\fIgid\fP]"
 Change to this username/uid before starting the process. You can also
 specify a group by appending a
 .BR : ,
@@ -254,21 +257,47 @@ option.
 Print verbose informational messages.
 .
 .SH EXIT STATUS
-.B start\-stop\-daemon
-returns 0 if the requested action was performed, or if
+.TP
+.B 0
+The requested action was performed. If
 .B \-\-oknodo
-is specified and either
+was specified, it's also possible that nothing had to be done.
+This can happen when
 .B \-\-start
-was specified and a matching process was already running, or
+was specified and a matching process was already running, or when
 .B \-\-stop
-was specified and there were no matching processes. If
+was specified and there were no matching processes.
+.TP
+.B 1
+If
 .B \-\-oknodo
-was not specified and nothing was done, 1 is returned. If
+was not specified and nothing was done.
+.TP
+.B 2
+If
 .B \-\-stop
 and
 .B \-\-retry
 were specified, but the end of the schedule was reached and the processes were
-still running, the error value is 2. For all other errors, the status is 3.
+still running.
+.TP
+.B 3
+Any other error.
+.PP
+When using the \fB\-\-status\fP command, the following status codes are
+returned:
+.TP
+.B 0
+Program is running.
+.TP
+.B 1
+Program is not running and the pid file exists.
+.TP
+.B 3
+Program is not running.
+.TP
+.B 4
+Unable to determine program status.
 .
 .SH EXAMPLE
 Start the \fBfood\fP daemon, unless one is already running (a process named

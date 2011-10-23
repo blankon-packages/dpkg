@@ -289,7 +289,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = po
+SUBDIRS = mk po
 bin_SCRIPTS = \
 	dpkg-architecture \
 	dpkg-buildflags \
@@ -1008,7 +1008,9 @@ uninstall-local:
 @BUILD_POD_DOC_TRUE@	done
 
 coverage: check
-	$(PERL_COVER) -silent -outputdir $(top_builddir)/doc/coverage/scripts
+	$(PERL_COVER) -silent \
+	  -ignore_re '^t/.*\.t' \
+	  -outputdir $(top_builddir)/doc/coverage/scripts
 
 coverage-clean:
 	rm -rf cover_db

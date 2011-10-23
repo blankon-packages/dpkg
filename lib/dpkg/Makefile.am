@@ -36,6 +36,7 @@ libdpkg_a_SOURCES = \
 	dir.c \
 	dump.c \
 	ehandle.c \
+	error.c \
 	fdio.c \
 	file.c \
 	fields.c \
@@ -44,9 +45,9 @@ libdpkg_a_SOURCES = \
 	log.c \
 	md5.c md5.h \
 	mlib.c \
-	myopt.c \
 	namevalue.c \
 	nfmalloc.c \
+	options.c \
 	parse.c \
 	parsehelp.c \
 	path.c \
@@ -58,11 +59,14 @@ libdpkg_a_SOURCES = \
 	pkg-queue.c \
 	pkg-show.c \
 	pkg-spec.c \
+	progname.c \
 	progress.c \
 	string.c \
 	subproc.c \
 	tarfn.c \
 	test.h \
+	trigname.c \
+	trignote.c \
 	triglib.c \
 	trigdeferred.l \
 	utils.c \
@@ -81,12 +85,13 @@ pkginclude_HEADERS = \
 	dpkg.h \
 	dpkg-db.h \
 	ehandle.h \
+	error.h \
 	fdio.h \
 	file.h \
 	glob.h \
 	macros.h \
-	myopt.h \
 	namevalue.h \
+	options.h \
 	parsedump.h \
 	path.h \
 	pkg.h \
@@ -96,10 +101,12 @@ pkginclude_HEADERS = \
 	pkg-queue.h \
 	pkg-show.h \
 	pkg-spec.h \
+	progname.h \
 	progress.h \
 	string.h \
 	subproc.h \
 	tarfn.h \
 	trigdeferred.h \
 	triglib.h \
-	varbuf.h
+	varbuf.h \
+	version.h

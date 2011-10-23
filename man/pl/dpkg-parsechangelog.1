@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-parsechangelog 1 2009\-05\-19 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-parsechangelog 1 2011\-08\-14 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-parsechangelog \- przetwarza pliki dzienników zmian Debiana
 .
 .SH SK£ADNIA
-\fBdpkg\-parsechangelog\fP [\fIopcje\fP]
+\fBdpkg\-parsechangelog\fP [\fIoption\fP...]
 .
 .SH OPIS
 \fBdpkg\-parsechangelog\fP czyta i przetwarza dziennik zmian rozpakowanego
@@ -51,23 +51,23 @@ za¿±dano wiêcej ni¿ jednego wpisu, to o ile nie podano inaczej \- wiêkszo¶æ
 pól jest brana z najnowszego wpisu:
 .RS
 .TP 
-\fBSource:\fP <nazwa pakietu>
+\fBSource:\fP\fI pkg\-name\fP
 .TP 
-\fBVersion:\fP <wersja>
+\fBVersion:\fP\fI version\fP
 .TP 
-\fBDistribution:\fP <dystrybucja docelowa>
+\fBDistribution:\fP\fI target\-distribution\fP
 .TP 
-\fBUrgency:\fP <wa¿no¶æ>
+\fBUrgency:\fP\fI urgency\fP
 Jest u¿ywana najwiêksza warto¶æ wa¿no¶ci ze wszystkich do³±czonych wpisów.
 .TP 
-\fBMaintainer:\fP <autor>
+\fBMaintainer:\fP\fI author\fP
 .TP 
-\fBDate:\fP <data>
+\fBDate:\fP\fI date\fP
 .TP 
-\fBCloses:\fP <number b³êdu>
+\fBCloses:\fP\fI bug\-number\fP
 Pola Closes wszystkich w³±czonych wpisów s± ³±czone.
 .TP 
-\fBChanges:\fP <wpisy dziennika zmian>
+\fBChanges:\fP\fI changelog\-entries\fP
 Tekst wszystkich wpisów dziennika zmian jest ³±czony. Aby uczyniæ to pole
 poprawnym wieloliniowym polem w formacie pliku kontrolnego Debiana,
 wszystkie puste linie s± zastêpowane pojedynczymi kropkami oraz jest

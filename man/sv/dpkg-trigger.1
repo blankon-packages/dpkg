@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-trigger 1 2009\-03\-15 Debianprojektet Dpkg\-sviten
+.TH dpkg\-trigger 1 2011\-08\-14 Debianprojektet Dpkg\-sviten
 .SH NAMN
 dpkg\-trigger \- ett verktyg för paketutlösare
 .
@@ -28,9 +28,10 @@ Okända utlösarnamnsyntaxer är ett fel för \fBdpkg\-trigger\fP.
 .TP 
 \fB\-\-check\-supported\fP
 Se om den \fBdpkg\fP som körs stöder utlösare (anropas vanligtvis från ett
-postinst\-skript). Avslutar med 0 om en \fBdpkg\fP med utlösarstöd har kört,
-eller 1 med ett felmeddelande på standard fel om inte. Det är dock normalt
-sett bättre att bara aktivera den önskade utlösaren med \fBdpkg\-trigger\fP.
+postinst\-skript). Avslutar med \fB0\fP om en \fBdpkg\fP med utlösarstöd har kört,
+eller \fB1\fP med ett felmeddelande på standard fel om inte. Det är dock
+normalt sett bättre att bara aktivera den önskade utlösaren med
+\fBdpkg\-trigger\fP.
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
 Visar hjälpskärm och avslutar.
@@ -45,7 +46,7 @@ Visar version och avslutar.
 .TP 
 \fB\-\-by\-package=\fP\fIpaket\fP
 Överstyr den som väntar på en utlösare (sätts vanligen av \fBdpkg\fP genom
-miljövariabeln DPKG_MAINTSCRIPT_PACKAGE i utvecklarskript, för att namnge
+miljövariabeln \fBDPKG_MAINTSCRIPT_PACKAGE\fP i utvecklarskript, för att namnge
 det paket som skriptet tillhör, och detta används som standard).
 .TP 
 \fB\-\-no\-await\fP
@@ -61,11 +62,10 @@ Bara testa, ändra inte på någonting.
 .SH MILJÖVARIABLER
 .TP 
 \fBDPKG_ADMINDIR\fP
-If set and the \fB\-\-admindir\fP option has not been specified, it will be used
-as the dpkg data directory.
+Om satt, och flaggan \fB\-\-admindir\fP inte har angivits, används värdet som
+datakatalog för dpkg.
 .
 .SH "SE ÄVEN"
 \fBdpkg\fP(1), \fBdeb\-triggers\fP(5), \fB/usr/share/doc/dpkg\-dev/triggers.txt.gz\fP.
-
 .SH "ÖVERSÄTTNING"
 Peter Krefting och Daniel Nylander.

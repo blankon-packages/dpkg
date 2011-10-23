@@ -4,7 +4,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-symbols 5 2007\-07\-16 Debianprojektet dpkg\-verktygen
+.TH deb\-symbols 5 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
 deb\-symbols \- Debians utökade informationsfil för delade bibliotek
 .
@@ -15,35 +15,35 @@ symbols
 Formatet för posterna med utökad beroendeinformation för delade bibliotek i
 dessa filer är:
 .PP
-<biblioteks\-sonamn> <huvudberoendemall>
+\fIbiblioteks\-sonamn huvudberoendemall\fP
 .br
-[ | <alternativ beroendemall> ]
-.br
-[ ? ]
-.br
-[ * <fältnamn>: <fältvärde> ]
+[ | \fIalternativ\-beroendemall\fP ]
 .br
 [ ? ]
- <symbol> <minsta version>[ <id för beroendemall> ]
+.br
+[ * \fIfältnamn\fP: \fIfältvärde\fP ]
+.br
+[ ? ]
+ \fIsymbol\fP \fIminsta\-version\fP[ \fIid för beroendemall\fP ]
 .P
 \fIBiblioteks\-sonamn\fP är det exakta värdet från SONAME\-fältet, som det
 exporteras från \fBobjdump\fP(1). En \fIberoendemall\fP är ett beroende där
-\fI#MINVER#\fP dynamiskt ersätts av en versionskontrollrad "(>= \fIminsta
-version\fP)" eller av ingenting (om ett ej versionsstyrt beroende anses
-tillräckligt).
+\fI#MINVER#\fP dynamiskt ersätts av en versionskontrollrad "(>=
+\fIminsta\-version\fP)" eller av ingenting (om ett ej versionsstyrt beroende
+anses tillräckligt).
 .P
 Varje exporterad \fIsymbol\fP (anges som \fInamn\fP@\fIversion\fP, där \fIversion\fP är
-"Base" om biblioteket inte är versionsstyrt) associeras med en \fIminsta
-version\fP i sin beroendemall (huvudberoendemallen används om \fIid för
-beroendemall\fP inte finns). Den första alternativa beroendemallen får nummer
-1, den andra 2, osv.
+"Base" om biblioteket inte är versionsstyrt) associeras med en
+\fIminsta\-version\fP i sin beroendemall (huvudberoendemallen används om
+\fIid\-för\-beroendemall\fP inte finns). Den första alternativa beroendemallen
+får nummer 1, den andra 2, osv.
 .P
 Alla poster i ett bibliotek kan även innehålla några fält med
 metainformation. Dessa fält lagras på rader som börjar med en asterisk. För
 närvarande är det enda giltiga fältet \fIBuild\-Depends\-Package\fP, vilket anger
 namnet på det "\-dev"\-paket som hör till biblioteket, och används av
-dpkg\-shlibdeps för att se till att det beroende som genereras är åtminstone
-lika strikt som motsvarande byggberoende.
+\fBdpkg\-shlibdeps\fP för att se till att det beroende som genereras är
+åtminstone lika strikt som motsvarande byggberoende.
 .SH EXEMPEL
 .SS "Enkla symbolfiler"
 .PP

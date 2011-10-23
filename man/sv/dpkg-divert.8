@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 2010\-10\-12 Debianprojektet dpkg\-verktygen
+.TH dpkg\-divert 8 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-divert \- överstyr ett pakets version av en fil
 .
 .SH SYNOPS
-\fBdpkg\-divert\fP [\fIflaggor\fP] \fIåtgärd\fP
+\fBdpkg\-divert\fP [\fIflagga\fP...] \fIåtgärd\fP
 .
 .SH BESKRIVNING
 \fBdpkg\-divert\fP är verktyget som används för att ställa in och uppdatera
@@ -78,8 +78,8 @@ Visar version och avslutar.
 .
 .SH ANTECKNINGAR
 Vid tillägg är standard \fB\-\-local\fP och \fB\-\-divert\fP
-\fI<original>.distrib\fP. Vid borttagning måste \fB\-\-package\fP eller
-\fB\-\-local\fP och \fB\-\-divert\fP matcha om de anges.
+\fIoriginal\fP\fB.distrib\fP. Vid borttagning måste \fB\-\-package\fP eller \fB\-\-local\fP
+och \fB\-\-divert\fP matcha om de anges.
 
 Kataloger kan inte omdirigeras med \fBdpkg\-divert\fP.
 
@@ -117,12 +117,12 @@ dpkg\-divert \-\-package wibble \-\-rename \-\-remove /usr/bin/exempel
 .SH MILJÖVARIABLER
 .TP 
 \fBDPKG_ADMINDIR\fP
-If set and the \fB\-\-admindir\fP option has not been specified, it will be used
-as the dpkg data directory.
+Om satt, och flaggan \fB\-\-admindir\fP inte har angivits, används värdet som
+datakatalog för dpkg.
 .TP 
 \fBDPKG_MAINTSCRIPT_PACKAGE\fP
-If set and the \fI\-\-local\fP and \fI\-\-package\fP options have not been specified,
-\fBdpkg\-divert\fP will use it as the package name.
+Om satt, och flaggorna \fB\-\-local\fP och \fB\-\-package\fP inte har angivits, kommer
+\fBdpkg\-divert\fP använda det som paketnamn.
 .
 .SH FILER
 .TP 

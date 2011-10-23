@@ -4,12 +4,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-gensymbols 1 2009\-08\-07 Debianprojektet dpkg\-verktygen
+.TH dpkg\-gensymbols 1 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-gensymbols \- generera symbolfiler (information om delade bibliotek)
 .
 .SH SYNOPS
-\fBdpkg\-gensymbols\fP [\fIflaggor\fP]
+\fBdpkg\-gensymbols\fP [\fIflagga\fP...]
 .
 .SH BESKRIVNING
 \fBdpkg\-gensymbols\fP söker genom en temporärt byggträd (som standard
@@ -60,6 +60,11 @@ versionen.
 Innan man applicerar en patch på symbolfilen bör de ansvariga dubbelchecka
 att den är korrekt. Publicerade symboler bör inte försvinna, så patchen bör
 ideellt sett bara lägga till nya rader.
+.P
+Obsevera att du kan skriva kommentarer i symbols\-filer: alla rader med "#"
+som första tecken är kommentarer, såvida inte det börjar med "#include" (se
+stycket \fBAnvända inkluderingar\fP). Rader som börjar med "#MISSING:" är
+speciella kommentarer som dokumenterar symboler som har försvunnit.
 .SS "Använda #PACKAGE#\-substituering"
 .P
 I några sällsynta fall skiljer sig namnet på biblioteket mellan
@@ -321,9 +326,9 @@ inkluderingsdirektiv som detta:
 .IP \(bu
 Inkluderingsdirektivet kan även taggas som alla andra symboler:
 
-(tag|..|tagN)#include "fil_att_inkludera"
+(tag|..|tagN)#include "fil\-att\-inkludera"
 
-Alla symboler som inkluderas från \fIfil_att_inkludera\fP kommer att anses som
+Alla symboler som inkluderas från \fIfil\-att\-inkludera\fP kommer att anses som
 standard vara taggade med \fItag\fP .. \fItagN\fP. Du kan använda denna funktion
 för att skapa en gemensam \fIpaket\fP.symbols\-fil som inkluderar
 arkitekturspecifika filer:

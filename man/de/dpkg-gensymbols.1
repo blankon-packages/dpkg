@@ -4,13 +4,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-gensymbols 1 2009\-08\-07 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH dpkg\-gensymbols 1 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 dpkg\-gensymbols \- erstelle Symboldateien (Abhängigkeitsinformationen für
 Laufzeitbibliotheken)
 .
 .SH ÜBERSICHT
-\fBdpkg\-gensymbols\fP [\fIOptionen\fP]
+\fBdpkg\-gensymbols\fP [\fIOption\fP...]
 .
 .SH BESCHREIBUNG
 \fBdpkg\-gensymbols\fP durchsucht einen temporären Baubaum (standardmäßig
@@ -65,6 +65,12 @@ Bevor irgendein Patch auf die Symboldatei angewendet wird, sollte der
 Betreuer zweimal prüfen, dass der Patch vernünftig ist. Öffentliche Symbole
 sollten nicht verschwinden, daher sollte der Patch idealerweise nur neue
 Zeilen hinzufügen.
+.P
+Beachten Sie, dass Sie in Symboldateien Kommentare einfügen können: jede
+Zeile, die mit »#« als ersten Zeichen beginnt, ist ein Kommentare, falls sie
+nicht mit »#include« beginnt (siehe Abschnitt \fBIncludes
+verwenden\fP). Zeilen, die mit »#MISSING:« anfangen, sind besondere
+Kommentare, die verschwundene Symbole dokumentieren.
 .SS "Verwendung der #PACKAGE#\-Ersetzung"
 .P
 In einigen seltenen Fällen unterscheidet sich der Name der Bibliothek auf
@@ -351,9 +357,9 @@ include\-Direktive wie folgt einbinden:
 .IP \(bu
 Die Include\-Direktive kann auch wie jedes Symbol gekennzeichnet werden:
 
-(Kennzeichen|...|KennzeichenN)#include "einzubindende_Datei"
+(Kennzeichen|...|KennzeichenN)#include "einzubindende\-Datei"
 
-Als Ergebnis werden alle Symbole aus \fIeinzubindende_Datei\fP standardmäßig
+Als Ergebnis werden alle Symbole aus \fIeinzubindende\-Datei\fP standardmäßig
 als mit \fIKennzeichen\fP ... \fIKennzeichenN\fP gekennzeichnet betrachtet. Sie
 können diese Funktionalität benutzen, um eine gemeinsame Datei
 \fIPaket\fP.symbols zu erstellen, die architekturspezifische Symboldateien

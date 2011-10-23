@@ -3,13 +3,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-maintscript\-helper 1 2010\-04\-16 Debianprojektet Dpkg\-sviten
+.TH dpkg\-maintscript\-helper 1 2011\-08\-14 Debianprojektet Dpkg\-sviten
 .SH NAMN
 dpkg\-maintscript\-helper \- går runt kända dpkg\-begränsningar i paketskript
 .
 .SH SYNOPS
-\fBdpkg\-maintscript\-helper\fP \fIkommando\fP [\fIflaggor\fP...] \-\-
-\fImaint\-script\-flaggor\fP
+\fBdpkg\-maintscript\-helper\fP \fIkommando\fP [\fIflagga\fP...] \fB\-\-\fP
+\fImaint\-script\-flagga\fP...
 .
 .SH "KOMMANDON OCH PARAMETRAR"
 .P
@@ -26,8 +26,8 @@ på grund av nuvarande begränsningar.
 Många av dessa åtgärder kräver samordnade åtgärder från flera paketskript
 (\fBpreint\fP, \fBpostinst\fP, \fBprerm\fP, \fBpostrm\fP). För att undvika misstag
 räcker det att lägga in ett och samma anrop i alla skript, varpå programmet
-anpassar sitt beteende beroende på miljövariabeln DPKG_MAINTSCRIPT_NAME och
-på paketskriptets parametrar, vilka du måste vidaresända efter dubbla
+anpassar sitt beteende beroende på miljövariabeln \fBDPKG_MAINTSCRIPT_NAME\fP
+och på paketskriptets parametrar, vilka du måste vidaresända efter dubbla
 bindestreck.
 .
 .SH "KONFFIL\-RELATERADE ÅTGÄRDER"
@@ -113,20 +113,21 @@ uppgradering eller installation byter \fBpostrm\fP tillbaka namnet från
 .
 .SH "INTEGRERA I PAKET"
 .P
-Given that \fBdpkg\-maintscript\-helper\fP is used in the \fBpreinst\fP, using it
-unconditionally requires a pre\-dependency to ensure that the required
-version of dpkg has been unpacked before. The required version depends on
-the command used, for \fBrm_conffile\fP and \fBmv_conffile\fP it is 1.15.7.2:
+Givet att \fBdpkg\-maintscript\-helper\fP används i \fBpreinst\fP så innebär detta
+villkorslöst att ett förhandsberoende ("pre\-dependency") krävs för att
+försäkra att den nödvändiga versionen av dpkg redan har packats upp. Den
+version som krävs beror på vilket kommando som används, för \fBrm_conffile\fP
+och \fBmv_conffile\fP är det 1.15.7.2:
 .P
-    Pre\-Depends: dpkg (>= 1.15.7.2)
+    \fBPre\-Depends:\fP dpkg (>= 1.15.7.2)
 .P
 Men i många fall är operationen som utförs av programmet inte kritiskt för
 paketet, och istället för att använda ett förhandsberoende kan vi anropa
 programmet endast om vi vet att det nödvändiga kommandot stöds av den nu
 installerade dpkg:
 .P
-    if dpkg\-maintscript\-helper supports <kommando>; then
-        dpkg\-maintscript\-helper <kommando> ...
+    if dpkg\-maintscript\-helper supports \fIkommando\fP; then
+        dpkg\-maintscript\-helper \fIkommando\fP ...
     fi
 .
 .SH FÖRFATTARE

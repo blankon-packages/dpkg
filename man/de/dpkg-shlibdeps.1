@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-shlibdeps 1 2011\-03\-04 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH dpkg\-shlibdeps 1 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 dpkg\-shlibdeps \- erstelle Substvar\-Abhängigkeiten für Laufzeitbibliotheken
 .
 .SH ÜBERSICHT
-\fBdpkg\-shlibdeps\fP [\fIOptionen\fP] \fIProgramm\fP|\fB\-e\fP\fIProgramm\fP [\fIOptionen\fP]
+\fBdpkg\-shlibdeps\fP [\fIOption\fP...] [\fB\-e\fP]\fIProgramm\fP [\fIOption\fP...]
 .
 .SH BESCHREIBUNG
 \fBdpkg\-shlibdeps\fP berechnet Abhängigkeiten von Laufzeitbibliotheken für
@@ -16,7 +16,7 @@ Programme, deren Name als Argument übergeben werden. Die Abhängigkeiten
 werden zu der Datei der Substitutionsvariablen \fBdebian/substvars\fP als
 Variablennamen \fBshlibs:\fP\fIAbhängigkeitsfeld\fP hinzugefügt, wobei
 \fIAbhängigkeitsfeld\fP der Feldname einer Abhängigkeit ist. Alle anderen
-Variablen, die mit \fIshlibs:\fP beginnen, werden aus der Datei entfernt.
+Variablen, die mit \fBshlibs:\fP beginnen, werden aus der Datei entfernt.
 .P
 \fBdpkg\-shlibdeps\fP hat zwei mögliche Informationsquellen zur Erstellung der
 Abhängigkeitsinformationen. Entweder \fISymbol\fP\- oder

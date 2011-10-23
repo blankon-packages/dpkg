@@ -37,7 +37,7 @@
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
 #include <dpkg/dir.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 #include <dpkg/triglib.h>
 
 #include "infodb.h"
@@ -286,11 +286,16 @@ removal_bulk_remove_files(struct pkginfo *pkg)
         /* Only delete a directory or a link to one if we're the only
          * package which uses it. Other files should only be listed
          * in this package (but we don't check). */
-	if (hasdirectoryconffiles(namenode,pkg)) {
+        if (dir_has_conffiles(namenode, pkg)) {
 	  push_leftover(&leftover,namenode);
 	  continue;
 	}
-	if (isdirectoryinuse(namenode,pkg)) continue;
+        if (dir_is_used_by_pkg(namenode, pkg, leftover)) {
+          push_leftover(&leftover, namenode);
+          continue;
+        }
+        if (dir_is_used_by_others(namenode, pkg))
+          continue;
       }
       debug(dbg_eachfiledetail, "removal_bulk removing `%s'", fnvb.buf);
       if (!rmdir(fnvb.buf) || errno == ENOENT || errno == ELOOP) continue;
@@ -320,6 +325,10 @@ removal_bulk_remove_files(struct pkginfo *pkg)
     maintainer_script_installed(pkg, POSTRMFILE, "post-removal",
                                 "remove", NULL);
 
+    trig_parse_ci(pkgadminfile(pkg, &pkg->installed, TRIGGERSCIFILE),
+                  trig_cicb_interest_delete, NULL, pkg);
+    trig_file_interests_save();
+
     debug(dbg_general, "removal_bulk cleaning info directory");
     pkg_infodb_foreach(pkg, &pkg->installed, removal_bulk_remove_file);
     dir_sync_path(pkgadmindir());
@@ -337,6 +346,9 @@ static void removal_bulk_remove_leftover_dirs(struct pkginfo *pkg) {
   static struct varbuf fnvb;
   struct stat stab;
 
+  /* We may have modified this previously. */
+  ensure_packagefiles_available(pkg);
+
   modstatdb_note(pkg);
   push_checkpoint(~ehflag_bombout, ehflag_normaltidy);
 
@@ -348,7 +360,10 @@ static void removal_bulk_remove_leftover_dirs(struct pkginfo *pkg) {
     debug(dbg_eachfile, "removal_bulk `%s' flags=%o",
           namenode->name, namenode->flags);
     if (namenode->flags & fnnf_old_conff) {
-      push_leftover(&leftover,namenode);
+      /* This can only happen if removal_bulk_remove_configfiles() got
+       * interrupted half way. */
+      debug(dbg_eachfiledetail, "removal_bulk expecting only left over dirs, "
+                                "ignoring conffile '%s'", namenode->name);
       continue;
     }
 
@@ -365,11 +380,12 @@ static void removal_bulk_remove_leftover_dirs(struct pkginfo *pkg) {
       /* Only delete a directory or a link to one if we're the only
        * package which uses it. Other files should only be listed
        * in this package (but we don't check). */
-      if (hasdirectoryconffiles(namenode,pkg)) {
-	push_leftover(&leftover,namenode);
-	continue;
+      if (dir_is_used_by_pkg(namenode, pkg, leftover)) {
+        push_leftover(&leftover, namenode);
+        continue;
       }
-      if (isdirectoryinuse(namenode,pkg)) continue;
+      if (dir_is_used_by_others(namenode, pkg))
+        continue;
     }
 
     debug(dbg_eachfiledetail, "removal_bulk removing `%s'", fnvb.buf);
@@ -392,6 +408,15 @@ static void removal_bulk_remove_leftover_dirs(struct pkginfo *pkg) {
       continue;
     }
     if (errno != ENOTDIR) ohshite(_("cannot remove `%.250s'"),fnvb.buf);
+
+    if (lstat(fnvb.buf, &stab) == 0 && S_ISLNK(stab.st_mode)) {
+      debug(dbg_eachfiledetail, "removal_bulk is a symlink to a directory");
+
+      if (unlink(fnvb.buf))
+        ohshite(_("cannot remove '%.250s'"), fnvb.buf);
+
+      continue;
+    }
 
     push_leftover(&leftover,namenode);
     continue;
@@ -521,6 +546,10 @@ static void removal_bulk_remove_configfiles(struct pkginfo *pkg) {
       }
       pop_cleanup(ehflag_normaltidy); /* closedir */
     }
+
+    /* Remove the conffiles from the file list file. */
+    write_filelist_except(pkg, &pkg->installed, pkg->clientdata->files,
+                          fnnf_old_conff);
 
     pkg->installed.conffiles = NULL;
     modstatdb_note(pkg);

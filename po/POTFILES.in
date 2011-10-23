@@ -15,8 +15,8 @@ lib/dpkg/glob.c
 lib/dpkg/log.c
 lib/dpkg/md5.c
 lib/dpkg/mlib.c
-lib/dpkg/myopt.c
 lib/dpkg/nfmalloc.c
+lib/dpkg/options.c
 lib/dpkg/parse.c
 lib/dpkg/parsehelp.c
 lib/dpkg/path.c
@@ -33,6 +33,7 @@ lib/dpkg/subproc.c
 lib/dpkg/tarfn.c
 lib/dpkg/trigdeferred.l
 lib/dpkg/triglib.c
+lib/dpkg/trigname.c
 lib/dpkg/utils.c
 lib/dpkg/varbuf.c
 lib/dpkg/vercmp.c

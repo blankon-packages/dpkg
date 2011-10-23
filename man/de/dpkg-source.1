@@ -4,12 +4,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-source 1 2011\-03\-04 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH dpkg\-source 1 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 dpkg\-source \- Debian Quellpaket\- (.dsc) Manipulations\-Werkzeuge
 .
 .SH ÜBERSICHT
-\fBdpkg\-source\fP [\fIOptionen\fP] \fIBefehl\fP
+\fBdpkg\-source\fP [\fIOption\fP...] \fIBefehl\fP
 .
 .SH BESCHREIBUNG
 \fBdpkg\-source\fP packt und entpackt Debian Quellarchive.
@@ -71,21 +71,29 @@ Bedingungen und mit den gleichen Parametern).
 
 .TP 
 \fB\-\-before\-build\fP \fIVerzeichnis\fP
-Dieser Befehl sollte vor jedem Bau des Pakets aufgerufen werden
-(\fBdpkg\-buildpackage\fP ruft ihn sehr früh vor \fBdebian/rules clean\fP
-auf). Dieser Befehl sollte idempotent sein und kann mehrfach aufgerufen
-werden. Nicht alle Quellformate implementieren in diesem Hook etwas und wenn
-dies erfolgt, dann gewöhnlich zur Vorbereitung des Quellbaums für den Bau,
-in dem beispielsweise sichergestellt wird, dass alle Debian\-Patches
-angewandt sind.
+Der entsprechende Hook dess Quellpaketformats soll ausgeführt werden. Dieser
+Hook wird vor jedem Bau des Pakets aufgerufen (\fBdpkg\-buildpackage\fP ruft ihn
+sehr früh, sogar vor \fBdebian/rules clean\fP auf). Dieser Befehl ist
+idempotent und kann mehrfach aufgerufen werden. Nicht alle Quellformate
+implementieren in diesem Hook etwas und wenn dies erfolgt, dann gewöhnlich
+zur Vorbereitung des Quellbaums für den Bau, in dem beispielsweise
+sichergestellt wird, dass alle Debian\-Patches angewandt sind.
 
 .TP 
 \fB\-\-after\-build\fP \fIVerzeichnis\fP
-Dieser Befehl sollte nach jedem Bau des Pakets aufgerufen werden
-(\fBdpkg\-buildpackage\fP ruft als letztes auf). Dieser Befehl sollte idempotent
-sein und kann mehrfach aufgerufen werden. Nicht alle Quellformate
-implementieren in diesem Hook etwas und wenn dies erfolgt, dann gewöhnlich
-um rückgängig zu machen, was \fB\-\-before\-build\fP durchgeführt hat.
+Der entsprechende Hook dess Quellpaketformats soll ausgeführt werden. Dieser
+Hook wird nach jedem Bau des Pakets aufgerufen (\fBdpkg\-buildpackage\fP ruft
+als letztes auf). Dieser Befehl ist idempotent und kann mehrfach aufgerufen
+werden. Nicht alle Quellformate implementieren in diesem Hook etwas und wenn
+dies erfolgt, dann gewöhnlich um rückgängig zu machen, was \fB\-\-before\-build\fP
+durchgeführt hat.
+
+.TP 
+\fB\-\-commit\fP [\fIVerzeichnis\fP] ...
+Zeichnet Änderungen am in \fIVerzeichnis\fP entpackten Quellbaum auf. Dieser
+Befehl kann zusätzliche Parameter akzeptieren, abhängig vom Quellformat. Er
+wird zu einer Fehlermeldung bei Formaten, für denen dieser Vorgang keine
+Bedeutung hat, führen.
 
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
@@ -144,7 +152,8 @@ unterstützt.
 \fB\-z\fP\fIStufe\fP, \fB\-\-compression\-level\fP=\fIStufe\fP
 Zu verwendende Komprimierstufe. Wie bei \fB\-Z\fP betrifft dies nur neu
 angelegte Dateien. Unterstützte Werte sind \fI1\fP bis \fI9\fP, \fIbest\fP (am
-besten) und \fIfast\fP (schnell). \fI9\fP ist voreingestellt.
+besten) und \fIfast\fP (schnell). Der Standardwert ist \fI9\fP für Gzip und Bzip2,
+\fI6\fP für Xz und Lzma.
 .TP 
 \fB\-i\fP[\fIregexp\fP], \fB\-\-diff\-ignore\fP[=\fIregexp\fP]
 Sie können einen regulären Perl\-Ausdruck angeben, der auf Dateien passt, die
@@ -171,12 +180,12 @@ Anfang eines Pfades oder komplette Dateinamen vergleichen wollen, müssen Sie
 die notwendigen Anker (z.B. »(^|/)«, »($|/)«) selbst bereitstellen.
 .TP 
 \fB\-\-extend\-diff\-ignore\fP=\fIregexp\fP
-Der angegebene reguläre Ausdruck (Perl\-Format) wird dem standardmäßigen
-regulären Ausdruck, der mit \fB\-i\fP verknüpft ist, erweiteren, indem
-»\fB|\fP\fIregexp\fP« an den standardmäßigen regulären Ausdruck angehängt
-wird. Diese Option ist bequem in \fBdebian/source/options\fP zu nutzen, um
-einige automatisch erstellten Dateien von der automatischen Patch\-Erzeugung
-auszuschließen.
+Der angegebene reguläre Ausdruck (Perl\-Format) wird den standardmäßigen Wert
+von \fB\-\-diff\-ignore\fP and dessen aktuellen Wert (falls gesetzt)
+erweiteren. Dies erfolgt, indem »\fB|\fP\fIregexp\fP« an den existierenden Wert
+angehängt wird. Diese Option ist bequem in \fBdebian/source/options\fP zu
+nutzen, um einige automatisch erstellten Dateien von der automatischen
+Patch\-Erzeugung auszuschließen.
 .TP 
 \fB\-I\fP[\fIDateimuster\fP], \fB\-\-tar\-ignore\fP[=\fIDateimuster\fP]
 Falls diese Option angegeben wird, wird der Dateiname an die
@@ -414,8 +423,10 @@ Entpacken verwandt, das debian\-Verzeichnis wird in das temporäre Verzeichnis
 kopiert und alle Patches außer dem automatischen Patch
 (\fBdebian\-changes\-\fP\fIVersion\fP oder \fBdebian\-changes\fP, abhängig von
 \fB\-\-single\-debian\-patch\fP) werden angewandt. Das temporäre Verzeichnis wird
-mit dem Quellpaketverzeichnis verglichen und der Diff (falls nicht\-leer)
-wird im automatischen Patch gespeichert. Falls der automatische Patch
+mit dem Quellpaketverzeichnis verglichen. Wenn der Diff nicht leer ist,
+schlägt der Bau fehl, falls nicht \fB\-\-single\-debian\-patch\fP oder
+\fB\-\-auto\-commit\fP verwandt wurde; in diesem Fall wird der Diff im
+automatischen Patch gespeichert. Falls der automatische Patch
 erzeugt/gelöscht wird, wird er zu der Datei series und den Quilt\-Metadaten
 hinzugefügt bzw. aus diesen gelöscht.
 
@@ -436,19 +447,28 @@ zugeordneten Standardwert in der Ausgabe von \fB\-\-help\fP). Insbesondere wird
 das von Quilt verwandte \fB.pc\fP\-Verzeichnis während der Erstellung des
 automatischen Patches ignoriert.
 
-Hinweis: \fBdpkg\-source\fP erwartet, dass alle Patches aus der Series\-Datei auf
-dem Quellbaum angewandt wurden, wenn Sie das Quellpaket erstellen. Dies ist
-z.B. nicht der Fall, wenn der Quellbaum durch Entpacken eines Quellpakets im
-Format: 1.0 erhalten wurde. Um das Problem zu entschärfen, wird
-\fBdpkg\-source\fP die Patches selbst anwenden, falls es glaubt, dass sie noch
-nicht angewandt wurden. Um diese Situation zu erkennen, verwendet es die
-folgende Heuristik: Es findet die Liste der vermutlich noch nicht
-angewandten Patches (sie sind in der Datei \fBseries\fP, aber nicht in der
-Datei \fB.pc/applied\-patches\fP aufgeführt) und wenn der erste Patch in dem
-Satz ohne Fehler angewandt werden kann, werden sie alle angewandt. Die
-Option \fB\-\-no\-preparation\fP kann zum Abschalten dieses Verhaltens verwandt
-werden. Dieser Ablauf passiert normalerweise als Teil des Befehls
-\fB\-\-prepare\-build\fP.
+Hinweis: \fBdpkg\-source\fP \fB\-\-before\-build\fP (und \fB\-b\fP) stellen sicher, dass
+alle in der Series\-Datei aufgeführten Patches angewendet sind, so dss ein
+Paketbau immer mit allen angewandten Patches durchgeführt wird. Dies
+erfolgt, indem nicht angewandte Patches ermittelt werden (sie sind in der
+Datei \fBseries\fP, aber nicht in der Datei \fB.pc/applied\-patches\fP aufgeführt)
+und wenn der erste Patch in dem Satz ohne Fehler angewandt werden kann,
+werden sie alle angewandt. Die Option \fB\-\-no\-preparation\fP kann zum
+Abschalten dieses Verhaltens verwandt werden.
+
+.PP
+\fBÄnderungen aufzeichnen\fP
+.TP 
+\fB\-\-commit\fP [\fIVerzeichnis\fP] [\fIPatch\-Name\fP] [\fIPatch\-Datei\fP]
+Erstellt einen Patch, der den lokalen Änderungen entspricht, die nicht vom
+Quilt\-Patch\-System verwaltet werden und integriert es unter dem Namen
+\fIPatch\-Name\fP in das Patch\-System. Falls der Name fehlt, wird er interaktiv
+erfragt. Falls \fIPatch\-Datei\fP angegeben ist, wird er als Patch, der zu den
+lokalen Änderungen, die integriert werden sollen, gehört, verwandt. Dies ist
+primär nach einem Baufehler nützlich, der diese Datei vorgenerierte. Sobald
+die Patch integriert wurde, wird ein Editor gestartet, so dass Sie die
+Metainformationen in den Kopfzeilen des Patches einfügen können.
+
 .PP
 \fBBau\-Optionen\fP
 .TP 
@@ -484,10 +504,10 @@ Baus automatisch generierten Patch. Diese Option ist insbesondere nützlich,
 wenn das Paket in einem VCS betreut wird und ein Patch\-Satz nicht
 zuverlässig erstellt werden kann. Stattdessen sollte der aktuelle Diff zu
 den Quellen der Originalautoren in einem einzelnen Patch gespeichert
-werden. Beim Verwenden dieser Option wird empfohlen, eine Datei
-debian/source/patch\-header zu erstellen, in der erklärt wird, wie die
-Debian\-Änderungen am besten begutachtet werden können, beispielsweise im
-eingesetzten VCS.
+werden. Diese Option sollte in \fBdebian/source/local\-options\fP eingestellt
+werden und würde dann von einer Datei \fBdebian/source/local\-patch\-header\fP
+begleitet, in der erklärt wird, wie die Debian\-Änderungen am besten
+begutachtet werden können, beispielsweise im eingesetzten VCS.
 .TP 
 \fB\-\-create\-empty\-orig\fP
 Erstelle den Hauptoriginal\-Tarball automatisch als leer falls er fehlt und
@@ -496,13 +516,11 @@ wenn das Quellpaket nur eine Sammlung von mehreren Softwaren der
 Originalautoren ist und es keine »Haupt«\-Software gibt.
 .TP 
 \fB\-\-unapply\-patches\fP
-Entfernt die Patches im Hook \fB\-\-after\-build\fP. Dies ist hauptsächlich
-nützlich, wenn Sie Ihr Paket direkt in einem VCS bauen, das die Quellen der
-Originalautoren ohne Patches enthält und in dem Sie den Baum ohne Patches
-behalten wollen, selbst nachdem ein Paket gebaut wurde. Diese Option kommt
-normalerweise in \fBdebian/source/local\-options\fP (sie ist in
-\fBdebian/source/options\fP nicht erlaubt, so dass die erstellten Quellpakete
-standardmäßig das gleiche Verhalten zeigen).
+Entfernt die Patches im Hook \fB\-\-after\-build\fP. Normalerweise benötigen Sie
+diese Option nicht, da Dpkg\-source alle Patches automatisch entfernen wird,
+wenn es sie während \fB\-\-before\-build\fP angewandt hatte. Diese Option ist nur
+in \fBdebian/source/local\-options\fP erlaubt, so dass alle erstellten
+Quellpakete standardmäßig das gleiche Verhalten zeigen.
 .TP 
 \fB\-\-abort\-on\-upstream\-changes\fP
 Dieser Prozess schlägt fehl, falls ein automatischer Patch erstellt
@@ -510,6 +528,10 @@ wurde. Diese Option kann dazu verwandt werden, sicherzustellen, dass alle
 Änderungen korrekt in separaten Quilt\-Patches aufgezeichnet wurden, bevor
 das Paket gebaut wurde. Diese Option ist in \fBdebian/source/options\fP nicht
 erlaubt, kann aber in \fBdebian/source/local\-options\fP verwandt werden.
+.TP 
+\fB\-\-auto\-commit\fP
+Der Vorgang schlägt nicht fehl, falls ein automatischer Patch erstellt
+wurde, stattdessen wird dieser sofort in die Quilt\-Serie aufgenommen.
 
 .PP
 \fBExtrahierungs\-Optionen\fP
@@ -667,6 +689,8 @@ ist ein Beispiel für so eine Datei:
   compression\-level = 9
   # verwende debian/patches/debian\-changes als automatischen Patch
   single\-debian\-patch
+  # ignoriere Änderungen von config.{sub,guess}
+  extend\-diff\-ignore = "(^|/)(config.sub|config.guess)$"
 .P
 Hinweis: \fB\-\-format\fP\-Optionen werden in dieser Datei nicht akzeptiert, Sie
 sollten stattdessen \fBdebian/source/format\fP verwenden.
@@ -675,9 +699,12 @@ Genau wie \fBdebian/source/options\fP, außer das die Datei nicht in das
 erstellte Quellpaket aufgenommen wird. Dies kann nützlich sein, um
 Voreinstellungen zu speichern, die an einen bestimmten Betreuer oder an ein
 bestimmtes VCS, in dem das Paket gewartet wird, gebunden sind.
+.SS debian/source/local\-patch\-header
 .SS debian/source/patch\-header
 Formloser Text, der an den Anfang des in den Formaten »2.0« und »3.0
-(quilt)« generierten automatischen Patches gestellt wird.
+(quilt)« generierten automatischen Patches gestellt
+wird. \fBlocal\-patch\-header\fP wird dem erstellen Quellpaket nicht hinzugefügt,
+\fBpatch\-header\fP dagegen schon.
 .SS debian/patches/series
 Diese Datei führt alle Patches auf, die (in der angegebenen Reihenfolge) auf
 das Quellpaket der Originalautoren angewandt werden müssen. Leerzeichen am
@@ -706,7 +733,7 @@ Copyright \(co 1995\-1996 Ian Jackson
 .br
 Copyright \(co 2000 Wichert Akkerman
 .br
-Copyright \(co 2007\-2010 Rapha\[:e]l Hertzog
+Copyright \(co 2008\-2011 Rapha\[:e]l Hertzog
 .sp
 Dies ist Freie Software; lesen Sie die GNU General Public License Version 2
 oder neuer für die Kopierbedingungen. Es gibt KEINE Haftung.

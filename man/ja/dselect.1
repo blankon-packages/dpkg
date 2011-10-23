@@ -3,15 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dselect 1 2010\-03\-07 "Debian Project" Debian
+.TH dselect 1 2011\-08\-14 "Debian Project" Debian
 .SH NAME
 dselect \- Debian パッケージ管理フロントエンド
 .
 .SH 書式
-\fBdselect\fP [\fB\-\-admindir\fP \fI<directory>\fP] [\fB\-\-help\fP] [\fB\-\-version\fP]
-[\fB\-\-expert\fP] [\fB\-\-debug\fP|\fB\-D\fP\fI<file>\fP] [\fI<action>\fP]
-[\fB\-\-colour\fP|\fB\-\-color\fP
-\fIscreenpart:\fP[\fIforeground\fP],[\fIbackground\fP][\fI:attr\fP[\fI+attr+..\fP]]]
+\fBdselect\fP [\fIoption\fP...] [\fIaction\fP]
 .
 .SH 説明
 \fBdselect\fP は Debian システムの、主要なパッケージ管理用ユーザインターフェースの一つである。システム管理者は、\fBdselect\fP のメインメニューで以下の操作を行える。
@@ -24,24 +21,26 @@ dselect \- Debian パッケージ管理フロントエンド
 のフロントエンドとして動作する。パッケージの依存・競合の解決を行なえる、全画面パッケージ選択マネージャであることが特徴である。管理者権限で起動すると、パッケージのインストール、更新、削除を行うことができる。またパッケージリポジトリより、利用可能パッケージのバージョン情報や、インストール可能パッケージの取得するための、様々なアクセス方式を設定できる。使用するアクセス方式によって、インターネット上の公開サーバ、ローカルサーバ、CD\-ROM
 をリポジトリにできる。推奨するアクセス方式は、\fBapt\fP パッケージで提供する \fIapt\fP である。
 .PP
-通常、\fBdselect\fP
-はパラメータなしで起動する。ユーザへは、対話的メニューで、アクションのリストを提供する。引数で、アクションを与えられた場合、直ちにそのアクションを実行する。いくつかのコマンドラインパラメータで、\fBdselect\fP
-の動きを修正したり、プログラムの補足情報を示すことができる。
+Normally \fBdselect\fP is invoked without parameters. An interactive menu is
+presented, offering the user a list of actions. If an action is given as
+argument, then that action is started immediately. Several command line
+parameters are still available to modify the running behaviour of \fBdselect\fP
+or show additional information about the program.
 .
 .SH オプション
-All options can be specified both on the commandline and in the \fBdselect\fP
+All options can be specified both on the command line and in the \fBdselect\fP
 configuration file \fI/etc/dpkg/dselect.cfg\fP or the files on the
-configuration directory \fI/etc/dpkg/dpkg.cfg.d/\fP. Each line in the
-configuration file is either an option (exactly the same as the commandline
+configuration directory \fI/etc/dpkg/dselect.cfg.d/\fP. Each line in the
+configuration file is either an option (exactly the same as the command line
 option but without leading dashes) or a comment (if it starts with a \fB#\fP).
 .br
 .TP 
-\fB\-\-admindir\fP\fI <directory>\fP
+\fB\-\-admindir\fP\fI directory\fP
 dpkg が使用する `status' ファイルや `available' ファイルなどを置くディレクトリを変更する。デフォルトは
 \fI/var/lib/dpkg\fP で、通常変更する必要はない。
 .TP 
-\fB\-\-debug\fP\fI <file> \fP|\fI \fP\fB\-D\fP\fI<file>\fP
-デバッグを有効にする。デバッグ情報は \fI<file>\fP に送られる。
+\fB\-\-debug\fP\fI file \fP|\fI \fP\fB\-D\fP\fIfile\fP
+Turn on debugging. Debugging information is sent to \fIfile\fP.
 .TP 
 \fB\-\-expert\fP
 エキスパートモードを有効にする。つまり、うるさいヘルプを表示しない。
@@ -100,14 +99,17 @@ normal, standout, underline, reverse, blink, bright, dim, bold
 \fB\-\-version\fP
 Print version information and exit successfully.
 .
-.SH 使用方法
-\fBdselect\fP を対話的に起動すると、以下の利用可能アクションのメニューをユーザに提示する。
+.SH アクション
+When \fBdselect\fP is started it can perform the following actions, either
+directly if it was specified on the command line or by prompting the user
+with a menu of available actions if running interactively:
 .SS access
 パッケージリポジトリにアクセスするための、アクセス方式を選択・設定する。
 .sp
-デフォルトでは \fBdselect\fP は \fIfloppy\fP, \fIharddisk\fP, \fIcdrom\fP
-といった、いくつかの方式を提供する。しかし、他のパッケージが追加アクセス方式を提供することもある。例えば、\fIapt\fP アクセス方式は \fBapt\fP
-パッケージで提供され、 \fImulti_cd\fP は \fBdpkg\-multicd\fP で提供される。
+By default, \fBdselect\fP provides several methods such as \fIcdrom\fP,
+\fImulti_cd\fP, \fInfs\fP, \fImulti_nfs\fP, \fIharddisk\fP, \fImounted\fP, \fImulti_mount\fP,
+\fIfloppy\fP or \fIftp\fP, but other packages may provide additional methods,
+eg. the \fIapt\fP access method provided by the \fBapt\fP package.
 .sp
 \fIapt\fP アクセス方式の使用を、強く推奨する。
 .sp

@@ -128,7 +128,7 @@ while (1) {
 if (defined($out_file) and $out_file ne "-") {
     open(OUT, ">", $out_file) || syserr(_g("cannot write %s"), $out_file);
     print OUT ((blessed $_) ? "$_" : "$_\n") foreach @result;
-    close(OUT);
+    close(OUT) || syserr(_g("cannot write %s"), $out_file);
 } else {
     print ((blessed $_) ? "$_" : "$_\n") foreach @result;
 }
@@ -286,5 +286,5 @@ sub get_conflict_block($$) {
     push @b, $b if defined $b;
     @a = @{$a} if ref($a) eq "ARRAY";
     @b = @{$b} if ref($b) eq "ARRAY";
-    return ("<<<<<<", @a, "======", @b, ">>>>>>");
+    return ("<<<<<<<", @a, "=======", @b, ">>>>>>>");
 }

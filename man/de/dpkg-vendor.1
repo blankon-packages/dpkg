@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-vendor 1 2009\-05\-10 Debian\-Projekt dpkg\-Programmsammlung
+.TH dpkg\-vendor 1 2011\-07\-04 Debian\-Projekt dpkg\-Programmsammlung
 .SH NAME
 dpkg\-vendor \- fragt Informationen über den Distributionslieferanten ab
 .
@@ -19,11 +19,11 @@ aktuellen Lieferanten.
 .SH BEFEHLE
 .TP 
 \fB\-\-is\fP\fI Lieferant\fP
-Beendet sich mit 0, falls der aktuelle Lieferant \fILieferant\fP ist, ansonsten
-mit einem von Null verschiedenen Wert.
+Beendet sich mit \fB0\fP, falls der aktuelle Lieferant \fILieferant\fP ist,
+ansonsten mit einem von Null verschiedenen Wert.
 .TP 
 \fB\-\-derives\-from\fP\fI Lieferant\fP
-Beendet sich mit 0, falls die aktuelle Lieferant\-Distribution von
+Beendet sich mit \fB0\fP, falls die aktuelle Lieferant\-Distribution von
 \fILieferant\fP abgeleitet ist, ansonsten mit einem von Null verschiedenen
 Wert. Es verwendet das Feld »Parent«, um alle Vorfahren des aktuellen
 Lieferanten zu ermitteln.
@@ -42,7 +42,7 @@ Gebe die Version aus und beende sich.
 .TP 
 \fB\-\-vendor\fP\fI Lieferant\fP
 Nimmt an, dass der aktuelle Lieferant \fILieferant\fP ist, statt ihn über die
-Umgebungsvariable DEB_VENDOR oder aus \fB/etc/dpkg/origins/default\fP zu
+Umgebungsvariable \fBDEB_VENDOR\fP oder aus \fB/etc/dpkg/origins/default\fP zu
 ermitteln.
 .
 .SH UMGEBUNG

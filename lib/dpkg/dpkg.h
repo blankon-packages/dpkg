@@ -64,12 +64,12 @@ DPKG_BEGIN_DECLS
 #define DIVERSIONSFILE    "diversions"
 #define STATOVERRIDEFILE  "statoverride"
 #define UPDATESDIR        "updates/"
-#define INFODIR           "info/"
-#define TRIGGERSDIR       "triggers/"
+#define INFODIR           "info"
+#define TRIGGERSDIR       "triggers"
 #define TRIGGERSFILEFILE  "File"
 #define TRIGGERSDEFERREDFILE "Unincorp"
 #define TRIGGERSLOCKFILE  "Lock"
-#define CONTROLDIRTMP     "tmp.ci/"
+#define CONTROLDIRTMP     "tmp.ci"
 #define IMPORTANTTMP      "tmp.i"
 #define REASSEMBLETMP     "reassemble" DEBEXT
 #define IMPORTANTMAXLEN    10
@@ -83,8 +83,11 @@ DPKG_BEGIN_DECLS
 #define MAXTRIGDIRECTIVE     256
 
 #define BACKEND		"dpkg-deb"
-#define DPKGQUERY	"dpkg-query"
 #define SPLITTER	"dpkg-split"
+#define DPKGQUERY	"dpkg-query"
+#define DPKGDIVERT	"dpkg-divert"
+#define DPKGSTAT	"dpkg-statoverride"
+#define DPKGTRIGGER	"dpkg-trigger"
 #define DPKG		"dpkg"
 #define DEBSIGVERIFY	"/usr/bin/debsig-verify"
 
@@ -95,6 +98,7 @@ DPKG_BEGIN_DECLS
 
 #define FIND_EXPRSTARTCHARS "-(),!"
 
+#include <dpkg/progname.h>
 #include <dpkg/ehandle.h>
 
 /*** from startup.c ***/
@@ -119,7 +123,7 @@ void statusfd_send(const char *fmt, ...) DPKG_ATTR_PRINTF(1);
 
 /*** cleanup.c ***/
 
-void cu_closefile(int argc, void **argv);
+void cu_closestream(int argc, void **argv);
 void cu_closepipe(int argc, void **argv);
 void cu_closedir(int argc, void **argv);
 void cu_closefd(int argc, void **argv);

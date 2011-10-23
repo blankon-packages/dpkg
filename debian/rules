@@ -4,17 +4,8 @@
 
 WFLAGS := -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
 
-CFLAGS = -g $(WFLAGS)
-CXXFLAGS = -g $(WFLAGS)
-
-# Disable optimisations if ‘noopt’ found in $DEB_BUILD_OPTIONS
-ifneq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-	CXXFLAGS += -O0
-else
-	CFLAGS += -O2
-	CXXFLAGS += -O2
-endif
+# Use the in-tree dpkg-buildflags
+dpkg_buildflags = DEB_CFLAGS_MAINT_APPEND="$(WFLAGS)" DEB_CXXFLAGS_MAINT_APPEND="$(WFLAGS)" PERL5LIB=$(CURDIR)/scripts DPKG_DATADIR=$(CURDIR) perl $(CURDIR)/scripts/dpkg-buildflags.pl
 
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
@@ -33,7 +24,9 @@ DEB_HOST_ARCH_OS  ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 ifeq ($(DEB_HOST_ARCH_OS),linux)
 	confflags += --with-selinux
 endif
-
+ifeq (,$(filter maintainer-build,$(DEB_BUILD_OPTIONS)))
+	confflags += --disable-silent-rules
+endif
 
 # Create configure script if necessary, automake handles rebuilding it.
 configure:
@@ -47,8 +40,7 @@ build-tree/config.status: configure
 
 	install -d build-tree
 	cd build-tree && ../configure $(confflags) \
-		CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
-		--disable-silent-rules \
+		$(shell $(dpkg_buildflags) --export=configure) \
 		--prefix=/usr \
 		--mandir=\$${datadir}/man \
 		--infodir=\$${datadir}/info \
@@ -58,7 +50,7 @@ build-tree/config.status: configure
 		--with-bz2
 
 # Build the package in build-tree
-build: build-tree/config.status
+build-indep build-arch build: build-tree/config.status
 	dh_testdir
 
 	cd build-tree && $(MAKE)
@@ -75,7 +67,7 @@ endif
 install: check
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 
 	cd build-tree && $(MAKE) DESTDIR="$(CURDIR)/debian/tmp" install
@@ -92,6 +84,9 @@ binary-arch: install
 	dh_testdir -a
 	dh_testroot -a
 	dh_install --sourcedir=debian/tmp -a
+ifeq ($(DEB_HOST_GNU_TYPE),x86_64-linux-gnu)
+	echo 'foreign-architecture i386' > $(CURDIR)/debian/dpkg/etc/dpkg/dpkg.cfg.d/multiarch
+endif
 	dh_installcron -a
 	dh_installlogrotate -a
 

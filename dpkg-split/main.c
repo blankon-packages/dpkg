@@ -37,7 +37,7 @@
 #include <dpkg/i18n.h>
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "dpkg-split.h"
 
@@ -82,20 +82,25 @@ usage(const struct cmdinfo *cip, const char *value)
 "Options:\n"
 "  --depotdir <directory>           Use <directory> instead of %s/%s.\n"
 "  -S|--partsize <size>             In KiB, for -s (default is 450).\n"
-"  -o|--output <file>               For -j (default is <package>-<version>.deb).\n"
+"  -o|--output <file>               Filename, for -j (default is\n"
+"                                     <package>_<version>_<arch>.deb).\n"
 "  -Q|--npquiet                     Be quiet when -a is not a part.\n"
 "  --msdos                          Generate 8.3 filenames.\n"
-"\n"
-"Exit status: 0 = OK;  1 = -a is not a part;  2 = trouble!\n"),
-         ADMINDIR, PARTSDIR);
+"\n"), ADMINDIR, PARTSDIR);
+
+  printf(_(
+"Exit status:\n"
+"  0 = ok\n"
+"  1 = with --auto, file is not a part\n"
+"  2 = trouble\n"));
+
 
   m_output(stdout, _("<standard output>"));
 
   exit(0);
 }
 
-const char thisname[]= SPLITTER;
-const char printforhelp[]= N_("Type dpkg-split --help for help.");
+static const char printforhelp[] = N_("Type dpkg-split --help for help.");
 
 struct partqueue *queue= NULL;
 
@@ -146,26 +151,17 @@ static const struct cmdinfo cmdinfos[]= {
 
 int main(int argc, const char *const *argv) {
   int ret;
-  int l;
-  char *p;
 
   if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
-     setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
 
+  dpkg_set_progname(SPLITTER);
   standard_startup();
-  myopt(&argv, cmdinfos);
+  myopt(&argv, cmdinfos, printforhelp);
 
   if (!cipaction) badusage(_("need an action option"));
-
-  l = strlen(opt_depotdir);
-  if (l && opt_depotdir[l - 1] != '/') {
-    p= nfmalloc(l+2);
-    strcpy(p, opt_depotdir);
-    strcpy(p+l,"/");
-    opt_depotdir = p;
-  }
 
   setvbuf(stdout,NULL,_IONBF,0);
 

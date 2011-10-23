@@ -25,6 +25,7 @@
 
 #include <sys/types.h>
 
+#include <errno.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -36,7 +37,7 @@
 #include <dpkg/fdio.h>
 #include <dpkg/buffer.h>
 
-struct buffer_write_md5ctx {
+struct buffer_md5_ctx {
 	struct MD5Context ctx;
 	char *hash;
 };
@@ -44,34 +45,56 @@ struct buffer_write_md5ctx {
 static void
 buffer_md5_init(struct buffer_data *data)
 {
-	struct buffer_write_md5ctx *ctx;
+	struct buffer_md5_ctx *ctx;
 
-	ctx = m_malloc(sizeof(struct buffer_write_md5ctx));
+	ctx = m_malloc(sizeof(*ctx));
 	ctx->hash = data->arg.ptr;
 	data->arg.ptr = ctx;
 	MD5Init(&ctx->ctx);
 }
 
 static off_t
-buffer_init(struct buffer_data *data)
+buffer_filter_init(struct buffer_data *data)
 {
 	switch (data->type) {
-	case BUFFER_WRITE_MD5:
+	case BUFFER_FILTER_NULL:
+		break;
+	case BUFFER_FILTER_MD5:
 		buffer_md5_init(data);
 		break;
 	}
 	return 0;
 }
 
+static off_t
+buffer_filter_update(struct buffer_data *filter, const void *buf, off_t length)
+{
+	off_t ret = length;
+
+	switch (filter->type) {
+	case BUFFER_FILTER_NULL:
+		break;
+	case BUFFER_FILTER_MD5:
+		MD5Update(&(((struct buffer_md5_ctx *)filter->arg.ptr)->ctx),
+		          buf, length);
+		break;
+	default:
+		internerr("unknown data type '%i' in buffer_filter_update",
+		          filter->type);
+	}
+
+	return ret;
+}
+
 static void
 buffer_md5_done(struct buffer_data *data)
 {
-	struct buffer_write_md5ctx *ctx;
+	struct buffer_md5_ctx *ctx;
 	unsigned char digest[16], *p = digest;
 	char *hash;
 	int i;
 
-	ctx = (struct buffer_write_md5ctx *)data->arg.ptr;
+	ctx = (struct buffer_md5_ctx *)data->arg.ptr;
 	hash = ctx->hash;
 	MD5Final(digest, &ctx->ctx);
 	for (i = 0; i < 16; ++i) {
@@ -83,10 +106,12 @@ buffer_md5_done(struct buffer_data *data)
 }
 
 static off_t
-buffer_done(struct buffer_data *data)
+buffer_filter_done(struct buffer_data *data)
 {
 	switch (data->type) {
-	case BUFFER_WRITE_MD5:
+	case BUFFER_FILTER_NULL:
+		break;
+	case BUFFER_FILTER_MD5:
 		buffer_md5_done(data);
 		break;
 	}
@@ -106,9 +131,6 @@ buffer_write(struct buffer_data *data, const void *buf, off_t length)
 		ret = fd_write(data->arg.i, buf, length);
 		break;
 	case BUFFER_WRITE_NULL:
-		break;
-	case BUFFER_WRITE_MD5:
-		MD5Update(&(((struct buffer_write_md5ctx *)data->arg.ptr)->ctx), buf, length);
 		break;
 	default:
 		internerr("unknown data type '%i' in buffer_write",
@@ -136,20 +158,22 @@ buffer_read(struct buffer_data *data, void *buf, off_t length)
 }
 
 off_t
-buffer_hash(const void *input, void *output, int type, off_t limit)
+buffer_filter(const void *input, void *output, int type, off_t limit)
 {
 	struct buffer_data data = { .arg.ptr = output, .type = type };
 	off_t ret;
 
-	buffer_init(&data);
-	ret = buffer_write(&data, input, limit);
-	buffer_done(&data);
+	buffer_filter_init(&data);
+	ret = buffer_filter_update(&data, input, limit);
+	buffer_filter_done(&data);
 
 	return ret;
 }
 
 static off_t
-buffer_copy(struct buffer_data *read_data, struct buffer_data *write_data,
+buffer_copy(struct buffer_data *read_data,
+            struct buffer_data *filter,
+            struct buffer_data *write_data,
             off_t limit, const char *desc)
 {
 	char *buf;
@@ -164,12 +188,12 @@ buffer_copy(struct buffer_data *read_data, struct buffer_data *write_data,
 
 	buf = m_malloc(bufsize);
 
-	buffer_init(write_data);
+	buffer_filter_init(filter);
 
-	while (bytesread >= 0 && byteswritten >= 0 && bufsize > 0) {
+	while (bufsize > 0) {
 		bytesread = buffer_read(read_data, buf, bufsize);
 		if (bytesread < 0)
-			break;
+			ohshite(_("failed to read on buffer copy for %s"), desc);
 		if (bytesread == 0)
 			break;
 
@@ -181,51 +205,116 @@ buffer_copy(struct buffer_data *read_data, struct buffer_data *write_data,
 				bufsize = limit;
 		}
 
+		buffer_filter_update(filter, buf, bytesread);
+
 		byteswritten = buffer_write(write_data, buf, bytesread);
 		if (byteswritten < 0)
-			break;
+			ohshite(_("failed in write on buffer copy for %s"), desc);
 		if (byteswritten == 0)
 			break;
 
 		totalwritten += byteswritten;
 	}
 
-	if (bytesread < 0)
-		ohshite(_("failed to read on buffer copy for %s"), desc);
-	if (byteswritten < 0)
-		ohshite(_("failed in write on buffer copy for %s"), desc);
 	if (limit > 0)
 		ohshit(_("short read on buffer copy for %s"), desc);
 
-	buffer_done(write_data);
+	buffer_filter_done(filter);
 
 	free(buf);
 
 	return totalread;
 }
 
-#define buffer_copy_TYPE(name, type1, name1, type2, name2) \
-off_t \
-buffer_copy_##name(type1 n1, int typeIn, \
-                   type2 n2, int typeOut, \
-                   off_t limit, const char *desc, ...) \
-{ \
-	va_list args; \
-	struct buffer_data read_data = { .arg.name1 = n1, .type = typeIn }; \
-	struct buffer_data write_data = { .arg.name2 = n2, .type = typeOut }; \
-	struct varbuf v = VARBUF_INIT; \
-	off_t ret; \
-\
-	va_start(args, desc); \
-	varbuf_vprintf(&v, desc, args); \
-	va_end(args); \
-\
-	ret = buffer_copy(&read_data, &write_data, limit, v.buf); \
-\
-	varbuf_destroy(&v); \
-\
-	return ret; \
+off_t
+buffer_copy_IntInt(int Iin, int Tin,
+                   void *Pfilter, int Tfilter,
+                   int Iout, int Tout,
+                   off_t limit, const char *desc, ...)
+{
+	va_list args;
+	struct buffer_data read_data = { .type = Tin, .arg.i = Iin };
+	struct buffer_data filter = { .type = Tfilter, .arg.ptr = Pfilter };
+	struct buffer_data write_data = { .type = Tout, .arg.i = Iout };
+	struct varbuf v = VARBUF_INIT;
+	off_t ret;
+
+	va_start(args, desc);
+	varbuf_vprintf(&v, desc, args);
+	va_end(args);
+
+	ret = buffer_copy(&read_data, &filter, &write_data, limit, v.buf);
+
+	varbuf_destroy(&v);
+
+	return ret;
 }
 
-buffer_copy_TYPE(IntInt, int, i, int, i);
-buffer_copy_TYPE(IntPtr, int, i, void *, ptr);
+off_t
+buffer_copy_IntPtr(int Iin, int Tin,
+                   void *Pfilter, int Tfilter,
+                   void *Pout, int Tout,
+                   off_t limit, const char *desc, ...)
+{
+	va_list args;
+	struct buffer_data read_data = { .type = Tin, .arg.i = Iin };
+	struct buffer_data filter = { .type = Tfilter, .arg.ptr = Pfilter };
+	struct buffer_data write_data = { .type = Tout, .arg.ptr = Pout };
+	struct varbuf v = VARBUF_INIT;
+	off_t ret;
+
+	va_start(args, desc);
+	varbuf_vprintf(&v, desc, args);
+	va_end(args);
+
+	ret = buffer_copy(&read_data, &filter, &write_data, limit, v.buf);
+
+	varbuf_destroy(&v);
+
+	return ret;
+}
+
+static off_t
+buffer_skip(struct buffer_data *input, off_t limit, const char *desc)
+{
+	struct buffer_data output;
+	struct buffer_data filter;
+
+	switch (input->type) {
+	case BUFFER_READ_FD:
+		if (lseek(input->arg.i, limit, SEEK_CUR) != -1)
+			return limit;
+		if (errno != ESPIPE)
+			ohshite(_("failed to seek %s"), desc);
+		break;
+	default:
+		internerr("unknown data type '%i' in buffer_skip\n",
+		          input->type);
+	}
+
+	output.type = BUFFER_WRITE_NULL;
+	output.arg.ptr = NULL;
+	filter.type = BUFFER_FILTER_NULL;
+	filter.arg.ptr = NULL;
+
+	return buffer_copy(input, &filter, &output, limit, desc);
+}
+
+off_t
+buffer_skip_Int(int I, int T, off_t limit, const char *desc_fmt, ...)
+{
+	va_list args; \
+	struct buffer_data input = { .type = T, .arg.i = I };
+	struct varbuf v = VARBUF_INIT;
+	off_t ret;
+
+	va_start(args, desc_fmt);
+	varbuf_vprintf(&v, desc_fmt, args);
+	va_end(args);
+
+	ret = buffer_skip(&input, limit, v.buf);
+
+	varbuf_destroy(&v);
+
+	return ret;
+}

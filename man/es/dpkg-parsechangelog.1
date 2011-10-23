@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-parsechangelog 1 "19 de Junio de 2009" "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-parsechangelog 1 2011\-08\-14 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-parsechangelog \- Análisis de ficheros de registro de cambios de Debian
 .
 .SH SINOPSIS
-\fBdpkg\-parsechangelog\fP [\fIopciones\fP]
+\fBdpkg\-parsechangelog\fP [\fIoption\fP...]
 .
 .SH DESCRIPCIÓN
 \fBdpkg\-parsechangelog\fP lee y analiza el registro de cambios de un árbol de
@@ -51,23 +51,23 @@ requerir más de una entrada, la mayoría de campos se toman de la última
 entrada, a menos que se especifique lo contrario:
 .RS
 .TP 
-\fBSource:\fP <nombre\-paquete>
+\fBSource:\fP\fI pkg\-name\fP
 .TP 
-\fBVersion:\fP <versión>
+\fBVersion:\fP\fI version\fP
 .TP 
-\fBDistribution:\fP <distribución\-destino>
+\fBDistribution:\fP\fI target\-distribution\fP
 .TP 
-\fBUrgency:\fP <urgencia>
+\fBUrgency:\fP\fI urgency\fP
 Se usa la urgencia más elevada presente entre todas las entradas incluidas.
 .TP 
-\fBMaintainer:\fP <autor>
+\fBMaintainer:\fP\fI author\fP
 .TP 
-\fBDate:\fP <fecha>
+\fBDate:\fP\fI date\fP
 .TP 
-\fBCloses:\fP <número\-fallo\-BTS>
+\fBCloses:\fP\fI bug\-number\fP
 Los campos «Closes» de todas las entradas incluidas se fusionan.
 .TP 
-\fBChanges:\fP <entradas\-registro\-cambios>
+\fBChanges:\fP\fI changelog\-entries\fP
 El texto de todas las entradas del registro de cambios se encadena. Para que
 ésto tenga un formato de control multi\-línea de Debian válido, las líneas
 vacías se reemplazan por un retorno de línea, y se inserta un sangrado de un

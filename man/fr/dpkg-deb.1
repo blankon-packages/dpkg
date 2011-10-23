@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-deb 1 07\-03\-2010 "Projet Debian" "suite dpkg"
+.TH dpkg\-deb 1 2011\-08\-14 "Projet Debian" "suite dpkg"
 .SH NOM
 dpkg\-deb \- outil pour la manipulation des archives (.deb) des paquets Debian
 .
 .SH SYNOPSIS
-\fBdpkg\-deb\fP [\fIoptions\fP] \fIcommande\fP
+\fBdpkg\-deb\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH DESCRIPTION
 \fBdpkg\-deb\fP crée un paquet, dépaquette une archive ou donne des
@@ -97,14 +97,22 @@ l'installation des paquets.
 ses permissions sont modifiées pour correspondre au cnotenu du paquet.
 .TP 
 \fB\-X\fP, \fB\-\-vextract\fP \fIarchive répertoire\fP
-Comme \fB\-\-extract\fP (\fB\-x\fP), mais affiche la liste des fichiers au fur et à
-mesure qu'ils sont extraits.
+Is like \fB\-\-extract\fP (\fB\-x\fP)  with \fB\-\-verbose\fP (\fB\-v\fP)  which prints a
+listing of the files extracted as it goes.
+.TP 
+\fB\-R\fP, \fB\-\-raw\-extract\fP \fIarchive directory\fP
+Extracts the filesystem tree from a package archive into a specified
+directory, and the control information files into a DEBIAN subdirectory of
+the specified directory.
+
+Le répertoire cible est créé si nécessaire (mais pas ses répertoires
+parents).
 .TP 
 \fB\-\-fsys\-tarfile\fP \fIarchive\fP
-Extrait les données de l'arborescence d'un paquet binaire et les envoie sur
-la sortie standard dans le format propre à la commande \fBtar\fP. En combinant
-cette option avec la commande \fBtar\fP(1), on peut ainsi extraire un fichier
-précis d'une archive de paquet.
+Extracts the filesystem tree data from a binary package and sends it to
+standard output in \fBtar\fP format. Together with \fBtar\fP(1)  this can be used
+to extract a particular file from a package archive.  The input archive will
+always be processed sequentially.
 .TP 
 \fB\-e\fP, \fB\-\-control\fP \fIarchive\fP [\fIrépertoire\fP]
 Extrait les fichiers de contrôle d'une archive de paquet dans le répertoire
@@ -137,11 +145,11 @@ entre les champs) se trouve dans la page \fBdpkg\-query\fP(1), option
 
 Par défaut, la valeur de ce champ est ${Package}\et${Version}\en.
 .TP 
-\fB\-z\fP\fIniveau_compression\fP
-Indique le niveau de compression à fournir au logiciel de compression appelé
-en sous\-main lors de la compression du paquet.
+\fB\-z\fP\fIcompress\-level\fP
+Specify which compression level to use on the compressor backend, when
+building a package (default is 9 for gzip and bzip2, 6 for xz and lzma).
 .TP 
-\fB\-Z\fP\fItype_compression\fP
+\fB\-Z\fP\fIcompress\-type\fP
 Indique le type de compression à utiliser lors de la construction d'un
 paquet. Les valeurs autorisées sont \fIgzip\fP (la valeur par défaut), \fIxz\fP,
 \fIbzip2\fP, \fIlzma\fP et \fInone\fP (aucune compression).
@@ -161,6 +169,10 @@ dépassé. On l'utilise seulement quand on construit des paquets qui doivent
 Empêche les vérifications normales de \fBdpkg\-deb \-\-build\fP quant au contenu
 proposé d'une archive. De cette façon, on peut construire n'importe quelle
 archive, aussi défectueuse soit\-elle.
+.TP 
+\fB\-v\fP, \fB\-\-verbose\fP
+Enables verbose output. This currently only affects \fB\-\-extract\fP making it
+behave like \fB\-\-vextract\fP.
 .TP 
 \fB\-D\fP, \fB\-\-debug\fP
 Permet les messages de débogage. Ce n'est pas très intéressant.

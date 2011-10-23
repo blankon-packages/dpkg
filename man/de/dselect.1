@@ -3,15 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dselect 1 2010\-03\-07 Debian\-Projekt Debian
+.TH dselect 1 2011\-08\-14 Debian\-Projekt Debian
 .SH NAME
 dselect \- Debian\-Paketverwaltungsoberfläche
 .
 .SH ÜBERSICHT
-\fBdselect\fP [\fB\-\-admindir\fP \fI<Verzeichnis>\fP] [\fB\-\-help\fP]
-[\fB\-\-version\fP] [\fB\-\-expert\fP] [\fB\-\-debug\fP|\fB\-D\fP\fI<Datei>\fP]
-[\fI<Aktion>\fP] [\fB\-\-colour\fP|\fB\-\-color\fP
-\fIBildschirmteil:\fP[\fIVordergrund\fP],[\fIHintergrund\fP][\fI:Attr\fP[\fI+Attr+..\fP]]]
+\fBdselect\fP [\fIOption\fP...] \fIAktion\fP
 .
 .SH BESCHREIBUNG
 \fBdselect\fP
@@ -43,20 +40,19 @@ Informationen über das Programm anzuzeigen.
 .SH OPTIONEN
 Alle Optionen können sowohl auf der Kommandozeile als auch in der
 Konfigurationsdatei \fI/etc/dpkg/dselect.cfg\fP oder in den Dateien im
-Konfigurationsverzeichnis \fI/etc/dpkg/dpkg.cfg.d/\fP von \fBdselect\fP angegeben
-werden. Jede Zeile in der Konfigurationsdatei ist entweder eine Option
-(exakt identisch mit der Kommandozeilenoption, nur ohne einleitende
+Konfigurationsverzeichnis \fI/etc/dpkg/dselect.cfg.d/\fP von \fBdselect\fP
+angegeben werden. Jede Zeile in der Konfigurationsdatei ist entweder eine
+Option (exakt identisch mit der Kommandozeilenoption, nur ohne einleitende
 Gedankenstriche) oder ein Kommentar (falls sie mit \fB#\fP beginnt).
 .br
 .TP 
-\fB\-\-admindir\fP\fI <Verzeichnis>\fP
+\fB\-\-admindir\fP\fI Verzeichnis\fP
 Ändert das Verzeichnis, in dem die Dateien »\fIstatus\fP«, »\fIavailable\fP« und
 ähnliche Dateien von Dpkg liegen. Standardmäßig ist dies \fI/var/lib/dpkg\fP
 und normalerweise sollte es keinen Grund geben, dieses zu ändern.
 .TP 
-\fB\-\-debug\fP\fI <Datei> \fP|\fI \fP\fB\-D\fP\fI<Datei>\fP
-Aktiviere Debugging. Debug\-Informationen werden nach \fI<Datei>\fP
-gesendet.
+\fB\-\-debug\fP\fI Datei\fP|\fI \fP\fB\-D\fP\fIDatei\fP
+Aktiviere Debugging. Debug\-Informationen werden nach \fIDatei\fP gesendet.
 .TP 
 \fB\-\-expert\fP
 Aktiviert den Expertenmodus, d.h. zeigt keine möglicherweise nervenden
@@ -126,16 +122,19 @@ Gib einen kurzen Hilfetext aus und beende sich erfolgreich.
 \fB\-\-version\fP
 Gebe Versionsinformationen aus und beende sich erfolgreich.
 .
-.SH VERWENDUNG
-Wenn \fBDselect\fP interaktiv gestartet wird, bietet es dem Benutzer ein Menü
-von verfügbaren Aktionen:
+.SH AKTIONEN
+Wenn \fBDselect\fP gestartet wird, kann es die folgenden Aktionen durchführen,
+entweder direkt, falls sie auf der Kommandozeile angegeben wurde oder indem
+dem Benutzer ein Menü der verfügbaren Aktionen bei interkativen Betrieb
+angezeigt wird:
 .SS Zugriff
 Wähle und konfiguriere eine Zugriffsmethode für Paketdepots.
 .sp
-Standardmäßig stellt \fBdselect\fP mehrere Methoden wie \fIfloppy\fP, \fIharddisk\fP
-oder \fIcdrom\fP zur Verfügung, aber andere Pakete können zusätzliche Methoden
-bereitstellen, z.B. das \fBapt\fP\-Paket stellt die \fIapt\fP\-Zugriffsmethode oder
-das \fBdpkg\-multicd\fP\-Paket \fImulti_cd\fP bereit.
+Standardmäßig stellt \fBdselect\fP mehrere Methoden wie \fIcdrom\fP, \fImulti_cd\fP,
+\fInfs\fP, \fImulti_nfs\fP, \fIharddisk\fP, \fImounted\fP, \fImulti_mount\fP, \fIfloppy\fP
+oder \fIftp\fP zur Verfügung, aber andere Pakete können zusätzliche Methoden
+bereitstellen, z.B. stellt das \fBapt\fP\-Paket die \fIapt\fP\-Zugriffsmethode
+bereit.
 .sp
 Die Verwendung der \fIapt\fP\-Zugriffsmethode wird nachdrücklich empfohlen.
 .sp
@@ -370,7 +369,7 @@ detaillierter beschrieben.
 Es ist auch möglich, die Befehle auf Gruppen von Paketauswahlen anzuwenden,
 indem mit dem Cursor\-Balken die Gruppen\-Überschrift ausgewählt wird. Die
 genaue Gruppierung der Pakete hängt von den Einstellungen der aktuellen
-Listen\-Sortierung ab.
+Listensortierung ab.
 .sp
 Veränderungen von großen Gruppen von Auswahlen sollten vorsichtig
 durchgeführt werden, da dies sofort zu einer großen Anzahl an

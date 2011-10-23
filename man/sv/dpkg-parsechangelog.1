@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-parsechangelog 1 2009\-05\-19 Debianprojektet dpkg\-verktygen
+.TH dpkg\-parsechangelog 1 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-parsechangelog \- tolka Debians ändringsloggar
 .
 .SH SYNOPS
-\fBdpkg\-parsechangelog\fP [\fIflaggor\fP]
+\fBdpkg\-parsechangelog\fP [\fIflagga\fP...]
 .
 .SH BESKRIVNING
 \fBdpkg\-parsechangelog\fP läser och tolkar ändringsloggen i ett uppackat
@@ -49,23 +49,23 @@ control\-format (se \fBdeb\-control\fP(5)). Om mer än en post önskas tas de
 flesta fält från den senaste posten, förutom om annat anges:
 .RS
 .TP 
-\fBSource:\fP <paketnamn>
+\fBSource:\fP \fIpaketnamn\fP
 .TP 
-\fBVersion:\fP <versions>
+\fBVersion:\fP \fIversions\fP
 .TP 
-\fBDescription:\fP <målutgåva>
+\fBDistribution:\fP \fImålutgåva\fP
 .TP 
-\fBUrgency:\fP <brådska>
+\fBUrgency:\fP \fIbrådska\fP
 Högsta brådskan av alla de inkluderade posterna används.
 .TP 
-\fBMaintainer:\fP <författare>
+\fBMaintainer:\fP \fIförfattare\fP
 .TP 
-\fBDate:\fP <datum>
+\fBDate:\fP \fIdatum\fP
 .TP 
-\fBCloses:\fP <nummer på felrapport>
+\fBCloses:\fP \fInummer\-på\-felrapport\fP
 Closes\-fältet i alla inkluderade poster slås samman.
 .TP 
-\fBChanges:\fP <poster från ändringsloggen>
+\fBChanges:\fP \fIposterfrån\-ändringsloggen\fP
 Texten i alla ändringsloggposter slås samman. För att göra fältet till
 giltigt flerradsfält i Debian\-control\-format ersätts tomma rader med en
 ensam punkt och alla rader får ett teckens indrag. Exakt innehåll beror på

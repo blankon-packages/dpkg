@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-statoverride 8 2009\-06\-26 Debianprojektet dpkg\-verktygen
+.TH dpkg\-statoverride 8 2011\-07\-04 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-statoverride \- överstyr ägarskap och läge för filer
 .
 .SH SYNOPS
-\fBdpkg\-statoverride\fP [\fIflaggor\fP] \fIåtgärd\fP
+\fBdpkg\-statoverride\fP [\fIflagga\fP...] \fIåtgärd\fP
 .
 .SH BESKRIVNING
 "\fBstat\-överstyrningar\fP" är ett sätt att tala om för \fBdpkg\fP(1) att en annan
@@ -71,8 +71,8 @@ Var mindre pratsom om vad som görs.
 .SH MILJÖVARIABLER
 .TP 
 \fBDPKG_ADMINDIR\fP
-If set and the \fB\-\-admindir\fP option has not been specified, it will be used
-as the dpkg data directory.
+Om satt, och flaggan \fB\-\-admindir\fP inte har angivits, används värdet som
+datakatalog för dpkg.
 .
 .SH FILER
 .TP 

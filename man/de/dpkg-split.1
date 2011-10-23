@@ -4,12 +4,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-split 1 2009\-06\-26 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH dpkg\-split 1 2011\-07\-04 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 dpkg\-split \- Debian\-Paketarchiv Teilungs\- und Zusammensetzwerkzeug
 .
 .SH ÜBERSICHT
-\fBdpkg\-split\fP [\fIOptionen\fP] \fIBefehl\fP
+\fBdpkg\-split\fP [\fIOption\fP...] \fIBefehl\fP
 .
 .SH BESCHREIBUNG
 \fBdpkg\-split\fP zerteilt Debian\-Binärpaketdateien in kleinere Teile und setzt
@@ -59,7 +59,8 @@ sein müssen.
 Die Dateinamen der Teile sind für den Prozess des Wiederzusammenbauens nicht
 relevant.
 
-Standardmäßig wird die Ausgabedatei \fIPaket\fP\fB\-\fP\fIVersion\fP\fB.deb\fP genannt.
+Standardmäßig wird die Ausgabedatei \fIPaket\fP\fB\-\fP\fIVersion\fP\fB_\fP\fIArch\fP\fB.deb\fP
+genannt.
 
 .TP 
 \fB\-I\fP, \fB\-\-info\fP \fITeil\fP...
@@ -84,8 +85,8 @@ Falls nicht, wird \fITeil\fP in die Warteschlange kopiert und
 \fIKomplettausgabe\fP wird nicht erzeugt.
 
 Falls \fITeil\fP kein Teil eines aufgeteilten Binärpaketes ist, dann beendet
-sich \fIdpkg\-split\fP mit Rückgabecode 1; falls irgendwelche anderen Probleme
-auftreten lautet der Rückgabecode 2.
+sich \fIdpkg\-split\fP mit Rückgabecode \fB1\fP; falls irgendwelche anderen
+Probleme auftreten lautet der Rückgabecode \fB2\fP.
 
 Die Option \fB\-\-output\fP oder \fB\-o\fP muss bei Verwenden von \fB\-\-auto\fP angegeben
 werden. (Falls dies nicht obligatorisch wäre, wüsste das Programm nicht,
@@ -151,32 +152,27 @@ Das Ergebnis wird dann soweit wie nötig abgeschnitten, und Dateinamen der
 Form \fIPräfixN\fP\fBof\fP\fIM\fP\fB.deb\fP werden generiert.
 .
 .SH RÜCKGABEWERT
-Ein Rückgabewert von 0 zeigt an, dass das angeforderte Aufteilen,
-Zusammenfügen oder anderer Befehl erfolgreich war. \fB\-\-info\fP\-Befehle werden
-als erfolgreich gewertet, sogar falls die Dateien keine Teile eines
-Binärpaketes waren.
-
-Ein Rückgabewert von 1 tritt nur bei \fB\-\-auto\fP auf und zeigt an, dass die
-Datei \fITeil\fP kein Teil eines Binärpaketes war.
-
-Ein Rückgabewert von 2 zeigt eine bestimmte Gattung von Problemen an, wie
-zum Beispiel ein Fehlschlag eines Systemaufrufs, eine Datei, die wie ein
-Paketteil aussah aber beschädigt war, ein Benutzungsfehler oder einige
-andere Probleme.
+.TP 
+\fB0\fP
+Das angeforderte Aufteilen, Zusammenfügen oder ein anderer Befehl war
+erfolgreich. \fB\-\-info\fP\-Befehle werden als erfolgreich gewertet, sogar falls
+die Dateien keine Teile eines Binärpaketes waren.
+.TP 
+\fB1\fP
+Tritt nur bei \fB\-\-auto\fP auf und zeigt an, dass die Datei \fITeil\fP kein Teil
+eines Binärprogramms war.
+.TP 
+\fB2\fP
+Eine bestimmte Gattung von Problemen trat auf, wie zum Beispiel ein
+Fehlschlag eines Systemaufrufs, eine Datei, die wie ein Paketteil aussah
+aber beschädigt war, ein Benutzungsfehler oder einige andere Probleme.
 .
 .SH FEHLER
-\fBdpkg\-split\fP benutzt einige ziemlich veraltete Konventionen für die
-Dateinamen von Debian\-Paketen.
-
 Volle Details über die Pakete in der Warteschlange sind nicht zu erhalten,
 ohne selbst im Warteschlangenverzeichnis zu wühlen.
 
 Es gibt keine einfache Art zu testen, ob eine Datei, die ein Teil eines
 Binärpaketes sein könnte, eines ist.
-
-Die Architektur wird nicht im Kopf der Teil\-Dateien dargestellt, nur in den
-Steuer\-Informationen der enthaltenen Binärpaket\-Datei, und sie ist nicht in
-den erzeugten Dateinamen wiedergegeben.
 .
 .SH DATEIEN
 .TP 

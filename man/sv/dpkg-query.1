@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-query 1 2010\-03\-07 Debianprojektet Dpkg\-sviten
+.TH dpkg\-query 1 2011\-08\-14 Debianprojektet Dpkg\-sviten
 .SH NAMN
 dpkg\-query \- ett verktyg för att fråga dpkg\-databasen
 .
@@ -16,7 +16,7 @@ dpkg\-query \- ett verktyg för att fråga dpkg\-databasen
 .
 .SH KOMMANDON
 .TP 
-\fB\-l\fP, \fB\-\-list\fP [\fIpackage\-name\-pattern\fP...]
+\fB\-l\fP, \fB\-\-list\fP [\fIpaketnamnsmönster\fP ...]
 Lista paket som matchar det givna mönstret. Om inget \fIpaketnamnsmönster\fP
 anges listas alla paket i \fI/var/lib/dpkg/status\fP, förutom de paket som
 markerats som ej installerade (dvs. de som tidigare har helt tagits
@@ -68,7 +68,7 @@ automatiskt för att passa terminalbredden. Det är avsett för mänskliga
 läsare, och är inte enkelt maskinläsbart. Se \fB\-W\fP (\fB\-\-show\fP) och
 \fB\-\-showformat\fP för hur du konfigurerar utdataformatet.
 .TP 
-\fB\-W\fP, \fB\-\-show\fP [\fIpackage\-name\-pattern\fP...]
+\fB\-W\fP, \fB\-\-show\fP [\fIpaketnamnsmönster\fP ...]
 Precis som flaggan \fB\-\-list\fP kommer att paket som matchar det givna mönstret
 att visas. Utdatat kan dock skräddarsys med flaggan
 \fB\-\-showformat\fP. Standardutdataformatet är en rad per paket som träffas, där
@@ -77,11 +77,14 @@ ett tabulatortecken.
 .TP 
 \fB\-s\fP, \fB\-\-status\fP \fIpaketnamn\fP ...
 Rapportera status om det angivna paketet.  Detta alternativ visar helt
-enkelt posten i statusdatabasen för installerade paket.
+enkelt posten i statusdatabasen för installerade paket. Om flera
+\fIpaketnamn\fP anges avdelas de efterfrågade statusposterna med en tomrad.
 .TP 
 \fB\-L\fP, \fB\-\-listfiles\fP \fIpaketnamn\fP ...
-Listar filer som installerats på ditt system från \fIpaketnamn\fP. Observera
-att filer som skapats av paketspecifika installationsskript inte visas
+Listar filer som installerats på ditt system från \fIpaketnamn\fP. Om flera
+\fIpaketnamn\fP anges avdelas den efterfrågade fillistan med en
+tomrad. Observera att filer som skapats av paketspecifika
+installationsskript inte visas
 .TP 
 \fB\-c\fP, \fB\-\-control\-path\fP \fIpaketnamn\fP [\fIcontrol\-filnamn\fP]
 Visar sökvägarna till control\-filerna som installerats på ditt system för
@@ -92,16 +95,18 @@ gränssnitt. Det kan avrådas från senare om bättre gränssnitt eller de
 nuvarande arkitektoniska begränsningarna har lösts.
 .TP 
 \fB\-S\fP, \fB\-\-search\fP \fIfilnamnssökmönster\fP ...
-Sök efter filnamnet bland de installerade paketen. Alla skalets vanliga
-jokertecken kan användas i mönstret. Kommandot kommer inte att visa
-extrafiler som skapas av paketskript, ej heller kommer det att visa
+Sök efter paket som äger filer som motsvarar det angivna mönstret. Alla
+skalets vanliga jokertecken kan användas i mönstret. Kommandot kommer inte
+att visa extrafiler som skapas av paketskript, ej heller kommer det att visa
 alternativ.
 .TP 
 \fB\-p\fP, \fB\-\-print\-avail\fP \fIpaketnamn\fP
 Visar information om \fIpaketnamn\fP, enligt vad som finns i
-\fI/var/lib/dpkg/available\fP. Använder du ett APT\-baserat skal bör du istället
-använda \fBapt\-cache show\fP \fIpaketnamn\fP, då \fIavailable\fP\-filen endast
-àjourförs om \fBdselect\fP används.
+\fI/var/lib/dpkg/available\fP. Om flera \fIpaketnamn\fP anges avdelas de
+efterfrågade posterna ur \fIavailable\fP\-filen med en tomrad.
+
+Använder du ett APT\-baserat skal bör du istället använda \fBapt\-cache show\fP
+\fIpaketnamn\fP, då \fIavailable\fP\-filen endast àjourförs om \fBdselect\fP används.
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
 Visar hjälpskärm och avslutar.
@@ -148,11 +153,11 @@ binärpaketet hamnar där):
     \fBDescription\fP
     \fBEnhances\fP
     \fBEssential\fP
-    \fBFilename\fP (internt, dselect\-relaterat)
+    \fBFilename\fP (internt, skalrelaterat)
     \fBHomepage\fP
     \fBInstalled\-Size\fP
-    \fBMD5sum\fP (internt, dselect\-relaterat)
-    \fBMSDOS\-Filename\fP (internt, dselect\-relaterat)
+    \fBMD5sum\fP (internt, skalrelaterat)
+    \fBMSDOS\-Filename\fP (internt, skalrelaterat)
     \fBMaintainer\fP
     \fBOrigin\fP
     \fBPackage\fP
@@ -163,11 +168,11 @@ binärpaketet hamnar där):
     \fBReplaces\fP
     \fBRevision\fP (föråldrat)
     \fBSection\fP
-    \fBSize\fP  (internt, dselect\-relaterat)
+    \fBSize\fP  (internt, skalrelaterat)
     \fBSource\fP
     \fBStatus\fP (internt)
     \fBSuggests\fP
-    \fBTag\fP (normalt inte i .deb, utan i APTs Packages\-filer)
+    \fBTag\fP (normalt inte i .deb, utan i arkivets Packages\-filer)
     \fBTriggers\-Awaited\fP (internt)    \fBTriggers\-Pending\fP (internt)    \fBVersion\fP
 .fi
 
@@ -182,9 +187,11 @@ och kan du köra:
 .fi
 .
 .SH RETURVÄRDE
-.IP 0
+.TP 
+\fB0\fP
 Den önskade frågan utfördes utan fel.
-.IP 1
+.TP 
+\fB1\fP
 Problem uppstod vid tolkning av kommandoraden eller när frågan skulle
 utföras, till exempel att ingen fil eller paket hittades (förutom för
 \-\-control\-path).
@@ -192,8 +199,8 @@ utföras, till exempel att ingen fil eller paket hittades (förutom för
 .SH MILJÖVARIABLER
 .TP 
 \fBDPKG_ADMINDIR\fP
-If set and the \fB\-\-admindir\fP option has not been specified, it will be used
-as the dpkg data directory.
+Om satt, och flaggan \fB\-\-admindir\fP inte har angivits, används värdet som
+datakatalog för dpkg.
 .TP 
 \fBCOLUMNS\fP
 Inställningen påverkar utdata från kommandot \fB\-\-list\fP genom att ändra

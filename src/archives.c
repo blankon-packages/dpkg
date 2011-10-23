@@ -54,7 +54,7 @@
 #include <dpkg/command.h>
 #include <dpkg/file.h>
 #include <dpkg/tarfn.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 #include <dpkg/triglib.h>
 
 #ifdef WITH_SELINUX
@@ -196,9 +196,9 @@ tarfile_skip_one_forward(struct tarcontext *tc, struct tar_entry *ti)
   if (ti->type == tar_filetype_file) {
     char fnamebuf[256];
 
-    fd_null_copy(tc->backendpipe, ti->size,
-                 _("skipped unpacking file '%.255s' (replaced or excluded?)"),
-                 path_quote_filename(fnamebuf, ti->name, 256));
+    fd_skip(tc->backendpipe, ti->size,
+            _("skipped unpacking file '%.255s' (replaced or excluded?)"),
+            path_quote_filename(fnamebuf, ti->name, 256));
     r = ti->size % TARBLKSZ;
     if (r > 0)
       if (fd_read(tc->backendpipe, databuf, TARBLKSZ - r) < 0)
@@ -283,7 +283,7 @@ tarobject_set_perms(struct tar_entry *te, const char *path, struct file_stat *st
 }
 
 static void
-set_selinux_path_context(const char *matchpath, const char *path, mode_t mode)
+tarobject_set_se_context(const char *matchpath, const char *path, mode_t mode)
 {
 #ifdef WITH_SELINUX
   static int selinux_enabled = -1;
@@ -441,11 +441,10 @@ linktosameexistingdir(const struct tar_entry *ti, const char *fname,
 }
 
 static void
-ensure_same_file(struct pkginfo *pkg,
-                 const char *fn_old, int fd_old, struct stat *stab,
-                 const char *fn_new, int fd_new, struct tar_entry *ti)
+ensure_same_file(struct pkginfo *pkg, const char *fn_old, struct stat *stab,
+                 const char *fn_new, struct tar_entry *ti, char *new_md5)
 {
-  char old_md5[MD5HASHLEN + 1], new_md5[MD5HASHLEN + 1];
+  char old_md5[MD5HASHLEN + 1];
   char linktarget[_POSIX_SYMLINK_MAX + 1];
   ssize_t sz;
   const char *err = _("'%s' is different from the same file on the system");
@@ -479,12 +478,15 @@ ensure_same_file(struct pkginfo *pkg,
     if (!S_ISFIFO(stab->st_mode))
       ohshit(err, ti->name);
     break;
-  case tar_filetype_file:
   case tar_filetype_hardlink:
+    /* md5sum of hardlinks are not computed during extraction since they
+     * have no associated data, they only point to a target file */
+    md5hash(pkg, new_md5, fn_new);
+    /* No break on purpose */
+  case tar_filetype_file:
     if (!S_ISREG(stab->st_mode) || ti->size != stab->st_size)
       ohshit(err, ti->name);
-    md5hash(pkg, new_md5, fn_new, fd_new);
-    md5hash(pkg, old_md5, fn_old, fd_old);
+    md5hash(pkg, old_md5, fn_old);
     if (strcmp(old_md5, new_md5))
       ohshit(err, ti->name);
     break;
@@ -505,7 +507,7 @@ tarobject(void *ctx, struct tar_entry *ti)
   struct conffile *conff;
   struct tarcontext *tc = ctx;
   bool existingdir, keepexisting, ensuresamefile, ensuresameconff;
-  char prevnewhash[MD5HASHLEN + 1] = "";
+  char filehash[MD5HASHLEN + 1], prevnewhash[MD5HASHLEN + 1];
   int statr;
   ssize_t r;
   struct stat stab, stabtmp;
@@ -673,6 +675,15 @@ tarobject(void *ctx, struct tar_entry *ti)
           continue;
       }
 
+      /* If the new object is a directory and the previous object does
+       * not exist assume it's also a directory and skip further checks.
+       * XXX: Ideally with more information about the installed files we
+       * could perform more clever checks. */
+      if (statr != 0 && ti->type == tar_filetype_dir) {
+        debug(dbg_eachfile, "tarobject ... assuming shared directory");
+        continue;
+      }
+
       /* Nope? Hmm, file conflict, perhaps. Check Replaces. */
       switch (otherpkg->clientdata->replacingfilesandsaid) {
       case 2:
@@ -700,12 +711,15 @@ tarobject(void *ctx, struct tar_entry *ti)
              conff = conff->next) {
           if (!conff->obsolete)
             continue;
-          if (stat(conff->name, &stabtmp))
+          if (stat(conff->name, &stabtmp)) {
             if (errno == ENOENT || errno == ENOTDIR || errno == ELOOP)
               continue;
-            if (stabtmp.st_dev == stab.st_dev &&
-                stabtmp.st_ino == stab.st_ino)
-              break;
+            else
+              ohshite(_("cannot stat file '%s'"), conff->name);
+          }
+          if (stabtmp.st_dev == stab.st_dev &&
+              stabtmp.st_ino == stab.st_ino)
+            break;
         }
         if (conff) {
           debug(dbg_eachfiledetail, "tarobject other's obsolete conffile");
@@ -727,6 +741,7 @@ tarobject(void *ctx, struct tar_entry *ti)
         nifd->namenode->flags &= ~fnnf_new_inarchive;
         keepexisting = true;
       } else {
+        /* At this point we are replacing something without a Replaces. */
         if (!statr && S_ISDIR(stab.st_mode)) {
           forcibleerr(fc_overwritedir,
                       _("trying to overwrite directory '%.250s' "
@@ -735,17 +750,13 @@ tarobject(void *ctx, struct tar_entry *ti)
                       versiondescribe(&otherpkg->installed.version,
                                       vdew_nonambig));
         } else {
-          /* At this point we are replacing something without a Replaces.
-           * If the new object is a directory and the previous object does
-           * not exist assume it's also a directory and don't complain. */
-          if (!(statr && ti->type == tar_filetype_dir))
-            forcibleerr(fc_overwrite,
-                        _("trying to overwrite '%.250s', "
-                          "which is also in package %.250s %.250s"),
-                        nifd->namenode->name,
-                        pkg_describe(otherpkg, pdo_foreign),
-                        versiondescribe(&otherpkg->installed.version,
-                                        vdew_nonambig));
+          forcibleerr(fc_overwrite,
+                      _("trying to overwrite '%.250s', "
+                        "which is also in package %.250s %.250s"),
+                      nifd->namenode->name,
+                      pkg_describe(otherpkg, pdo_foreign),
+                      versiondescribe(&otherpkg->installed.version,
+                                      vdew_nonambig));
         }
       }
     }
@@ -776,7 +787,7 @@ tarobject(void *ctx, struct tar_entry *ti)
     /* Compute the hash of the (former) .dpkg-new before we install
      * our own version in place of it. Also make a temporary backup in
      * case the new version differs and we have to roll-back. */
-    md5hash(tc->pkg, prevnewhash, fnamenewvb.buf, -1);
+    md5hash(tc->pkg, prevnewhash, fnamenewvb.buf);
     if (strcmp(prevnewhash, NONEXISTENTFLAG) && strcmp(prevnewhash, "-")) {
       debug(dbg_conffdetail, "former %s backupped", fnamenewvb.buf);
       if (link(fnamenewvb.buf, fnametmpvb.buf))
@@ -811,23 +822,20 @@ tarobject(void *ctx, struct tar_entry *ti)
     push_cleanup(cu_closefd, ehflag_bombout, NULL, 0, 1, &fd);
     debug(dbg_eachfiledetail, "tarobject file open size=%jd",
           (intmax_t)ti->size);
-    { char fnamebuf[256];
-    fd_fd_copy(tc->backendpipe, fd, ti->size,
-               _("backend dpkg-deb during `%.255s'"),
-               path_quote_filename(fnamebuf, ti->name, 256));
+    {
+      char fnamebuf[256];
+      path_quote_filename(fnamebuf, ti->name, 256);
+      if (ensuresamefile || ensuresameconff)
+        fd_fd_copy_and_md5(tc->backendpipe, fd, filehash, ti->size,
+                           _("backend dpkg-deb during `%.255s'"), fnamebuf);
+      else
+        fd_fd_copy(tc->backendpipe, fd, ti->size,
+                   _("backend dpkg-deb during `%.255s'"), fnamebuf);
     }
     r = ti->size % TARBLKSZ;
     if (r > 0)
       if (fd_read(tc->backendpipe, databuf, TARBLKSZ - r) < 0)
         ohshite(_("error reading from dpkg-deb pipe"));
-
-    if (ensuresamefile && !statr) {
-      /* We do the check here before we tell the filesystem that we won't
-       * access the file content */
-      if (lseek(fd, SEEK_SET, 0))
-        ohshite(_("failed to rewind temporary file (%s)"), fnamenewvb.buf);
-      ensure_same_file(tc->pkg, fnamevb.buf, -1, &stab, fnamenewvb.buf, fd, ti);
-    }
 
     fd_writeback_init(fd);
 
@@ -868,9 +876,9 @@ tarobject(void *ctx, struct tar_entry *ti)
     varbuf_reset(&hardlinkfn);
     varbuf_add_str(&hardlinkfn, instdir);
     varbuf_add_char(&hardlinkfn, '/');
-    varbuf_add_str(&hardlinkfn, ti->linkname);
     linknode = findnamenode(ti->linkname, 0);
-    if (linknode->flags & fnnf_deferred_rename)
+    varbuf_add_str(&hardlinkfn, namenodetouse(linknode, tc->pkg)->name);
+    if (linknode->flags & (fnnf_deferred_rename|fnnf_new_conff))
       varbuf_add_str(&hardlinkfn, DPKGNEWEXT);
     varbuf_end_str(&hardlinkfn);
     if (link(hardlinkfn.buf,fnamenewvb.buf))
@@ -893,12 +901,12 @@ tarobject(void *ctx, struct tar_entry *ti)
     internerr("unknown tar type '%d', but already checked", ti->type);
   }
 
-  if (ensuresamefile && !statr && ti->type != tar_filetype_file)
-    ensure_same_file(tc->pkg, fnamevb.buf, -1, &stab, fnamenewvb.buf, -1, ti);
+  if (ensuresamefile && !statr)
+    ensure_same_file(tc->pkg, fnamevb.buf, &stab, fnamenewvb.buf, ti, filehash);
 
   tarobject_set_perms(ti, fnamenewvb.buf, st);
   tarobject_set_mtime(ti, fnamenewvb.buf);
-  set_selinux_path_context(fnamevb.buf, fnamenewvb.buf, st->mode);
+  tarobject_set_se_context(fnamevb.buf, fnamenewvb.buf, st->mode);
 
   /*
    * CLEANUP: Now we have extracted the new object in .dpkg-new (or,
@@ -928,7 +936,6 @@ tarobject(void *ctx, struct tar_entry *ti)
             break;
         }
         if (conff) {
-          char disthash[MD5HASHLEN + 1];
           const char *refhash;
 
           /* The hash in the Conffiles is only meaningful if the package
@@ -936,11 +943,10 @@ tarobject(void *ctx, struct tar_entry *ti)
            * assumption that the hash of the .dpkg-new file that was there
            * when we started is the one of the unpacked package */
           refhash = (pkg->status > stat_unpacked) ? conff->hash : prevnewhash;
-          md5hash(pkg, disthash, fnamenewvb.buf, -1);
           debug(dbg_conffdetail, "ensuresameconf in %s(%s): %s vs %s",
                 pkg_describe(pkg, pdo_always), statusinfos[pkg->status].name,
-                refhash, disthash);
-          if (strcmp(disthash, refhash))
+                refhash, filehash);
+          if (strcmp(filehash, refhash))
             ohshit(_("conffile '%s' is not in sync with other instances "
                      "of the same package"), ti->name);
         }
@@ -975,14 +981,16 @@ tarobject(void *ctx, struct tar_entry *ti)
       r = readlink(fnamevb.buf, symlinkfn.buf, symlinkfn.size);
       if (r < 0)
         ohshite(_("unable to read link `%.255s'"), ti->name);
-      assert(r == stab.st_size);
+      else if (r != stab.st_size)
+        ohshit(_("symbolic link '%.250s' size has changed from %jd to %zd"),
+               fnamevb.buf, stab.st_size, r);
       varbuf_trunc(&symlinkfn, r);
       varbuf_end_str(&symlinkfn);
       if (symlink(symlinkfn.buf,fnametmpvb.buf))
         ohshite(_("unable to make backup symlink for `%.255s'"), ti->name);
       if (lchown(fnametmpvb.buf,stab.st_uid,stab.st_gid))
         ohshite(_("unable to chown backup symlink for `%.255s'"), ti->name);
-      set_selinux_path_context(fnamevb.buf, fnametmpvb.buf, stab.st_mode);
+      tarobject_set_se_context(fnamevb.buf, fnametmpvb.buf, stab.st_mode);
     } else {
       debug(dbg_eachfiledetail,"tarobject nondirectory, `link' backup");
       if (link(fnamevb.buf,fnametmpvb.buf))
@@ -996,7 +1004,8 @@ tarobject(void *ctx, struct tar_entry *ti)
    * in .dpkg-new.
    */
 
-  if (ti->type == tar_filetype_file || ti->type == tar_filetype_symlink) {
+  if (ti->type == tar_filetype_file || ti->type == tar_filetype_hardlink ||
+      ti->type == tar_filetype_symlink) {
     nifd->namenode->flags |= fnnf_deferred_rename;
 
     debug(dbg_eachfiledetail, "tarobject done and installation deferred");
@@ -1184,7 +1193,7 @@ void check_breaks(struct dependency *dep, struct pkginfo *pkg,
   int ok;
 
   fixbydeconf = NULL;
-  if (depisok(dep, &why, &fixbydeconf, false)) {
+  if (depisok(dep, &why, &fixbydeconf, NULL, false)) {
     varbuf_destroy(&why);
     return;
   }
@@ -1242,7 +1251,7 @@ void check_conflict(struct dependency *dep, struct pkginfo *pkg,
   struct dependency *providecheck;
 
   fixbyrm = NULL;
-  if (depisok(dep, &conflictwhy, &fixbyrm, false)) {
+  if (depisok(dep, &conflictwhy, &fixbyrm, NULL, false)) {
     varbuf_destroy(&conflictwhy);
     varbuf_destroy(&removalwhy);
     return;
@@ -1275,7 +1284,7 @@ void check_conflict(struct dependency *dep, struct pkginfo *pkg,
              pdep = pdep->rev_next) {
           if (pdep->up->type != dep_depends && pdep->up->type != dep_predepends)
             continue;
-          if (depisok(pdep->up, &removalwhy, NULL, false))
+          if (depisok(pdep->up, &removalwhy, NULL, NULL, false))
             continue;
           varbuf_end_str(&removalwhy);
           if (!try_remove_can(pdep,fixbyrm,removalwhy.buf))
@@ -1292,7 +1301,7 @@ void check_conflict(struct dependency *dep, struct pkginfo *pkg,
                  pdep = pdep->rev_next) {
               if (pdep->up->type != dep_depends && pdep->up->type != dep_predepends)
                 continue;
-              if (depisok(pdep->up, &removalwhy, NULL, false))
+              if (depisok(pdep->up, &removalwhy, NULL, NULL, false))
                 continue;
               varbuf_end_str(&removalwhy);
               fprintf(stderr, _("dpkg"
@@ -1518,12 +1527,12 @@ wanttoinstall(struct pkginfo *pkg)
 
   if (pkg->want != want_install && pkg->want != want_hold) {
     if (f_alsoselect) {
-      printf(_("Selecting previously deselected package %s.\n"),
+      printf(_("Selecting previously unselected package %s.\n"),
              pkg_describe(pkg, pdo_foreign));
       pkg->want = want_install;
       return true;
     } else {
-      printf(_("Skipping deselected package %s.\n"),
+      printf(_("Skipping unselected package %s.\n"),
              pkg_describe(pkg, pdo_foreign));
       return false;
     }

@@ -34,6 +34,7 @@
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
 
+#include "filesdb.h"
 #include "infodb.h"
 #include "main.h"
 
@@ -130,7 +131,7 @@ findbreakcyclerecursive(struct pkginfo *pkg, struct cyclesofarlink *sofar)
       if (possi->cyclebreak) continue;
       thislink.possi= possi;
       pkg_pos = NULL;
-      while ((pkg_pos = deppossi_get_pkg(possi, wpb_by_status, pkg_pos)))
+      while ((pkg_pos = deppossi_get_pkg(possi, wpb_installed, pkg_pos)))
         if (foundcyclebroken(&thislink, sofar, pkg_pos, possi))
           return true;
       /* Right, now we try all the providers ... */
@@ -161,6 +162,7 @@ findbreakcycle(struct pkginfo *pkg)
   /* Clear the visited flag of all packages before we traverse them. */
   iter = pkg_db_iter_new();
   while ((tpkg = pkg_db_iter_next_pkg(iter))) {
+    ensure_package_clientdata(tpkg);
     tpkg->clientdata->color = white;
   }
   pkg_db_iter_free(iter);
@@ -222,10 +224,16 @@ void describedepcon(struct varbuf *addto, struct dependency *dep) {
  * if removed (dep_conflicts) or deconfigured (dep_breaks) will fix
  * the problem. Caller may pass NULL for canfixbyremove and need not
  * initialize *canfixbyremove.
+ *
+ * On false return (‘not OK’), *canfixbytrigaw refers to a package which
+ * can fix the problem if all the packages listed in Triggers-Awaited have
+ * their triggers processed. Caller may pass NULL for canfixbytrigaw and
+ * need not initialize *canfixbytrigaw.
  */
 bool
 depisok(struct dependency *dep, struct varbuf *whynot,
-        struct pkginfo **canfixbyremove, bool allowunconfigd)
+        struct pkginfo **canfixbyremove, struct pkginfo **canfixbytrigaw,
+        bool allowunconfigd)
 {
   struct deppossi *possi;
   struct deppossi *provider;
@@ -245,6 +253,8 @@ depisok(struct dependency *dep, struct varbuf *whynot,
 
   if (canfixbyremove)
     *canfixbyremove = NULL;
+  if (canfixbytrigaw)
+    *canfixbytrigaw = NULL;
 
   /* The dependency is always OK if we're trying to remove the depend*ing*
    * package. */
@@ -321,9 +331,13 @@ depisok(struct dependency *dep, struct varbuf *whynot,
              * isn't and issue a diagnostic then. */
             *linebuf = '\0';
             break;
+          case stat_triggersawaited:
+              if (canfixbytrigaw && versionsatisfied(&pkg_pos->installed, possi))
+                *canfixbytrigaw = pkg_pos;
+              /* Fall through to have a chance to return OK due to
+               * allowunconfigd and to fill the explanation */
           case stat_unpacked:
           case stat_halfconfigured:
-          case stat_triggersawaited:
             if (allowunconfigd) {
               if (!informativeversion(&pkg_pos->configversion)) {
                 sprintf(linebuf, _("  %.250s is unpacked, but has never been "
@@ -334,7 +348,7 @@ depisok(struct dependency *dep, struct varbuf *whynot,
                 sprintf(linebuf, _("  %.250s is unpacked, but is version "
                                    "%.250s.\n"),
                         pkg_describe(pkg_pos, pdo_foreign),
-                        versiondescribe(&pkg_pos->available.version,
+                        versiondescribe(&pkg_pos->installed.version,
                                         vdew_nonambig));
                 break;
               } else if (!versionsatisfied3(&pkg_pos->configversion,
@@ -399,8 +413,11 @@ depisok(struct dependency *dep, struct varbuf *whynot,
                     possi->ed->name);
             break;
           case itb_normal: case itb_preinstall:
-            if (provider->up->up->status == stat_installed)
+            if (provider->up->up->status == stat_installed ||
+                provider->up->up->status == stat_triggerspending)
               return true;
+            if (provider->up->up->status == stat_triggersawaited)
+              *canfixbytrigaw = provider->up->up;
             sprintf(linebuf, _("  %.250s provides %.250s but is %s.\n"),
                     pkg_describe(provider->up->up, pdo_foreign),
                     possi->ed->name,
@@ -573,7 +590,7 @@ depisok(struct dependency *dep, struct varbuf *whynot,
 }
 
 struct pkginfo *
-deppossi_get_pkg(struct deppossi *possi, enum what_pkgbin wpb,
+deppossi_get_pkg(struct deppossi *possi, enum which_pkgbin wpb,
                  struct pkginfo *startpkg)
 {
   struct pkginfo *next;

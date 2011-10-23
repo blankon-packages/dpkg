@@ -4,12 +4,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-source 1 2011\-03\-04 "Projet Debian" "Utilitaires de dpkg"
+.TH dpkg\-source 1 2011\-08\-14 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
 dpkg\-source \- outil de manipulation des paquets sources Debian (.dsc).
 .
 .SH SYNOPSIS
-\fBdpkg\-source\fP [\fIoptions\fP] \fIcommande\fP
+\fBdpkg\-source\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH DESCRIPTION
 \fBdpkg\-source\fP empaquete ou dépaquete une archive source Debian.
@@ -53,14 +53,13 @@ nom du répertoire contenant l'arborescence des sources Debianisées
 sur les fichiers d'origine). Selon le format du paquet source utilisé pour
 construire le paquet, d'autres paramètres peuvent être acceptés.
 
-\fBdpkg\-source\fP va construire le paquet source dans le premier format qui
-fonctionnera dans la liste suivante\ : le(s) format(s) indiqué(s) avec le
-paramètre de la ligne de commande \fI\-\-format\fP, le format indiqué dans
-\fBdebian/source/format\fP, «\ 1.0\ ». L'utilisation de «\ 1.0\ » comme dernier
-recours est dépréciée et sera retirée dans le futur. Le format source
-devrait toujours être indiqué dans \fBdebian/source/format\fP. Voir la section
-\fBFORMATS DE PAQUETS SOURCE\fP pour une description plus détaillée des
-différents formats de paquet source.
+\fBdpkg\-source\fP will build the source package with the first format found in
+this ordered list: the format indicated with the \fI\-\-format\fP command line
+option, the format indicated in \fBdebian/source/format\fP, "1.0". The fallback
+to "1.0" is deprecated and will be removed at some point in the future, you
+should always document the desired source format in
+\fBdebian/source/format\fP. See section \fBSOURCE PACKAGE FORMATS\fP for an
+extensive description of the various source package formats.
 
 .TP 
 \fB\-\-print\-format\fP \fIrépertoire\fP
@@ -70,20 +69,26 @@ et avec les mêmes options).
 
 .TP 
 \fB\-\-before\-build\fP \fIrépertoire\fP
-Cette commande doit être utilisée avant toute construction du paquet
-(\fBdpkg\-buildpackage\fP l'utilise très tôt, avant même \fBdebian/rules
-clean\fP). Elle doit être «\ idempotent\ » et peut être lancée plusieurs
-fois. Tous les formats source ne mettent pas en oeuvre ce branchement et
-ceux qui le font préparent l'arborescence source pour la construction, par
-exemple en garantissant que les correctifs Debian sont appliqués.
+Run the corresponding hook of the source package format. This hook is called
+before any build of the package (\fBdpkg\-buildpackage\fP calls it very early
+even before \fBdebian/rules clean\fP). This command is idempotent and can be
+called multiple times. Not all source formats implement something in this
+hook, and those that do usually prepare the source tree for the build for
+example by ensuring that the Debian patches are applied.
 
 .TP 
 \fB\-\-after\-build\fP \fIrépertoire\fP
-Cette commande doit être utilisée après toute construction du paquet
-(\fBdpkg\-buildpackage\fP l'utilise en dernier). Elle doit être «\ idempotent\ »
-et peut être lancée plusieurs fois. Tous les formats source ne mettent pas
-en oeuvre ce branchement et ceux qui le font s'en servent pour défaire ce
-qui a été fait par \fB\-\-before\-build\fP..
+Run the corresponding hook of the source package format. This hook is called
+after any build of the package (\fBdpkg\-buildpackage\fP calls it last). This
+command is idempotent and can be called multiple times. Not all source
+formats implement something in this hook, and those that do usually use it
+to undo what \fB\-\-before\-build\fP has done.
+
+.TP 
+\fB\-\-commit\fP [\fIdirectory\fP] ...
+Record changes in the source tree unpacked in \fIdirectory\fP. This command can
+take supplementary parameters depending on the source format.  It will error
+out for formats where this operation doesn't mean anything.
 
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
@@ -139,9 +144,9 @@ fichiers. Les valeurs acceptées sont les suivantes\ : \fIgzip\fP, \fIbzip2\fP,
 depuis dpkg\-dev 1.15.5.
 .TP 
 \fB\-z\fP\fIniveau\fP, \fB\-\-compression\-level\fP=\fIniveau\fP
-Niveau de compression à utiliser. Comme avec \fB\-Z\fP cela ne concerne que les
-fichiers nouvellement créés. Les valeurs prises possibles sont les
-suivantes\ : \fI1\fP à \fI9\fP, \fIbest\fP, et \fIfast\fP. \fI9\fP est la valeur par défaut.
+Compression level to use. As with \fB\-Z\fP it only affects newly created
+files. Supported values are: \fI1\fP to \fI9\fP, \fIbest\fP, and \fIfast\fP.  The
+default is \fI9\fP for gzip and bzip2, \fI6\fP for xz and lzma.
 .TP 
 \fB\-i\fP[\fIexpr. rat.\fP], \fB\-\-diff\-ignore\fP[=\fIexpr. rat.\fP]
 Il est possible de donner une expression rationnelle Perl pour filtrer les
@@ -168,10 +173,11 @@ complets, vous devrez fournir les caractères spéciaux vous\-même (par
 exemple'(^|/)', '($|/)').
 .TP 
 \fB\-\-extend\-diff\-ignore\fP=\fIexpr.rat.\fP
-L'expression rationnelle Perl indiquée complétera celle associée à \fB\-i\fP en
-concaténant "\fB|\fP\fIexpr.rat.\fP à l'expression rationnelle par défaut. Cette
-option est pratique das \fBdebian/source/options\fP pour exclure certains
-fichiers auto\-créés de la création automatique de correctifs.
+The perl regular expression specified will extend the default value of
+\fB\-\-diff\-ignore\fP and its current value (if set). It does this by
+concatenating "\fB|\fP\fIregexp\fP" to the existing value.  This option is
+convenient to use in \fBdebian/source/options\fP to exclude some auto\-generated
+files from the automatic patch generation.
 .TP 
 \fB\-I\fP[\fImotif\-fichier\fP], \fB\-\-tar\-ignore\fP[=\fImotif\-fichier\fP]
 Avec cette option, le fichier est passé à l'option \fBtar\fP(1) quand on veut
@@ -405,14 +411,16 @@ appliqués au cours de l'extraction.
 .PP
 \fBConstruction\fP
 .PP
-Les originaux de toutes les archives tar trouvées dans le répertoire courant
-sont extraits dans un répertoire temporaire en suivant la même logique que
-pour le dépaquetage, le répertoire debian est copié dans le répertoire
-temporaire, et toutes les mises à jour sauf \fBdebian\-changes\-\fP\fIversion\fP
-sont appliquées. Le répertoire temporaire est comparé à celui du paquet
-source et le fichier de différences (s'il est non vide) est stocké dans le
-correctif automatique. Si le correctif automatique est créé ou supprimé, il
-est ajouté ou supprimé dans le fichier series et les méta\-données de quilt.
+All original tarballs found in the current directory are extracted in a
+temporary directory by following the same logic as for the unpack, the
+debian directory is copied over in the temporary directory, and all patches
+except the automatic patch (\fBdebian\-changes\-\fP\fIversion\fP or
+\fBdebian\-changes\fP, depending on \fB\-\-single\-debian\-patch\fP) are applied. The
+temporary directory is compared to the source package directory. When the
+diff is non\-empty, the build fails unless \fB\-\-single\-debian\-patch\fP or
+\fB\-\-auto\-commit\fP has been used, in which case the diff is stored in the
+automatic patch.  If the automatic patch is created/deleted, it's
+added/removed from the series file and from the quilt metadata.
 
 Tout changement dans un fichier binaire ne peut être indiqué dans le diff et
 va déboucher sur un échec à moins que le mainteneur décide délibérément
@@ -431,23 +439,30 @@ valeur par défaut associée à l'option \fB\-i\fP, voir la sortie de
 \fB\-\-help\fP). En particulier, le répertoire \fB.pc\fP utilisé par «\ quilt\ » est
 ignoré lors de la génération automatique du patch.
 
-Note\ : \fBdpkg\-source\fP s'attend à ce que l'arbre source ait toutes les
-corrections d'appliquées lorsque vous créez le paquet source. Ce n'est pas
-le cas lorsque l'arbre source a été obtenu par le dépaquetage d'un paquet
-source utilisant le format\ : 1.0 par exemple. Pour réduire le problème,
-\fBdpkg\-source\fP appliquera les corrections lui\-même s'il détecte qu'elles ne
-l'ont pas été. Pour effectuer cette détection, il suit le raisonnement
-suivant\ :\ il recherche la liste des correctifs supposément non appliqués
-(ils sont mentionnés dans le fichier \fBseries\fP mais pas dans
-\&\fB.pc/applied\-patches\fP) et si le premier de cette liste peut être appliqué
-dans erreur, il les applique tous. L'option \fB\-\-no\-preparation\fP peut être
-utilisée pour désactiver ce comportement. Cette opération est en général
-effectuée dans le cadre de l'utilisation de la commande \fB\-\-prepare\-build\fP.
+Note: \fBdpkg\-source\fP \fB\-\-before\-build\fP (and \fB\-b\fP) will ensure that all
+patches listed in the series file are applied so that a package build always
+has all patches applied. It does this by finding unapplied patches (they are
+listed in the \fBseries\fP file but not in \fB.pc/applied\-patches\fP), and if the
+first patch in that set can be applied without errors, it will apply them
+all. The option \fB\-\-no\-preparation\fP can be used to disable this behavior.
+
+.PP
+\fBRecording changes\fP
+.TP 
+\fB\-\-commit\fP [\fIdirectory\fP] [\fIpatch\-name\fP] [\fIpatch\-file\fP]
+Generates a patch corresponding to the local changes that are not managed by
+the quilt patch system and integrates it in the patch system under the name
+\fIpatch\-name\fP. If the name is missing, it will be asked interactively. If
+\fIpatch\-file\fP is given, it is used as the patch corresponding to the local
+changes to integrate. This is mainly useful after a build failure that
+pre\-generated this file. Once integrated, an editor is launched so that you
+can edit the meta\-information in the patch header.
+
 .PP
 \fBOptions de construction\fP
 .TP 
 \fB\-\-allow\-version\-of\-quilt\-db=\fP\fIversion\fP
-Autotide \fBdpkg\-source\fP à construire le fichier si la version des
+Autorise \fBdpkg\-source\fP à construire le fichier si la version des
 méta\-données de quilt est celle indiquée, même si \fBdpkg\-source\fP n'en n'a
 pas connaissance. En fait, cela indique que la version indiquée des
 méta\-données de quilt est compatible avec la version 2 que \fBdpkg\-source\fP
@@ -472,16 +487,15 @@ Ne pas essayer de préparer l'arbre de la construction en appliquant les
 correctifs qui ne lui sont apparemment pas appliqués.
 .TP 
 \fB\-\-single\-debian\-patch\fP
-Utilise \fBdebian/patches/debian\-changes\fP au lieu de
-\fBdebian/patches/debian\-changes\-\fP\fIversion\fP comme nom du correctif
-automatiquement créé au cours de la construction. Cette option est
-particulièrement pratique lorsque le paquet est géré avec un outil de
-gestion de versions et qu'un jeu de correctifs ne peut être créé de façon
-fiable. Dans ce cas, les différences avec la version amont doivent être
-conservées dans un correctif unique. Lorsque cette option est utilisée, il
-est recommandé d'utiliser un fichier debian/source/patch\-header qui explique
-la mailleure méthode pour relire les corrections spécifiques à Debian, par
-exemple dans le gestionnaire de versions utilisé.
+Use \fBdebian/patches/debian\-changes\fP instead of
+\fBdebian/patches/debian\-changes\-\fP\fIversion\fP for the name of the automatic
+patch generated during build. This option is particularly useful when the
+package is maintained in a VCS and a patch set can't reliably be
+generated. Instead the current diff with upstream should be stored in a
+single patch. The option would be put in \fBdebian/source/local\-options\fP and
+would be accompanied by a \fBdebian/source/local\-patch\-header\fP file
+explaining how the Debian changes can be best reviewed, for example in the
+VCS that is used.
 .TP 
 \fB\-\-create\-empty\-orig\fP
 Crée automatiquement une archive tar d'origine vide si elle est manquante et
@@ -490,14 +504,11 @@ qu'il existe des archives tar d'origine additionnelles. Cette option peut
 sources amont et qu'il n'existe pas de logiciel « principal\ ».
 .TP 
 \fB\-\-unapply\-patches\fP
-Retire les correctifs dans le point d'entrée \fB\-\-after\-build\fP. Cette option
-est principalement utile lorsque le paquet est construit directement depuis
-un gestionnaire de versions qui contient les sources amont non modifiées et
-que l'on souhaite conserver l'arborescence non modifiée après la
-construction du paquet. Cette option est en général utilisée dans
-\fBdebian/source/local\-options\fP (elle n'est pas permis dans
-\fBdebian/source/options\fP afin que tous les paquets source créés aient le
-même comportement par défaut.
+Unapply the patches in the \fB\-\-after\-build\fP hook. You usually don't need
+this option as dpkg\-source will automatically unapply the patches if it did
+apply them during \fB\-\-before\-build\fP. This option is only allowed in
+\fBdebian/source/local\-options\fP so that all generated source packages have
+the same behavior by default.
 .TP 
 \fB\-\-abort\-on\-upstream\-changes\fP
 Ce processus échouera si un correctif automatique a été créé. Elle peut
@@ -505,6 +516,10 @@ servir à vérifier que toutes les modifications ont été enregistrées
 correctement dans des correctifs quilt distincts avant la construction du
 paquet source. Elle n'est pas autorisée dans \fBdebian/source/options\fP mais
 peut prendre place dans \fBdebian/source/local\-options\fP.
+.TP 
+\fB\-\-auto\-commit\fP
+The process doesn't fail if an automatic patch has been generated, instead
+it's immediately recorded in the quilt series.
 
 .PP
 \fBOptions d'extraction\fP
@@ -517,9 +532,8 @@ amont
 Ne pas appliquer des correctifs à la fin de l'extraction.
 .
 .SS "Format: 3.0 (custom)"
-Ce format est particulier. Il ne représente pas un réel format de paquet
-source mais peut être utilisé pour créer des paquets sources avec des
-fichiers arbitraires.
+This format is special. It doesn't represent a real source package format
+but can be used to create source packages with arbitrary files.
 .PP
 \fBOptions de construction\fP
 .PP
@@ -656,11 +670,13 @@ initiaux «\ \-\-\ » doivent être retirés et les options courtes ne peuvent pas
 «\ =\ », ainsi que des guillemets optionnels autour de la valeur d'une option
 donnée. Voici un exemple d'un tel fichier\ :
 .P
-  # autoriser dpkg\-source à créer un fichier debian.tar.bz2 avec la compression maximale
+  # let dpkg\-source create a debian.tar.bz2 with maximal compression
   compression = "bzip2"
   compression\-level = 9
-  # utiliser debian/patches/debian\-changes comme correctif automatique
+  # use debian/patches/debian\-changes as automatic patch
   single\-debian\-patch
+  # ignore changes on config.{sub,guess}
+  extend\-diff\-ignore = "(^|/)(config.sub|config.guess)$"
 .P
 Note\ : les options de \fBformat\fP ne sont pas acceptées dans ce fichier. Vous
 devriez utiliser \fBdebian/source/format\fP à la place.
@@ -669,9 +685,11 @@ Identique à \fBdebian/source/options\fP mais n'est pas enregistré dans le
 paquet source créé. Ce fichier peut être utile pour conserver une préférence
 propre au responsable ou au dépôt de gestionnaire de versions où le paquet
 source est géré.
+.SS debian/source/local\-patch\-header
 .SS debian/source/patch\-header
-Texte en format libre qui sera ajouté au correctif automatique créé dans les
-formats «\ 2.0\ » et «\ 3.0 (quilt)\ ».
+Free form text that is put on top of the automatic patch generated in
+formats "2.0" or "3.0 (quilt)". \fBlocal\-patch\-header\fP is not included in the
+generated source package while \fBpatch\-header\fP is.
 .SS debian/patches/series
 Ce fichier comporte la liste de toutes les corrections qui ont été
 appliquées (dans l'ordre indiqué) aux sources amont. Les espaces situés
@@ -695,7 +713,7 @@ Copyright \(co 1995\-1996 Ian Jackson
 .br
 Copyright \(co 2000 Wichert Akkerman
 .br
-Copyright \(co 2008\-2010 Rapha\[:e]l Hertzog
+Copyright \(co 2008\-2011 Rapha\[:e]l Hertzog
 .sp
 Ce programme est un logiciel libre\ ; voyez la «\ GNU General Public Licence\ »
 version 2 ou supérieure pour le copyright. Il n'y a PAS de garantie.

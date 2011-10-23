@@ -33,6 +33,7 @@ struct partinfo {
   const char *fmtversion;
   const char *package;
   const char *version;
+  const char *arch;
   const char *md5sum;
   off_t orglength;
   unsigned int thispartn, maxpartn;
@@ -72,7 +73,7 @@ void addtopartlist(struct partinfo**, struct partinfo*, struct partinfo *refi);
 
 #define SPLITVERSION       "2.1"
 
-#define PARTSDIR          "parts/"
+#define PARTSDIR          "parts"
 
 #define PARTMAGIC         "debian-split"
 #define HEADERALLOWANCE    1024

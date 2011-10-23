@@ -36,6 +36,7 @@
 
 #include "main.h"
 #include "filesdb.h"
+#include "infodb.h"
 
 /*
  * Trigger processing algorithms:
@@ -258,7 +259,7 @@ check_trigger_cycle(struct pkginfo *processing_now)
 	 * progress. */
 	fprintf(stderr, _("%s: cycle found while processing triggers:\n chain of"
 	        " packages whose triggers are or may be responsible:\n"),
-	        thisname);
+	        dpkg_get_progname());
 	sep = "  ";
 	for (tcn = tortoise; tcn; tcn = tcn->next) {
 		fprintf(stderr, "%s%s", sep,
@@ -359,7 +360,8 @@ trigproc(struct pkginfo *pkg)
 /*========== Transitional global activation. ==========*/
 
 static void
-transitional_interest_callback_ro(const char *trig, void *user)
+transitional_interest_callback_ro(const char *trig, void *user,
+                                  enum trig_options opts)
 {
 	struct pkginfo *pend = user;
 
@@ -371,12 +373,13 @@ transitional_interest_callback_ro(const char *trig, void *user)
 }
 
 static void
-transitional_interest_callback(const char *trig, void *user)
+transitional_interest_callback(const char *trig, void *user,
+                               enum trig_options opts)
 {
 	struct pkginfo *pend = user;
 
-	trig_cicb_interest_add(trig, pend);
-	transitional_interest_callback_ro(trig, user);
+	trig_cicb_interest_add(trig, pend, opts);
+	transitional_interest_callback_ro(trig, user, opts);
 }
 
 /*
@@ -390,6 +393,10 @@ trig_transitional_activate(enum modstatdb_rw cstatus)
 	struct pkgiterator *it;
 	struct pkginfo *pkg;
 
+	/* Ensure we can use pkgadminfile() even when called at the very
+	 * end of modstatdb_open when triggers/Unincorp is missing */
+	pkg_infodb_init(cstatus);
+
 	it = pkg_db_iter_new();
 	while ((pkg = pkg_db_iter_next_pkg(it))) {
 		if (pkg->status <= stat_halfinstalled)
@@ -402,6 +409,13 @@ trig_transitional_activate(enum modstatdb_rw cstatus)
 		              cstatus >= msdbrw_write ?
 		              transitional_interest_callback :
 		              transitional_interest_callback_ro, NULL, pkg);
+		/* Ensure we're not creating incoherent data that can't
+		 * be written down. This should never happen in theory but
+		 * can happen if you restore an old status file that is
+		 * not in sync with the infodb files. */
+		pkg->status = pkg->trigaw.head ? stat_triggersawaited :
+		              pkg->trigpend_head ? stat_triggerspending :
+		              stat_installed;
 	}
 	pkg_db_iter_free(it);
 

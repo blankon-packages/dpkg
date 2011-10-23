@@ -104,7 +104,7 @@ void checkpath(void) {
 
   path_list = getenv("PATH");
   if (!path_list)
-    ohshit(_("error: PATH is not set."));
+    ohshit(_("PATH is not set."));
 
   for (prog = prog_list; *prog; prog++) {
     struct stat stab;
@@ -156,7 +156,7 @@ static bool
 ignore_depends_possi(struct deppossi *possi)
 {
   struct pkginfo *pkg = NULL;
-  while ((pkg = deppossi_get_pkg(possi, wpb_by_status, pkg))) {
+  while ((pkg = deppossi_get_pkg(possi, wpb_installed, pkg))) {
     if (ignore_depends(pkg))
       return true;
   }
@@ -225,8 +225,11 @@ preexecscript(struct command *cmd)
 void
 post_postinst_tasks(struct pkginfo *pkg, enum pkgstatus new_status)
 {
-  pkg->trigpend_head = NULL;
-  pkg->status = pkg->trigaw.head ? stat_triggersawaited : new_status;
+  if (new_status < stat_triggersawaited)
+    pkg->status = new_status;
+  else
+    pkg->status = pkg->trigaw.head ? stat_triggersawaited :
+                  pkg->trigpend_head ? stat_triggerspending : stat_installed;
 
   post_postinst_tasks_core(pkg);
 }
@@ -476,22 +479,23 @@ void clear_istobes(void) {
  * false otherwise.
  */
 bool
-hasdirectoryconffiles(struct filenamenode *file, struct pkginfo *pkg)
+dir_has_conffiles(struct filenamenode *file, struct pkginfo *pkg)
 {
   struct conffile *conff;
   size_t namelen;
 
-  debug(dbg_veryverbose, "hasdirectoryconffiles `%s' (from %s)", file->name,
+  debug(dbg_veryverbose, "dir_has_conffiles '%s' (from %s)", file->name,
         pkg_describe(pkg, pdo_foreign));
   namelen = strlen(file->name);
   for (conff= pkg->installed.conffiles; conff; conff= conff->next) {
-      if (!strncmp(file->name,conff->name,namelen)) {
+      if (strncmp(file->name, conff->name, namelen) == 0 &&
+          conff->name[namelen] == '/') {
 	debug(dbg_veryverbose, "directory %s has conffile %s from %s",
 	      file->name, conff->name, pkg_describe(pkg, pdo_foreign));
 	return true;
       }
   }
-  debug(dbg_veryverbose, "hasdirectoryconffiles no");
+  debug(dbg_veryverbose, "dir_has_conffiles no");
   return false;
 }
 
@@ -500,25 +504,58 @@ hasdirectoryconffiles(struct filenamenode *file, struct pkginfo *pkg)
  * false otherwise.
  */
 bool
-isdirectoryinuse(struct filenamenode *file, struct pkginfo *pkg)
+dir_is_used_by_others(struct filenamenode *file, struct pkginfo *pkg)
 {
   struct filepackages_iterator *iter;
   struct pkginfo *other_pkg;
 
-  debug(dbg_veryverbose, "isdirectoryinuse `%s' (except %s)", file->name,
+  debug(dbg_veryverbose, "dir_is_used_by_others '%s' (except %s)", file->name,
         pkg ? pkg_describe(pkg, pdo_foreign) : "<none>");
 
   iter = filepackages_iter_new(file);
   while ((other_pkg = filepackages_iter_next(iter))) {
-    debug(dbg_veryverbose, "isdirectoryinuse considering %s ...",
+    debug(dbg_veryverbose, "dir_is_used_by_others considering %s ...",
           pkg_describe(other_pkg, pdo_foreign));
     if (other_pkg == pkg)
       continue;
+
+    debug(dbg_veryverbose, "dir_is_used_by_others yes");
     return true;
   }
   filepackages_iter_free(iter);
 
-  debug(dbg_veryverbose, "isdirectoryinuse no");
+  debug(dbg_veryverbose, "dir_is_used_by_others no");
+  return false;
+}
+
+/*
+ * Returns true if the file is used by pkg, false otherwise.
+ */
+bool
+dir_is_used_by_pkg(struct filenamenode *file, struct pkginfo *pkg,
+                   struct fileinlist *list)
+{
+  struct fileinlist *node;
+  size_t namelen;
+
+  debug(dbg_veryverbose, "dir_is_used_by_pkg '%s' (by %s)",
+        file->name, pkg ? pkg_describe(pkg, pdo_foreign) : "<none>");
+
+  namelen = strlen(file->name);
+
+  for (node = list; node; node = node->next) {
+    debug(dbg_veryverbose, "dir_is_used_by_pkg considering %s ...",
+          node->namenode->name);
+
+    if (strncmp(file->name, node->namenode->name, namelen) == 0 &&
+        node->namenode->name[namelen] == '/') {
+      debug(dbg_veryverbose, "dir_is_used_by_pkg yes");
+      return true;
+    }
+  }
+
+  debug(dbg_veryverbose, "dir_is_used_by_pkg no");
+
   return false;
 }
 

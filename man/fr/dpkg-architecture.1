@@ -3,13 +3,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-architecture 1 15\-08\-2009 "Projet Debian" "Utilitaires de dpkg"
+.TH dpkg\-architecture 1 2011\-08\-14 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
 dpkg\-architecture \- Fixer et déterminer l'architecture pour la construction
 d'un paquet
 .
 .SH SYNOPSIS
-\fBdpkg\-architecture\fP [\fIoptions\fP] [\fIcommandes\fP]
+\fBdpkg\-architecture\fP [\fIoption\fP...] [\fIcommand\fP]
 .PP
 .
 .SH DESCRIPTION
@@ -292,9 +292,9 @@ dpkg\-architecture \-ilinux\-any
 dpkg\-architecture \-ai386 \-ilinux\-any
 .
 .SH FICHIERS
-Tous ces fichiers sont nécessaires afin que \fBdpkg\-architecture\fP puisse
-fonctionner. Leurs emplacements peuvent être modifiés lors du traitement via
-la variable d'environnement DPKG_DATADIR.
+All these files have to be present for \fBdpkg\-architecture\fP to work. Their
+location can be overridden at runtime with the environment variable
+\fBDPKG_DATADIR\fP.
 .TP 
 \fI/usr/share/dpkg/cputable\fP
 Table des noms de processeurs connus et liaison avec leur nom GNU.

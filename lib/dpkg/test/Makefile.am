@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CPPFLAGS = \
+	-DADMINDIR=\"$(admindir)\" \
 	-idirafter $(top_srcdir)/lib/compat \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/lib
@@ -14,6 +15,8 @@ check_PROGRAMS = \
 	t-string \
 	t-buffer \
 	t-path \
+	t-progname \
+	t-subproc \
 	t-command \
 	t-varbuf \
 	t-ar \
@@ -21,6 +24,7 @@ check_PROGRAMS = \
 	t-version \
 	t-pkginfo \
 	t-pkg-list \
-	t-pkg-queue
+	t-pkg-queue \
+	t-mod-db
 
 TESTS = $(check_PROGRAMS)

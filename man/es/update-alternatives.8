@@ -10,13 +10,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH update\-alternatives 8 2011\-03\-04 "Proyecto Debian" "Herramientas de dpkg"
+.TH update\-alternatives 8 2011\-08\-14 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 update\-alternatives \- Gestión de enlaces simbólicos que determinan órdenes
 predefinidas
 .
 .SH SINOPSIS
-\fBupdate\-alternatives\fP [\fIopciones\fP] \fIorden\fP
+\fBupdate\-alternatives\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH DESCRIPCIÓN
 \fBupdate\-alternatives\fP crea, elimina, gestiona y muestra información sobre
@@ -82,16 +82,16 @@ Cada alternativa tiene una \fIprioridad\fP asociada. Cuando un grupo de enlaces
 se encuentra en modo automático, los miembros del grupo apuntarán a la
 alternativa con la prioridad más alta.
 .PP
-El uso de la opción \fI\-\-config\fP hace que \fBupdate\-alternatives\fP muestre
-todas las elecciones dentro del grupo de enlaces que tienen como maestro a
-\fInombre\fP. La elección presente se marca con «*». A continuación se le
-preguntará por su elección dentro de las opciones posibles en el grupo de
-enlaces. Una vez que se haga realizado algún cambio el grupo de enlaces
-dejará de estar en modo \fIautomático\fP. Es necesario usar la opción \fI\-\-auto\fP
-para devolver el grupo de enlaces al estado automático.
+When using the \fB\-\-config\fP option, \fBupdate\-alternatives\fP will list all of
+the choices for the link group of which given \fIname\fP is the master
+alternative name. The current choice is marked with a '*'.  You will then be
+prompted for your choice regarding this link group.  Depending on the choice
+made, the link group might no longer be in \fIauto\fP mode. You will need to
+use the \fB\-\-auto\fP option in order to return to the automatic mode (or you
+can rerun \fB\-\-config\fP and select the entry marked as automatic).
 .PP
-Si quiere realizar la configuración de un modo no interactivo puede usar la
-opción \fI\-\-set\fP en su lugar (véase más abajo).
+If you want to configure non\-interactively you can use the \fB\-\-set\fP option
+instead (see below).
 .PP
 Los diferentes paquetes que proveen el mismo fichero tienen que hacerlo de
 forma \fBcooperativa\fP. En otras palabras, el uso de \fBupdate\-alternatives\fP es
@@ -167,9 +167,8 @@ añadida es mayor que cualquier otra alternativa instalada para ese grupo,
 los enlaces se actualizarán para apuntar a las nuevas alternativas.
 .TP 
 \fB\-\-set\fP \fInombre ruta\fP
-Define la \fIruta\fP del programa como alternativa para \fInombre\fP. Equivale a
-\fI\-\-config\fP pero no es interactivo, de modo que permite su inclusión en
-scripts.
+Set the program \fIpath\fP as alternative for \fIname.\fP This is equivalent to
+\fB\-\-config\fP but is non\-interactive and thus scriptable.
 .TP 
 \fB\-\-remove\fP \fInombre ruta\fP
 Elimina una alternativa y todos sus enlaces esclavos asociados. \fInombre\fP es
@@ -253,8 +252,8 @@ Define el fichero de registro de alternativas cuando es diferente del valor
 por omisión («/var/log/alternativas.log»).
 .TP 
 \fB\-\-force\fP
-Deja que \fBupdate\-alternatives\fP reemplace cualquier fichero real instalado
-en la misma ubicación que la de un enlace alternativo.
+Let \fBupdate\-alternatives\fP replace or drop any real file that is installed
+where an alternative link has to be installed or removed.
 .TP 
 \fB\-\-skip\-auto\fP
 Omite el dialogo de configuración de alternativas para aquellas configuradas
@@ -285,42 +284,44 @@ El directorio de administración por omisión. Se puede modificar con la
 opción \fB\-\-admindir\fP.
 .
 .SH "ESTADOS DE SALIDA"
-.IP 0
+.TP 
+\fB0\fP
 La acción requerida finalizó con éxito.
-.IP 2
+.TP 
+\fB2\fP
 Se encontraron problemas analizando la línea de órdenes o realizando la
 acción requerida.
 .
 .SH "FORMATO DE CONSULTA"
-El formato de consulta (\fI\-\-query\fP) de \fBupdate\-alternatives\fP usa un formato
-simple de tipo RFC822. Se compone de \fIn\fP + 1 bloques, en el que \fIn\fP es el
-número de alternativas disponibles en el grupo de enlaces consultado. El
-primer bloque contiene los siguientes campos:
+The \fBupdate\-alternatives \-\-query\fP format is using an RFC822\-like flat
+format. It's made of \fIn\fP + 1 blocks where \fIn\fP is the number of
+alternatives available in the queried link group. The first block contains
+the following fields:
 .TP 
-\fBLink:\fP <enlace>
+\fBLink:\fP\fI link\fP
 El nombre genérico de la alternativa.
 .TP 
-\fBStatus:\fP <estado>
+\fBStatus:\fP\fI status\fP
 El estado de la alternativa (\fBauto\fP o \fBmanual\fP).
 .TP 
-\fBBest:\fP <mejor\-opción>
+\fBBest:\fP\fI best\-choice\fP
 La ruta de la mejor alternativa para este grupo de enlaces. No aparece si no
 existen alternativas disponibles.
 .TP 
-\fBValue:\fP <alternativa seleccionada> 
+\fBValue:\fP\fI currently\-selected\-alternative\fP
 La ruta de la alternativa seleccionada en ese momento. También puede tomar
 el valor mágico \fBnone\fP (ninguno). Se usa si el enlace no existe.
 .TP 
 .TP 
 Los siguientes bloques describen las alternativas disponibles en el grupo de enlaces consultado:
 .TP 
-\fBAlternative:\fP <ruta a esta alternativa>
+\fBAlternative:\fP\fI path\-of\-this\-alternative\fP
 Ruta a la alternativa de este bloque.
 .TP 
-\fBPriority: \fP<prioridad>
+\fBPriority:\fP\fI priority\-value\fP
 Valor de la prioridad de esta alternativa.
 .TP 
-\fBSlaves:\fP <lista de esclavos>
+\fBSlaves:\fP\fI list\-of\-slaves\fP
 Cuando esta cabecera está presente, las líneas \fBnext\fP contienen todas las
 alternativas esclavas asociadas al enlace maestro de la alternativa. Hay un
 esclavo por línea. Cada línea contiene un espacio, el nombre genérico de la
@@ -357,20 +358,19 @@ Slaves:
 .fi
 .
 .SH DIAGNÓSTICOS
-Con la opción \fI\-\-verbose\fP, \fBupdate\-alternatives\fP informa extensamente
-acerca de sus actividades por la salida estándar. Si ocurre algún problema,
-\fBupdate\-alternatives\fP envía los mensajes de error por la salida de errores
-estándar y cierra con el estado 2. Los diagnósticos deberían ser
-auto\-explicativos; si a usted no se lo parecen, le rogamos informe de esto
-como un fallo.
+With \fB\-\-verbose\fP \fBupdate\-alternatives\fP chatters incessantly about its
+activities on its standard output channel.  If problems occur,
+\fBupdate\-alternatives\fP outputs error messages on its standard error channel
+and returns an exit status of 2.  These diagnostics should be
+self\-explanatory; if you do not find them so, please report this as a bug.
 .
 .SH EJEMPLOS
 Hay varios paquetes que proporcionan un editor de texto compatible con
 \fBvi\fP, por ejemplo \fBnvi\fPy \fBvim\fP. El grupo de enlaces \fBvi\fP selecciona cual
 se usa, incluyendo enlaces para el programa y la página del manual asociada.
 .PP
-Para mostrar los paquetes disponibles que proporcionan \fBvi\fP y su
-configuración actual, use la opción \fI\-\-display:\fP
+To display the available packages which provide \fBvi\fP and the current
+setting for it, use the \fB\-\-display\fP action:
 .RS
 .PP
 \fBupdate\-alternatives \-\-display vi\fP

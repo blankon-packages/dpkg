@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH start\-stop\-daemon 8 2011\-03\-04 Debianprojektet dpkg\-verktygen
+.TH start\-stop\-daemon 8 2011\-07\-04 Debianprojektet dpkg\-verktygen
 .SH NAMN
 start\-stop\-daemon \- startar och stoppar bakgrundsprocesser
 .
 .SH SYNOPS
-\fBstart\-stop\-daemon\fP [\fIflaggor\fP] \fIåtgärd\fP
+\fBstart\-stop\-daemon\fP [\fIflagga\fP...] \fIåtgärd\fP
 .
 .SH BESKRIVNING
 \fBstart\-stop\-daemon\fP används för att kontrollera hur processer på systemnivå
@@ -40,6 +40,10 @@ Testa om den angivna processen existerar. Om så är fallet sänder
 avslutar med status 0. Om processen inte finns avslutar \fBstart\-stop\-daemon\fP
 med status 1 (0 om \fB\-\-oknodo\fP anges). Om \fB\-\-retry\fP anges kommer
 \fBstart\-stop\-daemon\fP kontrollera att processen har avslutats.
+.TP 
+\fB\-T\fP, \fB\-\-status\fP
+Se om den angivna processen existerar, och returnerar en statuskod i
+enlighet med LBS Init Script Actions.
 .TP 
 \fB\-H\fP, \fB\-\-help\fP
 Visa hjälpskärm och avsluta.
@@ -109,7 +113,7 @@ utförts.
 \fB\-q\fP, \fB\-\-quiet\fP
 Skriv inte informationsmeddelanden; visa endast felmeddelanden.
 .TP 
-\fB\-c\fP, \fB\-\-chuid\fP \fIanvändarnamn\fP|\fIanvändar\-id\fP
+\fB\-c\fP, \fB\-\-chuid\fP \fIusername\fP|\fIuid\fP[\fB:\fP\fIgroup\fP|\fIgid\fP]
 Byt till användarnamnet/användar\-id:t innan processen startas. Du kan även
 ange en grupp genom att lägga till ett kolontecken, \fB:\fP, följt av
 gruppnamnet eller grupp\-id på samma sätt som du skull gjort till
@@ -173,13 +177,36 @@ huvudprocess. Därför är flaggan oftast bara användbar i samband med flaggan
 Skriv ut pratsamma informationsmeddelanden.
 .
 .SH RETURVÄRDE
-\fBstart\-stop\-deamon\fP returnerar 0 om kommandot som önskades utfördes, eller
-om \fB\-\-oknodo\fP angavs och antingen om \fB\-\-start\fP angavs och motsvarande
-process redan kördes, eller om \fB\-\-stop\fP angavs och ingen motsvarande
-process hittades. Om \fB\-\-oknodo\fP inte angavs och ingenting utfördes kommer 1
-att returneras. Om \fB\-\-stop\fP och \fB\-\-retry\fP angavs men slutet på schemat
-nåddes och processer fortfarande kördes är felkoden 2. För alla andra fel är
-statusen 3.
+.TP 
+\fB0\fP
+Efterfrågad åtgärd utfördes. Om \fB\-\-oknodo\fP angavs är det även möjligt att
+ingenting behövde utföras. Det kan hända när \fB\-\-start\fP angavs och en
+motsvarande process redan körde, eller när \fB\-\-stop\fP angavs och det inte
+fanns någon motsvarande process.
+.TP 
+\fB1\fP
+Om \fB\-\-oknodo\fP inte angavs och ingenting gjordes.
+.TP 
+\fB2\fP
+Om \fB\-\-stop\fP och \fB\-\-retry\fP angavs, men slutet på tidtabellen nåddes och
+processen fortfarande kördes.
+.TP 
+\fB3\fP
+Alla andra fel.
+.PP
+Med \fB\-\-status\fP\-åtgärden returneras följande statuskoder:
+.TP 
+\fB0\fP
+Programmet kör.
+.TP 
+\fB1\fP
+Programmet kör inte och pid\-filen finns.
+.TP 
+\fB3\fP
+Programmet kör inte.
+.TP 
+\fB4\fP
+Kan inte ta reda på programmets status.
 .
 .SH EXEMPEL
 Starta serverprocessen \fBfood\fP, såvida inte en redan kör (en process med

@@ -13,8 +13,8 @@ usr/bin/dpkg-statoverride
 usr/bin/dpkg-trigger
 usr/bin/update-alternatives
 usr/sbin
-usr/share/dpkg
-usr/share/locale/id/LC_MESSAGES/dpkg.mo
+usr/share/dpkg/*table
+#usr/share/locale/*/LC_MESSAGES/dpkg.mo
 usr/share/man/man1/dpkg-deb.1
 usr/share/man/man8/dpkg-divert.8
 usr/share/man/man1/dpkg-maintscript-helper.1

@@ -25,6 +25,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <dirent.h>
@@ -46,45 +47,77 @@
 static void pkg_infodb_upgrade_to_multiarch(void);
 
 /* Global variables */
-static int db_format;
+static int db_format = -1;
 static char *db_format_file;
+static char *db_format_file_new;
+
+static bool
+pkg_infodb_parse_format_file(const char *file, bool fail_on_error)
+{
+	int fd;
+
+	fd = open(file, O_RDONLY);
+	if (fd < 0 && errno == ENOENT) {
+		return false;
+	} else if (fd < 0) {
+		ohshite(_("error trying to open %.250s"), file);
+	} else {
+		char format[16], *endptr = NULL;
+		ssize_t size;
+		int format_value;
+
+		size = fd_read(fd, format, sizeof(format) - 1);
+		if (size < 0) {
+			ohshite(_("error while reading %s"), file);
+		} else if (size == 0) {
+			if (fail_on_error)
+				ohshit(_("%s is empty"), file);
+			else
+				return false;
+		}
+		format[size] = '\0';
+		format_value = strtol(format, &endptr, 10);
+		if (endptr == format || (*endptr != '\0' && *endptr != '\n')) {
+			if (fail_on_error)
+				ohshit(_("%s is corrupted, it should contain a "
+				         "database format version (an integer)"),
+				       file);
+			else
+				return false;
+		}
+		db_format = format_value;
+		close(fd);
+	}
+	return true;
+}
 
 void
 pkg_infodb_init(const enum modstatdb_rw flags)
 {
-	int fd;
+	bool found = false;
 
 	if (db_format_file)
 		free(db_format_file);
-	db_format_file = dpkg_db_get_path("format");
-	fd = open(db_format_file, O_RDONLY);
-	if (fd < 0 && errno == ENOENT) {
-		db_format = 0; /* Lack of file means old format */
-	} else if (fd < 0) {
-		ohshite(_("error trying to open %.250s"), db_format_file);
-	} else {
-		char format[16], *endptr = NULL;
-		ssize_t size;
+	db_format_file = dpkg_db_get_path(INFODIR "/format");
+	if (db_format_file_new)
+		free(db_format_file_new);
+	db_format_file_new = dpkg_db_get_path(INFODIR "/format-new");
 
-		size = fd_read(fd, format, sizeof(format) - 1);
-		if (size < 0) {
-			ohshite(_("error while reading %s"), db_format_file);
-		}
-		format[size] = '\0';
-		db_format = strtol(format, &endptr, 10);
-		if (endptr && *endptr != '\0' && *endptr != '\n')
-			ohshit(_("%s is corrupted, it should contain the "
-			         "database format version (an integer)"),
-			       db_format_file);
-		close(fd);
-	}
-	if (flags >= msdbrw_write && db_format < 2)
+	found = pkg_infodb_parse_format_file(db_format_file_new, false);
+	if (!found && !pkg_infodb_parse_format_file(db_format_file, true))
+		db_format = 0; /* Lack of file means old format */
+
+	/* Upgrade the DB if we have write rights and:
+	 * - if format-new exists (previous upgrade has not been completed)
+	 * - or if current format is not the latest one */
+	if (flags >= msdbrw_write && (found || db_format < 1))
 		pkg_infodb_upgrade_to_multiarch();
 }
 
 int
 pkg_infodb_format(void)
 {
+	assert(db_format >= 0); /* Ensure pkg_infodb_init() has been called */
 	return db_format;
 }
 
@@ -156,6 +189,7 @@ pkg_infodb_setup_multiarch_path(const char *filename, const char *filetype)
 		struct stat st;
 
 		varbuf_add_str(&new, pkgadmindir());
+		varbuf_add_char(&new, '/');
 		varbuf_pkg(&new, pkg, pdo_always);
 		varbuf_add_char(&new, '.');
 		varbuf_add_str(&new, filetype);
@@ -171,26 +205,34 @@ pkg_infodb_setup_multiarch_path(const char *filename, const char *filetype)
 }
 
 static void
-pkg_infodb_record_format(int version)
+pkg_infodb_record_new_format(int version)
 {
 	int fd, size;
 	char format[16];
 	ssize_t written;
 
 	size = snprintf(format, sizeof(format), "%d", version);
-	fd = open(db_format_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(db_format_file_new, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 1)
-		ohshite(_("unable to open/create '%s'"), db_format_file);
+		ohshite(_("unable to open/create '%s'"), db_format_file_new);
 	written = fd_write(fd, format, size);
-	if (written < 0) {
-		ohshite(_("error while writing '%s'"), db_format_file);
-	}
+	if (written < 0)
+		ohshite(_("error while writing '%s'"), db_format_file_new);
 	if (fsync(fd))
-		ohshite(_("unable to sync file '%s'"), db_format_file);
+		ohshite(_("unable to sync file '%s'"), db_format_file_new);
 	if (close(fd))
-		ohshite(_("unable to close file '%s'"), db_format_file);
-	dir_sync_path_parent(db_format_file);
+		ohshite(_("unable to close file '%s'"), db_format_file_new);
+	dir_sync_path_parent(db_format_file_new);
 	db_format = version;
+}
+
+static void
+pkg_infodb_commit_new_format(void)
+{
+	if (rename(db_format_file_new, db_format_file))
+		ohshite(_("cannot rename '%s' to '%s'"), db_format_file_new,
+		        db_format_file);
+	dir_sync_path_parent(db_format_file);
 }
 
 static void
@@ -211,7 +253,8 @@ cu_abort_db_upgrade(int argc, void **argv)
 		match_node_free(match_head);
 		match_head = next;
 	}
-	pkg_infodb_record_format(0);
+	if (unlink(db_format_file_new) && errno != ENOENT)
+		ohshite(_("cannot remove `%.250s'"), db_format_file_new);
 }
 
 static void
@@ -221,7 +264,7 @@ pkg_infodb_upgrade_to_multiarch(void)
 
 	push_cleanup(cu_abort_db_upgrade, ehflag_bombout, NULL, 0, 0);
 	pkg_infodb_foreach(NULL, NULL, pkg_infodb_setup_multiarch_path);
-	pkg_infodb_record_format(1);
+	pkg_infodb_record_new_format(1);
 	while (match_head) {
 		next = match_head->next;
 		if (unlink(match_head->old))
@@ -229,7 +272,7 @@ pkg_infodb_upgrade_to_multiarch(void)
 		match_node_free(match_head);
 		match_head = next;
 	}
-	pkg_infodb_record_format(2);
+	pkg_infodb_commit_new_format();
 	pop_cleanup(ehflag_normaltidy);
 }
 
@@ -262,7 +305,7 @@ pkg_infodb_foreach(struct pkginfo *pkg, struct pkgbin *pkgbin,
 	if (pkg) {
 		varbuf_add_str(&pkgname, pkg->set->name);
 		if (pkgbin->multiarch == multiarch_same &&
-		    pkg_infodb_format() > 0) {
+		    pkg_infodb_format() >= 1) {
 			varbuf_add_char(&pkgname, ':');
 			varbuf_add_str(&pkgname, pkgbin->arch->name);
 		}
@@ -270,6 +313,7 @@ pkg_infodb_foreach(struct pkginfo *pkg, struct pkgbin *pkgbin,
 	}
 
 	varbuf_add_str(&db_path, pkgadmindir());
+	varbuf_add_char(&db_path, '/');
 	db_path_len = db_path.used;
 	varbuf_add_char(&db_path, '\0');
 

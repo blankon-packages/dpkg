@@ -7,7 +7,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 
 AC_USE_SYSTEM_EXTENSIONS
-DPKG_ARCHITECTURE
 
 AM_INIT_AUTOMAKE([1.8 foreign nostdinc])
 
@@ -80,18 +79,21 @@ DPKG_FUNC_C99_SNPRINTF
 DPKG_CHECK_DECL([offsetof], [stddef.h])
 DPKG_CHECK_DECL([WCOREDUMP], [sys/wait.h])
 DPKG_CHECK_DECL([TIOCNOTTY], [sys/ioctl.h])
+DPKG_CHECK_PROGNAME
 DPKG_CHECK_COMPAT_FUNCS([getopt getopt_long obstack_free \
                          strnlen strerror strsignal asprintf \
                          scandir alphasort unsetenv])
 AC_CHECK_FUNCS([strtoul strtoimax isascii bcopy memcpy setsid getdtablesize \
-                lutimes posix_fadvise])
+                getprogname getexecname lutimes posix_fadvise])
 
 DPKG_MMAP
 
+# Checks for the build machinery.
 AC_DEFINE(LIBDPKG_VOLATILE_API, 1, [Acknowledge the volatility of the API.])
 DPKG_COMPILER_WARNINGS
 DPKG_COMPILER_OPTIMISATIONS
 DPKG_LINKER_OPTIMISATIONS
+DPKG_ARCHITECTURE
 
 AC_CONFIG_FILES([ Makefile
 		  dpkg-deb/Makefile
@@ -108,6 +110,7 @@ AC_CONFIG_FILES([ Makefile
 		  man/Makefile
 		  po/Makefile.in
 		  scripts/Makefile
+		  scripts/mk/Makefile
 		  scripts/po/Makefile.in
 		  src/Makefile
 		  utils/Makefile ])

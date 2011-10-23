@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-query 1 2010\-03\-07 Debian\-Projekt dpkg\-Programmsammlung
+.TH dpkg\-query 1 2011\-08\-14 Debian\-Projekt dpkg\-Programmsammlung
 .SH NAME
 dpkg\-query \- ein Werkzeug, um die dpkg\-Datenbank abzufragen
 .
@@ -44,8 +44,8 @@ Gewünschte Aktion:
 
 Paketstatus:
 .nf
-  n = Nicht
-  c = Config
+  n = Nicht installiert
+  c = Config\-Datei
   H = Halb installiert
   U = Entpackt
   F = Fehlgeschl. Konfiguration
@@ -80,12 +80,16 @@ sind.
 .TP 
 \fB\-s\fP, \fB\-\-status\fP \fIPaketname\fP ...
 Berichte Zustand des angegebenen Paketes. Dies zeigt nur den Eintrag in der
-Datenbank der Zustände der installierten Pakete.
+Datenbank der Zustände der installierten Pakete. Wenn mehrere \fIPaketname\fP
+aufgeführt sind, werden die angeforderten Statuseinträge durch Leerzeilen
+getrennt.
 .TP 
 \fB\-L\fP, \fB\-\-listfiles\fP \fIPaketname\fP ...
-Aufführen von Dateien, die durch \fIPaketname\fP installiert wurden. Beachten
-Sie aber, dass Dateien, die durch Paket\-spezifische Installationsskripte
-angelegt wurden, nicht aufgeführt werden.
+Aufführen von Dateien, die durch \fIPaketname\fP installiert wurden. Wenn
+mehrere \fIPaketname\fP aufgeführt sind, werden die angeforderten Dateilisten
+durch Leerzeilen getrennt. Beachten Sie aber, dass Dateien, die durch
+Paket\-spezifische Installationsskripte angelegt wurden, nicht aufgeführt
+werden.
 .TP 
 \fB\-c\fP, \fB\-\-control\-path\fP \fIPaketname\fP [\fISteuerdatei\fP]
 Listet die Pfade für Steuerdateien auf, die von \fIPaketname\fP auf Ihrem
@@ -97,16 +101,19 @@ veraltet werden, falls bessere Schnittstellen oder die aktuellen,
 Architektur\-bedingten Defizite gelöst wurden.
 .TP 
 \fB\-S\fP, \fB\-\-search\fP \fIDateiname\-Suchmuster\fP ...
-Suche nach einem Dateinamen aus einem installierten Paket. Alle
-Standard\-Jokerzeichen (»wildcards«) der Shell können in diesem Muster
-verwandt werden. Dieser Befehl wird weder die zusätzlichen Dateien, die
-durch Betreuer\-Skripte angelegt wurden, noch Alternativen aufführen.
+Suche nach Paketen, denen Paketen, die auf ein bestimmtes Muster passen,
+gehören. Die normalen Jokerzeichen (»wildcards«) der Shell können in diesem
+Muster verwandt werden. Dieser Befehl wird weder die zusätzlichen Dateien,
+die durch Betreuer\-Skripte angelegt wurden, noch Alternativen aufführen.
 .TP 
 \fB\-p\fP, \fB\-\-print\-avail\fP \fIPaketname\fP
 Zeige Details über \fIPaketname\fP an, wie diese in \fI/var/lib/dpkg/available\fP
-vorliegen. Benutzer APT\-basierter Oberflächen sollten \fBapt\-cache show\fP
-\fIPaketname\fP verwenden, da die Datei \fIavailable\fP nur bei der Benutzung von
-\fBdselect\fP aktuell bleibt.
+vorliegen. Wenn mehrere \fIPaketname\fP aufgeführt sind, werden die
+angeforderten \fIavailable\fP\-Einträge durch Leerzeilen getrennt.
+
+Benutzer APT\-basierter Oberflächen sollten \fBapt\-cache show\fP \fIPaketname\fP
+verwenden, da die Datei \fIavailable\fP nur bei der Benutzung von \fBdselect\fP
+aktuell bleibt.
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
 Zeige den Bedienungshinweis und beende.
@@ -156,11 +163,11 @@ Felder, die im Binärpaket abgespeichert sind, landen dort):
     \fBDescription\fP
     \fBEnhances\fP
     \fBEssential\fP
-    \fBFilename\fP (intern, Dselect\-bezogen)
+    \fBFilename\fP (intern, Oberflächen\-bezogen)
     \fBHomepage\fP
     \fBInstalled\-Size\fP
-    \fBMD5sum\fP (intern, Dselect\-bezogen)
-    \fBMSDOS\-Filename\fP (intern, Dselect\-bezogen)
+    \fBMD5sum\fP (intern, Oberflächen\-bezogen)
+    \fBMSDOS\-Filename\fP (intern, Oberflächen\-bezogen)
     \fBMaintainer\fP
     \fBOrigin\fP
     \fBPackage\fP
@@ -171,11 +178,11 @@ Felder, die im Binärpaket abgespeichert sind, landen dort):
     \fBReplaces\fP
     \fBRevision\fP (veraltet)
     \fBSection\fP
-    \fBSize\fP (intern, Dselect\-bezogen)
+    \fBSize\fP (intern, Oberflächen\-bezogen)
     \fBSource\fP
     \fBStatus\fP (intern)
     \fBSuggests\fP
-    \fBTag\fP (normalerweise nicht in dem .deb sondern in APTs Packages\-Dateien
+    \fBTag\fP (normalerweise nicht in dem .deb sondern in den Packages\-Dateien des Depots
     \fBTriggers\-Awaited\fP (intern)
     \fBTriggers\-Pending\fP (intern)
     \fBVersion\fP
@@ -194,9 +201,11 @@ Version zu erhalten, könnten Sie folgendes ausführen:
 .fi
 .
 .SH RÜCKGABEWERT
-.IP 0
+.TP 
+\fB0\fP
 Die angeforderte Abfrage wurde erfolgreich ausgeführt.
-.IP 1
+.TP 
+\fB1\fP
 Beim Lesen der Kommandozeile oder beim Ausführen der Abfrage traten Probleme
 auf. Dazu gehören auch keine Datei oder Paket gefunden (außer für
 \-\-control\-path).

@@ -3,15 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dselect 1 07\-03\-2010 "Projet Debian" Debian
+.TH dselect 1 2011\-08\-14 "Projet Debian" Debian
 .SH NOM
 dselect \- Interface de gestion de paquets Debian.
 .
 .SH SYNOPSIS
-\fBdselect\fP [\fB\-\-admindir\fP \fI<répertoire>\fP] [\fB\-\-help\fP]
-[\fB\-\-version\fP] [\fB\-\-expert\fP] [\fB\-\-debug\fP|\fB\-D\fP\fI<fichier>\fP]
-[\fI<action>\fP] [\fB\-\-colour\fP|\fB\-\-color\fP
-\fIpartie\-écran:\fP[\fIavant\-plan\fP],[\fIarrière\-plan\fP][\fI:attr\fP[\fI+attr+..\fP]]]
+\fBdselect\fP [\fIoption\fP...] [\fIaction\fP]
 .
 .SH DESCRIPTION
 \fBdselect\fP est une des principales interfaces de gestion des paquets sur un système Debian. À partir du menu principal de \fBdselect\fP, l'administrateur système peut\ :
@@ -32,29 +29,27 @@ serveurs d'archives publics sur Internet, des serveurs locaux ou des
 CDROM. La méthode d'accès recommandée est \fIapt\fP, qui est fournie par le
 paquet \fBapt\fP.
 .PP
-Normalement, \fBdselect\fP est appelé sans paramètre. Un menu interactif est
-présenté, offrant à l'utilisateur une liste d'actions. Si une action est
-donnée en paramètre, alors cette action est démarrée
-immédiatement. Plusieurs paramètres en ligne de commande sont disponibles
-pour modifier le comportement de \fBdselect\fP ou pour montrer des informations
-supplémentaires sur le programme.
+Normally \fBdselect\fP is invoked without parameters. An interactive menu is
+presented, offering the user a list of actions. If an action is given as
+argument, then that action is started immediately. Several command line
+parameters are still available to modify the running behaviour of \fBdselect\fP
+or show additional information about the program.
 .
 .SH OPTIONS
-On peut spécifier une option à la fois sur la ligne de commande, dans le
-fichier de configuration de dselect, \fI/etc/dpkg/dselect.cfg\fP ou dans les
-fichiers du répertoire de configuration \fI/etc/dpkg/dpkg.cfg.d/\fP. Chaque
-ligne de ce fichier est soit une option (identique à une option en ligne de
-commande mais sans tiret), soit un commentaire, commençant par \fB#\fP.
+All options can be specified both on the command line and in the \fBdselect\fP
+configuration file \fI/etc/dpkg/dselect.cfg\fP or the files on the
+configuration directory \fI/etc/dpkg/dselect.cfg.d/\fP. Each line in the
+configuration file is either an option (exactly the same as the command line
+option but without leading dashes) or a comment (if it starts with a \fB#\fP).
 .br
 .TP 
-\fB\-\-admindir\fP\fI <répertoire>\fP
+\fB\-\-admindir\fP\fI répertoire\fP
 Change le répertoire où les fichiers «\ \fIstatus\fP\ », «\ \fIavailable\fP\ » et
 autres sont situés. Le répertoire par défaut est \fI/var/lib/dpkg\fP et il ne
 devrait pas avoir besoin de le modifier.
 .TP 
-\fB\-\-debug\fP\fI <fichier> \fP|\fI \fP\fB\-D\fP\fI<fichier>\fP
-Activer le débogage. Les informations de débogage sont envoyées dans le
-\fI<fichier>\fP.
+\fB\-\-debug\fP\fI file \fP|\fI \fP\fB\-D\fP\fIfile\fP
+Turn on debugging. Debugging information is sent to \fIfile\fP.
 .TP 
 \fB\-\-expert\fP
 Activer le mode expert, c'est\-à\-dire ne pas afficher les messages d'aide
@@ -125,17 +120,17 @@ Affiche une aide rapide et se termine normalement.
 \fB\-\-version\fP
 Affiche la version et se termine normalement.
 .
-.SH UTILISATION
-Quand \fBdselect\fP est démarré en mode interactif, un menu propose à
-l'utilisateur une liste d'actions\ :
+.SH ACTIONS
+When \fBdselect\fP is started it can perform the following actions, either
+directly if it was specified on the command line or by prompting the user
+with a menu of available actions if running interactively:
 .SS "Accéder (access)"
 Choisir et configurer une méthode d'accès aux dépôts de paquets.
 .sp
-Par défaut, \fBdselect\fP fournit plusieurs méthodes telles que \fIfloppy\fP
-(disquette), \fIharddisk\fP (disque dur) ou \fIcdrom\fP, mais d'autres paquets
-peuvent fournir des méthodes supplémentaires, comme la méthode d'accès
-\fIapt\fP fournie par le paquet \fBapt\fP ou \fImulti_cd\fP fournie par le paquet
-\fBdpkg\-multicd\fP.
+By default, \fBdselect\fP provides several methods such as \fIcdrom\fP,
+\fImulti_cd\fP, \fInfs\fP, \fImulti_nfs\fP, \fIharddisk\fP, \fImounted\fP, \fImulti_mount\fP,
+\fIfloppy\fP or \fIftp\fP, but other packages may provide additional methods,
+eg. the \fIapt\fP access method provided by the \fBapt\fP package.
 .sp
 L'utilisation de la méthode d'accès \fIapt\fP est fortement conseillée.
 .sp

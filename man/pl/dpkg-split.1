@@ -4,12 +4,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-split 1 2009\-06\-26 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-split 1 2011\-07\-04 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-split \- narzêdzie dzielenia/³±czenia pakietów Debiana
 .
 .SH SK£ADNIA
-\fBdpkg\-split\fP [\fIopcje\fP] \fIpolecenie\fP
+\fBdpkg\-split\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH OPIS
 \fBdpkg\-split\fP dzieli pakiety binarne Debiana na mniejsze czê¶ci oraz scala
@@ -54,7 +54,8 @@ musz± to byæ te same czê¶ci utworzone za pomoc± polecenia \fBdpkg\-split
 
 Nazwy plików czê¶ci nie maj± znaczenia dla procesu odtworzenia pakietu.
 
-Domy¶lnie, odtworzony plik ma nazwê \fIpakiet\fP\fB\-\fP\fIwersja\fP\fB.deb\fP.
+By default the output file is called
+\fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarch\fP\fB.deb\fP.
 
 .TP 
 \fB\-I\fP, \fB\-\-info\fP \fIpart\fP...
@@ -74,9 +75,9 @@ zapisywany do \fIpe³nego\-archiwum\fP.
 Je¶li jeszcze nie ma wszystkich czê¶ci, podana \fIczê¶æ\fP jest kopiowana do
 kolejki i \fIpe³ne\-archiwum\fP nie jest odtwarzane.
 
-Je¶li plik \fIczê¶æ\fP nie jest czê¶ci± pakietu binarnego, \fBdpkg\-split\fP
-zakoñczy siê i zwróci kod b³êdu 1, albo kod b³êdu 2 w przypadku wyst±pienia
-innych problemów.
+If \fIpart\fP is not a split binary package part then \fBdpkg\-split\fP will exit
+with status \fB1\fP; if some other trouble occurs then it will exit with status
+\fB2\fP.
 
 Opcja \fB\-\-output\fP lub \fB\-o\fP musi zostaæ podana w przypadku u¿ycia
 \fB\-\-auto\fP. (W przeciwnym razie program nie wiedzia³by, jakiego spodziewaæ
@@ -134,29 +135,26 @@ Powsta³y przedrostek jest ucinany do niezbêdnego rozmiaru. Powsta³a nazwa ma
 postaæ \fIprzedrostekN\fP\fBof\fP\fIM\fP\fB.deb..\fP
 .
 .SH "KOD WYJ¦CIA"
-Kod b³êdu 0 oznacza, ¿e ¿±dana operacja dzielenia, ³±czenia czy jakakolwiek
-inna, zakoñczy³a siê sukcesem. Polecenie \fB\-\-info\fP koñczy siê sukcesem nawet
-gdy podany plik nie jest czê¶ci± pakietu.
-
-Kod b³êdu 1 oznacza, ¿e opcja \fB\-\-auto\fP zosta³a wykonana na pliku, który nie
-jest \fIczê¶ci±\fP pakietu.
-
-Kod b³êdu 2 pojawia siê przy ró¿nego rodzaju problemach, takich jak b³êdy
-wywo³ania funkcji systemu, uszkodzenie plików czê¶ci pakietu, czy innych
-wypadkach.
+.TP 
+\fB0\fP
+The requested split, merge, or other command succeeded.  \fB\-\-info\fP commands
+count as successful even if the files are not binary package parts.
+.TP 
+\fB1\fP
+Only occurs with \fB\-\-auto\fP and indicates that the \fIpart\fP file was not a
+binary package part.
+.TP 
+\fB2\fP
+Some kind of trouble happened, such as a system call failure, a file that
+looked like a package part file but was corrupted, a usage error or some
+other problem.
 .
 .SH B£ÊDY
-\fBdpkg\-split\fP u¿ywa raczej starej konwencji nazw plików pakietów.
-
 Pobranie pe³nej informacji o pakietach w kolejce jest niemo¿liwe, bez
 przeszukania katalogu kolejki.
 
 Nie ma prostego testu na sprawdzenie, czy dany plik jest na pewno czê¶ci±
 pakietu.
-
-Architektura nie jest okre¶lona w plikach czê¶ci pakietu, jedynie w
-kontrolnych plikach ca³ego pakietu, tak wiêc architektura nie jest czê¶ci±
-generowanej nazwy pliku.
 .
 .SH PLIKI
 .TP 

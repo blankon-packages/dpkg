@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-architecture 1 2009\-08\-15 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-architecture 1 2011\-08\-14 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-architecture \- ustawia i zwraca architekturê budowania pakietów.
 .
 .SH SK£ADNIA
-\fBdpkg\-architecture\fP [\fIopcje\fP] [\fIpolecenia\fP]
+\fBdpkg\-architecture\fP [\fIoption\fP...] [\fIcommand\fP]
 .PP
 .
 .SH OPIS
@@ -289,9 +289,9 @@ dpkg\-architecture \-ilinux\-any
 dpkg\-architecture \-ai386 \-ilinux\-any
 .
 .SH PLIKI
-Wszystkie te pliki musz± byæ obecne, aby \fBdpkg\-architecture\fP w ogóle
-dzia³a³. Ich po³o¿enie mo¿nazmieniæ w czasie dzia³ania programu przez
-ustawienie zmiennej ¶rodowiskowej DPKG_DATADIR.
+All these files have to be present for \fBdpkg\-architecture\fP to work. Their
+location can be overridden at runtime with the environment variable
+\fBDPKG_DATADIR\fP.
 .TP 
 \fI/usr/share/dpkg/cputable\fP
 Tabela znanych nazw procesorów i ich mapowanie na nazwy GNU.

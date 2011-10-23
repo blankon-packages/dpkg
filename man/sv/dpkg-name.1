@@ -8,23 +8,23 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-name 1 2008\-08\-18 Debianprojektet dpkg\-verktygen
+.TH dpkg\-name 1 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-name \- byt namnet på Debianpaket till det fullständiga paketnamnet
 .
 .SH SYNOPS
-\fBdpkg\-name\fP [\fIflaggor\fP] [\fB\-\-\fP] \fIfiler\fP
+\fBdpkg\-name\fP [\fIflagga\fP...] [\fB\-\-\fP] \fIfil\fP...
 .
 .SH BESKRIVNING
 .PP
 Manualsidan dokumenterar programmet \fBdpkg\-name\fP, vilket tillhandahåller ett
 enkelt sätt att byta namn på \fBDebian\fPpaket till deras fullständiga
 paketnamn. Ett fullständigt paketnamn består av
-\fI<paket>_<version>_<arkitektur>.<pakettyp>\fP
-och anges av control\-filen i paketet. \fI<Version>\fP\-delen av
-filnamnet består av uppströmsversionsinformation och kan eventuellt följas
-av ett bindestreck och revisionsinformationen. \fI<Pakettyp>\fP\-delen
-kommer från fältet \fIpackage_type\fP om det finns, annars \fBdeb\fP.
+\fIpaket\fP\fB_\fP\fIversion\fP\fB_\fP\fIarkitektur\fP\fB.\fP\fIpakettyp\fP och anges av
+control\-filen i paketet. \fIVersion\fP\-delen av filnamnet består av
+uppströmsversionsinformation och kan eventuellt följas av ett bindestreck
+och revisionsinformationen. \fIPakettyp\fP\-delen kommer från fältet
+\fIpackage\-type\fP om det finns, annars \fBdeb\fP.
 .
 .SH FLAGGOR
 .TP 
@@ -43,12 +43,12 @@ Filerna kommer att flyttas till en underkatalog. Om katalogen i argumentet
 existerar kommer filerna att flyttas in i den katalogen, om inte kommer
 namnet på målkatalogen att hämtas från sektionsfältet i styrdelen av
 paketet. Målkatalogen kommer vara
-"unstable/binary\-<arkitekur>/<sektion>". Om sektionen inte
-hittas i styrfilen antas "no\-section", och i så fall, samt för sektionerna
-"non\-free" och "contrib", är målkatalogen
-"<sektion>/binary\-<arkitektur>". Sektionsfältet är inte
-nödvändigt, så flera paket hamnar i katalogen "no\-section". Använd den här
-flaggan med tillförsikt, den kan vara rörig.
+"unstable/binary\-\fIarkitekur\fP\fIsektion\fP". Om sektionen inte hittas i
+styrfilen antas "no\-section", och i så fall, samt för sektionerna "non\-free"
+och "contrib", är målkatalogen
+"\fIsektion\fP/binary\-\fIarkitektur\fP". Sektionsfältet är inte nödvändigt, så
+flera paket hamnar i katalogen "no\-section". Använd den här flaggan med
+tillförsikt, den kan vara rörig.
 .TP 
 \fB\-c\fP, \fB\-\-create\-dir\fP
 Flaggan kan användas tillsammans med \-s\-flaggan. Om en målkatalog inte
@@ -82,9 +82,9 @@ Kan användas när nya paket byggs.
 .
 .SH PROGRAMFEL
 Vissa paket följer inte namnstrukturen
-<paket>_<version>_<arckitektur>.deb. Paket vars namn
-ändrats med dpkg\-name kommer följa denna struktur. Normalt påverkar detta
-inte hur \fBdselect\fP(1)/\fBdpkg\fP(1) installerar paket, men vissa andra
+\fIpaket\fP\fB_\fP\fIversion\fP\fB_\fP\fIarkitektur\fP\fB.deb\fP. Paket vars namn ändrats med
+dpkg\-name kommer följa denna struktur. Normalt påverkar detta inte hur
+\fBdselect\fP(1)/\fBdpkg\fP(1) installerar paket, men vissa andra
 installationsverktyg kan vara beroende av denna namngivningsstruktur.
 .
 .SH "SE ÄVEN"

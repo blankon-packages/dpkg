@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 2010\-10\-12 "Projet Debian" "Utilitaires de dpkg"
+.TH dpkg\-divert 8 2011\-08\-14 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
 dpkg\-divert \- remplacer la version d'un fichier contenu dans un paquet.
 .
 .SH SYNOPSIS
-\fBdpkg\-divert\fP [\fIoptions\fP] \fIcommande\fP
+\fBdpkg\-divert\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH DESCRIPTION
 \fBdpkg\-divert\fP sert à créer et à mettre à jour la liste des détournements.
@@ -79,9 +79,9 @@ Affiche un message d'aide puis quitte.
 Affiche le numéro de version puis quitte.
 .
 .SH NOTES
-Pour l'ajout, le défaut est \fB\-\-local\fP et \fB\-\-divert\fP \fI
-<original>.distrib\fP. Pour la suppression, \fB\-\-package\fP ou \fB\-\-local\fP
-et \fB\-\-divert\fP doivent correspondre quand ils sont précisés.
+When adding, default is \fB\-\-local\fP and \fB\-\-divert\fP
+\fIoriginal\fP\fB.distrib\fP. When removing, \fB\-\-package\fP or \fB\-\-local\fP and
+\fB\-\-divert\fP must match if specified.
 
 On ne peut pas détourner des répertoires avec \fBdpkg\-divert\fP.
 
@@ -122,7 +122,7 @@ If set and the \fB\-\-admindir\fP option has not been specified, it will be used
 as the dpkg data directory.
 .TP 
 \fBDPKG_MAINTSCRIPT_PACKAGE\fP
-If set and the \fI\-\-local\fP and \fI\-\-package\fP options have not been specified,
+If set and the \fB\-\-local\fP and \fB\-\-package\fP options have not been specified,
 \fBdpkg\-divert\fP will use it as the package name.
 .
 .SH FICHIERS

@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-deb 1 2010\-03\-07 Debian\-Projekt dpkg\-Programmsammlung
+.TH dpkg\-deb 1 2011\-08\-14 Debian\-Projekt dpkg\-Programmsammlung
 .SH NAME
 dpkg\-deb \- Debian\-Paketarchiv (.deb) Manipulationswerkzeug
 .
 .SH ÜBERSICHT
-\fBdpkg\-deb\fP [\fIOptionen\fP] \fIBefehl\fP
+\fBdpkg\-deb\fP [\fIOption\fP...] \fIBefehl\fP
 .
 .SH BESCHREIBUNG
 \fBdpkg\-deb\fP packt und entpackt Debian\-Archive und stellt Informationen über
@@ -98,14 +98,22 @@ angelegt. Seine Rechte werden angepasst, um mit dem Inhalt des Pakets
 übereinzustimmen.
 .TP 
 \fB\-X\fP, \fB\-\-vextract\fP \fIArchiv\-Verzeichnis\fP
-Ist wie \fB\-\-extract\fP (\fB\-x\fP), gibt aber beim Arbeiten eine Liste von
-extrahierten Dateien aus.
+Ist wie \fB\-\-extract\fP (\fB\-x\fP) mit \fB\-\-verbose\fP (\fB\-v\fP), das beim Arbeiten
+eine Liste von extrahierten Dateien ausgibt.
+.TP 
+\fB\-R\fP, \fB\-\-raw\-extract\fP \fIArchiv\-Verzeichnis\fP
+Extrahiert den Dateisystembaum aus einem Paketarchiv in ein angegebenes
+Verzeichnis und die Steuerinformationensdateien in das
+DEBIAN\-Unterverzeichnis des angegebenen Verzeichnisses.
+
+Das Zielverzeichnis (aber nicht übergeordnete) wird, falls notwendig,
+angelegt.
 .TP 
 \fB\-\-fsys\-tarfile\fP \fIArchiv\fP
 Extrahiert die Dateisystembaum\-Daten aus einem Binärpaket und schickt sie
 zur Standardausgabe im \fBtar\fP\-Format. Dies kann zusammen mit \fBtar\fP(1)
 verwendet werden, um eine bestimmte Datei aus einem Paketarchiv zu
-extrahieren.
+extrahieren. Das Eingabearchiv wird immer sequenziell verarbeitet.
 .TP 
 \fB\-e\fP, \fB\-\-control\fP \fIArchiv\fP [\fIVerzeichnis\fP]
 Extrahiert die Steuer\-Informationsdateien aus einem Paketarchiv in das
@@ -140,10 +148,11 @@ werden.
 Die Voreinstellung für dieses Feld ist "${Package}\et${Version}\en".
 .TP 
 \fB\-z\fP\fIKomprimierstufe\fP
-Gibt die Komprimierstufe an, die an das Komprimier\-Backendprogramm beim Bau
-eines Pakets übergeben werden soll.
+Gibt die Komprimierstufe an, die im Komprimier\-Backendprogramm beim Bau
+eines Pakets verwendet werden soll. Standardmäßig ist dies 9 für Gzip und
+Bzip2, 6 für Xz und Lzma.
 .TP 
-\fB\-Z\fP\fIkomprimier_Art\fP
+\fB\-Z\fP\fIKomprimierart\fP
 Gibt die Art der Komprimierung beim Bau eines Pakets an. Erlaubte Werte sind
 \fIgzip\fP, \fIxz\fP, \fIbzip2\fP, \fIlzma\fP und \fInone\fP (voreingestellt ist \fIgzip\fP).
 .TP 
@@ -162,6 +171,10 @@ sollen. Diese Dpkg\-Version wurde nur als i386 a.out\-Programm veröffentlicht.
 Unterdrückt die normalen Überprüfungen von \fBdpkg\-deb \-\-build\fP über die
 vorgeschlagenen Inhalte eines Archivs. Damit können Sie jedes Archiv bauen,
 das Sie möchten, egal wie defekt es ist.
+.TP 
+\fB\-v\fP, \fB\-\-verbose\fP
+Aktiviert ausführliche Ausgabe. Dies betrifft derzeit nur \fB\-\-extract\fP,
+wodurch dieses sich wie \fB\-\-vextract\fP verhält.
 .TP 
 \fB\-D\fP, \fB\-\-debug\fP
 Aktiviert Fehlersuch\-Ausgaben (»debugging«). Dies ist nicht sehr

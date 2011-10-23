@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-buildpackage 1 2010\-07\-29 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH dpkg\-buildpackage 1 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 dpkg\-buildpackage \- baue Binär\- oder Quellpakete aus Quellen
 .
 .SH ÜBERSICHT
-\fBdpkg\-buildpackage\fP [\fIOptionen\fP]
+\fBdpkg\-buildpackage\fP [\fIOption\fP...]
 .
 .SH BESCHREIBUNG
 \fBdpkg\-buildpackage\fP ist ein Programm, das den Prozess des Bauens eines
@@ -30,11 +30,10 @@ Es ruft \fBdpkg\-source \-b\fP auf, um das Quellpaket zu erstellen (falls nicht
 mit \fB\-b\fP, \fB\-B\fP oder \fB\-A\fP ein rein\-binärer Bau erbeten wurde).
 .IP \fB5.\fP 3
 Es ruft \fBdebian/rules\fP \fBbuild\fP, gefolgt von \fBfakeroot debian/rules\fP
-\fIProgramm\-Ziel\fP auf (falls nicht ein reiner Quellbau mit \fB\-S\fP erbeten
-wurde). Beachten Sie, dass \fIProgramm\-Ziel\fP entweder \fBbinary\fP
-(Standardfall, oder falls \fB\-b\fP angegeben wurde) oder \fBbinary\-arch\fP (falls
-\fB\-B\fP angegeben wurde) oder \fBbinary\-indep\fP (falls \fB\-A\fP angegeben wurde)
-lautet.
+\fIBinärziel\fP auf (falls nicht ein reiner Quellbau mit \fB\-S\fP erbeten
+wurde). Beachten Sie, dass \fIBinärziel\fP entweder \fBbinary\fP (Standardfall,
+oder falls \fB\-b\fP angegeben ist) oder \fBbinary\-arch\fP (falls \fB\-B\fP angegeben
+ist) oder \fBbinary\-indep\fP (falls \fB\-A\fP angegeben ist) lautet.
 .IP \fB6.\fP 3
 Es ruft \fBgpg\fP auf, um die \fB.dsc\fP\-Datei zu signieren (falls vorhanden und
 \fB\-us\fP nicht angegeben wurde).
@@ -227,10 +226,11 @@ abzufragen.
 Beim Aufruf von \fBdpkg\-architecture\fP werden die Parameter von \fB\-a\fP und
 \fB\-t\fP durchgereicht. Jede Variable, die von seiner Option \fB\-s\fP ausgegeben
 wird, wird in die Bauumgebung integriert.
-.SS Compiler\-Schalter
-Die Umgebungsvariablen \fBCFLAGS\fP, \fBCXXFLAGS\fP, \fBFFLAGS\fP, \fBCPPFLAGS\fP und
-\fBLDFLAGS\fP werden auf die Werte gesetzt, die \fBdpkg\-buildflags\fP
-zurückliefert. Lesen Sie die Handbuchseite für weitere Informationen.
+.SS "Kompilierschalter werden nicht mehr exportiert"
+Zwischen den Versionen 1.14.17 and 1.16.1 exportierte \fBdpkg\-buildpackage\fP
+Kompilierschalter (\fBCFLAGS\fP, \fBCXXFLAGS\fP, \fBFFLAGS\fP, \fBCPPFLAGS\fP und
+\fBLDFLAGS\fP) mit Werten, die von \fBdpkg\-buildflags\fP geliefert wurden. Dies
+ist nicht mehr der Fall.
 .
 .SH FEHLER
 Es sollte möglich sein, Leerzeichen und Metazeichen der Shell in und
@@ -244,8 +244,8 @@ angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
 GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
-\fBdpkg\-source\fP(1), \fBdpkg\-architecture\fP(1), \fBdpkg\-genchanges\fP(1),
-\fBfakeroot\fP(1), \fBgpg\fP(1).
+\fBdpkg\-source\fP(1), \fBdpkg\-architecture\fP(1), \fBdpkg\-buildflags\fP(1),
+\fBdpkg\-genchanges\fP(1), \fBfakeroot\fP(1), \fBgpg\fP(1).
 .
 .SH AUTOREN
 Copyright \(co 1995\-1996 Ian Jackson

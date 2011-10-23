@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2011\-02\-05 "Projekt Debiana" "u¿ytki dpkg"
+.TH dpkg 1 2011\-08\-14 "Projekt Debiana" "u¿ytki dpkg"
 .SH NAZWA
 dpkg \- mened¿er pakietów Debiana
 .
 .SH SK£ADNIA
-\fBdpkg\fP [\fIopcje\fP] \fIdzia³anie\fP
+\fBdpkg\fP [\fIoption\fP...] \fIaction\fP
 .
 .SH UWAGA
 Ten podrêcznik jest przeznaczony dla u¿ytkowników, którzy chc± poznaæ opcje
@@ -27,21 +27,12 @@ jest obs³ugiwany z linii komend, przez podanie dok³adnie jednego dzia³ania
 oraz dodatkowych, nieobowi±zkowych opcji. Parametr dzia³anie okre¶la, co
 \fBdpkg\fP ma zrobiæ, a dodatkowe opcje modyfikuj± to dzia³anie.
 
-\fBdpkg\fP mo¿e byæ tak¿e u¿yty jako nak³adka na \fBdpkg\-deb\fP(1). Wymienione
-poni¿ej dzia³ania s± dzia³aniami programu \fBdpkg\-deb\fP i je¿eli zostan±
-u¿yte, to \fBdpkg\fP uruchomi \fBdpkg\-deb\fP, przekazuj±c mu odpowiednie
-parametry:
-.nf
-    \fB\-b\fP, \fB\-\-build\fP,
-    \fB\-c\fP, \fB\-\-contents\fP,
-    \fB\-I\fP, \fB\-\-info\fP,
-    \fB\-f\fP, \fB\-\-field\fP,
-    \fB\-e\fP, \fB\-\-control\fP,
-    \fB\-x\fP, \fB\-\-extract\fP,
-    \fB\-X\fP, \fB\-\-vextract\fP oraz
-    \fB\-\-fsys\-tarfile\fP.
-.fi
-Dzia³ania te s± opisane w osobnym podrêczniku do \fBdpkg\-deb\fP(1).
+\fBdpkg\fP can also be used as a front\-end to \fBdpkg\-deb\fP(1) and
+\fBdpkg\-query\fP(1). The list of supported actions can be found later on in the
+\fBACTIONS\fP section. If any such action is encountered \fBdpkg\fP just runs
+\fBdpkg\-deb\fP or \fBdpkg\-query\fP with the parameters given to it, but no
+specific options are currently passed to them, to use any such option the
+back\-ends need to be called directly.
 .
 .SH "INFORMACJE O PAKIETACH"
 \fBdpkg\fP zarz±dza informacjami o dostêpnych pakietach. Informacje zosta³y
@@ -98,9 +89,9 @@ reinstalacji. Taki pakiet nie mo¿e zostaæ usuniêty, chyba ¿e u¿yje siê opcji
 .
 .SH AKCJE
 .TP 
-\fB\-i\fP, \fB\-\-install\fP \fIplik_pakietu\fP...
-Instalacja pakiet. Je¶li zosta³a u¿yta opcja \fB\-\-recursive\fP lub \fB\-R\fP,
-\fIplik_pakietu\fP musi oznaczaæ wybrany katalog.
+\fB\-i\fP, \fB\-\-install\fP \fIpackage\-file\fP...
+Install the package. If \fB\-\-recursive\fP or \fB\-R\fP option is specified,
+\fIpackage\-file\fP must refer to a directory instead.
 
 Instalacja sk³ada siê z nastêpuj±cych kroków:
 .br
@@ -128,9 +119,9 @@ pliki s± zapisywane w tym samym czasie, gdy stare s± kasowane.
 \fB6.\fP Konfiguracja pakietu. Bardziej szczegó³owe informacje zawarto przy
 opisie parametru \fB\-\-configure\fP.
 .TP 
-\fB\-\-unpack \fP\fIplik_pakietu\fP...
-Rozpakowanie pakietu, ale bez konfigurowania go. Je¶li zosta³a u¿yta opcja
-\fB\-\-recursive\fP lub \fB\-R\fP, \fIplik_pakietu\fP musi oznaczaæ wybrany katalog.
+\fB\-\-unpack \fP\fIpackage\-file\fP...
+Unpack the package, but don't configure it. If \fB\-\-recursive\fP or \fB\-R\fP
+option is specified, \fIpackage\-file\fP must refer to a directory instead.
 .TP 
 \fB\-\-configure \fP\fIpakiet\fP...|\fB\-a\fP|\fB\-\-pending\fP
 Configure a package which has been unpacked but not yet configured.  If
@@ -199,11 +190,10 @@ zasadniczo nieu¿yteczny, je¶li nie u¿ywa siê \fBdselect\fP tylko nak³adki
 bazuj±cej na APT. Przyczyn± tego jest fakt, ¿e APT posiada w³asny system
 okre¶lania dostêpno¶ci pakietów.
 .TP 
-\fB\-A\fP, \fB\-\-record\-avail\fP \fIplik_pakietu\fP...
-Zaktualizowanie bazy danych programów \fBdpkg\fP oraz \fBdselect\fP o dostêpnych
-pakietach, uwzglêdniaj±c informacje zawarte w pakiecie
-\fIplik_pakietu\fP. Je¶li zosta³a u¿yta opcja \fB\-\-recursive\fP lub \fB\-R\fP,
-\fIplik_pakietu\fP musi oznaczaæ wybrany katalog.
+\fB\-A\fP, \fB\-\-record\-avail\fP \fIpackage\-file\fP...
+Update \fBdpkg\fP and \fBdselect\fP's idea of which packages are available with
+information from the package \fIpackage\-file\fP. If \fB\-\-recursive\fP or \fB\-R\fP
+option is specified, \fIpackage\-file\fP must refer to a directory instead.
 .TP 
 \fB\-\-forget\-old\-unavail\fP
 Aktualnie \fBprzestarza³e\fP i nie daje ¿adnego efektu, poniewa¿ \fBdpkg\fP
@@ -223,11 +213,10 @@ podano wzorca, pakiety niezainstalowane (czyli takie, które nie zosta³y
 uprzednio wyczyszczone) nie zostan± wy¶wietlone.
 .TP 
 \fB\-\-set\-selections\fP
-Ustawia wybór pakietów u¿ywaj±c pliku przeczytanego ze standardowego
-wej¶cia. Plik ten powinien byæ w nastêpuj±cym formacie "<pakiet>
-<stan>", gdzie stan jest jednym z install, hold, deinstall lub
-purge. Dozwolone s± tak¿e linie puste i linie komentarza \- zaczynaj±ce siê
-od "#".
+Set package selections using file read from stdin. This file should be in
+the format '\fIpackage\fP \fIstate\fP', where state is one of \fBinstall\fP, \fBhold\fP,
+\fBdeinstall\fP or \fBpurge\fP. Blank lines and comment lines beginning with '#'
+are also permitted.
 .TP 
 \fB\-\-clear\-selections\fP
 Oznacza wszystkie pakiety nie bêd±ce pakietami niezbêdnymi (essential) jako
@@ -255,11 +244,10 @@ których pusty numer wersji oznacza wersjê pó¼niejsz± ni¿ dowolna: \fBlt\-nl
 le\-nl ge\-nl gt\-nl\fP. Operatory istniej±ce, aby zachowaæ kompatybilno¶æ z
 plikiem kontrolnym: \fB< << <= = >= >> >\fP.
 .TP 
-\fB\-\-command\-fd \fP\fI<n>\fP
-Accept a series of commands on input file descriptor \fI<n>\fP. Note:
-additional options set on the command line, and through this file
-descriptor, are not reset for subsequent commands executed during the same
-run.
+\fB\-\-command\-fd \fP\fIn\fP
+Accept a series of commands on input file descriptor \fIn\fP. Note: additional
+options set on the command line, and through this file descriptor, are not
+reset for subsequent commands executed during the same run.
 .TP 
 \fB\-\-help\fP
 Wy¶wietlenie krótkiego komunikatu pomocy.
@@ -456,6 +444,8 @@ data, use with care.\fP
 
 \fBarchitecture\fP: Process even packages with wrong or no architecture.
 
+\fBbad\-version\fP: Process even packages with wrong versions.
+
 \fBbad\-path\fP: Zignorowanie braku pewnych programów w ¶cie¿ce zmiennej
 systemowej \fBPATH\fP.
 
@@ -470,14 +460,6 @@ sprawdzenie jego autentyczno¶ci.
 Zignorowanie sprawdzania zale¿no¶ci od podanych pakietów (a ¶ci¶lej rzecz
 bior±c, sprawdzanie siê odbywa, ale w przypadku konfliktów wy¶wietlane jest
 tylko ostrze¿enie).
-.TP 
-\fB\-\-new\fP, \fB\-\-old\fP
-Wybór pomiêdzy nowym i starym formatem binarnym pakietu. Ta opcja jest
-przes³ana do \fBdpkg\-deb\fP(1).
-.TP 
-\fB\-\-nocheck\fP
-Brak sprawdzania zawarto¶ci pliku kontrolnego podczas budowania pakietu. Ta
-opcja jest przes³ana do \fBdpkg\-deb\fP(1).
 .TP 
 \fB\-\-no\-act\fP, \fB\-\-dry\-run\fP, \fB\-\-simulate\fP
 Podejmowane dzia³ania nie powoduj± ¿adnych zmian. Ta opcja jest u¿yteczna,
@@ -607,18 +589,14 @@ times. The output format used is the same as in \fB\-\-status\-fd.\fP
 .RE
 .TP 
 \fB\-\-log=\fP\fInazwa\-pliku\fP
-Zapisuje informacje o zmianach stanu i akcjach do pliku logu \fInazwa\-pliku\fP,
-zamiast do domy¶lnego pliku \fI/var/log/dpkg.log\fP. Je¿eli tê opcjê podano
-kilka razy, brany jest pod uwagê plik podany w ostatniej opcji. Komunikaty
-logu s± w postaci"YYYY\-MM\-DD HH:MM:SS <status> <pakiet>
-<wersja\-zainstalowana>" dla zmian stanu; "YYYY\-MM\-DD HH:MM:SS
-<akcja> <pakiet> <wersja\-instalowana>
-<wersja\-dostêpna>" dla akcji, gdzie \fI<akcja>\fP jest jedn± z
-install (instalacja), upgrade (aktualizacja), remove (usuwanie), purge
-(czyszczenie) oraz "YYYY\-MM\-DD HH:MM:SS conffile <nazwa\-pliku>
-<decyzja>" dla zmian plików konfiguracyjnych, gdzie
-\fI<decyzja>\fP to albo install (instalacja nowej wersji), albo keep
-(zachowanie poprzedniej wersji).
+Log status change updates and actions to \fIfilename\fP, instead of the default
+\fI/var/log/dpkg.log\fP. If this option is given multiple times, the last
+filename is used. Log messages are of the form `YYYY\-MM\-DD HH:MM:SS status
+\fIstate\fP \fIpkg\fP \fIinstalled\-version\fP' for status change updates; `YYYY\-MM\-DD
+HH:MM:SS \fIaction\fP \fIpkg\fP \fIinstalled\-version\fP \fIavailable\-version\fP' for
+actions where \fIaction\fP is one of \fBinstall\fP, \fBupgrade\fP, \fBremove\fP,
+\fBpurge\fP; and `YYYY\-MM\-DD HH:MM:SS conffile \fIfilename\fP \fIdecision\fP' for
+conffile changes where \fIdecision\fP is either \fBinstall\fP or \fBkeep\fP.
 .TP 
 \fB\-\-no\-debsig\fP
 Nie próbuje weryfikowaæ sygnatur pakietu.

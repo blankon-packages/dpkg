@@ -10,13 +10,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH update\-alternatives 8 2011\-03\-04 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH update\-alternatives 8 2011\-08\-14 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 update\-alternatives \- zarz±dzanie dowi±zaniami symbolicznymi okre¶laj±cymi
 domy¶lne polecenia
 .
 .SH SK£ADNIA
-\fBupdate\-alternatives\fP [\fIopcje\fP] \fIpolecenie\fP
+\fBupdate\-alternatives\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH OPIS
 \fBupdate\-alternatives\fP tworzy, usuwa, wy¶wietla informacje o dowi±zaniach
@@ -79,16 +79,16 @@ Z ka¿d± alternatyw± skojarzony jest \fIpriorytet\fP. Je¿eli grupa dowi±zañ jest
 w trybie automatycznym, to wybran± alternatyw± bêdzie ta, która ma najwy¿szy
 priorytet.
 .PP
-\fBupdate\-alternatives\fP u¿yte z opcj± \fI\-\-config\fP wy¶wietli listê wszystkich
-alternatyw dla grupy dowi±zañ, dla której podana \fInazwa\fP jest nazw±
-g³ównego dowi±zania. Bie¿±ca alternatywa bêdzie oznaczona znakiem
-"*". U¿ytkownik zostanie poproszony o wybór alternatywy, która bêdzie
-u¿ywana dla tej grupy dowi±zañ. Po dokonaniu zmiany grupa dowi±zañ nie
-bêdzie ju¿ w trybie \fIautomatycznym\fP. Aby przywróciæ tryb automatyczny,
-nale¿y u¿yæ opcji \fI\-\-auto\fP (lub ponownie uruchomiæ \fI\-\-config\fP i wybraæ
-pozycjê oznaczon± jako automatyczn±).
+When using the \fB\-\-config\fP option, \fBupdate\-alternatives\fP will list all of
+the choices for the link group of which given \fIname\fP is the master
+alternative name. The current choice is marked with a '*'.  You will then be
+prompted for your choice regarding this link group.  Depending on the choice
+made, the link group might no longer be in \fIauto\fP mode. You will need to
+use the \fB\-\-auto\fP option in order to return to the automatic mode (or you
+can rerun \fB\-\-config\fP and select the entry marked as automatic).
 .PP
-Aby skonfigurowaæ nieinteraktywnie, mo¿na u¿yæ opcji \fI\-\-set\fP (patrz ni¿ej).
+If you want to configure non\-interactively you can use the \fB\-\-set\fP option
+instead (see below).
 .PP
 Ró¿ne pakiety dostarczaj±ce tych samych plików powinny \fBwspó³pracowaæ\fP ze
 sob± w tym zakresie. Oznacza to, ¿e u¿ywanie programu \fBupdate\-alternatives\fP
@@ -162,9 +162,8 @@ zainstalowanych alternatyw w tej grupie, to dowi±zania symboliczne bêd±
 zaktualizowane tak, ¿eby prowadzi³y do nowo dodanych alternatyw.
 .TP 
 \fB\-\-set\fP \fInazwa ¶cie¿ka\fP
-Ustawia program \fI¶cie¿ka\fP jako alternatywê dla \fInazwy\fP. Jest to
-nieinteraktywny, a wiêc mo¿liwy do u¿ycia w skryptach, odpowiednik opcji
-\fI\-\-config\fP.
+Set the program \fIpath\fP as alternative for \fIname.\fP This is equivalent to
+\fB\-\-config\fP but is non\-interactive and thus scriptable.
 .TP 
 \fB\-\-remove\fP \fInazwa ¶cie¿ka\fP
 Usuwa alternatywê i wszystkie dowi±zania podrzêdne z ni±
@@ -246,8 +245,8 @@ Specifies the log file, when this is to be different from the default
 (/var/log/alternatives.log).
 .TP 
 \fB\-\-force\fP
-Zezwala \fBupdate\-alternatives\fP na zastêpowanie istniej±cych rzeczywistych
-plików tam, gdzie powinno byæ zainstalowane dowi±zanie alternatywy.
+Let \fBupdate\-alternatives\fP replace or drop any real file that is installed
+where an alternative link has to be installed or removed.
 .TP 
 \fB\-\-skip\-auto\fP
 Pomija pytania o konfiguracjê alternatyw, które s± w³a¶ciwie skonfigurowane
@@ -275,42 +274,44 @@ Domy¶lny katalog alternatyw. Mo¿na go zmieniæ opcj± \fB\-altdir\fP.
 Domy¶lny katalog administracyjny. Mo¿na go zmieniæ opcj± \fB\-admindir\fP.
 .
 .SH "KOD WYJ¦CIA"
-.IP 0
+.TP 
+\fB0\fP
 Akcja zakoñczy³a siê powodzeniem.
-.IP 2
+.TP 
+\fB2\fP
 Wyst±pi³y problemy podczas przetwarzania linii poleceñ lub wykonywania
 akcji.
 .
 .SH "FORMAT ZAPYTANIA"
-Wynik polecenia \fBupdate\-alternatives\fP \fI\-\-query\fP u¿ywa formatu podobnego do
-p³askiego formatu RFC822. Sk³ada siê z \fIn\fP + 1 bloków, gdzie \fIn\fP jest
-liczb± alternatyw dostêpnych w grupie dowi±zañ, do której odnosi siê
-zapytanie. Pierwszy blok zawiera nastêpuj±ce pola:
+The \fBupdate\-alternatives \-\-query\fP format is using an RFC822\-like flat
+format. It's made of \fIn\fP + 1 blocks where \fIn\fP is the number of
+alternatives available in the queried link group. The first block contains
+the following fields:
 .TP 
-\fBLink:\fP <dowi±zanie>
+\fBLink:\fP\fI link\fP
 Nazwa ogólna alternatywy.
 .TP 
-\fBStatus:\fP <status>
+\fBStatus:\fP\fI status\fP
 Status alternatywy (\fBauto\fP lub \fBmanual\fP).
 .TP 
-\fBBest:\fP <najlepszy wybór>
+\fBBest:\fP\fI best\-choice\fP
 ¦cie¿ka najlepszej alternatywy dla tej grupy dowi±zañ. Nie jest wy¶wietlana,
 je¶li nie ma dostêpnych ¿adnych alternatyw.
 .TP 
-\fBValue:\fP <aktualnie wybrana alternatywa> 
+\fBValue:\fP\fI currently\-selected\-alternative\fP
 ¦cie¿ka aktualnie wybranej alternatywy. Mo¿e równie¿ przyjmowaæ specjaln±
 warto¶æ \fBnone\fP \- jest ona u¿ywana je¶li dowi±zanie nie istnieje.
 .TP 
 .TP 
 Inne bloki opisuj± dostêpne alternatywy w grupie dowi±zañ, do której odnosi siê zapytanie:
 .TP 
-\fBAlternative:\fP <¶cie¿ka alternatywy>
+\fBAlternative:\fP\fI path\-of\-this\-alternative\fP
 ¦cie¿ka do alternatywy opisywanej w tym bloku.
 .TP 
-\fBPriority:\fP <warto¶æ priorytetu>
+\fBPriority:\fP\fI priority\-value\fP
 Warto¶æ priorytetu alternatywy.
 .TP 
-\fBSlaves:\fP <lista alternatyw podrzêdnych>
+\fBSlaves:\fP\fI list\-of\-slaves\fP
 Gdy obecny jest ten nag³ówek, \fBnastêpne\fP linie zawieraj± wszystkie
 podrzêdne alternatywy zwi±zane z g³ównym dowi±zaniem alternatywy. W ka¿dej
 linii podana jest jedna podrzêdna alternatywa. Ka¿da linia zawiera jedn±
@@ -348,12 +349,11 @@ Slaves:
 .fi
 .
 .SH DIAGNOSTYKA
-Po podaniu \fI\-\-verbose\fP, \fBupdate\-alternatives\fP wypisuje nieustannie
-informacje o podejmowanych dzia³aniach na swoim standardowym wyj¶ciu. Je¿eli
-wyst±pi b³±d, \fBupdate\-alternatives\fP wy¶wietla komunikaty b³êdów na
-standardowym wyj¶ciu b³êdów i koñczy dzia³anie z kodem wyj¶cia 2. Wypisywana
-diagnostyka powinna wszystko wyja¶niaæ, je¿eli tak nie jest, proszê zg³osiæ
-to jako b³±d.
+With \fB\-\-verbose\fP \fBupdate\-alternatives\fP chatters incessantly about its
+activities on its standard output channel.  If problems occur,
+\fBupdate\-alternatives\fP outputs error messages on its standard error channel
+and returns an exit status of 2.  These diagnostics should be
+self\-explanatory; if you do not find them so, please report this as a bug.
 .
 .SH PRZYK£ADY
 Istnieje klika pakietów, które dostarczaj± edytora tekstu kompatybilnego z
@@ -361,8 +361,8 @@ edytorem \fBvi\fP, na przyk³ad \fBnvi\fP i \fBvim\fP. To, który pakiet bêdzie
 u¿ywany, kontrolowane jest przez grupê dowi±zañ \fBvi\fP, zawieraj±c±
 dowi±zania do samego programu i odpowiadaj±cych mu stron podrêcznika.
 .PP
-Aby wy¶wietliæ listê dostêpnych pakietów, które dostarczaj± \fBvi\fP oraz jego
-bie¿±ce ustawienie, nale¿y u¿yæ akcji \fI\-\-display\fP:
+To display the available packages which provide \fBvi\fP and the current
+setting for it, use the \fB\-\-display\fP action:
 .RS
 .PP
 \fBupdate\-alternatives \-\-display vi\fP

@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-trigger 1 "15 de Marzo de 2009" "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-trigger 1 2011\-08\-14 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-trigger \- Herramienta de disparadores de paquete
 .
@@ -30,11 +30,10 @@ La sintaxis no reconocida de nombres de disparadores son un error para
 .SH ÓRDENES
 .TP 
 \fB\-\-check\-supported\fP
-Revisa si la versión de \fBdpkg\fP en ejecución es compatible con disparadores
-(habitualmente invocados mediante una post\-instalación). Cierra con 0 si
-\fBdpkg\fP es compatible con los disparadores, o 1 con un mensaje de error por
-la salida estándar en caso de fallo. Por otra parte, en general es mejor
-activar sólo el disparador deseado con \fBdpkg\-trigger\fP.
+Check if the running \fBdpkg\fP supports triggers (usually called from a
+postinst). Will exit \fB0\fP if a triggers\-capable \fBdpkg\fP has run, or \fB1\fP
+with an error message to stderr if not. Normally, however, it is better just
+to activate the desired trigger with \fBdpkg\-trigger\fP.
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
 Muestra el modo de uso y termina.
@@ -49,10 +48,10 @@ Cambia el directorio con la base de datos de \fBdpkg\fP. Por omisión es
 \fI/var/lib/dpkg\fP.
 .TP 
 \fB\-\-by\-package=\fP\fIpaquete\fP
-Invalida la espera al inicio del disparador (habitualmente definido con
-\fBdpkg\fP a través de la variable de entorno «DPKG_MAINTSCRIPT_PACKAGE» en los
-scripts del desarrollador, nombrando el paquete al que el script
-pertenece. Este es el comportamiento por omisión.)
+Override trigger awaiter (normally set by \fBdpkg\fP through the
+\fBDPKG_MAINTSCRIPT_PACKAGE\fP environment variable of the maintainer scripts,
+naming the package to which the script belongs, and this will be used by
+default).
 .TP 
 \fB\-\-no\-await\fP
 Esta opción define que la invocación al paquete T (de existir) no necesita
@@ -72,7 +71,6 @@ as the dpkg data directory.
 .
 .SH "VÉASE TAMBIÉN"
 \fBdpkg\fP(1), \fBdeb\-triggers\fP(5), \fB/usr/share/doc/dpkg\-dev/triggers.txt.gz\fP.
-
 .SH "TRADUCTOR"
 Rudy Godoy <rudy@kernel\-panik.org>,
 Rubén Porras <nahoo@inicia.es>,

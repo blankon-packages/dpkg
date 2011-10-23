@@ -4,13 +4,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-gensymbols 1 "7 de Agosto de 2009" "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-gensymbols 1 2011\-08\-14 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-gensymbols \- Generación de ficheros «symbols» (información de
 dependencia de bibliotecas compartidas)
 .
 .SH SINOPSIS
-\fBdpkg\-gensymbols\fP [\fIopciones\fP]
+\fBdpkg\-gensymbols\fP [\fIoption\fP...]
 .
 .SH DESCRIPCIÓN
 \fBdpkg\-gensymbols\fP analiza un árbol temporal de construcción («debian/tmp»
@@ -64,6 +64,11 @@ Antes de aplicar un parche al fichero «symbols» el desarrollador debería
 revisar nuevamente que es adecuado. Se espera que los símbolos públicos no
 desaparezcan así que, idealmente, el parche sólo debería añadir líneas
 nuevas.
+.P
+Note that you can put comments in symbols files: any line with '#' as the
+first character is a comment except if it starts with '#include' (see
+section \fBUsing includes\fP). Lines starting with '#MISSING:' are special
+comments documenting symbols that have disappeared.
 .SS "Usar la sustitución de #PACKAGE#"
 .P
 En algunos casos aislados el nombre de la biblioteca varía según la
@@ -345,13 +350,12 @@ fichero en su fichero \fIpaquete\fP.symbols.\fIarq\fP usando una directiva
 .IP \(bu
 Al igual que con cualquier símbolo, puede etiquetar la directiva «include»:
 
-(etiqueta|..|etiquetaN)#include "fichero\-para\-include"
+(tag|..|tagN)#include "file\-to\-include"
 
-Como resultado, se considerará que todos los símbolos incluidos en
-\fIfichero\-para\-include\fP están etiquetados con \fIetiqueta\fP .. \fIetiquetaN\fP
-por omisión. Puede usar esta característica para crear un fichero común
-\fIpackage\fP.symbols, que incluye ficheros de símbolos específicos a la
-arquitectura.
+As a result, all symbols included from \fIfile\-to\-include\fP will be considered
+to be tagged with \fItag\fP .. \fItagN\fP by default. You can use this feature to
+create a common \fIpackage\fP.symbols file which includes architecture specific
+symbol files:
 
   common_symbol1@Base 1.0
  (arch=amd64 ia64 alpha)#include "package.symbols.64bit"

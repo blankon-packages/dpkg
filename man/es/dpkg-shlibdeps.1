@@ -3,22 +3,21 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-shlibdeps 1 2011\-03\-04 "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-shlibdeps 1 2011\-08\-14 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-shlibdeps \- Genera dependencias de bibliotecas compartidas de
 sustitución de variables
 .
 .SH SINOPSIS
-\fBdpkg\-shlibdeps\fP [\fIopciones\fP] \fIejecutable\fP|\fB\-e\fP\fIejecutable\fP
-[\fIopciones\fP]
+\fBdpkg\-shlibdeps\fP [\fIoption\fP...] [\fB\-e\fP]\fIexecutable\fP [\fIoption\fP...]
 .
 .SH DESCRIPCIÓN
-\fBdpkg\-shlibdeps\fP calcula las dependencias de bibliotecas compartidas de los
-ejecutables suministrados en sus argumentos. Las dependencias se añaden al
-fichero de sustitución de variables \fBdebian/substvars\fP como nombres de
-variable \fBshlibs:\fP\fIcampo\-dependencia\fP, donde \fIcampo\-dependencia\fP es un
-nombre de campo de dependencia. Cualquier otra variable que empiece con
-\fIshlibs:\fP se elimina del fichero.
+\fBdpkg\-shlibdeps\fP calculates shared library dependencies for executables
+named in its arguments. The dependencies are added to the substitution
+variables file \fBdebian/substvars\fP as variable names
+\fBshlibs:\fP\fIdependencyfield\fP where \fIdependencyfield\fP is a dependency field
+name. Any other variables starting with \fBshlibs:\fP are removed from the
+file.
 .P
 \fBdpkg\-shlibdeps\fP tiene dos posibles fuentes de información para generar la
 información de dependencias. Estos son los ficheros \fIsymbols\fP y
@@ -243,19 +242,17 @@ una extensión) no debería tener un «SONAME», y por ello no necesita
 información de versión.
 .TP 
 \fBcouldn't find library \fP\fIlibrary\-soname\fP\fB needed by \fP\fIbinary\fP\fB (its RPATH is '\fP\fIrpath\fP\fB')\fP
-El \fIbinario\fP usa una biblioteca llamada \fIsoname\-biblioteca\fP, pero
-\fBdpkg\-shlibdeps\fP ha sido incapaz de encontrar la
-biblioteca. \fBdpkg\-shlibdeps\fP crea una lista de directorios a revisar en el
-siguiente orden: los directorios listados en el «RPATH» del binario, los
-directorios listados en /etc/ld.so.conf, los directorios listados en la
-variable de entorno «LD_LIBRARY_PATH», y los directorios públicos estándar
-(/lib, /usr/lib, /lib32, /usr/lib32, /lib64, /usr/lib64). Después revisa
-esos directorios en el árbol de construcción del paquete del binario
-analizado, en los árboles de construcción del paquete indicados con la
-opción de línea de órdenes «\-S», en otros árboles de construcción de paquete
-que contienen el fichero «DEBIAN/shlibs» o «DEBIAN/symbols», y por último en
-el directorio raíz. Esto error aparece cuando la biblioteca no se encuentra
-en ninguno de estos directorios.
+The \fIbinary\fP uses a library called \fIlibrary\-soname\fP but \fBdpkg\-shlibdeps\fP
+has been unable to find the library.  \fBdpkg\-shlibdeps\fP creates a list of
+directories to check as following: directories listed in the RPATH of the
+binary, directories listed in /etc/ld.so.conf, directories listed in the
+LD_LIBRARY_PATH environment variable, and standard public directories (/lib,
+/usr/lib, /lib32, /usr/lib32, /lib64, /usr/lib64). Then it checks those
+directories in the package's build tree of the binary being analyzed, in the
+packages' build trees indicated with the \-S command\-line option, in other
+packages' build trees that contains a DEBIAN/shlibs or DEBIAN/symbols file
+and finally in the root directory.  If the library is not found in any of
+those directories, then you get this error.
 
 Si la biblioteca que no se encontró está dentro de un directorio privado del
 mismo paquete, querrá añadir el directorio a «LD_LIBRARY_PATH». Si está en

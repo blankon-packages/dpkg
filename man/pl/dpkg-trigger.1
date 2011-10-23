@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-trigger 1 2009\-03\-15 "Projekt Debiana" "u¿ytki dpkg"
+.TH dpkg\-trigger 1 2011\-08\-14 "Projekt Debiana" "u¿ytki dpkg"
 .SH NAZWA
 dpkg\-trigger \- program pomocniczy wyzwalaczy dla pakietów
 .
@@ -27,11 +27,10 @@ Nierozpoznana sk³adnia nazwy wyzwalacza stanowi b³±d dla \fBdpkg\-trigger\fP.
 .SH POLECENIA
 .TP 
 \fB\-\-check\-supported\fP
-Sprawdza czy uruchomione \fBdpkg\fP obs³uguje wyzwalacze (zwykle wywo³ywane ze
-skryptu postinst). Program koñczy siê z kodem 0, je¶li uruchamiane jest
-\fBdpkg\fP wspieraj±ce wyzwalacze, lub z kodem 1 i komunikatem b³êdu na stderr
-w przeciwnym wypadku. Jednak normalnie lepiej jest po prostu aktywowaæ
-potrzebny wyzwalacz, u¿ywaj±c \fBdpkg\-trigger\fP.
+Check if the running \fBdpkg\fP supports triggers (usually called from a
+postinst). Will exit \fB0\fP if a triggers\-capable \fBdpkg\fP has run, or \fB1\fP
+with an error message to stderr if not. Normally, however, it is better just
+to activate the desired trigger with \fBdpkg\-trigger\fP.
 .TP 
 \fB\-h\fP, \fB\-\-help\fP
 Wy¶wietla informacjê o u¿ytkowaniu i koñczy dzia³anie.
@@ -45,10 +44,10 @@ Wy¶wietla informacjê o wersji i pomy¶lnie koñczy dzia³anie.
 Zmienia po³o¿enie bazy danych \fBdpkg\fP. Domy¶lnie jest to \fI/var/lib/dpkg\fP.
 .TP 
 \fB\-\-by\-package=\fP\fIpakiet\fP
-Wymuszenie pakietu oczekuj±cego na wyzwalacz. Normalnie ustawiane przez
-\fBdpkg\fP w zmiennej ¶rodowiskowej DPKG_MAINTSCRIPT_PACKAGE skryptu opiekuna
-pakietu, wskazuj±c nazwê pakietu, do którego nale¿y skrypt (jest to warto¶æ
-u¿ywana domy¶lnie).
+Override trigger awaiter (normally set by \fBdpkg\fP through the
+\fBDPKG_MAINTSCRIPT_PACKAGE\fP environment variable of the maintainer scripts,
+naming the package to which the script belongs, and this will be used by
+default).
 .TP 
 \fB\-\-no\-await\fP
 Ta opcja zapewnia, ¿e wywo³uj±cy pakiet T (je¶li jest) nie potrzebuje
@@ -68,7 +67,6 @@ as the dpkg data directory.
 .
 .SH "ZOBACZ TAK¯E"
 \fBdpkg\fP(1), \fBdeb\-triggers\fP(5), \fB/usr/share/doc/dpkg\-dev/triggers.txt.gz\fP.
-
 .SH "T£UMACZE"
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br

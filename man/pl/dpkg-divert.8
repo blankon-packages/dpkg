@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 2010\-10\-12 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-divert 8 2011\-08\-14 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-divert \- nadpisywanie plików z pakietów
 .
 .SH SK£ADNIA
-\fBdpkg\-divert\fP [\fIopcje\fP] \fIpolecenie\fP
+\fBdpkg\-divert\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH OPIS
 \fBdpkg\-diver\fP jest narzêdziem u¿ywanym do tworzenia i aktualizowania listy
@@ -80,9 +80,9 @@ Wy¶wietla informacjê o u¿ytkowaniu i koñczy dzia³anie.
 Wy¶wietla informacjê o wersji i pomy¶lnie koñczy dzia³anie.
 .
 .SH UWAGI
-Podczas dodawania domy¶lnymi opcjami s± \fB\-\-local\fP i \fB\-\-divert\fP
-\fI<oryginalny>.distrib\fP. Podczas usuwania \fB\-\-package\fP lub
-\fB\-\-local\fP i \fB\-\-divert\fP, je¶li zosta³y podane, to musz± pasowaæ.
+When adding, default is \fB\-\-local\fP and \fB\-\-divert\fP
+\fIoriginal\fP\fB.distrib\fP. When removing, \fB\-\-package\fP or \fB\-\-local\fP and
+\fB\-\-divert\fP must match if specified.
 
 Za pomoc± \fBdpkg\-divert\fP nie mo¿na nadpisaæ katalogów.
 
@@ -123,7 +123,7 @@ If set and the \fB\-\-admindir\fP option has not been specified, it will be used
 as the dpkg data directory.
 .TP 
 \fBDPKG_MAINTSCRIPT_PACKAGE\fP
-If set and the \fI\-\-local\fP and \fI\-\-package\fP options have not been specified,
+If set and the \fB\-\-local\fP and \fB\-\-package\fP options have not been specified,
 \fBdpkg\-divert\fP will use it as the package name.
 .
 .SH PLIKI

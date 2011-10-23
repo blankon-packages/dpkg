@@ -1,4 +1,4 @@
-# Copyright © 2010 Raphaël Hertzog <hertzog@debian.org>
+# Copyright © 2010-2011 Raphaël Hertzog <hertzog@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ package Dpkg::BuildFlags;
 use strict;
 use warnings;
 
-our $VERSION = "1.00";
+our $VERSION = "1.01";
 
 use Dpkg::Gettext;
 use Dpkg::BuildOptions;
@@ -84,6 +84,7 @@ sub load_vendor_defaults {
 	FFLAGS   => 'vendor',
 	LDFLAGS  => 'vendor',
     };
+    # The Debian vendor hook will add hardening build flags
     run_vendor_hook("update-buildflags", $self);
 }
 
@@ -106,13 +107,16 @@ Update flags from the user configuration.
 
 sub load_user_config {
     my ($self) = @_;
-    my $confdir = $ENV{'XDG_CONFIG_HOME'} || $ENV{"HOME"} . "/.config";
-    $self->update_from_conffile("$confdir/dpkg/buildflags.conf", "user");
+    my $confdir = $ENV{'XDG_CONFIG_HOME'};
+    $confdir ||= $ENV{'HOME'} . "/.config" if defined $ENV{'HOME'};
+    if (defined $confdir) {
+        $self->update_from_conffile("$confdir/dpkg/buildflags.conf", "user");
+    }
 }
 
 =item $bf->load_environment_config()
 
-Update flags based on directives stored in the environment. See
+Update flags based on user directives stored in the environment. See
 dpkg-buildflags(1) for details.
 
 =cut
@@ -124,18 +128,56 @@ sub load_environment_config {
 	if (exists $ENV{$envvar}) {
 	    $self->set($flag, $ENV{$envvar}, "env");
 	}
+	$envvar = "DEB_" . $flag . "_STRIP";
+	if (exists $ENV{$envvar}) {
+	    $self->strip($flag, $ENV{$envvar}, "env");
+	}
 	$envvar = "DEB_" . $flag . "_APPEND";
 	if (exists $ENV{$envvar}) {
 	    $self->append($flag, $ENV{$envvar}, "env");
 	}
+	$envvar = "DEB_" . $flag . "_PREPEND";
+	if (exists $ENV{$envvar}) {
+	    $self->prepend($flag, $ENV{$envvar}, "env");
+	}
     }
 }
 
+=item $bf->load_maintainer_config()
+
+Update flags based on maintainer directives stored in the environment. See
+dpkg-buildflags(1) for details.
+
+=cut
+
+sub load_maintainer_config {
+    my ($self) = @_;
+    foreach my $flag (keys %{$self->{flags}}) {
+	my $envvar = "DEB_" . $flag . "_MAINT_SET";
+	if (exists $ENV{$envvar}) {
+	    $self->set($flag, $ENV{$envvar}, undef);
+	}
+	$envvar = "DEB_" . $flag . "_MAINT_STRIP";
+	if (exists $ENV{$envvar}) {
+	    $self->strip($flag, $ENV{$envvar}, undef);
+	}
+	$envvar = "DEB_" . $flag . "_MAINT_APPEND";
+	if (exists $ENV{$envvar}) {
+	    $self->append($flag, $ENV{$envvar}, undef);
+	}
+	$envvar = "DEB_" . $flag . "_MAINT_PREPEND";
+	if (exists $ENV{$envvar}) {
+	    $self->prepend($flag, $ENV{$envvar}, undef);
+	}
+    }
+}
+
+
 =item $bf->load_config()
 
-Call successively load_system_config(), load_user_config() and
-load_environment_config() to update the default build flags
-defined by the vendor.
+Call successively load_system_config(), load_user_config(),
+load_environment_config() and load_maintainer_config() to update the
+default build flags defined by the vendor.
 
 =cut
 
@@ -144,24 +186,44 @@ sub load_config {
     $self->load_system_config();
     $self->load_user_config();
     $self->load_environment_config();
+    $self->load_maintainer_config();
 }
 
 =item $bf->set($flag, $value, $source)
 
-Update the build flag $flag with value $value and record its origin as $source.
+Update the build flag $flag with value $value and record its origin as
+$source (if defined).
 
 =cut
 
 sub set {
     my ($self, $flag, $value, $src) = @_;
     $self->{flags}->{$flag} = $value;
-    $self->{origin}->{$flag} = $src;
+    $self->{origin}->{$flag} = $src if defined $src;
+}
+
+=item $bf->strip($flag, $value, $source)
+
+Update the build flag $flag by stripping the flags listed in $value and
+record its origin as $source (if defined).
+
+=cut
+
+sub strip {
+    my ($self, $flag, $value, $src) = @_;
+    foreach my $tostrip (split(/\s+/, $value)) {
+	next unless length $tostrip;
+	$self->{flags}->{$flag} =~ s/(^|\s+)\Q$tostrip\E(\s+|$)/ /g;
+    }
+    $self->{flags}->{$flag} =~ s/^\s+//g;
+    $self->{flags}->{$flag} =~ s/\s+$//g;
+    $self->{origin}->{$flag} = $src if defined $src;
 }
 
 =item $bf->append($flag, $value, $source)
 
 Append the options listed in $value to the current value of the flag $flag.
-Record its origin as $source.
+Record its origin as $source (if defined).
 
 =cut
 
@@ -172,8 +234,26 @@ sub append {
     } else {
         $self->{flags}->{$flag} = $value;
     }
-    $self->{origin}->{$flag} = $src;
+    $self->{origin}->{$flag} = $src if defined $src;
 }
+
+=item $bf->prepend($flag, $value, $source)
+
+Prepend the options listed in $value to the current value of the flag $flag.
+Record its origin as $source (if defined).
+
+=cut
+
+sub prepend {
+    my ($self, $flag, $value, $src) = @_;
+    if (length($self->{flags}->{$flag})) {
+        $self->{flags}->{$flag} = "$value " . $self->{flags}->{$flag};
+    } else {
+        $self->{flags}->{$flag} = $value;
+    }
+    $self->{origin}->{$flag} = $src if defined $src;
+}
+
 
 =item $bf->update_from_conffile($file, $source)
 
@@ -192,7 +272,7 @@ sub update_from_conffile {
         chomp;
         next if /^\s*#/; # Skip comments
         next if /^\s*$/; # Skip empty lines
-        if (/^(append|set)\s+(\S+)\s+(\S.*\S)\s*$/i) {
+        if (/^(append|prepend|set|strip)\s+(\S+)\s+(\S.*\S)\s*$/i) {
             my ($op, $flag, $value) = ($1, $2, $3);
             unless (exists $self->{flags}->{$flag}) {
                 warning(_g("line %d of %s mentions unknown flag %s"), $., $file, $flag);
@@ -200,8 +280,12 @@ sub update_from_conffile {
             }
             if (lc($op) eq "set") {
                 $self->set($flag, $value, $src);
+            } elsif (lc($op) eq "strip") {
+                $self->strip($flag, $value, $src);
             } elsif (lc($op) eq "append") {
                 $self->append($flag, $value, $src);
+            } elsif (lc($op) eq "prepend") {
+                $self->prepend($flag, $value, $src);
             }
         } else {
             warning(_g("line %d of %s is invalid, it has been ignored."), $., $file);
@@ -257,6 +341,16 @@ sub list {
 }
 
 =back
+
+=head1 CHANGES
+
+=head2 Version 1.01
+
+New method: $bf->prepend() very similar to append(). Implement support of
+the prepend operation everywhere.
+
+New method: $bf->load_maintainer_config() that update the build flags
+based on the package maintainer directives.
 
 =head1 AUTHOR
 

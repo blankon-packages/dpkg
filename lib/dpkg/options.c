@@ -1,6 +1,6 @@
 /*
  * libdpkg - Debian packaging suite library routines
- * myopt.c - my very own option parsing
+ * options.c - option parsing functions
  *
  * Copyright © 1994,1995 Ian Jackson <ian@chiark.greenend.org.uk>
  * Copyright © 2000,2002 Wichert Akkerman <wichert@deephackmode.org>
@@ -33,7 +33,9 @@
 #include <dpkg/i18n.h>
 #include <dpkg/dpkg.h>
 #include <dpkg/string.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
+
+static const char *printforhelp;
 
 void
 badusage(const char *fmt, ...)
@@ -198,10 +200,15 @@ void loadcfgfile(const char *prog, const struct cmdinfo* cmdinfos) {
   }
 }
 
-void myopt(const char *const **argvp, const struct cmdinfo *cmdinfos) {
+void
+myopt(const char *const **argvp, const struct cmdinfo *cmdinfos,
+      const char *help_str)
+{
   const struct cmdinfo *cip;
   const char *p, *value;
   int l;
+
+  printforhelp = help_str;
 
   ++(*argvp);
   while ((p= **argvp) && *p == '-') {

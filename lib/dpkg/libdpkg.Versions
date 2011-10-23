@@ -1,5 +1,9 @@
 LIBDPKG_0 {
 global:
+	# Program name
+	dpkg_set_progname;
+	dpkg_get_progname;
+
 	# Ar support
 	dpkg_ar_normalize_name;
 
@@ -54,6 +58,7 @@ LIBDPKG_PRIVATE {
 
 	str_escape_fmt;
 	str_strip_quotes;
+	str_quote_meta;
 
 	# Variable buffer support
 	varbuf_init;
@@ -150,8 +155,6 @@ LIBDPKG_PRIVATE {
 	loadcfgfile;
 	myopt;
 	badusage;
-	# printforhelp;		# XXX variable, do not require external
-	# thisname;		# XXX variable, do not require external
 	cipaction;		# XXX variable, do not export
 	setaction;
 	setobsolete;
@@ -240,6 +243,10 @@ LIBDPKG_PRIVATE {
 	writerecord;
 	parsedb;
 	writedb;
+
+	dpkg_db_set_dir;
+	dpkg_db_get_dir;
+	dpkg_db_get_path;
 
 	# Log based package on-disk database support
 	modstatdb_init;

@@ -1,5 +1,5 @@
 /*
- * dpkg - main program for package management
+ * libdpkg - Debian packaging suite library routines
  * dbmodify.c - routines for managing dpkg database updates
  *
  * Copyright © 1994,1995 Ian Jackson <ian@chiark.greenend.org.uk>
@@ -57,7 +57,6 @@ static int nextupdate;
 static char *updatesdir;
 static int updateslength;
 static char *updatefnbuf, *updatefnrest;
-static char *infodir;
 static struct varbuf uvb;
 
 static int ulist_select(const struct dirent *de) {
@@ -95,7 +94,7 @@ static void cleanupdates(void) {
     }
 
     if (cstatus >= msdbrw_write) {
-      writedb(statusfile,0,1);
+      writedb(statusfile, wdb_must_sync);
 
       for (i=0; i<cdn; i++) {
         strcpy(updatefnrest, cdlist[i]->d_name);
@@ -142,7 +141,6 @@ static const struct fni {
   {   AVAILFILE,                  &availablefile      },
   {   UPDATESDIR,                 &updatesdir         },
   {   UPDATESDIR IMPORTANTTMP,    &importanttmpfile   },
-  {   INFODIR,                    &infodir            },
   {   NULL, NULL                                      }
 };
 
@@ -281,9 +279,9 @@ modstatdb_open(enum modstatdb_rw readwritereq)
   if (cstatus != msdbrw_needsuperuserlockonly) {
     cleanupdates();
     if (cflags >= msdbrw_available_readonly)
-    parsedb(availablefile,
-            pdb_recordavailable | pdb_rejectstatus | pdb_lax_parser,
-            NULL);
+      parsedb(availablefile,
+              pdb_recordavailable | pdb_rejectstatus | pdb_lax_parser,
+              NULL);
   }
 
   if (cstatus >= msdbrw_write) {
@@ -301,7 +299,7 @@ void modstatdb_checkpoint(void) {
   int i;
 
   assert(cstatus >= msdbrw_write);
-  writedb(statusfile,0,1);
+  writedb(statusfile, wdb_must_sync);
 
   for (i=0; i<nextupdate; i++) {
     sprintf(updatefnrest, IMPORTANTFMT, i);
@@ -318,7 +316,7 @@ void modstatdb_checkpoint(void) {
 
 void modstatdb_shutdown(void) {
   if (cflags >= msdbrw_available_write)
-    writedb(availablefile, 1, 0);
+    writedb(availablefile, wdb_dump_available);
 
   switch (cstatus) {
   case msdbrw_write:

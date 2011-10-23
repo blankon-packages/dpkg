@@ -43,18 +43,19 @@
 #include <dpkg/path.h>
 #include <dpkg/dir.h>
 #include <dpkg/glob.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "main.h"
 #include "filesdb.h"
 
-const char thisname[] = "dpkg-statoverride";
-const char printforhelp[] = N_("Use --help for help about querying packages.");
+static const char printforhelp[] = N_(
+"Use --help for help about overriding file stat information.");
 
 static void DPKG_ATTR_NORET
 printversion(const struct cmdinfo *cip, const char *value)
 {
-	printf(_("Debian %s version %s.\n"), thisname, DPKG_VERSION_ARCH);
+	printf(_("Debian %s version %s.\n"), dpkg_get_progname(),
+	       DPKG_VERSION_ARCH);
 
 	printf(_(
 "Copyright (C) 2000, 2001 Wichert Akkerman.\n"
@@ -74,7 +75,7 @@ usage(const struct cmdinfo *cip, const char *value)
 {
 	printf(_(
 "Usage: %s [<option> ...] <command>\n"
-"\n"), thisname);
+"\n"), dpkg_get_progname());
 
 	printf(_(
 "Commands:\n"
@@ -364,13 +365,14 @@ main(int argc, const char *const *argv)
 {
 	int ret;
 
-        if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
-           setlocale(LC_ALL, "");
+	if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+		setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 
+	dpkg_set_progname("dpkg-statoverride");
 	standard_startup();
-	myopt(&argv, cmdinfos);
+	myopt(&argv, cmdinfos, printforhelp);
 
 	admindir = dpkg_db_set_dir(admindir);
 

@@ -10,13 +10,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH update\-alternatives 8 2011\-03\-04 Debianprojektet dpkg\-verktygen
+.TH update\-alternatives 8 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
 update\-alternatives \- underhåller symboliska länkar för att bestämma
 standardkommandon
 .
 .SH SYNOPS
-\fBupdate\-alternatives\fP [\fIflaggor\fP] \fIåtgärd\fP
+\fBupdate\-alternatives\fP [\fIflagga\fP...] \fIåtgärd\fP
 .
 .SH BESKRIVNING
 \fBupdate\-alternatives\fP skapar, tar bort, underhåller och visar information
@@ -83,11 +83,11 @@ När flaggan \fI\-\-config\fP används kommer \fBupdate\-alternatives\fP att visa 
 val för länkgruppen där \fInamn\fP är huvudalternativnamnet. Det aktuella valet
 är markerat med en "*". Du kommer därefter att få välja vad som skall göras
 med länkgruppen. Beroende på vad du väljer kommer längruppen inte längre att
-vara i \fIauto\fP\-läge. Du måste använda flaggan \fI\-\-auto\fP för att återgå till
-automatiskt läge (eller köra \fI\-\-config\fP på nytt och välja alternativet som
+vara i \fIauto\fP\-läge. Du måste använda flaggan \fB\-\-auto\fP för att återgå till
+automatiskt läge (eller köra \fB\-\-config\fP på nytt och välja alternativet som
 märkts som automatiskt).
 .PP
-Om du vill konfigurera icke\-interaktivt kan du använda flaggan \fI\-\-set\fP i
+Om du vill konfigurera icke\-interaktivt kan du använda flaggan \fB\-\-set\fP i
 stället (se nedan).
 .PP
 Olika paket som tillhandahåller samma fil måste göra så i
@@ -163,7 +163,7 @@ uppdateras så att de pekar på de nyligen tillagda alternativen.
 .TP 
 \fB\-\-set\fP \fInamn sökväg\fP
 Sätt programmet \fIsökväg\fP som ett alternativ till \fInamn\fP. Detta motsvarar
-\fI\-\-config\fP men är icke\-interaktivt och kan därmed användas i ett skript.
+\fB\-\-config\fP men är icke\-interaktivt och kan därmed användas i ett skript.
 .TP 
 \fB\-\-remove\fP \fInamn sökväg\fP
 Ta bort ett alternativ och alla dess anknutna slavlänkar. \fInamn\fP är ett
@@ -243,8 +243,8 @@ Anger loggfilen, om det skall vara en annan än standard
 (/var/log/alternatives.log).
 .TP 
 \fB\-\-force\fP
-Låt \fBupdate\-alternatives\fP ersätta en verklig fil som installerats där en
-alternativlänk måste installeras.
+Låt \fBupdate\-alternatives\fP ersätta eller ta bort en verklig fil som
+installerats där en alternativlänk måste installeras eller tas bort.
 .TP 
 \fB\-\-skip\-auto\fP
 Hoppa över konfigureringsfrågor för alternativ som är korrekt konfigurerade
@@ -260,8 +260,8 @@ Skriv inte några kommentarer såvida det inte uppstår ett fel.
 .SH MILJÖVARIABLER
 .TP 
 \fBDPKG_ADMINDIR\fP
-If set and the \fB\-\-admindir\fP option has not been specified, it will be used
-as the base administrative directory.
+Om satt och flaggan \fB\-\-admindir\fP inte har angivits används det som
+bas\-administrativ katalog.
 .
 .SH FILER
 .TP 
@@ -273,42 +273,44 @@ Den förvalda administrativa katalogen. Kan överstyras med flaggan
 \fB\-\-admindir\fP.
 .
 .SH RETURVÄRDE
-.IP 0
+.TP 
+\fB0\fP
 Den önskade funktionen utfördes utan fel.
-.IP 2
+.TP 
+\fB2\fP
 Problem uppstod vid tolkning av kommandoraden eller när funktionen skulle
 utföras.
 .
 .SH FRÅGEFORMAT
-Formatet för \fBupdate\-alternatives\fP \fI\-\-query\fP använder ett RFC822\-liknande
+Formatet för \fBupdate\-alternatives \-\-query\fP använder ett RFC822\-liknande
 platt format. Det består av \fIn\fP + 1 block där \fIn\fP är antalet tillgängliga
 alternativ i den efterfrågade länkgruppen. Det första blocket innehåller
 följande fält:
 .TP 
-\fBLink:\fP <länk>
+\fBLink:\fP\fI länk\fP
 Generiskt namn för alternativet.
 .TP 
-\fBStatus:\fP <status>
+\fBStatus:\fP\fI status\fP
 Status för alternativet (\fBauto\fP eller \fBmanual\fP).
 .TP 
-\fBBest:\fP <bästa val>
+\fBBest:\fP\fI bästa\-val\fP
 Sökvägen till det bästa alternativet i länkgruppen. Tas inte med om inget
 alternativ är tillgängligt.
 .TP 
-\fBValue:\fP <för närvarande valt alternativ> 
+\fBValue:\fP\fI för\-närvarande\-valt\-alternativ\fP
 Sökvägen till det för närvarande valda alternativet. Kan även ta det magiska
 värdet \fBnone\fP (inget). Det används om det inte finns någon länk.
 .TP 
 .TP 
 Övriga block beskriver tillgängliga alternativ i den efterfrågade länkgruppen:
 .TP 
-\fBAlternative:\fP <sökväg till alternativet>
+\fBAlternative:\fP\fI sökväg\-till\-alternativet\fP
 Sökväg till alternativet som beskrivs i blocket.
 .TP 
-\fBPriority:\fP <prioritetsvärde>
+\fBPriority:\fP\fI prioritetsvärde\fP
 Värdet för prioriteten på alternativet.
 .TP 
-\fBSlaves:\fP <lista över slavar>
+\fBSlaves:\fP\fI lista\-över\-slavar\fP
 När denna rubrik är tillgänglig innehåller \fBnext\fP\-raderna alla
 slavalternativ som kopplas till huvudlänken för alternativet. Varje rad
 beskriver en slag. Varje rad innehåller ett blanksteg, det generiska namnet
@@ -346,7 +348,7 @@ Slaves:
 .fi
 .
 .SH DIAGNOSTIK
-Med \fI\-\-verbose\fP kommer \fBupdate\-alternatives\fP att beskriva i det oändliga
+Med \fB\-\-verbose\fP kommer \fBupdate\-alternatives\fP att beskriva i det oändliga
 vad det gör på sin standard ut\-kanal. Om ett fel uppstår skriver
 \fBupdate\-alternatives\fP ut felmeddelanden på sin standard fel\-kanal och
 avslutar med felkoden 2. Diagnostikinformationen bör vara självförklarande,
@@ -359,7 +361,7 @@ vilken innehåller länkar både för själva programmet och dessa anknutna
 manualsida.
 .PP
 För att visa vilka tillgängliga paket som tillhandahåller \fBvi\fP, samt dess
-aktuella inställning, använd kommandot \fI\-\-display\fP:
+aktuella inställning, använd kommandot \fB\-\-display\fP:
 .RS
 .PP
 \fBupdate\-alternatives \-\-display vi\fP

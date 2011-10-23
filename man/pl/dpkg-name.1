@@ -8,24 +8,23 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-name 1 2008\-08\-18 "Projekt Debiana" "programy pomocnicze dpkg"
+.TH dpkg\-name 1 2011\-08\-14 "Projekt Debiana" "programy pomocnicze dpkg"
 .SH NAZWA
 dpkg\-name \- zmienia nazwy pakietów Debiana na pe³ne
 .
 .SH SK£ADNIA
-\fBdpkg\-name\fP [\fIopcje\fP] [\fB\-\-\fP] \fIpliki\fP
+\fBdpkg\-name\fP [\fIoption\fP...] [\fB\-\-\fP] \fIfile\fP...
 .
 .SH OPIS
 .PP
-Ta strona podrêcznika dokumentuje program \fBdpkg\-name\fP, który dostarcza
-prostego sposobu na zmianê nazw pakietów \fBDebiana\fP na pe³ne nazwy
-pakietów. Pe³na nazwa pakietu jest w postaci
-\fI<pakiet>_<wersja>_<architektua>.<typ_pakietu>\fP,
-jak to okre¶lono w pliku kontrolnym pakietu. Czê¶æ \fI<wersja>\fP nazwy
-pliku zawiera oryginaln± wersjê nadan± przez autora, po której opcjonalnie
-nastêpuje my¶lnik oraz informacje o wersji zmian pakietu w Debianie.Czê¶æ
-\fI<typ_pakietu>\fP pochodzi z odpowiedniego pola, je¶li jest obecne,
-lub jest równa \fBdeb\fP.
+This manual page documents the \fBdpkg\-name\fP program which provides an easy
+way to rename \fBDebian\fP packages into their full package names. A full
+package name consists of
+\fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarchitecture\fP\fB.\fP\fIpackage\-type\fP as specified
+in the control file of the package. The \fIversion\fP part of the filename
+consists of the upstream version information optionally followed by a hyphen
+and the revision information. The \fIpackage\-type\fP part comes from that field
+if present or fallbacks to \fBdeb\fP.
 .
 .SH OPCJE
 .TP 
@@ -40,17 +39,16 @@ Istniej±ce pliki bêd± nadpisane, je¿eli ich nazwy s± takie same jak nazwy
 plików wynikowych.
 .TP 
 \fB\-s\fP, \fB\-\-subdir\fP [\fIkatalog\fP]
-Pliki bêd± przeniesione do podkatalogu. Je¶li istnieje katalog podany jako
-argument tej opcji, to pliki zostan± przeniesione do tego katalogu, w
-przeciwnym wypadku nazwa katalogu docelowego jest wyodrêbniana z pola
-Section w czê¶ci kontrolnej pakietu. Katalogiem docelowym bêdzie wtedy
-"unstable/binary\-<architektura>/<sekcja>". Je¶li sekcja nie
-zostanie znaleziona w pliku kontrolnym, to jest przyjmowane "no\-section" i w
-tym przypadku, jak i w przypadku sekcji "non\-free" oraz "contrib",
-katalogiem docelowym bêdzie
-<sekcja>/binary\-<architektura>". Pole kontrolne Section nie
-jest wymagane, tak wiêc w ten sposób wiele pakietów bêdzie umieszczonych w
-katalogu "no\-section". Proszê ostro¿nie u¿ywaæ tej opcji, jest niechlujna.
+Files will be moved into a subdirectory. If the directory given as argument
+exists the files will be moved into that directory otherwise the name of the
+target directory is extracted from the section field in the control part of
+the package. The target directory will be
+`unstable/binary\-\fIarchitecture\fP/\fIsection\fP'. If the section is not found in
+the control, then `no\-section' is assumed, and in this case, as well as for
+sections `non\-free' and `contrib' the target directory is
+`\fIsection\fP/binary\-\fIarchitecture\fP'. The section field isn't required so a
+lot of packages will find their way to the `no\-section' area. Use this
+option with care, it's messy.
 .TP 
 \fB\-c\fP, \fB\-\-create\-dir\fP
 Opcja ta mo¿e byæ u¿yta ³±cznie z opcj± \-s. Je¶li katalog docelowy nie
@@ -82,12 +80,11 @@ pakietów nie bêdzie mia³o informacji o sekcji. \fBNie rób tego\fP.
 Mo¿e zostaæ u¿yte do budowania nowych pakietów.
 .
 .SH B£ÊDY
-Niektóre pakiety maj± inn± strukturê nazwy ni¿
-<pakiet>_<wersja>_<architektura>.deb. Pakiety,
-którym dpkg\-name zmieni nazwê, bêd± mia³y powy¿sz± strukturê nazwy. Ogólnie,
-polecenie to nie bêdzie mia³o ¿adnego wp³ywu na to, jak pakiety s±
-instalowane przez \fBdselect\fP(1)/ \fBdpkg\fP(1), ale inne narzêdzia instalacyjne
-mog± zale¿eæ od powy¿szej struktury nazywania pakietów.
+Some packages don't follow the name structure
+\fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarchitecture\fP\fB.deb\fP.  Packages renamed by
+dpkg\-name will follow this structure. Generally this will have no impact on
+how packages are installed by \fBdselect\fP(1)/\fBdpkg\fP(1), but other
+installation tools might depend on this naming structure.
 .
 .SH "ZOBACZ TAK¯E"
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg\fP(1), \fBdpkg\-deb\fP(1), \fBfind\fP(1),

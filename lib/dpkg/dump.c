@@ -79,8 +79,7 @@ w_configversion(struct varbuf *vb,
   if (!informativeversion(&pigp->configversion)) return;
   if (pigp->status == stat_installed ||
       pigp->status == stat_notinstalled ||
-      pigp->status == stat_triggerspending ||
-      pigp->status == stat_triggersawaited)
+      pigp->status == stat_triggerspending)
     return;
   if (flags&fw_printheader)
     varbuf_add_str(vb, "Config-Version: ");
@@ -463,7 +462,7 @@ writerecord(FILE *file, const char *filename,
 }
 
 void
-writedb(const char *filename, bool available, bool mustsync)
+writedb(const char *filename, enum writedb_flags flags)
 {
   static char writebuf[8192];
 
@@ -476,7 +475,7 @@ writedb(const char *filename, bool available, bool mustsync)
   struct varbuf vb = VARBUF_INIT;
   int old_umask;
 
-  which = available ? "available" : "status";
+  which = (flags & wdb_dump_available) ? "available" : "status";
   m_asprintf(&oldfn, "%s%s", filename, OLDDBEXT);
   m_asprintf(&newfn, "%s%s", filename, NEWDBEXT);
 
@@ -491,7 +490,7 @@ writedb(const char *filename, bool available, bool mustsync)
 
   it = pkg_db_iter_new();
   while ((pigp = pkg_db_iter_next_pkg(it)) != NULL) {
-    pifp= available ? &pigp->available : &pigp->installed;
+    pifp = (flags & wdb_dump_available) ? &pigp->available : &pigp->installed;
     /* Don't dump records which have no useful content. */
     if (!pkg_is_informative(pigp, pifp))
       continue;
@@ -501,13 +500,14 @@ writedb(const char *filename, bool available, bool mustsync)
     if (fputs(vb.buf,file) < 0)
       ohshite(_("failed to write %s database record about '%.50s' to '%.250s'"),
               which,
-              pkg_describe(pigp, pdo_foreign | (available ? pdo_avail : 0)),
+              pkg_describe(pigp, pdo_foreign | ((flags & wdb_dump_available) ?
+                                                pdo_avail : 0)),
               filename);
     varbuf_reset(&vb);
   }
   pkg_db_iter_free(it);
   varbuf_destroy(&vb);
-  if (mustsync) {
+  if (flags & wdb_must_sync) {
     if (fflush(file))
       ohshite(_("failed to flush %s database to '%.250s'"), which, filename);
     if (fsync(fileno(file)))
@@ -524,7 +524,7 @@ writedb(const char *filename, bool available, bool mustsync)
     ohshite(_("failed to install '%.250s' as '%.250s' containing %s database"),
             newfn, filename, which);
 
-  if (mustsync)
+  if (flags & wdb_must_sync)
     dir_sync_path_parent(filename);
 
   free(newfn);

@@ -1,5 +1,5 @@
 /*
- * dpkg - main program for package management
+ * libdpkg - Debian packaging suite library routines
  * trigdeferred.l - parsing of triggers/Deferred
  *
  * Copyright © 2007 Canonical Ltd
@@ -101,6 +101,7 @@ constructfn(struct varbuf *vb, const char *dir, const char *tail)
 {
 	varbuf_reset(vb);
 	varbuf_add_str(vb, dir);
+	varbuf_add_char(vb, '/');
 	varbuf_add_str(vb, tail);
 	varbuf_end_str(vb);
 }

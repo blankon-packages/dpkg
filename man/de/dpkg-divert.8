@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 2010\-10\-12 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH dpkg\-divert 8 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 dpkg\-divert \- Hinwegsetzen über die Paketversion einer Datei
 .
 .SH ÜBERSICHT
-\fBdpkg\-divert\fP [\fIOptionen\fP] \fIBefehl\fP
+\fBdpkg\-divert\fP [\fIOption\fP...] \fIBefehl\fP
 .
 .SH BESCHREIBUNG
 \fBdpkg\-divert\fP ist ein Hilfswerkzeug, um die Liste der Umleitungen
@@ -81,7 +81,7 @@ Gebe die Version aus und beende sich.
 .
 .SH BEMERKUNGEN
 Beim Hinzufügen ist die Standardeinstellung \fB\-\-local\fP und \fB\-\-divert\fP
-\fI<Originalname>.distrib\fP. Beim Entfernen müssen, falls angegeben,
+\fIOriginalname\fP.\fBdistrib\fP. Beim Entfernen müssen, falls angegeben,
 \fB\-\-package\fP oder \fB\-\-local\fP und \fB\-\-divert\fP übereinstimmen.
 
 Verzeichnisse können mit \fBdpkg\-divert\fP nicht umgeleitet werden.
@@ -124,7 +124,7 @@ Falls gesetzt und die Option \fB\-\-admindir\fP nicht verwandt wurde, wird dies
 als Datenverzeichnis von Dpkg verwandt.
 .TP 
 \fBDPKG_MAINTSCRIPT_PACKAGE\fP
-Falls gesetzt und die Optionen \fI\-\-local\fP und \fI\-\-package\fP nicht verwandt
+Falls gesetzt und die Optionen \fB\-\-local\fP und \fB\-\-package\fP nicht verwandt
 wurden, wird \fBdpkg\-divert\fP dies als Paketnamen verwenden.
 .
 .SH DATEIEN

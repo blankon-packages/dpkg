@@ -56,11 +56,17 @@
 /* Define to 1 if you have the `getdtablesize' function. */
 #undef HAVE_GETDTABLESIZE
 
+/* Define to 1 if you have the `getexecname' function. */
+#undef HAVE_GETEXECNAME
+
 /* Define to 1 if you have the `getopt' function. */
 #undef HAVE_GETOPT
 
 /* Define to 1 if you have the `getopt_long' function. */
 #undef HAVE_GETOPT_LONG
+
+/* Define to 1 if you have the `getprogname' function. */
+#undef HAVE_GETPROGNAME
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
@@ -121,6 +127,9 @@
 
 /* Define to 1 if you have the `posix_fadvise' function. */
 #undef HAVE_POSIX_FADVISE
+
+/* Define to 1 if you have program_invocation_short_name */
+#undef HAVE_PROGRAM_INVOCATION_SHORT_NAME
 
 /* Define to 1 if you have the `scandir' function. */
 #undef HAVE_SCANDIR
@@ -187,6 +196,9 @@
 
 /* Define to 1 if 'WCOREDUMP' is declared in <sys/wait.h> */
 #undef HAVE_WCOREDUMP
+
+/* Define to 1 if you have __progname */
+#undef HAVE___PROGNAME
 
 /* Acknowledge the volatility of the API. */
 #undef LIBDPKG_VOLATILE_API

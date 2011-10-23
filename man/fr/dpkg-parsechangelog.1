@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-parsechangelog 1 19\-05\-2009 "Projet Debian" "Utilitaires de dpkg"
+.TH dpkg\-parsechangelog 1 2011\-08\-14 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
 dpkg\-parsechangelog \- Analyser un fichier changelog Debian.
 .
 .SH SYNOPSIS
-\fBdpkg\-parsechangelog\fP [\fIoptions\fP]
+\fBdpkg\-parsechangelog\fP [\fIoption\fP...]
 .
 .SH DESCRIPTION
 \fBdpkg\-parsechangelog\fP lit et fait l'analyse du fichier «\ changelog\ » d'une
@@ -52,23 +52,23 @@ entrée est demandée, alors la plupart des champs sont tirés de la dernière
 entrée, sauf s'il y a l'indication\ :
 .RS
 .TP 
-\fBSource:\fP <nom du paquet>
+\fBSource:\fP\fI pkg\-name\fP
 .TP 
-\fBVersion:\fP <version>
+\fBVersion:\fP\fI version\fP
 .TP 
-\fBDistribution:\fP <distribution cible>
+\fBDistribution:\fP\fI target\-distribution\fP
 .TP 
-\fBUrgency:\fP <priorité>
+\fBUrgency:\fP\fI urgency\fP
 La priorité la plus haute de celles indiquées est utilisée.
 .TP 
-\fBMaintainer:\fP <auteur>
+\fBMaintainer:\fP\fI author\fP
 .TP 
-\fBDate:\fP <date>
+\fBDate:\fP\fI date\fP
 .TP 
-\fBCloses:\fP <Numéro de bogue>
+\fBCloses:\fP\fI bug\-number\fP
 Les champs «\ Closes\ » de toutes les entrées incluses sont fusionnés.
 .TP 
-\fBChanges:\fP <entrées du fichier des changements>
+\fBChanges:\fP\fI changelog\-entries\fP
 Le texte de toutes les entrées de changelog est concaténé. Pour faire de ce
 champ un champ de contrôle Debian valide, les lignes multiples qui sont
 vides sont remplacées par un point \fB"."\fP et toutes les lignes sont

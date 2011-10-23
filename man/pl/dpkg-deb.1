@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-deb 1 2010\-03\-07 "Projekt Debiana" "u¿ytki dpkg"
+.TH dpkg\-deb 1 2011\-08\-14 "Projekt Debiana" "u¿ytki dpkg"
 .SH NAZWA
 dpkg\-deb \- narzêdzie obs³ugi plików archiwum Debiana (.deb)
 .
 .SH SK£ADNIA
-\fBdpkg\-deb\fP [\fIopcje\fP] \fIpolecenie\fP
+\fBdpkg\-deb\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH OPIS
 \fBdpkg\-deb\fP tworzy, rozpakowuje i podaje informacje o plikach archiwum
@@ -92,13 +92,21 @@ a jego uprawnienia zostan± zmodyfikowane tak, aby odpowiada³y zawarto¶ci
 pakietu.
 .TP 
 \fB\-X\fP, \fB\-\-vextract\fP \fIkatalog archiwum\fP
-Dzia³a podobnie do \fB\-\-extract\fP (\fB\-x\fP), z t± ró¿nic±, ¿e wy¶wietla nazwy
-plików, które s± rozpakowywane.
+Is like \fB\-\-extract\fP (\fB\-x\fP)  with \fB\-\-verbose\fP (\fB\-v\fP)  which prints a
+listing of the files extracted as it goes.
+.TP 
+\fB\-R\fP, \fB\-\-raw\-extract\fP \fIarchive directory\fP
+Extracts the filesystem tree from a package archive into a specified
+directory, and the control information files into a DEBIAN subdirectory of
+the specified directory.
+
+W razie potrzeby, katalog docelowy bêdzie utworzony.
 .TP 
 \fB\-\-fsys\-tarfile\fP \fIarchiwum\fP
-Rozpakowuje pliki z archiwum i wysy³a je na standardowe wyj¶cie w postaci
-formatu polecenia \fBtar\fP. Gdy ta operacja zostanie po³±czona z \fBtar\fP'em,
-mo¿liwe jest rozpakowanie tylko wybranych plików z archiwum.
+Extracts the filesystem tree data from a binary package and sends it to
+standard output in \fBtar\fP format. Together with \fBtar\fP(1)  this can be used
+to extract a particular file from a package archive.  The input archive will
+always be processed sequentially.
 .TP 
 \fB\-e\fP, \fB\-\-control\fP \fIarchiwum\fP [\fIkatalog\fP]
 Rozpakowuje pliki kontrolne pakietu do podanego \fIkatalogu\fP.
@@ -129,11 +137,11 @@ mo¿na znale¼æ w opisie opcji \fB\-\-showformat\fP w \fBdpkg\-query\fP(1).
 
 Domy¶ln± warto¶ci± tego pola jest "${Package}\et${Version}\en".
 .TP 
-\fB\-z\fP\fIpoziom_kompresji\fP
-Okre¶la poziom kompresji przekazywany do programu kompresuj±cego podczas
-budowania pakietu.
+\fB\-z\fP\fIcompress\-level\fP
+Specify which compression level to use on the compressor backend, when
+building a package (default is 9 for gzip and bzip2, 6 for xz and lzma).
 .TP 
-\fB\-Z\fP\fItyp_kompresji\fP
+\fB\-Z\fP\fIcompress\-type\fP
 Specify which compression type to use when building a package. Allowed
 values are \fIgzip\fP, \fIxz\fP, \fIbzip2\fP, \fIlzma\fP, and \fInone\fP (default is
 \fIgzip\fP).
@@ -153,6 +161,10 @@ opublikowana jedynie dla i386 a.out.
 Powoduje, ¿e polecenie \fBdpkg\-deb \-\-build\fP nie bêdzie sprawdzaæ zawarto¶ci
 archiwum. W ten sposób mo¿na utworzyæ niepoprawny pakiet, je¶li zajdzie taka
 potrzeba.
+.TP 
+\fB\-v\fP, \fB\-\-verbose\fP
+Enables verbose output. This currently only affects \fB\-\-extract\fP making it
+behave like \fB\-\-vextract\fP.
 .TP 
 \fB\-D\fP, \fB\-\-debug\fP
 W³±cza opcjê debugowania. Nie jest to zbyt interesuj±ce.

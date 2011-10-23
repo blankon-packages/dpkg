@@ -3,14 +3,14 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-maintscript\-helper 1 2010\-04\-16 Debian\-Projekt dpkg\-Programmsammlung
+.TH dpkg\-maintscript\-helper 1 2011\-08\-14 Debian\-Projekt dpkg\-Programmsammlung
 .SH NAME
 dpkg\-maintscript\-helper \- Bekannte Einschränkungen in Dpkg in
 Betreuerskripten umgehen
 .
 .SH ÜBERSICHT
-\fBdpkg\-maintscript\-helper\fP \fIBefehl\fP [\fIParameter\fP...] \-\-
-\fIBetr\-Skript\-Parameter\fP
+\fBdpkg\-maintscript\-helper\fP \fIBefehl\fP [\fIParameter\fP...] \fB\-\-\fP
+\fIBetr\-Skript\-Parameter\fP...
 .
 .SH "BEFEHLE UND PARAMETER"
 .P
@@ -29,7 +29,7 @@ Viele dieser Aufgaben benötigen koordinierte Aktionen aus mehreren
 Betreuerskripten (\fBpreinst\fP, \fBpostinst\fP, \fBprerm\fP, \fBpostrm\fP). Um Fehler
 zu vermeiden, wird der gleiche Aufruf einfach in alle Skripte eingefügt und
 das Programm wird sein Verhalten automatisch abhängig von der Variable
-DPKG_MAINTSCRIPT_NAME und den Argumenten im Betreuerskript, die Sie nach
+\fBDPKG_MAINTSCRIPT_NAME\fP und den Argumenten im Betreuerskript, die Sie nach
 einem doppelten Schrägstrich übergeben müssen, anpassen.
 .
 .SH "CONFFILE\-BEZOGENE AUFGABEN"
@@ -126,15 +126,15 @@ sicherzustellen, dass die Mindestversion von Dpkg breits entpackt wurde. Die
 benötigte Version hängt vom verwandten Befehl ab, für \fBrm_conffile\fP und
 \fBmv_conffile\fP lautet sie 1.15.7.2:
 .P
-    Pre\-Depends: dpkg (>= 1.15.7.2)
+    \fBPre\-Depends:\fP dpkg (>= 1.15.7.2)
 .P
 In vielen Fällen sind aber die Ausführungen des Programms für das Paket
 nicht kritisch und statt einer pre\-Abhängigkeit soll das Programm nur
 aufgerufen werden, falls bekannt ist, dass der benötigte Befehl vom derzeit
 installierten Dpkg unterstützt wird:
 .P
-    if dpkg\-maintscript\-helper supports <command>; then
-        dpkg\-maintscript\-helper <command> ...
+    if dpkg\-maintscript\-helper supports \fIcommand\fP; then
+        dpkg\-maintscript\-helper \fIcommand\fP ...
     fi
 .
 .SH AUTOREN

@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2011\-02\-05 "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg 1 2011\-08\-14 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg \- Gestor de paquetes de Debian
 .
 .SH SINOPSIS
-\fBdpkg\fP [\fIopciones\fP] \fIacción\fP
+\fBdpkg\fP [\fIoption\fP...] \fIaction\fP
 .
 .SH AVISO
 El propósito de este manual es que los usuarios entiendan las opciones de
@@ -27,20 +27,12 @@ consisten de una sola acción y cero o más opciones. La acción o parámetro
 dice a \fBdpkg\fP qué hacer, mientras que las opciones controlan de una manera
 u otra su comportamiento.
 
-También puede usar \fBdpkg\fP como una interfaz a \fBdpkg\-deb\fP(1). Si el primero
-encuentra alguna de las opciones del segundo, se limita a invocarlo con esos
-mismos parámetros:
-.nf
-    \fB\-b\fP, \fB\-\-build\fP,
-    \fB\-c\fP, \fB\-\-contents\fP,
-    \fB\-I\fP, \fB\-\-info\fP,
-    \fB\-f\fP, \fB\-\-field\fP,
-    \fB\-e\fP, \fB\-\-control\fP,
-    \fB\-x\fP, \fB\-\-extract\fP,
-    \fB\-X\fP, \fB\-\-vextract\fP, y
-    \fB\-\-fsys\-tarfile\fP.
-.fi
-Consulte \fBdpkg\-deb\fP(1) si desea más información sobre estas acciones.
+\fBdpkg\fP can also be used as a front\-end to \fBdpkg\-deb\fP(1) and
+\fBdpkg\-query\fP(1). The list of supported actions can be found later on in the
+\fBACTIONS\fP section. If any such action is encountered \fBdpkg\fP just runs
+\fBdpkg\-deb\fP or \fBdpkg\-query\fP with the parameters given to it, but no
+specific options are currently passed to them, to use any such option the
+back\-ends need to be called directly.
 .
 .SH "INFORMACIÓN SOBRE PAQUETES"
 \fBdpkg\fP posibilita el acceso a bastante información sobre los paquetes
@@ -99,9 +91,9 @@ acción con la opción \fB\-\-force\-remove\-reinstreq\fP.
 .
 .SH ACCIONES
 .TP 
-\fB\-i\fP, \fB\-\-install\fP \fIfichero\-paquete\fP...
-Instala el paquete. Si se especifica la opción \fB\-\-recursive\fP o \fB\-R\fP, el
-\fIfichero\-paquete\fP debe ser un directorio.
+\fB\-i\fP, \fB\-\-install\fP \fIpackage\-file\fP...
+Install the package. If \fB\-\-recursive\fP or \fB\-R\fP option is specified,
+\fIpackage\-file\fP must refer to a directory instead.
 
 La instalación consiste de los siguientes pasos:
 .br
@@ -131,9 +123,9 @@ que se borran los antiguos.
 \fB6.\fP Configuración del paquete. Para una información detallada sobre este
 proceso, consulte \fB\-\-configure\fP.
 .TP 
-\fB\-\-unpack \fP\fIfichero\-paquete\fP ...
-Desempaqueta el paquete, pero no lo configura. Si se introducen las opciones
-\fB\-\-recursive\fP o \fB\-R\fP el \fIfichero\-paquete\fP debe ser un directorio.
+\fB\-\-unpack \fP\fIpackage\-file\fP...
+Unpack the package, but don't configure it. If \fB\-\-recursive\fP or \fB\-R\fP
+option is specified, \fIpackage\-file\fP must refer to a directory instead.
 .TP 
 \fB\-\-configure \fP\fIpaquete\fP...|\fB\-a\fP|\fB\-\-pending\fP
 Configura un paquete que está desempaquetado pero no configurado. Si se
@@ -204,10 +196,10 @@ fichero es casi inservible si usa una interfaz basada en APT en lugar de
 \fBdselect\fP: APT tiene su propio sistema de registrar los paquetes
 disponibles.
 .TP 
-\fB\-A\fP, \fB\-\-record\-avail\fP \fIfichero\-paquete\fP...
-Actualiza la lista de paquetes disponibles de \fBdpkg\fP y \fBdselect\fP con la
-información del \fIfichero\-paquete\fP. Si se usa \fB\-\-recursive\fP o \fB\-R\fP, el
-\fIfichero\-paquete\fP debe ser un directorio.
+\fB\-A\fP, \fB\-\-record\-avail\fP \fIpackage\-file\fP...
+Update \fBdpkg\fP and \fBdselect\fP's idea of which packages are available with
+information from the package \fIpackage\-file\fP. If \fB\-\-recursive\fP or \fB\-R\fP
+option is specified, \fIpackage\-file\fP must refer to a directory instead.
 .TP 
 \fB\-\-forget\-old\-unavail\fP
 \fBObsoleta\fP, y una opción inservible ya que \fBdpkg\fP olvidará automáticamente
@@ -226,11 +218,10 @@ introducir un patrón se mostrará la lista de paquetes no instalados (esto
 es, previamente purgados) .
 .TP 
 \fB\-\-set\-selections\fP
-Define las selecciones de paquetes usando un fichero introducido por la
-entrada estándar. Este fichero debería tener el formato «<paquete>
-<estado>», en el que el estado es «install», «hold», «deinstall» o
-«purge». Se permiten las líneas vacías y líneas de comentarios que empiecen
-por «#».
+Set package selections using file read from stdin. This file should be in
+the format '\fIpackage\fP \fIstate\fP', where state is one of \fBinstall\fP, \fBhold\fP,
+\fBdeinstall\fP or \fBpurge\fP. Blank lines and comment lines beginning with '#'
+are also permitted.
 .TP 
 \fB\-\-clear\-selections\fP
 Define el estado deseado de todo paquete no esencial para su
@@ -258,11 +249,10 @@ versión como la más moderna posible: \fBlt\-nl le\-nl ge\-nl gt\-nl\fP. Éstos se
 proporcionan sólo por compatibilidad con la sintaxis del fichero de control:
 \fB< << <= = >= >> >\fP.
 .TP 
-\fB\-\-command\-fd \fP\fI<n>\fP
-Acepta una serie de órdenes en el descriptor de fichero
-\fB<n>\fP. Nota: las opciones adicionales introducidas desde la línea
-de órdenes y mediante este descriptor de fichero no se desactivan en las
-subsiguientes llamadas efectuadas en la misma ejecución.
+\fB\-\-command\-fd \fP\fIn\fP
+Accept a series of commands on input file descriptor \fIn\fP. Note: additional
+options set on the command line, and through this file descriptor, are not
+reset for subsequent commands executed during the same run.
 .TP 
 \fB\-\-help\fP
 Muestra un resumen de las instrucciones de uso.
@@ -460,6 +450,8 @@ pérdida de datos. Úselo con cuidado.\fP
 
 \fBarchitecture\fP: Process even packages with wrong or no architecture.
 
+\fBbad\-version\fP: Process even packages with wrong versions.
+
 \fBbad\-path\fP: \fBPATH\fP no contiene algunos programas importantes, así que es
 bastante posible que haya problemas.
 
@@ -473,14 +465,6 @@ autenticidad.
 Ignora la comprobación de dependencias para los paquetes definidos (en
 realidad, se hacen las comprobaciones pero se imprimen avisos en vez de
 interrumpir el proceso).
-.TP 
-\fB\-\-new\fP, \fB\-\-old\fP
-Selecciona el formato nuevo o antiguo de paquete. Es una opción de
-\fBdpkg\-deb\fP(1).
-.TP 
-\fB\-\-nocheck\fP
-No lee ni comprueba el contenido del fichero de control al construir el
-paquete. Es una opción de \fBdpkg\-deb\fP(1).
 .TP 
 \fB\-\-no\-act\fP, \fB\-\-dry\-run\fP, \fB\-\-simulate\fP
 Hace todo lo que se supone que debe hacer, pero no realiza ningún cambio. Se
@@ -612,17 +596,14 @@ times. The output format used is the same as in \fB\-\-status\-fd.\fP
 .RE
 .TP 
 \fB\-\-log=\fP\fIfichero\fP
-Registrar los cambios de estado y acciones en el \fIfichero\fP, en lugar del
-predefinido, \fI/var/log/dpkg.log\fP. Se usará el último fichero introducido en
-caso de definir varios. Los mensajes del registro tienen el formato
-«YYYY\-MM\-DD HH:MM:SS estado <estado> <paq>
-<versión\-instalada>» para actualizaciones de cambios de estado;
-«YYYY\-MM\-DD HH:MM:SS <acción> <paq>
-<versión\-instalada> <versión\-disponible>» para aquellas
-acciones en las que la \fI<acción>\fP es «install», «upgrade», «remove»
-o «purge»; y «YYYY\-MM\-DD HH:MM:SS conffile <fichero>
-<decisión>» para aquellos cambios en «conffiles» en los que la
-\fI<decisión>\fP es o «install» o «keep».
+Log status change updates and actions to \fIfilename\fP, instead of the default
+\fI/var/log/dpkg.log\fP. If this option is given multiple times, the last
+filename is used. Log messages are of the form `YYYY\-MM\-DD HH:MM:SS status
+\fIstate\fP \fIpkg\fP \fIinstalled\-version\fP' for status change updates; `YYYY\-MM\-DD
+HH:MM:SS \fIaction\fP \fIpkg\fP \fIinstalled\-version\fP \fIavailable\-version\fP' for
+actions where \fIaction\fP is one of \fBinstall\fP, \fBupgrade\fP, \fBremove\fP,
+\fBpurge\fP; and `YYYY\-MM\-DD HH:MM:SS conffile \fIfilename\fP \fIdecision\fP' for
+conffile changes where \fIdecision\fP is either \fBinstall\fP or \fBkeep\fP.
 .TP 
 \fB\-\-no\-debsig\fP
 No intenta verificar las firmas de los paquetes.

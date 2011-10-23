@@ -2,7 +2,7 @@
 #
 # dpkg-buildflags
 #
-# Copyright © 2010 Raphaël Hertzog <hertzog@debian.org>
+# Copyright © 2010-2011 Raphaël Hertzog <hertzog@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ sub version {
     printf _g("Debian %s version %s.\n"), $progname, $version;
 
     printf _g("
-Copyright (C) 2010 Raphael Hertzog <hertzog\@debian.org>.");
+Copyright (C) 2010-2011 Raphael Hertzog <hertzog\@debian.org>.");
 
     printf _g("
 This is free software; see the GNU General Public License version 2 or
@@ -48,8 +48,11 @@ Actions:
   --origin <flag>    output the origin of the flag to stdout:
                      value is one of vendor, system, user, env.
   --list             output a list of the flags supported by the current vendor.
-  --export=(sh|make) output commands to be executed in shell or make that export
-                     all the compilation flags as environment variables.
+  --export=(sh|make|configure)
+                     output something convenient to import the
+                     compilation flags in a shell script, in make,
+                     or on a ./configure command line.
+  --dump             output all compilation flags with their values
   --help             show this help message.
   --version          show the version.
 "), $progname;
@@ -65,11 +68,15 @@ while (@ARGV) {
         $action = $1;
         $param = shift(@ARGV);
 	usageerr(_g("%s needs a parameter"), $_) unless defined $param;
-    } elsif (m/^--export(?:=(sh|make))?$/) {
+    } elsif (m/^--export(?:=(sh|make|configure))?$/) {
         usageerr(_g("two commands specified: --%s and --%s"), "export", $action)
             if defined($action);
         my $type = $1 || "sh";
         $action = "export-$type";
+    } elsif (m/^--dump$/) {
+        usageerr(_g("two commands specified: --%s and --%s"), "dump", $action)
+            if defined($action);
+        $action = "dump";
     } elsif (m/^--list$/) {
         usageerr(_g("two commands specified: --%s and --%s"), "list", $action)
             if defined($action);
@@ -85,7 +92,7 @@ while (@ARGV) {
     }
 }
 
-usageerr(_g("need an action option")) unless defined($action);
+$action = "dump" unless defined($action);
 
 my $build_flags = Dpkg::BuildFlags->new();
 
@@ -119,9 +126,16 @@ if ($action eq "get") {
 	} elsif ($export_type eq "make") {
 	    $value =~ s/\$/\$\$/g;
 	    print "export $flag := $value\n";
+	} elsif ($export_type eq "configure") {
+	    print "$flag=\"$value\" ";
 	}
     }
     exit(0);
+} elsif ($action eq "dump") {
+    foreach my $flag ($build_flags->list()) {
+	my $value = $build_flags->get($flag);
+	print "$flag=$value\n";
+    }
 }
 
 exit(1);

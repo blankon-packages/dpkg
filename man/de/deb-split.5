@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-split 5 2010\-01\-28 Debian\-Projekt Debian
+.TH deb\-split 5 2011\-07\-04 Debian\-Projekt Debian
 .SH NAME
 deb\-split \- mehrteiliges Debian\-Binärpaketformat
 .SH ÜBERSICHT
@@ -18,13 +18,25 @@ Die Datei ist ein \fBar\fP\-Archiv mit einer magischen Zahl von
 Schrägstrich abschließen.
 .PP
 Das erste Mitglied heißt \fBdebian\-split\fP und enthält eine Reihe von Zeilen,
-die durch Zeilenumbrüche getrennt sind. Derzeit sind sieben Zeile
-vorhanden. Die erste ist die Formatversionsnummer, \fB2.1\fP zum Zeitpunkt zu
-dem diese Handbuchseite geschrieben wurde. Die Zweite ist der Paketname. Die
-Dritte die Paketversion. Die Vierte ist die Md5sum des Pakets. Die Fünfte
-ist die Gesamtgröße des Pakets. Die Sechste ist die maximale Teilgröße. Die
-Siebte ist die aktuelle Teilnummer, gefolgt von einem Schrägstrich und der
-Gesamtanzahl von Teilen (wie in \(oq1/10\(cq).
+getrennt durch Leerzeilen. Derzeit sind acht Zeilen vorhanden:
+.IP \(bu 4
+Die Formatversionsnummer, zum Zeitpunkt der Erstellung dieser Handbuchseite
+lautet sie \fB2.1\fP.
+.IP \(bu
+Der Paketname.
+.IP \(bu
+Die Paketversion.
+.IP \(bu
+Die Md5sum des Pakets.
+.IP \(bu
+Die Gesamtgröße des Pakets.
+.IP \(bu
+Die maximale Teilegröße
+.IP \(bu
+Die aktuelle Teilenummer, gefolgt von einem Schrägstrich und der
+Gesamtanzahl an Teilen (wie in \(oq1/10\(cq).
+.IP \(bu
+Die Paketarchitektur (seit Dpkg 1.16.1).
 .PP
 Programme, die mehrteilige Archive lesen, sollten darauf vorbereitet sein,
 dass zusätzliche Zeilen vorhanden sein können, und sollten diese ignorieren,
@@ -36,11 +48,11 @@ ist, dann sollte das Programm sicher fortfahren können, es sei denn, ein
 unerwartetes Mitglied ist im Archiv (abgesehen vom Ende) gefunden worden,
 wie unten beschrieben.
 .PP
-Das zweite, letzte benötigte Mitglied heißt \fBdata.\fPN, wobei N die
+Das zweite, letzte benötigte Mitglied heißt \fBdata.\fP\fIN\fP, wobei \fIN\fP die
 Teilnummer angibt. Es enthält die rohen Daten des Teils.
 .PP
 Diese Mitglieder müssen in genau dieser Reihenfolge auftauchen. Aktuelle
-Implementationen sollten zusätzliche Mitglieder nach \fBdata.\fPN
+Implementationen sollten zusätzliche Mitglieder nach \fBdata.\fP\fIN\fP
 ignorieren. Weitere Mitglieder könnten in der Zukunft definiert werden und
 werden (falls möglich) nach diesen drei platziert.
 .SH ÜBERSETZUNG

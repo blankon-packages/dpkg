@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-architecture 1 2009\-08\-15 Debianprojektet dpkg\-verktygen
+.TH dpkg\-architecture 1 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-architecture \- ställ in och bestäm arkitektur för paket som byggs
 .
 .SH SYNOPS
-\fBdpkg\-architecture\fP [\fIflaggor\fP] \fIåtgärd\fP
+\fBdpkg\-architecture\fP [\fIflagga\fP...] [\fIåtgärd\fP]
 .PP
 .
 .SH BESKRIVNING
@@ -118,8 +118,8 @@ Systemdelen av \s-1DEB_BUILD_GNU_TYPE\s0.
 .IP \s-1DEB_BUILD_GNU_TYPE\s0 4
 \s-1GNU\s0\-systemtypen för byggmaskinen.
 .IP \s-1DEB_BUILD_MULTIARCH\s0 4
-The clarified \s-1GNU\s0 system type of the build machine, used for
-filesystem paths.
+Den förtydligade \s-1GNU\s0\-systemtypen för byggmaskinen, används för
+sökvägar i filsystemet.
 .IP \s-1DEB_HOST_ARCH\s0 4
 Debianarkitekturen för värdmaskinen.
 .IP \s-1DEB_HOST_ARCH_OS\s0 4
@@ -137,8 +137,8 @@ Systemdelen av \s-1DEB_HOST_GNU_TYPE\s0.
 .IP \s-1DEB_HOST_GNU_TYPE\s0 4
 \s-1GNU\s0\-systemtypen för värdmaskinen.
 .IP \s-1DEB_HOST_MULTIARCH\s0 4
-The clarified \s-1GNU\s0 system type of the host machine, used for
-filesystem paths.
+Den förtydligade \s-1GNU\s0\-systemtypen för värdmaskinen, används för
+sökvägar i filsystemet.
 .
 .SH DEBIAN/RULES
 Miljövariablerna som sätts av \fBdpkg\-architecture\fP sänds till
@@ -287,7 +287,7 @@ dpkg\-architecture \-ai386 \-ilinux\-any
 .SH FILER
 Alla dessa filer måste finnas för att \fBdpkg\-architecture\fP måste
 finnas. Deras placering kan överstyras vid körning med miljövariabeln
-DPKG_DATADIR.
+\fBDPKG_DATADIR\fP.
 .TP 
 \fI/usr/share/dpkg/cputable\fP
 Tabell över kända processornamn och deras motsvarande GNU\-namn.

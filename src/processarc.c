@@ -49,7 +49,7 @@
 #include <dpkg/subproc.h>
 #include <dpkg/dir.h>
 #include <dpkg/tarfn.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 #include <dpkg/triglib.h>
 #include <dpkg/arch.h>
 
@@ -155,6 +155,45 @@ deb_verify(const char *filename)
       printf(_("passed\n"));
     }
   }
+}
+
+static char *
+get_control_dir(char *cidir)
+{
+  if (f_noact) {
+    char *tmpdir;
+
+    tmpdir = mkdtemp(path_make_temp_template("dpkg"));
+    if (tmpdir == NULL)
+      ohshite(_("unable to create temporary directory"));
+
+    cidir = m_realloc(cidir, strlen(tmpdir) + MAXCONTROLFILENAME + 10);
+
+    strcpy(cidir, tmpdir);
+
+    free(tmpdir);
+  } else {
+    const char *admindir;
+
+    admindir = dpkg_db_get_dir();
+
+    /* The admindir length is always constant on a dpkg execution run. */
+    if (cidir == NULL)
+      cidir = m_malloc(strlen(admindir) + sizeof(CONTROLDIRTMP) +
+                       MAXCONTROLFILENAME + 10);
+
+    /* We want it to be on the same filesystem so that we can
+     * use rename(2) to install the postinst &c. */
+    strcpy(cidir, admindir);
+    strcat(cidir, "/" CONTROLDIRTMP);
+
+    /* Make sure the control information directory is empty. */
+    ensure_pathname_nonexisting(cidir);
+  }
+
+  strcat(cidir, "/");
+
+  return cidir;
 }
 
 #define MAXCONFLICTORS 20
@@ -326,6 +365,56 @@ pkg_infodb_update(struct pkginfo *pkg, char *cidir, char *cidirrest)
   dir_sync_path(pkgadmindir());
 }
 
+static enum parsedbflags
+parsedb_force_flags(void)
+{
+  enum parsedbflags flags = 0;
+
+  if (fc_badversion)
+    flags |= pdb_lax_version_parser;
+
+  return flags;
+}
+
+static void
+disappear_package(struct pkginfo *pkg, struct pkginfo *infavor)
+{
+  printf(_("(Noting disappearance of %s, which has been completely replaced.)\n"),
+         pkg_describe(pkg, pdo_foreign));
+  log_action("disappear", pkg);
+  debug(dbg_general, "process_archive disappearing %s",
+        pkg_describe(pkg, pdo_foreign));
+
+  if (pkg->set != infavor->set ||
+      (pkg->installed.multiarch == multiarch_same &&
+       infavor->installed.multiarch == multiarch_same)) {
+    trig_activate_packageprocessing(pkg);
+    maintainer_script_installed(pkg, POSTRMFILE,
+                                "post-removal script (for disappearance)",
+                                "disappear",
+                                pkg_describe(infavor, pdo_foreign | pdo_avail),
+                                versiondescribe(&infavor->available.version,
+                                                vdew_nonambig),
+                                NULL);
+
+    /* OK, now we delete all the stuff in the ‘info’ directory .. */
+    debug(dbg_general, "process_archive disappear cleaning info directory");
+    pkg_infodb_foreach(pkg, &pkg->installed, pkg_infodb_remove_file);
+    dir_sync_path(pkgadmindir());
+  }
+
+  pkg->status = stat_notinstalled;
+  pkg->want = want_unknown;
+  pkg->eflag = eflag_ok;
+
+  blankversion(&pkg->configversion);
+  pkgbin_blank(&pkg->installed, true);
+
+  pkg->clientdata->fileslistvalid = false;
+
+  modstatdb_note(pkg);
+}
+
 void process_archive(const char *filename) {
   static const struct tar_operations tf = {
     .read = tarfileread,
@@ -366,6 +455,7 @@ void process_archive(const char *filename) {
   struct filenamenode *namenode;
   struct stat stab, oldfs;
   struct pkg_deconf_list *deconpil, *deconpiltemp;
+  struct pkginfo *fixbytrigaw;
 
   cleanup_pkg_failed= cleanup_conflictor_failed= 0;
 
@@ -383,40 +473,11 @@ void process_archive(const char *filename) {
   if (!f_nodebsig)
     deb_verify(filename);
 
-  if (f_noact) {
-    char *tmpdir;
-
-    tmpdir = mkdtemp(path_make_temp_template("dpkg"));
-    if (!tmpdir)
-      ohshite(_("unable to create temporary directory"));
-
-    cidir = m_realloc(cidir, strlen(tmpdir) + MAXCONTROLFILENAME + 10);
-    strcpy(cidir, tmpdir);
-    strcat(cidir,"/");
-
-    cidirrest = cidir + strlen(cidir);
-
-    free(tmpdir);
-  } else {
-    const char *admindir = dpkg_db_get_dir();
-
-    /* We want it to be on the same filesystem so that we can
-     * use rename(2) to install the postinst &c. */
-    if (!cidir)
-      cidir = m_malloc(strlen(admindir) + sizeof(CONTROLDIRTMP) +
-                       MAXCONTROLFILENAME + 10);
-    strcpy(cidir,admindir);
-    strcat(cidir, "/" CONTROLDIRTMP);
-
-    cidirrest = cidir + strlen(cidir);
-
-    assert(*cidir && cidirrest[-1] == '/');
-    cidirrest[-1] = '\0';
-    ensure_pathname_nonexisting(cidir);
-    cidirrest[-1] = '/';
-  }
-
+  /* Get the control information directory. */
+  cidir = get_control_dir(cidir);
+  cidirrest = cidir + strlen(cidir);
   push_cleanup(cu_cidir, ~0, NULL, 0, 2, (void *)cidir, (void *)cidirrest);
+
   pid = subproc_fork();
   if (pid == 0) {
     cidirrest[-1] = '\0';
@@ -435,8 +496,8 @@ void process_archive(const char *filename) {
 
   strcpy(cidirrest,CONTROLFILE);
 
-  parsedb(cidir, pdb_recordavailable | pdb_rejectstatus | pdb_ignorefiles,
-          &pkg);
+  parsedb(cidir, pdb_recordavailable | pdb_rejectstatus | pdb_ignorefiles |
+          parsedb_force_flags(), &pkg);
   if (!pkg->files) {
     pkg->files= nfmalloc(sizeof(struct filedetails));
     pkg->files->next = NULL;
@@ -536,14 +597,20 @@ void process_archive(const char *filename) {
       /* Ignore these here. */
       break;
     case dep_predepends:
-      if (!depisok(dsearch, &depprobwhy, NULL, true)) {
-        varbuf_end_str(&depprobwhy);
-        fprintf(stderr, _("dpkg: regarding %s containing %s, pre-dependency problem:\n%s"),
-                pfilename, pkg_describe(pkg, pdo_foreign | pdo_avail), depprobwhy.buf);
-        if (!force_depends(dsearch->list))
-          ohshit(_("pre-dependency problem - not installing %.250s"),
-                 pkg_describe(pkg, pdo_foreign | pdo_avail));
-        warning(_("ignoring pre-dependency problem!"));
+      if (!depisok(dsearch, &depprobwhy, NULL, &fixbytrigaw, true)) {
+        if (fixbytrigaw) {
+          while (fixbytrigaw->trigaw.head)
+            trigproc(fixbytrigaw->trigaw.head->pend);
+        } else {
+          varbuf_end_str(&depprobwhy);
+          fprintf(stderr, _("dpkg: regarding %s containing %s, pre-dependency problem:\n%s"),
+                  pfilename, pkg_describe(pkg, pdo_foreign | pdo_avail),
+                  depprobwhy.buf);
+          if (!force_depends(dsearch->list))
+            ohshit(_("pre-dependency problem - not installing %.250s"),
+                   pkg_describe(pkg, pdo_foreign | pdo_avail));
+          warning(_("ignoring pre-dependency problem!"));
+        }
       }
     }
   }
@@ -582,6 +649,22 @@ void process_archive(const char *filename) {
   strcpy(cidirrest, TRIGGERSCIFILE);
   trig_parse_ci(cidir, NULL, trig_cicb_statuschange_activate, pkg);
 
+  /* Take over remaining files for other packages in the set when not
+   * multiarch same since the package has to disappear */
+  if (pkg->available.multiarch != multiarch_same &&
+      pkg->status == stat_notinstalled) {
+    for (otherpkg = &pkg->set->pkg; otherpkg; otherpkg = otherpkg->arch_next) {
+      if (otherpkg == pkg || otherpkg->status == stat_notinstalled)
+        continue;
+      pkg->clientdata->files = otherpkg->clientdata->files;
+      pkg->clientdata->fileslistvalid = otherpkg->clientdata->fileslistvalid;
+      otherpkg->clientdata->files = NULL;
+      otherpkg->clientdata->fileslistvalid = false;
+      oldconffsetflags(otherpkg->installed.conffiles);
+      break;
+    }
+  }
+
   /* Read the conffiles, and copy the hashes across. */
   newconffiles = NULL;
   newconffileslastp = &newconffiles;
@@ -589,7 +672,7 @@ void process_archive(const char *filename) {
   strcpy(cidirrest,CONFFILESFILE);
   conff= fopen(cidir,"r");
   if (conff) {
-    push_cleanup(cu_closefile, ehflag_bombout, NULL, 0, 1, (void *)conff);
+    push_cleanup(cu_closestream, ehflag_bombout, NULL, 0, 1, (void *)conff);
     while (fgets(conffilenamebuf,MAXCONFFILENAME-2,conff)) {
       struct filepackages_iterator *iter;
 
@@ -678,8 +761,14 @@ void process_archive(const char *filename) {
     pkg->status= stat_halfconfigured;
     modstatdb_note(pkg);
     push_cleanup(cu_prermupgrade, ~ehflag_normaltidy, NULL, 0, 1, (void *)pkg);
-    maintainer_script_alternative(pkg, PRERMFILE, "pre-removal", cidir, cidirrest,
-                                  "upgrade", "failed-upgrade");
+    if (versioncompare(&pkg->available.version,
+                       &pkg->installed.version) >= 0) /* Upgrade or reinstall */
+      maintainer_script_alternative(pkg, PRERMFILE, "pre-removal", cidir, cidirrest,
+                                    "upgrade", "failed-upgrade");
+    else /* Downgrade => no fallback */
+      maintainer_script_installed(pkg, PRERMFILE, "pre-removal", "upgrade",
+                                  versiondescribe(&pkg->available.version,
+                                                  vdew_nonambig), NULL);
     pkg->status= stat_unpacked;
     oldversionstatus= stat_unpacked;
     modstatdb_note(pkg);
@@ -889,7 +978,7 @@ void process_archive(const char *filename) {
       ohshit(_("corrupted filesystem tarfile - corrupted package archive"));
     }
   }
-  fd_null_copy(p1[0], -1, _("dpkg-deb: zap possible trailing zeros"));
+  fd_skip(p1[0], -1, _("dpkg-deb: zap possible trailing zeros"));
   close(p1[0]);
   p1[0] = -1;
   subproc_wait_check(pid, BACKEND " --fsys-tarfile", PROCPIPE);
@@ -943,7 +1032,8 @@ void process_archive(const char *filename) {
     if (!stat(namenode->name,&stab) && S_ISDIR(stab.st_mode)) {
       debug(dbg_eachfiledetail, "process_archive: %s is a directory",
 	    namenode->name);
-      if (isdirectoryinuse(namenode,pkg)) continue;
+      if (dir_is_used_by_others(namenode, pkg))
+        continue;
     }
 
     if (lstat(fnamevb.buf, &oldfs)) {
@@ -1164,6 +1254,13 @@ void process_archive(const char *filename) {
    * never even rearranged. Phew! */
   pkg->installed.arbs= pkg->available.arbs;
 
+  if (pkg->installed.multiarch != multiarch_same) {
+    for (otherpkg = &pkg->set->pkg; otherpkg; otherpkg = otherpkg->arch_next) {
+      if (otherpkg == pkg || otherpkg->status == stat_notinstalled)
+        continue;
+      disappear_package(otherpkg, pkg);
+    }
+  }
   /* Check for disappearing packages:
    * We go through all the packages on the system looking for ones
    * whose files are entirely part of the one we've just unpacked
@@ -1205,7 +1302,7 @@ void process_archive(const char *filename) {
          pdep = pdep->rev_next) {
       if (pdep->up->type != dep_depends && pdep->up->type != dep_predepends &&
           pdep->up->type != dep_recommends) continue;
-      if (depisok(pdep->up, &depprobwhy, NULL, false))
+      if (depisok(pdep->up, &depprobwhy, NULL, NULL, false))
         continue;
       varbuf_end_str(&depprobwhy);
       debug(dbg_veryverbose,"process_archive cannot disappear: %s",depprobwhy.buf);
@@ -1223,7 +1320,7 @@ void process_archive(const char *filename) {
           if (pdep->up->type != dep_depends && pdep->up->type != dep_predepends &&
               pdep->up->type != dep_recommends)
             continue;
-          if (depisok(pdep->up, &depprobwhy, NULL, false))
+          if (depisok(pdep->up, &depprobwhy, NULL, NULL, false))
             continue;
           varbuf_end_str(&depprobwhy);
           debug(dbg_veryverbose,"process_archive cannot disappear (provides %s): %s",
@@ -1236,38 +1333,10 @@ void process_archive(const char *filename) {
     otherpkg->clientdata->istobe= itb_normal;
     if (pdep) continue;
 
-    printf(_("(Noting disappearance of %s, which has been completely replaced.)\n"),
-           pkg_describe(otherpkg, pdo_foreign));
-    log_action("disappear", otherpkg);
-    debug(dbg_general, "process_archive disappearing %s",
-          pkg_describe(otherpkg, pdo_foreign));
     /* No, we're disappearing it. This is the wrong time to go and
      * run maintainer scripts and things, as we can't back out. But
      * what can we do ?  It has to be run this late. */
-    trig_activate_packageprocessing(otherpkg);
-    maintainer_script_installed(otherpkg, POSTRMFILE,
-                                "post-removal script (for disappearance)",
-                                "disappear",
-                                pkg_describe(pkg, pdo_foreign | pdo_avail),
-                                versiondescribe(&pkg->available.version,
-                                                vdew_nonambig),
-                                NULL);
-
-    /* OK, now we delete all the stuff in the ‘info’ directory .. */
-    debug(dbg_general, "process_archive disappear cleaning info directory");
-    pkg_infodb_foreach(otherpkg, &otherpkg->installed, pkg_infodb_remove_file);
-    dir_sync_path(pkgadmindir());
-
-    otherpkg->status= stat_notinstalled;
-    otherpkg->want = want_unknown;
-    otherpkg->eflag = eflag_ok;
-
-    blankversion(&otherpkg->configversion);
-    pkgbin_blank(&otherpkg->installed, true);
-
-    otherpkg->clientdata->fileslistvalid = false;
-
-    modstatdb_note(otherpkg);
+    disappear_package(otherpkg, pkg);
 
   } /* while (otherpkg= ... */
   pkg_db_iter_free(it);
@@ -1313,17 +1382,17 @@ void process_archive(const char *filename) {
         debug(dbg_eachfiledetail, "process_archive ... diverted, skipping");
         continue;
       }
-      /* Multi-Arch: same packages can share files */
-      if (otherpkg->set == pkg->set &&
-          otherpkg->installed.multiarch == multiarch_same &&
-          pkg->installed.multiarch == multiarch_same)
+      /* Multi-Arch: same packages can share files, and Multi-Arch:
+       * foreign|allowed|no have a single list file, so we should
+       * not rewrite the list file that we have already put in place. */
+      if (otherpkg->set == pkg->set)
         continue;
 
       /* Found one. We delete remove the list entry for this file,
        * (and any others in the same package) and then mark the package
        * as requiring a reread. */
       write_filelist_except(otherpkg, &otherpkg->installed,
-                            otherpkg->clientdata->files, 1);
+                            otherpkg->clientdata->files, fnnf_elide_other_lists);
       ensure_package_clientdata(otherpkg);
       debug(dbg_veryverbose, "process_archive overwrote from %s",
             pkg_describe(otherpkg, pdo_foreign));

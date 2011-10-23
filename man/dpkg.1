@@ -1,10 +1,10 @@
-.TH dpkg 1 "2011-02-05" "Debian Project" "dpkg suite"
+.TH dpkg 1 "2011-08-14" "Debian Project" "dpkg suite"
 .SH NAME
 dpkg \- package manager for Debian
 .
 .SH SYNOPSIS
 .B dpkg
-[\fIoptions\fP] \fIaction\fP
+.RI [ option "...] " action
 .
 .SH WARNING
 This manual is intended for users wishing to understand \fBdpkg\fP's
@@ -24,21 +24,12 @@ controlled entirely via command line parameters, which consist of exactly
 one action and zero or more options. The action-parameter tells \fBdpkg\fP
 what to do and options control the behavior of the action in some way.
 
-\fBdpkg\fP can also be used as a front-end to \fBdpkg\-deb\fP(1).
-The following
-are \fBdpkg\-deb\fP actions, and if they are encountered, \fBdpkg\fP
-just runs \fBdpkg\-deb\fP with the parameters given to it:
-.nf
-    \fB\-b\fP, \fB\-\-build\fP,
-    \fB\-c\fP, \fB\-\-contents\fP,
-    \fB\-I\fP, \fB\-\-info\fP,
-    \fB\-f\fP, \fB\-\-field\fP,
-    \fB\-e\fP, \fB\-\-control\fP,
-    \fB\-x\fP, \fB\-\-extract\fP,
-    \fB\-X\fP, \fB\-\-vextract\fP, and
-    \fB\-\-fsys\-tarfile\fP.
-.fi
-Please refer to \fBdpkg\-deb\fP(1) for information about these actions.
+\fBdpkg\fP can also be used as a front-end to \fBdpkg\-deb\fP(1) and
+\fBdpkg\-query\fP(1). The list of supported actions can be found later on
+in the \fBACTIONS\fP section. If any such action is encountered \fBdpkg\fP
+just runs \fBdpkg\-deb\fP or \fBdpkg\-query\fP with the parameters given
+to it, but no specific options are currently passed to them, to use
+any such option the back-ends need to be called directly.
 .
 .SH INFORMATION ABOUT PACKAGES
 \fBdpkg\fP maintains some usable information about available
@@ -97,9 +88,9 @@ option \fB\-\-force\-remove\-reinstreq\fP.
 .
 .SH ACTIONS
 .TP
-\fB\-i\fP, \fB\-\-install\fP \fIpackage_file\fP...
+\fB\-i\fP, \fB\-\-install\fP \fIpackage-file\fP...
 Install the package. If \fB\-\-recursive\fP or \fB\-R\fP option is
-specified, \fIpackage_file\fP must refer to a directory instead.
+specified, \fIpackage-file\fP must refer to a directory instead.
 
 Installation consists of the following steps:
 .br
@@ -128,9 +119,9 @@ time old files are removed.
 \fB6.\fP Configure the package. See \fB\-\-configure\fP for detailed
 information about how this is done.
 .TP
-\fB\-\-unpack \fP\fIpackage_file\fP...
+\fB\-\-unpack \fP\fIpackage-file\fP...
 Unpack the package, but don't configure it. If \fB\-\-recursive\fP or
-\fB\-R\fP option is specified, \fIpackage_file\fP must refer to a
+\fB\-R\fP option is specified, \fIpackage-file\fP must refer to a
 directory instead.
 .TP
 \fB\-\-configure \fP\fIpackage\fP...|\fB\-a\fP|\fB\-\-pending\fP
@@ -202,10 +193,10 @@ file is \fBdselect update\fR. Note that this file is mostly useless
 if you don't use \fBdselect\fR but an APT-based frontend: APT has its
 own system to keep track of available packages.
 .TP
-\fB\-A\fP, \fB\-\-record\-avail\fP \fIpackage_file\fP...
+\fB\-A\fP, \fB\-\-record\-avail\fP \fIpackage-file\fP...
 Update \fBdpkg\fP and \fBdselect\fP's idea of which packages are
-available with information from the package \fIpackage_file\fP. If
-\fB\-\-recursive\fP or \fB\-R\fP option is specified, \fIpackage_file\fP
+available with information from the package \fIpackage-file\fP. If
+\fB\-\-recursive\fP or \fB\-R\fP option is specified, \fIpackage-file\fP
 must refer to a directory instead.
 .TP
 .B \-\-forget\-old\-unavail
@@ -227,9 +218,9 @@ will not be shown.
 .TP
 .B \-\-set\-selections
 Set package selections using file read from stdin. This file should be
-in the format '<package> <state>', where state is one of install, hold,
-deinstall or purge. Blank lines and comment lines beginning with '#'
-are also permitted.
+in the format '\fIpackage\fP \fIstate\fP', where state is one of
+\fBinstall\fP, \fBhold\fP, \fBdeinstall\fP or \fBpurge\fP. Blank lines
+and comment lines beginning with '#' are also permitted.
 .TP
 .B \-\-clear\-selections
 Set the requested state of every non-essential package to deinstall.
@@ -265,8 +256,8 @@ than any version: \fBlt\-nl le\-nl ge\-nl gt\-nl\fP. These are provided
 only for compatibility with control file syntax: \fB< << <= = >= >>
 >\fP.
 .TP
-.B \-\-command\-fd \fI<n>\fP
-Accept a series of commands on input file descriptor \fI<n>\fP. Note:
+.B \-\-command\-fd \fIn\fP
+Accept a series of commands on input file descriptor \fIn\fP. Note:
 additional options set on the command line, and through this file descriptor,
 are not reset for subsequent commands executed during the same run.
 .TP
@@ -475,6 +466,9 @@ losing data, use with care.\fP
 \fBarchitecture\fP:
 Process even packages with wrong or no architecture.
 
+\fBbad\-version\fP:
+Process even packages with wrong versions.
+
 \fBbad\-path\fP:
 \fBPATH\fP is missing important programs, so problems are likely.
 
@@ -488,14 +482,6 @@ Install a package even if it fails authenticity check.
 \fB\-\-ignore\-depends\fP=\fIpackage\fP,...
 Ignore dependency-checking for specified packages (actually, checking is
 performed, but only warnings about conflicts are given, nothing else).
-.TP
-\fB\-\-new\fP, \fB\-\-old\fP
-Select new or old binary package format. This is a \fBdpkg\-deb\fP(1)
-option.
-.TP
-.B \-\-nocheck
-Don't read or check contents of control file while building a package.
-This is a \fBdpkg\-deb\fP(1) option.
 .TP
 \fB\-\-no\-act\fP, \fB\-\-dry\-run\fP, \fB\-\-simulate\fP
 Do everything which is supposed to be done, but don't write any
@@ -606,7 +592,7 @@ Package status changed; \fIstatus\fR is as in the status file.
 An error occurred. Any possible newlines in \fIextended-error-message\fR
 will be converted to spaces before output.
 .TP
-.BI "status: " file " : conffile-prompt : '" real-old "' '" real-new "' " useredited " " distedited
+.BI "status: " file " : conffile\-prompt : '" real-old "' '" real-new "' " useredited " " distedited
 User is being asked a conffile question.
 .TP
 .BI "processing: " stage ": " package
@@ -625,13 +611,13 @@ multiple times. The output format used is the same as in \fB\-\-status\-fd.
 Log status change updates and actions to \fIfilename\fP, instead of
 the default \fI/var/log/dpkg.log\fP. If this option is given multiple
 times, the last filename is used. Log messages are of the form
-`YYYY-MM-DD HH:MM:SS status
-<state> <pkg> <installed-version>' for status change updates;
-`YYYY-MM-DD HH:MM:SS <action> <pkg> <installed-version>
-<available-version>' for actions where \fI<action>\fP is one of install,
-upgrade, remove, purge; and `YYYY-MM-DD HH:MM:SS conffile <filename>
-<decision>' for conffile changes where \fI<decision>\fP is either install
-or keep.
+`YYYY-MM-DD HH:MM:SS status \fIstate\fP \fIpkg\fP \fIinstalled-version\fP'
+for status change updates;
+`YYYY-MM-DD HH:MM:SS \fIaction\fP \fIpkg\fP \fIinstalled-version\fP
+\fIavailable-version\fP' for actions where \fIaction\fP is one of
+\fBinstall\fP, \fBupgrade\fP, \fBremove\fP, \fBpurge\fP; and
+`YYYY-MM-DD HH:MM:SS conffile \fIfilename\fP \fIdecision\fP' for conffile
+changes where \fIdecision\fP is either \fBinstall\fP or \fBkeep\fP.
 .TP
 \fB\-\-no\-debsig\fP
 Do not try to verify package signatures.

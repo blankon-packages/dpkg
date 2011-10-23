@@ -3,15 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dselect 1 2010\-03\-07 "Projekt Debiana" Debian
+.TH dselect 1 2011\-08\-14 "Projekt Debiana" Debian
 .SH NAZWA
 dselect \- konsolowe narzêdzie zarz±dzania pakietami Debiana
 .
 .SH SK£ADNIA
-\fBdselect\fP [\fB\-\-admindir\fP \fI<directory>\fP] [\fB\-\-help\fP] [\fB\-\-version\fP]
-[\fB\-\-expert\fP] [\fB\-\-debug\fP|\fB\-D\fP\fI<file>\fP] [\fI<action>\fP]
-[\fB\-\-colour\fP|\fB\-\-color\fP
-\fIscreenpart:\fP[\fIforeground\fP],[\fIbackground\fP][\fI:attr\fP[\fI+attr+..\fP]]]
+\fBdselect\fP [\fIoption\fP...] [\fIaction\fP]
 .
 .SH OPIS
 \fBdselect\fP
@@ -35,30 +32,27 @@ serwerach\-archiwach w Internecie, lokalnych serwerach z archiwami lub na
 CD\-ROM\-ach. Zalecan± metod± dostêpu jest metoda \fIapt\fP, dostarczana przez
 pakiet \fBapt\fP.
 .PP
-Zazwyczaj \fBdselect\fP jest uruchamiany bez ¿adnych parametrów. Wtedy
-wy¶wietlane jest interaktywne menu z list± akcji. Je¿eli akcja zostanie
-podana jako argument wywo³ania programu, to ta akcja jest od razu
-wykonywana. Ponadto jest dostêpnych kilka parametrów wywo³ania, które
-modyfikuj± zachowanie \fBdselecta\fP albo wy¶wietlaj± dodatkowe informacje o
-programie.
+Normally \fBdselect\fP is invoked without parameters. An interactive menu is
+presented, offering the user a list of actions. If an action is given as
+argument, then that action is started immediately. Several command line
+parameters are still available to modify the running behaviour of \fBdselect\fP
+or show additional information about the program.
 .
 .SH OPCJE
-Wszystkie opcje mog± byæ podane zarówno w linii poleceñ, jak i w pliku
-konfiguracyjnym \fI/etc/dpkg/dselect.cfg\fP programu \fBdselect\fP lub w plikach w
-katalogu konfiguracyjnym \fI/etc/dpkg/dpkg.cfg.d/\fP. Ka¿da linia pliku
-konfiguracyjnego jest albo opcj± (dok³adnie tak± sam± jak opcja linii
-poleceñ, ale bez pocz±tkowych my¶lników), albo komentarzem (je¿eli zaczyna
-siê od \fB#\fP).
+All options can be specified both on the command line and in the \fBdselect\fP
+configuration file \fI/etc/dpkg/dselect.cfg\fP or the files on the
+configuration directory \fI/etc/dpkg/dselect.cfg.d/\fP. Each line in the
+configuration file is either an option (exactly the same as the command line
+option but without leading dashes) or a comment (if it starts with a \fB#\fP).
 .br
 .TP 
-\fB\-\-admindir\fP\fI <katalog>\fP
+\fB\-\-admindir\fP\fI katalog\fP
 Zmienia katalog zawieraj±cy pliki "\fIstatus\fP" ,"\fIavailable\fP" i inne
 potrzebne programowi \fBdpkg\fP. Domy¶lnym katalogiem jest \fI/var/lib/dpkg\fP i
 zazwyczaj nie powinno byæ potrzeby zmieniania go na inny.
 .TP 
-\fB\-\-debug\fP\fI <plik> \fP|\fI \fP\fB\-D\fP\fI<plik>\fP
-W³±cza opcjê debuggera. Informacje debuggera s± wysy³ane do
-\fI<pliku>\fP.
+\fB\-\-debug\fP\fI file \fP|\fI \fP\fB\-D\fP\fIfile\fP
+Turn on debugging. Debugging information is sent to \fIfile\fP.
 .TP 
 \fB\-\-expert\fP
 W³±cza tryb do¶wiadczonego u¿ytkownika i na przyk³ad nie wy¶wietla mêcz±cych
@@ -126,16 +120,17 @@ Wy¶wietla krótk± informacjê o pomocy i pomy¶lnie koñczy dzia³anie.
 \fB\-\-version\fP
 Wy¶wietla informacjê o wersji i pomy¶lnie koñczy dzia³anie.
 .
-.SH U¯YTKOWANIE
-\fBdselect\fP uruchomiony w trybie interakcyjnym wy¶wietla menu z nastêpuj±cymi
-akcjami:
+.SH AKCJE
+When \fBdselect\fP is started it can perform the following actions, either
+directly if it was specified on the command line or by prompting the user
+with a menu of available actions if running interactively:
 .SS "access (dostêp)"
 Wybiera metodê dostêpu u¿ywan± do znalezienia repozytorium pakietów.
 .sp
-Domy¶lnie istnieje kilka metod, takich jak \fIfloppy\fP (dyskietka),
-\fIharddisk\fP (dysk twardy) lub \fIcdrom\fP (CD\-ROM), ale inne pakiety mog±
-dostarczyæ dodatkowych metod, na przyk³ad metody \fIapt\fP dostarcza pakiet
-\fBapt\fP, a \fImulti_cd\fP \- pakiet \fBdpkg\-multicd\fP.
+By default, \fBdselect\fP provides several methods such as \fIcdrom\fP,
+\fImulti_cd\fP, \fInfs\fP, \fImulti_nfs\fP, \fIharddisk\fP, \fImounted\fP, \fImulti_mount\fP,
+\fIfloppy\fP or \fIftp\fP, but other packages may provide additional methods,
+eg. the \fIapt\fP access method provided by the \fBapt\fP package.
 .sp
 Zalecane jest u¿ywanie metody \fIapt\fP.
 .sp

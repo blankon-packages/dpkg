@@ -81,17 +81,29 @@ const struct fieldinfo fieldinfos[]= {
   { "Triggers-Pending", f_trigpend,        w_trigpend                                 },
   { "Triggers-Awaited", f_trigaw,          w_trigaw                                   },
   { "PackageSpec",      f_forbidden,       w_packagespec                              },
-  /* Note that aliases are added to the nicknames table in parsehelp.c. */
+  /* Note that aliases are added to the nicknames table. */
   {  NULL                                                                             }
 };
 
-struct field_state {
-  const char *fieldstart;
-  const char *valuestart;
-  struct varbuf value;
-  int fieldlen;
-  int valuelen;
-  int fieldencountered[array_count(fieldinfos)];
+static const struct nickname nicknames[] = {
+  /* Note: Capitalization of these strings is important. */
+  { .nick = "Recommended",      .canon = "Recommends" },
+  { .nick = "Optional",         .canon = "Suggests" },
+  { .nick = "Class",            .canon = "Priority" },
+  { .nick = "Package-Revision", .canon = "Revision" },
+  { .nick = "Package_Revision", .canon = "Revision" },
+  { .nick = NULL }
+};
+
+/**
+ * Package object being parsed.
+ *
+ * Structure used to hold the parsed data for the package being constructed,
+ * before it gets properly inserted into the package database.
+ */
+struct pkg_parse_object {
+  struct pkginfo *pkg;
+  struct pkgbin *pkgbin;
 };
 
 /**
@@ -99,8 +111,9 @@ struct field_state {
  */
 static void
 pkg_parse_field(struct parsedb_state *ps, struct field_state *fs,
-                struct pkginfo *pkg, struct pkgbin *pkgbin)
+                void *parse_obj)
 {
+  struct pkg_parse_object *pkg_obj = parse_obj;
   const struct nickname *nick;
   const struct fieldinfo *fip;
   int *ip;
@@ -119,25 +132,25 @@ pkg_parse_field(struct parsedb_state *ps, struct field_state *fs,
       break;
   if (fip->name) {
     if ((*ip)++)
-      parse_error(ps, pkg,
+      parse_error(ps,
                   _("duplicate value for `%s' field"), fip->name);
 
     varbuf_reset(&fs->value);
     varbuf_add_buf(&fs->value, fs->valuestart, fs->valuelen);
     varbuf_end_str(&fs->value);
 
-    fip->rcall(pkg, pkgbin, ps, fs->value.buf, fip);
+    fip->rcall(pkg_obj->pkg, pkg_obj->pkgbin, ps, fs->value.buf, fip);
   } else {
     struct arbitraryfield *arp, **larpp;
 
     if (fs->fieldlen < 2)
-      parse_error(ps, pkg,
+      parse_error(ps,
                   _("user-defined field name `%.*s' too short"),
                   fs->fieldlen, fs->fieldstart);
-    larpp = &pkgbin->arbs;
+    larpp = &pkg_obj->pkgbin->arbs;
     while ((arp = *larpp) != NULL) {
       if (!strncasecmp(arp->name, fs->fieldstart, fs->fieldlen))
-        parse_error(ps, pkg,
+        parse_error(ps,
                    _("duplicate value for user-defined field `%.*s'"),
                    fs->fieldlen, fs->fieldstart);
       larpp = &arp->next;
@@ -160,26 +173,31 @@ pkg_parse_verify(struct parsedb_state *ps,
   struct dependency *dep;
   struct deppossi *dop;
 
-  parse_must_have_field(ps, pkg, pkg->set->name, "package name");
+  parse_must_have_field(ps, pkg->set->name, "package name");
 
   /* XXX: We need to check for status != stat_halfinstalled as while
-   * unpacking a deselected package, it will not have yet all data in
+   * unpacking an unselected package, it will not have yet all data in
    * place. But we cannot check for > stat_halfinstalled as stat_configfiles
    * always should have those fields. */
   if ((ps->flags & pdb_recordavailable) ||
       (pkg->status != stat_notinstalled &&
        pkg->status != stat_halfinstalled)) {
-    parse_ensure_have_field(ps, pkg, &pkgbin->description, "description");
-    parse_ensure_have_field(ps, pkg, &pkgbin->maintainer, "maintainer");
-    parse_must_have_field(ps, pkg, pkgbin->version.version, "version");
+    parse_ensure_have_field(ps, &pkgbin->description, "description");
+    parse_ensure_have_field(ps, &pkgbin->maintainer, "maintainer");
+    parse_must_have_field(ps, pkgbin->version.version, "version");
+  }
 
-    /* Warn about missing architecture information (as long as the package
-     * is in such a state that it makes sense) */
+  /* XXX: Versions before dpkg 1.10.19 did not preserve the Architecture
+   * field in the status file. So there's still live systems with packages
+   * in stat_configfiles, ignore those too for now. */
+  if ((ps->flags & pdb_recordavailable) ||
+      pkg->status > stat_halfinstalled) {
+    /* Warn about missing architecture information if needed */
     if (pkgbin->arch->type == arch_none)
-      parse_warn(ps, pkg, _("missing %s"), "architecture");
+      parse_warn(ps, _("missing %s"), "architecture");
 
     if (pkgbin->arch->type == arch_all && pkgbin->multiarch == multiarch_same)
-      parse_error(ps, pkg, _("package is marked '%s' but is architecture all"),
+      parse_error(ps, _("package is marked '%s' but is architecture all"),
                   "Multi-Arch: same");
   }
 
@@ -197,7 +215,7 @@ pkg_parse_verify(struct parsedb_state *ps,
   if (!(ps->flags & pdb_recordavailable)) {
     if (pkg->configversion.version) {
       if (pkg->status == stat_installed || pkg->status == stat_notinstalled)
-        parse_error(ps, pkg,
+        parse_error(ps,
                     _("Configured-Version for package with inappropriate Status"));
     } else {
       if (pkg->status == stat_installed)
@@ -208,21 +226,21 @@ pkg_parse_verify(struct parsedb_state *ps,
   if (pkg->trigaw.head &&
       (pkg->status <= stat_configfiles ||
        pkg->status >= stat_triggerspending))
-    parse_error(ps, pkg,
+    parse_error(ps,
                 _("package has status %s but triggers are awaited"),
                 statusinfos[pkg->status].name);
   else if (pkg->status == stat_triggersawaited && !pkg->trigaw.head)
-    parse_error(ps, pkg,
+    parse_error(ps,
                 _("package has status triggers-awaited but no triggers awaited"));
 
   if (pkg->trigpend_head &&
       !(pkg->status == stat_triggerspending ||
         pkg->status == stat_triggersawaited))
-    parse_error(ps, pkg,
+    parse_error(ps,
                 _("package has status %s but triggers are pending"),
                 statusinfos[pkg->status].name);
   else if (pkg->status == stat_triggerspending && !pkg->trigpend_head)
-    parse_error(ps, pkg,
+    parse_error(ps,
                 _("package has status triggers-pending but no triggers "
                   "pending"));
 
@@ -232,7 +250,7 @@ pkg_parse_verify(struct parsedb_state *ps,
   if (!(ps->flags & pdb_recordavailable) &&
       pkg->status == stat_notinstalled &&
       pkgbin->conffiles) {
-    parse_warn(ps, pkg,
+    parse_warn(ps,
                _("Package which in state not-installed has conffiles, "
                  "forgetting them"));
     pkgbin->conffiles = NULL;
@@ -303,143 +321,234 @@ pkg_parse_copy(struct parsedb_state *ps,
 }
 
 /**
+ * Open a file for RFC-822 parsing.
+ */
+void
+parse_open(struct parsedb_state *ps, const char *filename,
+           enum parsedbflags flags)
+{
+  static int fd;
+  struct stat st;
+
+  ps->filename = filename;
+  ps->flags = flags;
+  ps->lno = 0;
+  ps->pkg = NULL;
+  ps->pkgbin = NULL;
+
+  fd = open(filename, O_RDONLY);
+  if (fd == -1)
+    ohshite(_("failed to open package info file `%.255s' for reading"),
+            filename);
+
+  push_cleanup(cu_closefd, ~ehflag_normaltidy, NULL, 0, 1, &fd);
+
+  if (fstat(fd, &st) == -1)
+    ohshite(_("can't stat package info file `%.255s'"), filename);
+
+  if (st.st_size > 0) {
+#ifdef USE_MMAP
+    ps->dataptr = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    if (ps->dataptr == MAP_FAILED)
+      ohshite(_("can't mmap package info file `%.255s'"), filename);
+#else
+    ps->dataptr = m_malloc(st.st_size);
+
+    if (fd_read(fd, ps->dataptr, st.st_size) < 0)
+      ohshite(_("reading package info file '%.255s'"), filename);
+#endif
+    ps->data = ps->dataptr;
+    ps->endptr = ps->dataptr + st.st_size;
+  } else {
+    ps->data = ps->dataptr = ps->endptr = NULL;
+  }
+
+  pop_cleanup(ehflag_normaltidy);
+
+  if (close(fd))
+    ohshite(_("failed to close after read: `%.255s'"), filename);
+}
+
+/**
+ * Parse an RFC-822 style stanza.
+ */
+bool
+parse_stanza(struct parsedb_state *ps, struct field_state *fs,
+             parse_field_func *parse_field, void *parse_obj)
+{
+  int c;
+
+  /* Skip adjacent new lines. */
+  while (!parse_EOF(ps)) {
+    c = parse_getc(ps);
+    if (c != '\n' && c != MSDOS_EOF_CHAR)
+      break;
+    ps->lno++;
+  }
+
+  /* Nothing relevant parsed, bail out. */
+  if (parse_EOF(ps))
+    return false;
+
+  /* Loop per field. */
+  for (;;) {
+    bool blank_line;
+
+    /* Scan field name. */
+    fs->fieldstart = ps->dataptr - 1;
+    while (!parse_EOF(ps) && !isspace(c) && c != ':' && c != MSDOS_EOF_CHAR)
+      c = parse_getc(ps);
+    fs->fieldlen = ps->dataptr - fs->fieldstart - 1;
+
+    /* Skip spaces before ‘:’. */
+    while (!parse_EOF(ps) && c != '\n' && isspace(c))
+      c = parse_getc(ps);
+
+    /* Validate ‘:’. */
+    if (parse_EOF(ps))
+      parse_error(ps,
+                  _("EOF after field name `%.*s'"), fs->fieldlen, fs->fieldstart);
+    if (c == '\n')
+      parse_error(ps,
+                  _("newline in field name `%.*s'"), fs->fieldlen, fs->fieldstart);
+    if (c == MSDOS_EOF_CHAR)
+      parse_error(ps,
+                  _("MSDOS EOF (^Z) in field name `%.*s'"),
+                  fs->fieldlen, fs->fieldstart);
+    if (c != ':')
+      parse_error(ps,
+                  _("field name `%.*s' must be followed by colon"),
+                  fs->fieldlen, fs->fieldstart);
+
+    /* Skip space after ‘:’ but before value and EOL. */
+    while (!parse_EOF(ps)) {
+      c = parse_getc(ps);
+      if (c == '\n' || !isspace(c))
+        break;
+    }
+    if (parse_EOF(ps))
+      parse_error(ps,
+                  _("EOF before value of field `%.*s' (missing final newline)"),
+                  fs->fieldlen, fs->fieldstart);
+    if (c == MSDOS_EOF_CHAR)
+      parse_error(ps,
+                  _("MSDOS EOF char in value of field `%.*s' (missing newline?)"),
+                  fs->fieldlen, fs->fieldstart);
+
+    blank_line = false;
+
+    /* Scan field value. */
+    fs->valuestart = ps->dataptr - 1;
+    for (;;) {
+      if (c == '\n' || c == MSDOS_EOF_CHAR) {
+        if (blank_line)
+          parse_error(ps,
+                      _("blank line in value of field '%.*s'"),
+                      fs->fieldlen, fs->fieldstart);
+        ps->lno++;
+
+        if (parse_EOF(ps))
+          break;
+        c = parse_getc(ps);
+
+        /* Found double EOL, or start of new field. */
+        if (parse_EOF(ps) || c == '\n' || !isspace(c))
+          break;
+
+        parse_ungetc(c, ps);
+        c = '\n';
+        blank_line = true;
+      } else if (blank_line && !isspace(c)) {
+        blank_line = false;
+      }
+
+      if (parse_EOF(ps))
+        parse_error(ps,
+                    _("EOF during value of field `%.*s' (missing final newline)"),
+                    fs->fieldlen, fs->fieldstart);
+
+      c = parse_getc(ps);
+    }
+    fs->valuelen = ps->dataptr - fs->valuestart - 1;
+
+    /* Trim ending space on value. */
+    while (fs->valuelen && isspace(*(fs->valuestart + fs->valuelen - 1)))
+      fs->valuelen--;
+
+    parse_field(ps, fs, parse_obj);
+
+    if (parse_EOF(ps) || c == '\n' || c == MSDOS_EOF_CHAR)
+      break;
+  } /* Loop per field. */
+
+  if (c == '\n')
+    ps->lno++;
+
+  return true;
+}
+
+/**
+ * Close an RFC-822 parser context.
+ */
+void
+parse_close(struct parsedb_state *ps)
+{
+  if (ps->data != NULL) {
+#ifdef USE_MMAP
+    munmap(ps->data, ps->endptr - ps->data);
+#else
+    free(ps->data);
+#endif
+  }
+}
+
+/**
  * Parse an RFC-822 style file.
  *
- * warnto, warncount and donep may be NULL.
+ * donep may be NULL.
  * If donep is not NULL only one package's information is expected.
  */
 int parsedb(const char *filename, enum parsedbflags flags,
             struct pkginfo **donep)
 {
-  static int fd;
-  struct pkgset new_set;
+  struct pkgset tmp_set;
   struct pkginfo *new_pkg, *db_pkg;
   struct pkgbin *new_pkgbin, *db_pkgbin;
+  struct pkg_parse_object pkg_obj;
+  int fieldencountered[array_count(fieldinfos)];
   int pdone;
-  char *data, *dataptr, *endptr;
-  struct stat st;
   struct parsedb_state ps;
   struct field_state fs;
 
-  ps.filename = filename;
-  ps.flags = flags;
-  ps.lno = 0;
-
   memset(&fs, 0, sizeof(fs));
+  fs.fieldencountered = fieldencountered;
 
-  new_pkg = &new_set.pkg;
+  parse_open(&ps, filename, flags);
+
+  new_pkg = &tmp_set.pkg;
   if (flags & pdb_recordavailable)
     new_pkgbin = &new_pkg->available;
   else
     new_pkgbin = &new_pkg->installed;
 
-  fd= open(filename, O_RDONLY);
-  if (fd == -1) ohshite(_("failed to open package info file `%.255s' for reading"),filename);
+  ps.pkg = new_pkg;
+  ps.pkgbin = new_pkgbin;
 
-  push_cleanup(cu_closefd, ~ehflag_normaltidy, NULL, 0, 1, &fd);
-
-  if (fstat(fd, &st) == -1)
-    ohshite(_("can't stat package info file `%.255s'"),filename);
-
-  if (st.st_size > 0) {
-#ifdef USE_MMAP
-    dataptr = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
-    if (dataptr == MAP_FAILED)
-      ohshite(_("can't mmap package info file `%.255s'"),filename);
-#else
-    dataptr = m_malloc(st.st_size);
-
-    if (fd_read(fd, dataptr, st.st_size) < 0)
-      ohshite(_("reading package info file '%.255s'"), filename);
-#endif
-    data= dataptr;
-    endptr = dataptr + st.st_size;
-  } else {
-    data= dataptr= endptr= NULL;
-  }
+  pkg_obj.pkg = new_pkg;
+  pkg_obj.pkgbin = new_pkgbin;
 
   pdone= 0;
-#define EOF_mmap(dataptr, endptr)	(dataptr >= endptr)
-#define getc_mmap(dataptr)		*dataptr++;
-#define ungetc_mmap(c, dataptr, data)	dataptr--;
 
   /* Loop per package. */
   for (;;) {
-    int c;
+    memset(fieldencountered, 0, sizeof(fieldencountered));
+    pkgset_blank(&tmp_set);
 
-    memset(fs.fieldencountered, 0, sizeof(fs.fieldencountered));
-    pkgset_blank(&new_set);
-
-    /* Skip adjacent new lines. */
-    while(!EOF_mmap(dataptr, endptr)) {
-      c= getc_mmap(dataptr); if (c!='\n' && c!=MSDOS_EOF_CHAR ) break;
-      ps.lno++;
-    }
-    if (EOF_mmap(dataptr, endptr)) break;
-
-    /* Loop per field. */
-    for (;;) {
-      fs.fieldstart = dataptr - 1;
-      while (!EOF_mmap(dataptr, endptr) && !isspace(c) && c!=':' && c!=MSDOS_EOF_CHAR)
-        c= getc_mmap(dataptr);
-      fs.fieldlen = dataptr - fs.fieldstart - 1;
-      while (!EOF_mmap(dataptr, endptr) && c != '\n' && isspace(c)) c= getc_mmap(dataptr);
-      if (EOF_mmap(dataptr, endptr))
-        parse_error(&ps, new_pkg,
-                    _("EOF after field name `%.*s'"), fs.fieldlen, fs.fieldstart);
-      if (c == '\n')
-        parse_error(&ps, new_pkg,
-                    _("newline in field name `%.*s'"), fs.fieldlen, fs.fieldstart);
-      if (c == MSDOS_EOF_CHAR)
-        parse_error(&ps, new_pkg,
-                    _("MSDOS EOF (^Z) in field name `%.*s'"),
-                    fs.fieldlen, fs.fieldstart);
-      if (c != ':')
-        parse_error(&ps, new_pkg,
-                    _("field name `%.*s' must be followed by colon"),
-                    fs.fieldlen, fs.fieldstart);
-      /* Skip space after ‘:’ but before value and EOL. */
-      while(!EOF_mmap(dataptr, endptr)) {
-        c= getc_mmap(dataptr);
-        if (c == '\n' || !isspace(c)) break;
-      }
-      if (EOF_mmap(dataptr, endptr))
-        parse_error(&ps, new_pkg,
-                    _("EOF before value of field `%.*s' (missing final newline)"),
-                    fs.fieldlen, fs.fieldstart);
-      if (c == MSDOS_EOF_CHAR)
-        parse_error(&ps, new_pkg,
-                    _("MSDOS EOF char in value of field `%.*s' (missing newline?)"),
-                    fs.fieldlen, fs.fieldstart);
-      fs.valuestart = dataptr - 1;
-      for (;;) {
-        if (c == '\n' || c == MSDOS_EOF_CHAR) {
-          ps.lno++;
-	  if (EOF_mmap(dataptr, endptr)) break;
-          c= getc_mmap(dataptr);
-          /* Found double EOL, or start of new field. */
-          if (EOF_mmap(dataptr, endptr) || c == '\n' || !isspace(c)) break;
-          ungetc_mmap(c,dataptr, data);
-          c= '\n';
-        } else if (EOF_mmap(dataptr, endptr)) {
-          parse_error(&ps, new_pkg,
-                      _("EOF during value of field `%.*s' (missing final newline)"),
-                      fs.fieldlen, fs.fieldstart);
-        }
-        c= getc_mmap(dataptr);
-      }
-      fs.valuelen = dataptr - fs.valuestart - 1;
-      /* Trim ending space on value. */
-      while (fs.valuelen && isspace(*(fs.valuestart + fs.valuelen - 1)))
-        fs.valuelen--;
-
-      pkg_parse_field(&ps, &fs, new_pkg, new_pkgbin);
-
-      if (EOF_mmap(dataptr, endptr) || c == '\n' || c == MSDOS_EOF_CHAR) break;
-    } /* Loop per field. */
+    if (!parse_stanza(&ps, &fs, pkg_parse_field, &pkg_obj))
+      break;
 
     if (pdone && donep)
-      parse_error(&ps, new_pkg,
+      parse_error(&ps,
                   _("several package info entries found, only one allowed"));
 
     pkg_parse_verify(&ps, new_pkg, new_pkgbin);
@@ -459,20 +568,13 @@ int parsedb(const char *filename, enum parsedbflags flags,
     if (donep)
       *donep = db_pkg;
     pdone++;
-    if (EOF_mmap(dataptr, endptr)) break;
-    if (c == '\n')
-      ps.lno++;
+    if (parse_EOF(&ps))
+      break;
   }
-  if (data != NULL) {
-#ifdef USE_MMAP
-    munmap(data, st.st_size);
-#else
-    free(data);
-#endif
-  }
+
+  parse_close(&ps);
+
   varbuf_destroy(&fs.value);
-  pop_cleanup(ehflag_normaltidy);
-  if (close(fd)) ohshite(_("failed to close after read: `%.255s'"),filename);
   if (donep && !pdone) ohshit(_("no package information in `%.255s'"),filename);
 
   return pdone;

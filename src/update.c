@@ -30,7 +30,7 @@
 #include <dpkg/i18n.h>
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "main.h"
 
@@ -49,7 +49,8 @@ updateavailable(const char *const *argv)
     break;
   case act_avreplace: case act_avmerge:
     if (!sourcefile || argv[1])
-      badusage(_("--%s needs exactly one Packages file argument"),cipaction->olong);
+      badusage(_("--%s needs exactly one Packages-file argument"),
+               cipaction->olong);
     break;
   default:
     internerr("unknown action '%d'", cipaction->arg_int);
@@ -90,7 +91,7 @@ updateavailable(const char *const *argv)
                      NULL);
 
   if (!f_noact) {
-    writedb(availfile, 1, 0);
+    writedb(availfile, wdb_dump_available);
     modstatdb_unlock();
   }
 

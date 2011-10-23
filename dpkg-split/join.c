@@ -33,7 +33,7 @@
 #include <dpkg/dpkg.h>
 #include <dpkg/dpkg-db.h>
 #include <dpkg/buffer.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "dpkg-split.h"
 
@@ -55,7 +55,7 @@ void reassemble(struct partinfo **partlist, const char *outputfile) {
     fd_in = open(pi->filename, O_RDONLY);
     if (fd_in < 0)
       ohshite(_("unable to (re)open input part file `%.250s'"), pi->filename);
-    fd_null_copy(fd_in, pi->headerlen, _("skipping split package header"));
+    fd_skip(fd_in, pi->headerlen, _("skipping split package header"));
     fd_fd_copy(fd_in, fd_out, pi->thispartlen, _("split package part"));
     close(fd_in);
 
@@ -132,8 +132,10 @@ do_join(const char *const *argv)
 
     p= nfmalloc(strlen(refi->package)+1+strlen(refi->version)+sizeof(DEBEXT));
     strcpy(p,refi->package);
-    strcat(p,"-");
+    strcat(p, "_");
     strcat(p,refi->version);
+    strcat(p, "_");
+    strcat(p, refi->arch ? refi->arch : "unknown");
     strcat(p,DEBEXT);
     opt_outputfile = p;
   }

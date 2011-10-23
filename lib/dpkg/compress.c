@@ -42,47 +42,51 @@
 #include <dpkg/buffer.h>
 #include <dpkg/command.h>
 #include <dpkg/compress.h>
+#include <dpkg/subproc.h>
 
-static void DPKG_ATTR_NORET DPKG_ATTR_SENTINEL
+static void DPKG_ATTR_SENTINEL
 fd_fd_filter(int fd_in, int fd_out, const char *desc, const char *file, ...)
 {
 	va_list args;
 	struct command cmd;
+	pid_t pid;
 
-	if (fd_in != 0) {
-		m_dup2(fd_in, 0);
-		close(fd_in);
+	pid = subproc_fork();
+	if (pid == 0) {
+		if (fd_in != 0) {
+			m_dup2(fd_in, 0);
+			close(fd_in);
+		}
+		if (fd_out != 1) {
+			m_dup2(fd_out, 1);
+			close(fd_out);
+		}
+
+		command_init(&cmd, file, desc);
+		command_add_arg(&cmd, file);
+		va_start(args, file);
+		command_add_argv(&cmd, args);
+		va_end(args);
+
+		command_exec(&cmd);
 	}
-	if (fd_out != 1) {
-		m_dup2(fd_out, 1);
-		close(fd_out);
-	}
-
-	command_init(&cmd, file, desc);
-	command_add_arg(&cmd, file);
-	va_start(args, file);
-	command_add_argv(&cmd, args);
-	va_end(args);
-
-	command_exec(&cmd);
+	subproc_wait_check(pid, desc, 0);
 }
 
 /*
  * No compressor (pass-through).
  */
 
-static void DPKG_ATTR_NORET
+static void
 decompress_none(int fd_in, int fd_out, const char *desc)
 {
 	fd_fd_copy(fd_in, fd_out, -1, _("%s: decompression"), desc);
-	exit(0);
 }
 
-static void DPKG_ATTR_NORET
+static void
 compress_none(int fd_in, int fd_out, int compress_level, const char *desc)
 {
 	fd_fd_copy(fd_in, fd_out, -1, _("%s: compression"), desc);
-	exit(0);
 }
 
 struct compressor compressor_none = {
@@ -98,10 +102,10 @@ struct compressor compressor_none = {
  */
 
 #ifdef WITH_ZLIB
-static void DPKG_ATTR_NORET
+static void
 decompress_gzip(int fd_in, int fd_out, const char *desc)
 {
-	char buffer[4096];
+	char buffer[DPKG_BUFFER_SIZE];
 	gzFile gzfile = gzdopen(fd_in, "r");
 
 	if (gzfile == NULL)
@@ -112,10 +116,10 @@ decompress_gzip(int fd_in, int fd_out, const char *desc)
 
 		actualread = gzread(gzfile, buffer, sizeof(buffer));
 		if (actualread < 0) {
-			int err = 0;
-			const char *errmsg = gzerror(gzfile, &err);
+			int z_errnum = 0;
+			const char *errmsg = gzerror(gzfile, &z_errnum);
 
-			if (err == Z_ERRNO)
+			if (z_errnum == Z_ERRNO)
 				errmsg = strerror(errno);
 			ohshit(_("%s: internal gzip read error: '%s'"), desc,
 			       errmsg);
@@ -130,16 +134,14 @@ decompress_gzip(int fd_in, int fd_out, const char *desc)
 
 	if (close(fd_out))
 		ohshite(_("%s: internal gzip write error"), desc);
-
-	exit(0);
 }
 
-static void DPKG_ATTR_NORET
+static void
 compress_gzip(int fd_in, int fd_out, int compress_level, const char *desc)
 {
-	char buffer[4096];
+	char buffer[DPKG_BUFFER_SIZE];
 	char combuf[6];
-	int err;
+	int z_errnum;
 	gzFile gzfile;
 
 	snprintf(combuf, sizeof(combuf), "w%d", compress_level);
@@ -158,36 +160,34 @@ compress_gzip(int fd_in, int fd_out, int compress_level, const char *desc)
 
 		actualwrite = gzwrite(gzfile, buffer, actualread);
 		if (actualwrite != actualread) {
-			const char *errmsg = gzerror(gzfile, &err);
+			const char *errmsg = gzerror(gzfile, &z_errnum);
 
-			if (err == Z_ERRNO)
+			if (z_errnum == Z_ERRNO)
 				errmsg = strerror(errno);
 			ohshit(_("%s: internal gzip write error: '%s'"), desc,
 			       errmsg);
 		}
 	}
 
-	err = gzclose(gzfile);
-	if (err) {
+	z_errnum = gzclose(gzfile);
+	if (z_errnum) {
 		const char *errmsg;
 
-		if (err == Z_ERRNO)
+		if (z_errnum == Z_ERRNO)
 			errmsg = strerror(errno);
 		else
-			errmsg = zError(err);
+			errmsg = zError(z_errnum);
 		ohshit(_("%s: internal gzip write error: %s"), desc, errmsg);
 	}
-
-	exit(0);
 }
 #else
-static void DPKG_ATTR_NORET
+static void
 decompress_gzip(int fd_in, int fd_out, const char *desc)
 {
 	fd_fd_filter(fd_in, fd_out, desc, GZIP, "-dc", NULL);
 }
 
-static void DPKG_ATTR_NORET
+static void
 compress_gzip(int fd_in, int fd_out, int compress_level, const char *desc)
 {
 	char combuf[6];
@@ -210,10 +210,10 @@ struct compressor compressor_gzip = {
  */
 
 #ifdef WITH_BZ2
-static void DPKG_ATTR_NORET
+static void
 decompress_bzip2(int fd_in, int fd_out, const char *desc)
 {
-	char buffer[4096];
+	char buffer[DPKG_BUFFER_SIZE];
 	BZFILE *bzfile = BZ2_bzdopen(fd_in, "r");
 
 	if (bzfile == NULL)
@@ -224,10 +224,10 @@ decompress_bzip2(int fd_in, int fd_out, const char *desc)
 
 		actualread = BZ2_bzread(bzfile, buffer, sizeof(buffer));
 		if (actualread < 0) {
-			int err = 0;
-			const char *errmsg = BZ2_bzerror(bzfile, &err);
+			int bz_errnum = 0;
+			const char *errmsg = BZ2_bzerror(bzfile, &bz_errnum);
 
-			if (err == BZ_IO_ERROR)
+			if (bz_errnum == BZ_IO_ERROR)
 				errmsg = strerror(errno);
 			ohshit(_("%s: internal bzip2 read error: '%s'"), desc,
 			       errmsg);
@@ -242,16 +242,14 @@ decompress_bzip2(int fd_in, int fd_out, const char *desc)
 
 	if (close(fd_out))
 		ohshite(_("%s: internal bzip2 write error"), desc);
-
-	exit(0);
 }
 
-static void DPKG_ATTR_NORET
+static void
 compress_bzip2(int fd_in, int fd_out, int compress_level, const char *desc)
 {
-	char buffer[4096];
+	char buffer[DPKG_BUFFER_SIZE];
 	char combuf[6];
-	int err;
+	int bz_errnum;
 	BZFILE *bzfile;
 
 	snprintf(combuf, sizeof(combuf), "w%d", compress_level);
@@ -270,20 +268,20 @@ compress_bzip2(int fd_in, int fd_out, int compress_level, const char *desc)
 
 		actualwrite = BZ2_bzwrite(bzfile, buffer, actualread);
 		if (actualwrite != actualread) {
-			const char *errmsg = BZ2_bzerror(bzfile, &err);
+			const char *errmsg = BZ2_bzerror(bzfile, &bz_errnum);
 
-			if (err == BZ_IO_ERROR)
+			if (bz_errnum == BZ_IO_ERROR)
 				errmsg = strerror(errno);
 			ohshit(_("%s: internal bzip2 write error: '%s'"), desc,
 			       errmsg);
 		}
 	}
 
-	BZ2_bzWriteClose(&err, bzfile, 0, NULL, NULL);
-	if (err != BZ_OK) {
+	BZ2_bzWriteClose(&bz_errnum, bzfile, 0, NULL, NULL);
+	if (bz_errnum != BZ_OK) {
 		const char *errmsg = _("unexpected bzip2 error");
 
-		if (err == BZ_IO_ERROR)
+		if (bz_errnum == BZ_IO_ERROR)
 			errmsg = strerror(errno);
 		ohshit(_("%s: internal bzip2 write error: '%s'"), desc,
 		       errmsg);
@@ -294,17 +292,15 @@ compress_bzip2(int fd_in, int fd_out, int compress_level, const char *desc)
 	 * be safe™. */
 	if (close(fd_out))
 		ohshite(_("%s: internal bzip2 write error"), desc);
-
-	exit(0);
 }
 #else
-static void DPKG_ATTR_NORET
+static void
 decompress_bzip2(int fd_in, int fd_out, const char *desc)
 {
 	fd_fd_filter(fd_in, fd_out, desc, BZIP2, "-dc", NULL);
 }
 
-static void DPKG_ATTR_NORET
+static void
 compress_bzip2(int fd_in, int fd_out, int compress_level, const char *desc)
 {
 	char combuf[6];
@@ -326,13 +322,13 @@ struct compressor compressor_bzip2 = {
  * Xz compressor.
  */
 
-static void DPKG_ATTR_NORET
+static void
 decompress_xz(int fd_in, int fd_out, const char *desc)
 {
 	fd_fd_filter(fd_in, fd_out, desc, XZ, "-dc", NULL);
 }
 
-static void DPKG_ATTR_NORET
+static void
 compress_xz(int fd_in, int fd_out, int compress_level, const char *desc)
 {
 	char combuf[6];
@@ -353,13 +349,13 @@ struct compressor compressor_xz = {
  * Lzma compressor.
  */
 
-static void DPKG_ATTR_NORET
+static void
 decompress_lzma(int fd_in, int fd_out, const char *desc)
 {
 	fd_fd_filter(fd_in, fd_out, desc, XZ, "-dc", "--format=lzma", NULL);
 }
 
-static void DPKG_ATTR_NORET
+static void
 compress_lzma(int fd_in, int fd_out, int compress_level, const char *desc)
 {
 	char combuf[6];
@@ -427,8 +423,6 @@ decompress_filter(struct compressor *compressor, int fd_in, int fd_out,
 	va_end(args);
 
 	compressor->decompress(fd_in, fd_out, desc.buf);
-
-	exit(0);
 }
 
 void
@@ -451,6 +445,4 @@ compress_filter(struct compressor *compressor, int fd_in, int fd_out,
 		compressor = &compressor_none;
 
 	compressor->compress(fd_in, fd_out, compress_level, desc.buf);
-
-	exit(0);
 }

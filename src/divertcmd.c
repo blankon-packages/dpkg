@@ -44,14 +44,14 @@
 #include <dpkg/file.h>
 #include <dpkg/glob.h>
 #include <dpkg/buffer.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "filesdb.h"
 #include "infodb.h"
 
 
-const char thisname[] = "dpkg-divert";
-const char printforhelp[] = N_("Use --help for help about querying packages.");
+static const char printforhelp[] = N_(
+"Use --help for help about diverting files.");
 
 static const char *admindir;
 
@@ -67,7 +67,8 @@ static int opt_rename = 0;
 static void
 printversion(const struct cmdinfo *cip, const char *value)
 {
-	printf(_("Debian %s version %s.\n"), thisname, DPKG_VERSION_ARCH);
+	printf(_("Debian %s version %s.\n"), dpkg_get_progname(),
+	       DPKG_VERSION_ARCH);
 
 	printf(_(
 "Copyright (C) 1995 Ian Jackson.\n"
@@ -88,7 +89,7 @@ usage(const struct cmdinfo *cip, const char *value)
 {
 	printf(_(
 "Usage: %s [<option> ...] <command>\n"
-"\n"), thisname);
+"\n"), dpkg_get_progname());
 
 	printf(_(
 "Commands:\n"
@@ -730,13 +731,14 @@ main(int argc, const char * const *argv)
 	int ret;
 	enum modstatdb_rw msdb_status;
 
-        if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
-           setlocale(LC_ALL, "");
+	if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
+		setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 
+	dpkg_set_progname("dpkg-divert");
 	standard_startup();
-	myopt(&argv, cmdinfos);
+	myopt(&argv, cmdinfos, printforhelp);
 
 	admindir = dpkg_db_set_dir(admindir);
 

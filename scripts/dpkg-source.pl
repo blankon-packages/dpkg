@@ -11,7 +11,7 @@
 # Copyright © 2005 Brendan O'Dea <bod@debian.org>
 # Copyright © 2006-2008 Frank Lichtenheld <djpig@debian.org>
 # Copyright © 2006-2009 Guillem Jover <guillem@debian.org>
-# Copyright © 2008-2010 Raphaël Hertzog <hertzog@debian.org>
+# Copyright © 2008-2011 Raphaël Hertzog <hertzog@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,6 +45,8 @@ use Dpkg::Changelog::Parse;
 use Dpkg::Source::Package;
 use Dpkg::Vendor qw(run_vendor_hook);
 
+use Cwd;
+use File::Basename;
 use File::Spec;
 
 textdomain("dpkg-dev");
@@ -85,6 +87,8 @@ while (@ARGV && $ARGV[0] =~ m/^-/) {
         setopmode('-x');
     } elsif (m/^--(before|after)-build$/) {
         setopmode($_);
+    } elsif (m/^--commit$/) {
+        setopmode($_);
     } elsif (m/^--print-format$/) {
 	setopmode('--print-format');
 	report_options(info_fh => \*STDERR); # Avoid clutter on STDOUT
@@ -95,14 +99,22 @@ while (@ARGV && $ARGV[0] =~ m/^-/) {
 
 my $dir;
 if (defined($options{'opmode'}) &&
-    $options{'opmode'} =~ /^(-b|--print-format|--before-build|--after-build)$/) {
+    $options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build|--commit)$/) {
     if (not scalar(@ARGV)) {
-	usageerr(_g("%s needs a directory"), $options{'opmode'});
+	usageerr(_g("%s needs a directory"), $options{'opmode'})
+	    unless $1 eq "--commit";
+	$dir = ".";
+    } else {
+	$dir = File::Spec->catdir(shift(@ARGV));
     }
-    $dir = File::Spec->catdir(shift(@ARGV));
     stat($dir) || syserr(_g("cannot stat directory %s"), $dir);
     if (not -d $dir) {
 	error(_g("directory argument %s is not a directory"), $dir);
+    }
+    if ($dir eq ".") {
+	# . is never correct, adjust automatically
+	$dir = basename(cwd());
+	chdir("..") || syserr(_g("unable to chdir to `%s'"), "..");
     }
     # --format options are not allowed, they would take precedence
     # over real command line options, debian/source/format should be used
@@ -158,6 +170,9 @@ while (@options) {
         $options{'diff_ignore_regexp'} = $1 ? $1 : $Dpkg::Source::Package::diff_ignore_default_regexp;
     } elsif (m/^--extend-diff-ignore=(.+)$/) {
 	$Dpkg::Source::Package::diff_ignore_default_regexp .= "|$1";
+	if ($options{'diff_ignore_regexp'}) {
+	    $options{'diff_ignore_regexp'} .= "|$1";
+	}
     } elsif (m/^-(?:I|-tar-ignore=)(.+)$/) {
         push @{$options{'tar_ignore'}}, $1;
     } elsif (m/^-(?:I|-tar-ignore)$/) {
@@ -196,10 +211,10 @@ while (@options) {
 }
 
 unless (defined($options{'opmode'})) {
-    usageerr(_g("need a command (-x, -b, --before-build, --after-build, --print-format)"));
+    usageerr(_g("need a command (-x, -b, --before-build, --after-build, --print-format, --commit)"));
 }
 
-if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
+if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build|--commit)$/) {
 
     $options{'ARGV'} = \@ARGV;
 
@@ -220,6 +235,8 @@ if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
 
     # Scan control info of source package
     my $src_fields = $control->get_source();
+    error(_g("%s doesn't contain any information about the source package"),
+          $controlfile) unless defined $src_fields;
     my $src_sect = $src_fields->{'Section'} || "unknown";
     my $src_prio = $src_fields->{'Priority'} || "unknown";
     foreach $_ (keys %{$src_fields}) {
@@ -251,9 +268,7 @@ if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
 	my $prio = $pkg->{'Priority'} || $src_prio;
 	my $type = $pkg->{'Package-Type'} ||
 	        $pkg->get_custom_field('Package-Type') || 'deb';
-	my $arch = $pkg->{'Architecture'};
-	$arch =~ s/\s+/,/g;
-	push @pkglist, sprintf("%s %s %s %s %s", $p, $type, $sect, $prio, $arch);
+	push @pkglist, sprintf("%s %s %s %s", $p, $type, $sect, $prio);
 	push(@binarypackages,$p);
 	foreach $_ (keys %{$pkg}) {
 	    my $v = $pkg->{$_};
@@ -282,16 +297,20 @@ if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
             }
 	}
     }
+    unless (scalar(@pkglist)) {
+	error(_g("%s doesn't list any binary package"), $controlfile);
+    }
     if (grep($_ eq 'any', @sourcearch)) {
-        # If we encounter one 'any' then the other arches become insignificant.
-        @sourcearch = ('any');
+        # If we encounter one 'any' then the other arches become insignificant
+        # except for 'all' that must also be kept
+        if (grep($_ eq 'all', @sourcearch)) {
+            @sourcearch = ('any', 'all');
+        } else {
+            @sourcearch = ('any');
+        }
     }
     $fields->{'Architecture'} = join(' ', @sourcearch);
-    $fields->{'Package-List'} = sprintf("\n%s source %s %s %s", $sourcepackage,
-                                        $src_sect, $src_prio,
-                                        join(',', @sourcearch));
-    $fields->{'Package-List'} .= "\n" . join("\n", sort @pkglist);
-    delete $fields->{'Package-List'};
+    $fields->{'Package-List'} = "\n" . join("\n", sort @pkglist);
 
     # Scan fields of dpkg-parsechangelog
     foreach $_ (keys %{$changelog}) {
@@ -348,6 +367,9 @@ if ($options{'opmode'} =~ /^(-b|--print-format|--(before|after)-build)$/) {
 	exit(0);
     } elsif ($options{'opmode'} eq "--after-build") {
 	$srcpkg->after_build($dir);
+	exit(0);
+    } elsif ($options{'opmode'} eq "--commit") {
+	$srcpkg->commit($dir);
 	exit(0);
     }
 
@@ -452,7 +474,9 @@ Commands:
                            extract source package.
   -b <dir>                 build source package.
   --print-format <dir>     print the source format that would be
-                           used to build the source package.")
+                           used to build the source package.
+  --commit [<dir> [<patch-name>]]
+                           store upstream changes in a new patch.")
     . "\n\n" . _g(
 "Build options:
   -c<controlfile>          get control info from this file.

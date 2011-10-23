@@ -91,7 +91,7 @@ case "$1" in
 	delete_multiarch_transitional_symlink "$@"
 	;;
 
-   abort-deconfigure|abort-remove)
+    abort-deconfigure|abort-remove)
 	;;
 
     *)

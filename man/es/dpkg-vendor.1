@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-vendor 1 "10 de Abril de 2009" "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-vendor 1 2011\-07\-04 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-vendor \- Consulta información relativa al proveedor de la publicación
 .
@@ -18,13 +18,13 @@ contiene información acerca del proveedor actual.
 .SH ÓRDENES
 .TP 
 \fB\-\-is\fP\fI proveedor\fP
-Finaliza con 0 si \fIproveedor\fP es el proveedor actual. De no ser así,
-finaliza con un valor distinto de 0.
+Exits with \fB0\fP if the current vendor is \fIvendor\fP. Otherwise exits with
+non\-zero.
 .TP 
 \fB\-\-derives\-from\fP\fI proveedor\fP
-Finaliza con 0 si el proveedor de la distribución actual deriva de
-\fIproveedor\fP. De no ser así, finaliza con un valor distinto de 0. Use el
-campo «Parent» para explorar los proveedores anteriores al actual.
+Exits with \fB0\fP if the current vendor distribution is a derivative of
+\fIvendor\fP, otherwise exits with non\-zero. It uses the "Parent" field to
+browse all ancestors of the current vendor.
 .TP 
 \fB\-\-query\fP\fI campo\fP
 Muestra por la salida estándar el valor específico de proveedor \fIcampo\fP en
@@ -39,8 +39,8 @@ Muestra la versión y termina.
 .SH OPCIONES
 .TP 
 \fB\-\-vendor\fP\fI proveedor\fP
-Supone que el proveedor actual es \fIproveedor\fP, en lugar de definirlo con la
-variable de entorno «DEB_VENDOR» o \fB/etc/dpkg/origins/default\fP.
+Assumes the current vendor is \fIvendor\fP instead of discovering it with the
+\fBDEB_VENDOR\fP environment variable or \fB/etc/dpkg/origins/default\fP.
 .
 .SH ENTORNO
 .TP 

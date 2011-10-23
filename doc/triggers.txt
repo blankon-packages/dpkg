@@ -46,7 +46,8 @@ will not be processed immediately when it is activated; processing is
 deferred until it is convenient (as described below).
 
 At a trigger activation, the interested packages(s) are added to the
-triggering package's list of triggers-awaited packages; the triggering
+triggering package's list of triggers-awaited packages (unless the
+trigger has been configured to not require it); the triggering
 package is said to await the trigger processing.
 
 A package which has pending triggers, or which awaits triggers, is not
@@ -125,7 +126,7 @@ reasonable states by default.
 
 If the `postinst triggered' run fails the package goes to
 `config-failed', so that the trigger processing will not be attempted
-again until explictly requested.
+again until explicitly requested.
 
 
              |
@@ -174,7 +175,7 @@ that T may automatically go from `triggers-awaited' to `installed'.
 Or to put it another way, triggered actions are considered irrelevant
 if the interested package I is not configured.  When I's postinst is
 called with `configure', it must do whatever actions are necessary to
-deal with any trigger activations which might have occured while it
+deal with any trigger activations which might have occurred while it
 was not configured, just as if the package was being configured for
 the first time.
 
@@ -263,7 +264,7 @@ dpkg during package unpack or removal.  The pathname must be absolute.
 File triggers should not generally be used without mutual consent.
 The use of a file trigger, and the name of the trigger used, should be
 stated in policy, so that a package which creates a relevant file in a
-maintainer script can activate the trigger explictly.
+maintainer script can activate the trigger explicitly.
 
 File triggers must definitely not be used as an escalation tool in
 disagreements between different packages as to the desired contents of
@@ -311,7 +312,7 @@ by dpkg-trigger).  dpkg-deb will be changed to warn about unrecognised
 trigger names syntaxes and unrecognised trigger control directives.
 
 
-New command-line interfaces to dpkg tools
+New command line interfaces to dpkg tools
 -----------------------------------------
 
 See dpkg(1).

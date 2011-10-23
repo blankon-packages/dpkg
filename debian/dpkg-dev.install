@@ -17,7 +17,9 @@ usr/bin/dpkg-scansources
 usr/bin/dpkg-shlibdeps
 usr/bin/dpkg-source
 usr/bin/dpkg-vendor
+usr/share/dpkg/*.mk
 usr/share/man/man5/deb-control.5
+usr/share/man/man5/deb-src-control.5
 usr/share/man/man5/deb-version.5
 usr/share/man/man5/deb-substvars.5
 usr/share/man/man5/deb-override.5

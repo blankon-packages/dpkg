@@ -4,7 +4,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-symbols 5 2007\-07\-16 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH deb\-symbols 5 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 deb\-symbols \- Debians erweiterte Informationsdatei von Laufzeitbibliotheken
 .
@@ -15,16 +15,16 @@ symbols
 Das Format eines Eintrags für eine erweiterte Abhängigkeitsinformation einer
 Laufzeitbibliothek (»shared library«) lautet:
 .PP
-<Bibliotheks\-Soname> <Hauptabhängigkeitsvorlage>
+\fIBibliotheks\-Soname Hauptabhängigkeitsvorlage\fP
 .br
-[ | <alternative Abhängigkeitsvorlage> ]
-.br
-[ ... ]
-.br
-[ * <Feldname>: <Feldwert> ]
+[ | \fIalternative\-Abhängigkeitsvorlage\fP ]
 .br
 [ ... ]
- <Symbol> <Minimalversion>[ <Kennung der Abhängigkeitsvorlage> ]
+.br
+[ * \fIFeldname\fP: \fIFeldwert\fP ]
+.br
+[ ... ]
+ \fISymbol\fP \fIMinimalversion\fP[ \fIKennung\-der\-Abhängigkeitsvorlage\fP ]
 .P
 Der \fIBibliotheks\-Soname\fP ist genau der Wert des SONAME\-Feldes, wie er von
 \fBobjdump\fP(1) exportiert wird. Eine \fIAbhängigkeitsvorlage\fP ist eine
@@ -35,16 +35,17 @@ erachtet wird.
 .P
 Jedem exportierten \fISymbol\fP (aufgeführt als \fIName\fP@\fIVersion\fP, mit
 \fIVersion\fP als »Base«, falls die Bibliothek nicht versioniert ist) wird eine
-Minimalversion seiner Abhängigkeitsvorlage zugeordnet (die
-Hauptabhängigkeitsvorlage wird verwandt, falls die \fIKennung der
-Abhängigkeitsvorlage\fP nicht vorhanden ist). Die erste alternative
-Abhängigkeitsvorlage wird mit 1 nummeriert, die zweite mit 2 usw.
+\fIMinimalversion\fP seiner Abhängigkeitsvorlage zugeordnet (die
+Hauptabhängigkeitsvorlage wird verwandt, falls die
+\fIKennung\-der\-Abhängigkeitsvorlage\fP nicht vorhanden ist). Die erste
+alternative Abhängigkeitsvorlage wird mit 1 nummeriert, die zweite mit 2
+usw.
 .P
 Jeder Eintrag für eine Bibliothek kann auch einige Felder mit
 Metainformationen enthalten. Diese Felder werden in Zeilen gespeichert, die
 mit einem Stern beginnen. Derzeit ist \fIBuild\-Depends\-Package\fP das einzige
 gültige Feld, es gibt den Namen des »\-dev«\-Pakets an, das der Bibliothek
-zugeordnet ist, und wird von dpkg\-shlibdeps verwandt, um sicherzustellen,
+zugeordnet ist, und wird von \fBdpkg\-shlibdeps\fP verwandt, um sicherzustellen,
 dass die erstellte Abhängigkeit mindestens genauso strikt ist wie die
 zugehörige Bau\-Abhängigkeit.
 .SH BEISPIELE

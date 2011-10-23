@@ -41,7 +41,7 @@
 #include <dpkg/pkg-list.h>
 #include <dpkg/pkg-queue.h>
 #include <dpkg/pkg-spec.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "filesdb.h"
 #include "infodb.h"

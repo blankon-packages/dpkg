@@ -47,7 +47,7 @@
 #include <dpkg/command.h>
 #include <dpkg/compress.h>
 #include <dpkg/ar.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "dpkg-deb.h"
 
@@ -66,7 +66,7 @@ static void movecontrolfiles(const char *thing) {
 static void DPKG_ATTR_NORET
 read_fail(int rc, const char *filename, const char *what)
 {
-  if (rc == 0)
+  if (rc >= 0)
     ohshit(_("unexpected end of file in %s in %.255s"),what,filename);
   else
     ohshite(_("error reading %s from file %.255s"), what, filename);
@@ -112,6 +112,7 @@ extracthalf(const char *debar, const char *dir, const char *taroption,
   int dummy;
   pid_t c1=0,c2,c3;
   int p1[2], p2[2];
+  int p2_out;
   int arfd;
   struct stat stab;
   char nlc;
@@ -174,8 +175,8 @@ extracthalf(const char *debar, const char *dir, const char *taroption,
       } else if (arh.ar_name[0] == '_') {
         /* Members with ‘_’ are noncritical, and if we don't understand
          * them we skip them. */
-        fd_null_copy(arfd, memberlen + (memberlen & 1),
-                     _("skipped archive member data from %s"), debar);
+        fd_skip(arfd, memberlen + (memberlen & 1),
+                _("skipped archive member data from %s"), debar);
       } else {
 	if (strncmp(arh.ar_name, ADMINMEMBER, sizeof(arh.ar_name)) == 0)
 	  adminmember = 1;
@@ -200,8 +201,8 @@ extracthalf(const char *debar, const char *dir, const char *taroption,
           ctrllennum= memberlen;
         }
         if (!adminmember != !admininfo) {
-          fd_null_copy(arfd, memberlen + (memberlen & 1),
-                       _("skipped archive member data from %s"), debar);
+          fd_skip(arfd, memberlen + (memberlen & 1),
+                  _("skipped archive member data from %s"), debar);
         } else {
           /* Yes! - found it. */
           break;
@@ -237,8 +238,8 @@ extracthalf(const char *debar, const char *dir, const char *taroption,
       memberlen = ctrllennum;
     } else {
       memberlen = stab.st_size - ctrllennum - strlen(ctrllenbuf) - l;
-      fd_null_copy(arfd, ctrllennum,
-                   _("skipped archive control member data from %s"), debar);
+      fd_skip(arfd, ctrllennum,
+              _("skipped archive control member data from %s"), debar);
     }
 
     if (admininfo >= 2) {
@@ -269,31 +270,23 @@ extracthalf(const char *debar, const char *dir, const char *taroption,
   }
   close(p1[1]);
 
-  if (taroption) m_pipe(p2);
+  if (taroption) {
+    m_pipe(p2);
+    p2_out = p2[1];
+  } else {
+    p2_out = 1;
+  }
 
   c2 = subproc_fork();
   if (!c2) {
-    m_dup2(p1[0], 0);
-    if (admininfo) close(p1[0]);
-    if (taroption) { m_dup2(p2[1],1); close(p2[0]); close(p2[1]); }
-    decompress_filter(decompressor, 0, 1, _("data"));
+    if (taroption)
+      close(p2[0]);
+    decompress_filter(decompressor, p1[0], p2_out, _("data"));
+    exit(0);
   }
   close(p1[0]);
   close(arfd);
   if (taroption) close(p2[1]);
-
-  if (taroption && dir) {
-    if (chdir(dir)) {
-      if (errno == ENOENT) {
-        if (mkdir(dir, 0777))
-          ohshite(_("failed to create directory"));
-        if (chdir(dir))
-          ohshite(_("failed to chdir to directory after creating it"));
-      } else {
-        ohshite(_("failed to chdir to directory"));
-      }
-    }
-  }
 
   if (taroption) {
     c3 = subproc_fork();
@@ -308,7 +301,19 @@ extracthalf(const char *debar, const char *dir, const char *taroption,
 
       unsetenv("TAR_OPTIONS");
 
-      execlp(TAR, "tar", buffer, "-", NULL);
+      if (dir) {
+        if (chdir(dir)) {
+          if (errno != ENOENT)
+            ohshite(_("failed to chdir to directory"));
+
+          if (mkdir(dir, 0777))
+            ohshite(_("failed to create directory"));
+          if (chdir(dir))
+            ohshite(_("failed to chdir to directory after creating it"));
+        }
+      }
+
+      execlp(TAR, "tar", buffer, "-", "--warning=no-timestamp", NULL);
       ohshite(_("unable to execute %s (%s)"), "tar", TAR);
     }
     close(p2[0]);
@@ -372,11 +377,48 @@ do_control(const char *const *argv)
 int
 do_extract(const char *const *argv)
 {
-  return controlextractvextract(0, "xp", argv);
+  if (opt_verbose)
+    return controlextractvextract(0, "xpv", argv);
+  else
+    return controlextractvextract(0, "xp", argv);
 }
 
 int
 do_vextract(const char *const *argv)
 {
-  return controlextractvextract(0, "xpv", argv);
+  /* XXX: Backward compatibility. */
+  opt_verbose = 1;
+  return do_extract(argv);
+}
+
+int
+do_raw_extract(const char *const *argv)
+{
+  const char *debar, *dir;
+  char *control_dir;
+
+  debar = *argv++;
+  if (debar == NULL)
+    badusage(_("--%s needs a .deb filename argument"), cipaction->olong);
+
+  dir = *argv++;
+  if (dir == NULL)
+    badusage(_("--%s needs a target directory.\n"
+               "Perhaps you should be using dpkg --install ?"),
+             cipaction->olong);
+  else if (*argv)
+    badusage(_("--%s takes at most two arguments (.deb and directory)"),
+             cipaction->olong);
+
+  m_asprintf(&control_dir, "%s/%s", dir, EXTRACTCONTROLDIR);
+
+  if (opt_verbose)
+    extracthalf(debar, dir, "xpv", 0);
+  else
+    extracthalf(debar, dir, "xp", 0);
+  extracthalf(debar, control_dir, "x", 1);
+
+  free(control_dir);
+
+  return 0;
 }

@@ -10,13 +10,13 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH update\-alternatives 8 2011\-03\-04 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH update\-alternatives 8 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 update\-alternatives \- Verwaltung symbolischer Links zur Bestimmung von
 Standardwerten für Befehle
 .
 .SH ÜBERSICHT
-\fBupdate\-alternatives\fP [\fIOptionen\fP] \fIBefehl\fP
+\fBupdate\-alternatives\fP [\fIOption\fP...] \fIBefehl\fP
 .
 .SH BESCHREIBUNG
 \fBupdate\-alternatives\fP erzeugt, entfernt, verwaltet und zeigt die
@@ -86,18 +86,18 @@ Jede Alternative hat eine ihr zugeordnete \fIPriorität\fP. Befindet sich eine
 Linkgruppe im automatischen Modus, zeigen die Mitglieder einer Gruppe auf
 die Alternative mit der höchsten Priorität.
 .PP
-Wird die \fI\-\-config\fP\-Option verwendet, dann zeigt \fBupdate\-alternatives\fP
+Wird die \fB\-\-config\fP\-Option verwendet, dann zeigt \fBupdate\-alternatives\fP
 alle Auswahlmöglichkeiten für die Link\-Gruppe an, für die der gegebene
 \fIName\fP der Master\-Alternative\-Name ist. Die aktuelle Auswahl ist mit »*«
 markiert. Sie werden dann aufgefordert, Ihre Auswahl bezüglich der
 Linkgruppe anzugeben. Abhängig von der getroffenen Auswahl könnte sich die
 Link\-Gruppe nicht mehr im \fIautomatischen\fP Modus befinden. Sie müssen dann
-die Option \fI\-\-auto\fP verwenden, um wieder in den automatischen Zustand
-zurückzukehren (oder Sie können \fI\-\-config\fP erneut ausführen und den als
+die Option \fB\-\-auto\fP verwenden, um wieder in den automatischen Zustand
+zurückzukehren (oder Sie können \fB\-\-config\fP erneut ausführen und den als
 automatisch markierten Eintrag auswählen).
 .PP
 Falls Sie nicht\-interaktiv konfigurieren möchten, können Sie stattdessen die
-\fI\-\-set\fP Option verwenden (siehe unten).
+\fB\-\-set\fP Option verwenden (siehe unten).
 .PP
 Verschiedene Pakete, die die gleiche Datei bereitstellen, müssen dies
 \fBkooperativ\fP durchführen. Anders gesagt ist in diesem Fall die Verwendung
@@ -178,7 +178,7 @@ so dass sie auf die neu hinzugefügte Alternative zeigen.
 .TP 
 \fB\-\-set\fP \fIName Pfad\fP
 Setzt das Programm \fIPfad\fP als Alternative für \fIName\fP. Dies ist äquivalent
-zu \fI\-\-config\fP, ist aber nicht interaktiv und kann somit geskriptet werden.
+zu \fB\-\-config\fP, ist aber nicht interaktiv und kann somit geskriptet werden.
 .TP 
 \fB\-\-remove\fP \fIName Pfad\fP
 Entferne eine Alternative und alle zugehörigen Slave\-Links. \fIName\fP ist ein
@@ -263,8 +263,9 @@ Gibt die Protokolldatei an, wenn diese sich von der Vorgabe
 (/var/log/alternatives.log) unterscheiden soll.
 .TP 
 \fB\-\-force\fP
-Lässt \fBupdate\-alternatives\fP alle echten Dateien ersetzen, die sich an
-Stellen befinden, an denen ein Alternativ\-Link installiert werden muss.
+Lässt \fBupdate\-alternatives\fP alle echten Dateien ersetzen oder entfernen,
+die sich an Stellen befinden, an denen ein Alternativ\-Link installiert
+werden muss.
 .TP 
 \fB\-\-skip\-auto\fP
 Überspringt die Konfigurationsabfrage für Alternativen, die korrekt im
@@ -294,42 +295,44 @@ Das standardmäßige administrative Verzeichnis. Kann mittels der
 \fB\-\-admindir\fP Option geändert werden.
 .
 .SH RÜCKGABEWERT
-.IP 0
+.TP 
+\fB0\fP
 Die angeforderte Aktion wurde erfolgreich ausgeführt.
-.IP 2
+.TP 
+\fB2\fP
 Beim Lesen der Kommandozeile oder beim Ausführen der Aktion traten Probleme
 auf.
 .
 .SH ABFRAGE\-FORMAT
-Das Format von \fBupdate\-alternatives\fP \fI\-\-query\fP ist ein RFC822\-artiges,
+Das Format von \fBupdate\-alternatives \-\-query\fP ist ein RFC822\-artiges,
 flaches Format. Es besteht aus \fIn\fP+1 Blöcken, wobei \fIn\fP die Anzahl der in
 einer abgefragten Linkgruppe verfügbaren Alternativen ist. Der erste Block
 enthält die folgenden Felder:
 .TP 
-\fBLink:\fP <Link>
+\fBLink:\fP\fI Link\fP
 Der generische Name der Alternative.
 .TP 
-\fBStatus:\fP <Status>
+\fBStatus:\fP\fI Status\fP
 Der Status der Alternative (\fBauto\fP oder \fBmanual\fP).
 .TP 
-\fBBest:\fP <beste Wahl>
+\fBBest:\fP\fI beste\-Wahl\fP
 Der Pfad der besten Alternative für diese Linkgruppe. Nicht vorhanden, falls
 keine Alternative verfügbar ist.
 .TP 
-\fBValue:\fP <derzeit ausgewählte Alternative>
+\fBValue:\fP\fI derzeit\-ausgewählte\-Alternative\fP
 Der Pfad der derzeit ausgewählten Alternative. Es akzeptiert auch den
 magischen Wert \fBnone\fP, der verwandt wird, falls der Link nicht existiert.
 .TP 
 .TP 
 Die anderen Blöcke beschreiben die verfügbaren Alternativen in der abgefragten Linkgruppe:
 .TP 
-\fBAlternative:\fP <Pfad dieser Alternativen>
+\fBAlternative:\fP\fI Pfad\-dieser\-Alternativen\fP
 Pfad zum Block dieser Alternativen.
 .TP 
-\fBPriority:\fP <Prioritätswert>
+\fBPriority:\fP\fI Prioritätswert\fP
 Wert der Priorität dieser Alternativen.
 .TP 
-\fBSlaves:\fP <Liste von Slaves>
+\fBSlaves:\fP\fI Liste\-von\-Slaves\fP
 Wenn diese Kopfzeile vorhanden ist enthält die \fBnächste\fP Zeile alle
 Slave\-Alternativen, die dem Masterlink dieser Alternativen zugeordnet
 sind. Pro Zeile wird ein Slave aufgeführt. Jede Zeile enthält ein
@@ -367,7 +370,7 @@ Slaves:
 .fi
 .
 .SH DIAGNOSE
-Mit \fI\-\-verbose\fP quatscht \fBupdate\-alternatives\fP ohne Unterlass über seine
+Mit \fB\-\-verbose\fP quatscht \fBupdate\-alternatives\fP ohne Unterlass über seine
 Aktivitäten auf seinem Standardausgabekanal. Falls Probleme auftreten, gibt
 \fBupdate\-alternatives\fP eine Fehlermeldung auf seinem Standardfehlerkanal aus
 und beendet sich mit dem Exit\-Status 2. Die Diagnostiken sollten
@@ -381,7 +384,7 @@ durch die Linkgruppe \fBvi\fP eingestellt, welche Links für das Programm selber
 und die zugehörige Handbuchseite beinhaltet.
 .PP
 Um alle verfügbaren Programme anzuzeigen, die \fBvi\fP bereitstellen, und die
-dazu gehörigen Einstellungen, benutzen Sie die \fI\-\-display\fP Aktion:
+dazu gehörigen Einstellungen, benutzen Sie die Aktion \fB\-\-display\fP:
 .RS
 .PP
 \fBupdate\-alternatives \-\-display vi\fP

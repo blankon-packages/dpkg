@@ -80,8 +80,8 @@ my @choices = (
     },
 );
 my $nb_slaves = 4;
-plan tests => (4 * ($nb_slaves + 1) + 2) * 25 # number of check_choices
-		+ 69;			      # rest
+plan tests => (4 * ($nb_slaves + 1) + 2) * 26 # number of check_choices
+               + 106;                         # rest
 
 sub cleanup {
     system("rm -rf $tmpdir && mkdir -p $admindir && mkdir -p $altdir");
@@ -119,20 +119,26 @@ sub install_choice {
 sub remove_choice {
     my ($id, %opts) = @_;
     my $alt = $choices[$id];
-    my @params = ("--remove", $main_name, $alt->{path});
+    my @params;
+    push @params, @{$opts{params}} if exists $opts{params};
+    push @params, "--remove", $main_name, $alt->{path};
     call_ua(\@params, %opts);
 }
 
 sub remove_all_choices {
     my (%opts) = @_;
-    my @params = ("--remove-all", $main_name);
+    my @params;
+    push @params, @{$opts{params}} if exists $opts{params};
+    push @params, "--remove-all", $main_name;
     call_ua(\@params, %opts);
 }
 
 sub set_choice {
     my ($id, %opts) = @_;
     my $alt = $choices[$id];
-    my @params = ("--set", $main_name, $alt->{path});
+    my @params;
+    push @params, @{$opts{params}} if exists $opts{params};
+    push @params, "--set", $main_name, $alt->{path};
     call_ua(\@params, %opts);
 }
 
@@ -148,7 +154,9 @@ sub config_choice {
     $input .= "\n";
     $opts{from_string} = \$input;
     $opts{to_string} = \$output;
-    my @params = ("--config", $main_name);
+    my @params;
+    push @params, @{$opts{params}} if exists $opts{params};
+    push @params, "--config", $main_name;
     call_ua(\@params, %opts);
 }
 
@@ -354,7 +362,15 @@ $choices[0]{"slaves"}[0]{"link"} = "$bindir/generic-slave-bis";
 install_choice(0);
 check_choice(0, "auto", "rename lost file");
 check_no_link($old_slave, "rename lost file");
+# update of alternative with many slaves not currently installed
+# and the link of the renamed slave exists while it should not
+set_choice(1);
+symlink("/bin/cat", "$bindir/generic-slave-bis");
 $choices[0]{"slaves"}[0]{"link"} = "$bindir/slave2";
+install_choice(0, test_id => "update with non-installed slaves");
+check_no_link("$bindir/generic-slave-bis",
+              "drop renamed symlink that should not be installed");
+
 # test install with empty admin file (#457863)
 cleanup();
 system("touch $admindir/generic-test");
@@ -385,6 +401,11 @@ call_ua(["--install", "$bindir/slave1", "testmaster", "/bin/date", "10"],
 call_ua(["--install", "$bindir/testmaster", "testmaster", "/bin/date", "10",
 	 "--slave", "$bindir/generic-test", "testslave", "/bin/true" ],
 	expect_failure => 1, to_file => "/dev/null", error_to_file => "/dev/null");
+# try to reuse slave link in another slave alternative of another choice of
+# the same main alternative
+call_ua(["--install", $main_link, $main_name, "/bin/date", "10",
+	 "--slave", "$bindir/slave1", "testslave", "/bin/true" ],
+	expect_failure => 1, to_file => "/dev/null", error_to_file => "/dev/null");
 # lack of absolute filenames in links or file path, non-existing path,
 call_ua(["--install", "../testmaster", "testmaster", "/bin/date", "10"],
         expect_failure => 1, to_file => "/dev/null", error_to_file => "/dev/null");
@@ -413,7 +434,7 @@ my $old_path = $choices[0]{"slaves"}[0]{"path"};
 $old_slave = $choices[0]{"slaves"}[0]{"link"};
 $choices[0]{"slaves"}[0]{"path"} = "$bindir/doesntexist";
 $choices[0]{"slaves"}[0]{"link"} = "$bindir/baddir/slave2";
-# test rename of slave link that existed but that doesnt anymore
+# test rename of slave link that existed but that doesn't anymore
 # and link is moved into non-existing dir at the same time
 install_choice(0);
 check_choice(0, "auto", "optional renamed slave2 in non-existing dir");
@@ -439,3 +460,44 @@ ok(-f $main_link, "removal keeps real file installed as master link");
 ok(-f "$bindir/slave1", "removal keeps real files installed as slave links");
 install_choice(0, params => ["--force"]);
 check_choice(0, "auto", "install --force replaces files with links");
+
+# test management of pre-existing files #2
+cleanup();
+system("touch $main_link $bindir/slave2");
+install_choice(0);
+install_choice(1);
+ok(!-l $main_link, "inactive install preserves files that should be links");
+ok(!-l "$bindir/slave2", "inactive install preserves files that should be slave links");
+ok(-f $main_link, "inactive install keeps real file installed as master link");
+ok(-f "$bindir/slave2", "inactive install keeps real files installed as slave links");
+set_choice(1);
+ok(!-l $main_link, "manual switching preserves files that should be links");
+ok(!-l "$bindir/slave2", "manual switching preserves files that should be slave links");
+ok(-f $main_link, "manual switching keeps real file installed as master link");
+ok(-f "$bindir/slave2", "manual switching keeps real files installed as slave links");
+remove_choice(1);
+ok(!-l $main_link, "auto switching preserves files that should be links");
+ok(!-l "$bindir/slave2", "auto switching preserves files that should be slave links");
+ok(-f $main_link, "auto switching keeps real file installed as master link");
+ok(-f "$bindir/slave2", "auto switching keeps real files installed as slave links");
+remove_all_choices(params => ["--force"]);
+ok(!-e "$bindir/slave2", "forced removeall drops real files installed as slave links");
+
+# test management of pre-existing files #3
+cleanup();
+system("touch $main_link $bindir/slave2");
+install_choice(0);
+install_choice(1);
+remove_choice(0);
+ok(!-l $main_link, "removal + switching preserves files that should be links");
+ok(!-l "$bindir/slave2", "removal + switching preserves files that should be slave links");
+ok(-f $main_link, "removal + switching keeps real file installed as master link");
+ok(-f "$bindir/slave2", "removal + switching keeps real files installed as slave links");
+install_choice(0);
+ok(!-l $main_link, "install + switching preserves files that should be links");
+ok(!-l "$bindir/slave2", "install + switching preserves files that should be slave links");
+ok(-f $main_link, "install + switching keeps real file installed as master link");
+ok(-f "$bindir/slave2", "install + switching keeps real files installed as slave links");
+set_choice(1, params => ["--force"]);
+ok(!-e "$bindir/slave2", "forced switching w/o slave drops real files installed as slave links");
+check_choice(1, "manual", "set --force replaces files with links");

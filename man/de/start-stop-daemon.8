@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH start\-stop\-daemon 8 2011\-03\-04 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH start\-stop\-daemon 8 2011\-07\-04 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 start\-stop\-daemon \- startet und stoppt System\-Daemon\-Programme
 .
 .SH ÜBERSICHT
-\fBstart\-stop\-daemon\fP [\fIOptionen\fP] \fIBefehl\fP
+\fBstart\-stop\-daemon\fP [\fIOption\fP...] \fIBefehl\fP
 .
 .SH BESCHREIBUNG
 \fBstart\-stop\-daemon\fP wird zur Steuerung der Erzeugung und Beendigung von
@@ -45,6 +45,10 @@ angegebene Signal und beendet sich mit Fehlerstatus 0. Falls kein solcher
 Prozess existiert, dann beendet sich \fBstart\-stop\-daemon\fP mit Fehlerstatus 1
 (0 falls \fB\-\-oknodo\fP angegeben ist). Falls \fB\-\-retry\fP angegeben wurde, wird
 \fBstart\-stop\-daemon\fP überprüfen, ob der/die Prozess(e) beendet wurden.
+.TP 
+\fB\-T\fP, \fB\-\-status\fP
+Überprüft auf die Existenz eines bestimmten Prozesses und liefert den
+Exit\-Status\-Code entsprechend der »LSB Init Script Actions« zurück.
 .TP 
 \fB\-H\fP, \fB\-\-help\fP
 Zeige Bedienungsinformationen und beendet sich.
@@ -119,7 +123,7 @@ Liefert den Rückgabewert 0 anstatt 1 falls keine Aktionen ausgeführt wurden
 \fB\-q\fP, \fB\-\-quiet\fP
 Gebe keine informativen Meldungen aus, zeige nur Fehlermeldungen an.
 .TP 
-\fB\-c \fP, \fB \-\-chuid \fP\fIBenutzername\fP|\fIuid\fP
+\fB\-c \fP, \fB \-\-chuid \fP\fIBenutzername\fP|\fIuid\fP[\fB:\fP\fIGruppe\fP|\fIgid\fP]
 Wechsele vor dem Start des Prozesses zu diesem Benutzername/uid. Sie können
 durch Anhängen von \fB:\fP auch die Gruppe spezifizieren, in diesem Fall wird
 die Gruppe oder gid wie bei dem »chown«\-Befehl (\fIBenutzer\fP\fB:\fP\fIGruppe\fP)
@@ -186,13 +190,37 @@ Kombination mit der Option \fB\-\-background\fP sinnvoll.
 Gibt ausführliche informative Meldungen aus.
 .
 .SH RÜCKGABEWERT
-\fBstart\-stop\-daemon\fP liefert 0, falls die angeforderte Aktion ausgeführt
-wurde oder \fB\-\-oknodo\fP angegeben und entweder \fB\-\-start\fP angegeben wurde und
-ein passender Prozess lief bereits oder \fB\-\-stop\fP angebeben wurde und es gab
-keinen passenden Prozess. Falls \fB\-\-oknodo\fP nicht angegeben wurde und nichts
-erfolgte, wird 1 zurückgeliefert. Falls \fB\-\-stop\fP und \fB\-\-retry\fP angegeben
-wurden, aber das Ende des Plans errreicht wurde und der Prozess noch läuft,
-lautet der Fehlerwert 2. Bei allen anderen Fehlern ist der Status 3.
+.TP 
+\fB0\fP
+Die angeforderte Aktion wurde durchgeführt. Falls \fB\-\-oknodo\fP angegeben
+wurde, kann es auch sein, dass nicht durchgeführt wurde. Das kann passieren,
+wenn \fB\-\-start\fP angegeben wurde und der passende Prozess bereits lief oder
+wenn \fB\-\-stop\fP angegeben wurde und es keinen passenden Prozess gab.
+.TP 
+\fB1\fP
+Falls \fB\-\-oknodo\fP nicht angegeben war und nichts durchgeführt wurde.
+.TP 
+\fB2\fP
+Falls \fB\-\-stop\fP und \fB\-\-retry\fP angegeben waren, aber das Ende des Plans
+erreicht wurde und die Prozesse noch liefen.
+.TP 
+\fB3\fP
+Jeder andere Fehler.
+.PP
+Bei der Verwendung des Befehls \fB\-\-status\fP werden die folgenden Statuscodes
+zurückgeliefert:
+.TP 
+\fB0\fP
+Programm läuft.
+.TP 
+\fB1\fP
+Programm läuft nicht und die PID\-Datei existiert.
+.TP 
+\fB3\fP
+Programm läuft nicht.
+.TP 
+\fB4\fP
+Programmstatus kann nicht bestimmt werden.
 .
 .SH BEISPIEL
 Starte den Daemon \fBfood\fP falls noch keiner läuft (ein Prozess mit Namen

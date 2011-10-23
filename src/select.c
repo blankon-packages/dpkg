@@ -34,7 +34,7 @@
 #include <dpkg/dpkg-db.h>
 #include <dpkg/pkg-array.h>
 #include <dpkg/pkg-spec.h>
-#include <dpkg/myopt.h>
+#include <dpkg/options.h>
 
 #include "filesdb.h"
 #include "infodb.h"

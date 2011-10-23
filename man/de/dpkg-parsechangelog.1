@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-parsechangelog 1 2009\-05\-19 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH dpkg\-parsechangelog 1 2011\-08\-14 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH NAME
 dpkg\-parsechangelog \- auswerten von Debian changelog\-Dateien
 .
 .SH ÜBERSICHT
-\fBdpkg\-parsechangelog\fP [\fIOptionen\fP]
+\fBdpkg\-parsechangelog\fP [\fIOption\fP...]
 .
 .SH BESCHREIBUNG
 \fBdpkg\-parsechangelog\fP liest das Änderungsprotokoll (»changelog«) eines
@@ -53,23 +53,23 @@ Eintrag angefordert wird, dann werden die meisten Felder aus dem letzten
 Eintrag verwendet, falls dies nicht anders angegeben wird:
 .RS
 .TP 
-\fBSource:\fP <Paket\-Name>
+\fBSource:\fP\fI Paketname\fP
 .TP 
-\fBVersion:\fP <Version>
+\fBVersion:\fP\fI Version\fP
 .TP 
-\fBDistribution:\fP <Ziel\-Distribution>
+\fBDistribution:\fP\fI Ziel\-Distribution\fP
 .TP 
-\fBUrgency:\fP <Dringlichkeit>
+\fBUrgency:\fP\fI Dringlichkeit\fP
 Die höchste Dringlichkeit aller enthaltenen Einträge wird verwendet.
 .TP 
-\fBMaintainer:\fP <Autor>
+\fBMaintainer:\fP\fI Autor\fP
 .TP 
-\fBDate:\fP <Datum>
+\fBDate:\fP\fI Datum\fP
 .TP 
-\fBCloses:\fP <Fehlernummer>
+\fBCloses:\fP\fI Fehlernummer\fP
 Die Felder »Closes« aller enthaltenen Einträge werden zusammengefasst.
 .TP 
-\fBChanges:\fP <Changelog\-Einträge>
+\fBChanges:\fP\fI Changelog\-Einträge\fP
 Der Text aller Changelog\-Einträge wird aneinandergehängt. Um aus diesem Feld
 ein gültiges mehrzeiliges Feld im Debian Steuer\-Format zu bekomen, werden
 leere Zeilen mit einem einzelnen Satzpunkt ersetzt und alle Zeilen durch ein

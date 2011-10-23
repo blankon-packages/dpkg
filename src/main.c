@@ -49,8 +49,8 @@
 #include <dpkg/arch.h>
 #include <dpkg/subproc.h>
 #include <dpkg/command.h>
-#include <dpkg/myopt.h>
 #include <dpkg/pkg-spec.h>
+#include <dpkg/options.h>
 
 #include "main.h"
 #include "filesdb.h"
@@ -168,8 +168,7 @@ usage(const struct cmdinfo *ci, const char *value)
   exit(0);
 }
 
-const char thisname[]= "dpkg";
-const char printforhelp[]= N_(
+static const char printforhelp[] = N_(
 "Type dpkg --help for help about installing and deinstalling packages [*];\n"
 "Use `dselect' or `aptitude' for user-friendly package management;\n"
 "Type dpkg -Dhelp for a list of dpkg debug flag values;\n"
@@ -189,6 +188,7 @@ int fc_conff_old=0, fc_conff_def=0;
 int fc_conff_ask = 0;
 int fc_unsafe_io = 0;
 int fc_badverify = 0;
+int fc_badversion = 0;
 
 int errabort = 50;
 static const char *admindir = ADMINDIR;
@@ -231,6 +231,8 @@ static const struct forceinfo {
     ' ', N_("PATH is missing important programs, problems likely") },
   { "bad-verify",          &fc_badverify,
     ' ', N_("Install a package even if it fails authenticity check") },
+  { "bad-version",         &fc_badversion,
+    ' ', N_("Process even packages with wrong versions") },
   { "overwrite",           &fc_overwrite,
     ' ', N_("Overwrite a file from one package with another") },
   { "overwrite-diverted",  &fc_overwritediverted,
@@ -625,8 +627,6 @@ static const struct cmdinfo cmdinfos[]= {
   ACTIONBACKEND( "info",		'I', BACKEND),
   ACTIONBACKEND( "field",		'f', BACKEND),
   ACTIONBACKEND( "extract",		'x', BACKEND),
-  ACTIONBACKEND( "new",			0,  BACKEND),
-  ACTIONBACKEND( "old",			0,  BACKEND),
   ACTIONBACKEND( "vextract",		'X', BACKEND),
   ACTIONBACKEND( "fsys-tarfile",	0,   BACKEND),
   { NULL,                0,   0, NULL,          NULL,      NULL,          0 }
@@ -742,7 +742,7 @@ commandfd(const char *const *argv)
         newargs[i] = m_strdup(newargs[i]);
 
     setaction(NULL, NULL);
-    myopt((const char *const**)&newargs,cmdinfos);
+    myopt((const char *const **)&newargs, cmdinfos, printforhelp);
     if (!cipaction) badusage(_("need an action option"));
 
     ret |= cipaction->action(newargs);
@@ -757,13 +757,14 @@ int main(int argc, const char *const *argv) {
   int ret;
 
   if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
-     setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
 
+  dpkg_set_progname("dpkg");
   standard_startup();
   loadcfgfile(DPKG, cmdinfos);
-  myopt(&argv, cmdinfos);
+  myopt(&argv, cmdinfos, printforhelp);
 
   if (!cipaction) badusage(_("need an action option"));
 

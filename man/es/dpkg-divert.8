@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-divert 8 2010\-10\-12 "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-divert 8 2011\-08\-14 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
 dpkg\-divert \- Redefine la versión de un fichero del paquete
 .
 .SH SINOPSIS
-\fBdpkg\-divert\fP [\fIopciones\fP] \fIorden\fP
+\fBdpkg\-divert\fP [\fIoption\fP...] \fIcommand\fP
 .
 .SH DESCRIPCIÓN
 \fBdpkg\-divert\fP es una herramienta para configurar y actualizar la lista de
@@ -81,9 +81,9 @@ Muestra el modo de uso y termina.
 Muestra la versión y termina.
 .
 .SH NOTAS
-Al añadir redirecciones por omisión se usa \fB\-\-local\fP y \fB\-\-divert\fP
-\fI<original>.distrib\fP. Al eliminar, \fB\-\-package\fP o \fB\-\-local\fP y
-\fB\-\-divert\fP deben coincidir en caso de definirse.
+When adding, default is \fB\-\-local\fP and \fB\-\-divert\fP
+\fIoriginal\fP\fB.distrib\fP. When removing, \fB\-\-package\fP or \fB\-\-local\fP and
+\fB\-\-divert\fP must match if specified.
 
 Los directorios no se pueden redirigir con \fBdpkg\-divert\fP.
 
@@ -124,7 +124,7 @@ If set and the \fB\-\-admindir\fP option has not been specified, it will be used
 as the dpkg data directory.
 .TP 
 \fBDPKG_MAINTSCRIPT_PACKAGE\fP
-If set and the \fI\-\-local\fP and \fI\-\-package\fP options have not been specified,
+If set and the \fB\-\-local\fP and \fB\-\-package\fP options have not been specified,
 \fBdpkg\-divert\fP will use it as the package name.
 .
 .SH FICHEROS

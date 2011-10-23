@@ -5,7 +5,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-control 5 29\-07\-2010 "Projet Debian" Debian
+.TH deb\-control 5 2011\-08\-14 "Projet Debian" Debian
 .SH NOM
 deb\-control \- Format du fichier principal de contrôle dans les paquets
 Debian
@@ -26,23 +26,23 @@ lignes pendant le traitement du contenu du champ (sauf pour le champ
 .
 .SH "LES CHAMPS EXIGÉS"
 .TP 
-\fBPackage:\fP <nom du paquet>
+\fBPackage:\fP\fI nom\-du\-paquet\fP
 La valeur de ce champ donne le nom du paquet, et la plupart des outils
 d'installation s'en servent pour produire les noms des paquets.
 .TP 
-\fBVersion:\fP <chaîne pour la version>
+\fBVersion:\fP \fIchaîne pour la version\fP
 C'est classiquement le numéro de version du paquet d'origine dans la forme
 choisie par l'auteur du programme. Il peut y avoir aussi un numéro de
 révision Debian (pour les paquets non natifs). Le format exact et
 l'algorithme de tri sont décrits dans \fBdeb\-version\fP(5).
 .TP 
-\fBMaintainer:\fP <nom adresse>
+\fBMaintainer:\fP \fI nom\-complet\-adresse\-électronique\fP
 Le format de ce champ sera «\ Jean Dupont <jdupont@foo.com>\ »\ ; et
 c'est bien sûr le créateur du paquet, par opposition à l'auteur du programme
 mis en paquet.
 .TP 
-\fBDescription:\fP <description courte>
-\fB \fP<description longue>
+\fBDescription:\fP \fI description courte\fP
+\fB \fP\fIdescription longue\fP
 .br
 Le format de la description du paquet est un résumé bref sur la première
 ligne (après le champ «\ Description\ »). Les lignes suivantes peuvent servir
@@ -52,13 +52,13 @@ blanche, elle doit contenir un seul «\ .\ » après cet espace.
 .
 .SH "CHAMPS OPTIONNELS"
 .TP 
-\fBSection:\fP <section>
+\fBSection:\fP \fI section\fP
 C'est un champ général qui indique la catégorie d'un paquet\ ; cette
 catégorie est fondée sur le programme que ce paquet installe. «\ Utils\ »,
 «\ net\ », «\ mail\ », «\ text\ », «\ x11\ », etc. représentent quelques catégories
 habituelles.
 .TP 
-\fBPriority:\fP <priorité>
+\fBPriority:\fP \fIpriorité\fP
 Définit l'importance du paquet à l'intérieur du système
 général. «\ Required\ », «\ standard\ », «\ optional\ », «\ extra\ »,
 etc. représentent des priorités habituelles.
@@ -67,67 +67,68 @@ Les champs \fBSection\fP et \fBPriority\fP possèdent un ensemble défini de valeu
 acceptées, tiré de la Charte Debian («\ Debian Policy\ »). On peut en trouver
 une liste dans la version la plus récente du paquet \fBdebian\-policy\fP.
 .TP 
-\fBEssential:\fP <yes|no>
+\fBEssential:\fP \fByes\fP|\fBno\fP
 On se sert habituellement de ce champ uniquement si la réponse est
-«\ yes\ ». Il signifie que ce paquet est exigé pour un fonctionnement correct
+\fByes\fP. Il signifie que ce paquet est exigé pour un fonctionnement correct
 du système. Dpkg et les autres outils d'installation interdisent la
 suppression d'un paquet \fBEssential\fP (du moins tant qu'une des options de
 forçage n'est pas utilisée).
 .TP 
-\fBArchitecture:\fP <arch|all>
+\fBArchitecture:\fP \fIarch\fP|\fBall\fP
 L'architecture précise pour quel type de matériel le paquet a été
 compilé. Voici quelques architectures habituelles\ : «\ i386\ », «\ m68k\ »,
 «\ sparc\ », «\ alpha\ », «\ powerpc\ », etc. Remarquez que l'option \fBall\fP
 signifie que le paquet est indépendant de toute architecture. Les scripts
 shell ou Perl, ainsi que la documentation sont dans ce cas.
 .TP 
-\fBOrigin:\fP <nom>
+\fBOrigin:\fP \fI nom\fP
 Nom de la distribution dont ce paquet provient.
 .TP 
-\fBBugs:\fP <URL>
-URL du système de suivi de bogues (BTS) de ce paquet. Le format utilisé est
-\fB<type_de_bts>://<adresse_du_bts>\fP, par exemple
+\fBBugs:\fP \fI URL\fP
+\fIurl\fPURL du système de suivi de bogues (BTS) de ce paquet. Le format
+utilisé est \fItype_de_bts\fP\fB://\fP\fIadresse_du_bts\fP, par exemple
 \fBdebbugs://bugs.debian.org\fP.
 .TP 
-\fBHomepage:\fP <URL>
-URL de la page d'accueil du projet amont.
+\fBHomepage:\fP\fI URL\fP
+\fIURL\fP de la page d'accueil du projet amont.
 .TP 
-\fBTag:\fP <liste d'étiquettes>
+\fBTag:\fP \fIliste d'étiquettes\fP
 Liste d'étiquettes décrivant les qualités du paquet. La description et la
 liste des étiquettes («\ tags\ ») gérées peut être trouvée dans le paquet
 \fBdebtags\fP.
 .TP 
-\fBMulti\-Arch:\fP <same|foreign|allowed>
+\fBMulti\-Arch:\fP \fBsame\fP|\fBforeign\fP|\fBallowed\fP
 This field is used to indicate how this package should behave on a
-multi\-arch installations. The value `same' means that the package is
+multi\-arch installations. The value \fBsame\fP means that the package is
 co\-installable with itself, but it must not be used to satisfy the
 dependency of any package of a different architecture from itself. The value
-`foreign' means that the package is not co\-installable with itself, but
+\fBforeign\fP means that the package is not co\-installable with itself, but
 should be allowed to satisfy the dependency of a package of a different arch
-from itself. The value `allowed` allows reverse\-dependencies to indicate in
+from itself. The value \fBallowed\fP allows reverse\-dependencies to indicate in
 their Depends field that they need a package from a foreign architecture,
 but has no effect otherwise. This field should not be present in packages
-with the Architecture: all field.
+with the \fBArchitecture: all\fP field.
 .TP 
-\fBSource:\fP <nom du source>
+\fBSource:\fP\fI nom du source\fP
 Le nom du paquet source d'où provient le paquet binaire, s'il y a une
 différence entre les deux noms.
 
 .TP 
 .PD 0
-\fBSubarchitecture:\fP <value>
+\fBSubarchitecture:\fP\fI valeur\fP
 .TP 
 .PD 0
-\fBKernel\-Version:\fP <value>
+\fBKernel\-Version:\fP\fI valeur\fP
 .TP 
 .PD
-\fBInstaller\-Menu\-Item:\fP <value>
-These fields are used by the debian\-installer and are usually not needed.
-See /usr/share/doc/debian\-installer/devel/modules.txt from the
-\fBdebian\-installer\fP package for more details about them.
+\fBInstaller\-Menu\-Item:\fP\fI valeur\fP
+Ces champs sont utilisés par l'installateur et ne sont en général pas
+nécessaires. Veuillez consulter
+/usr/share/doc/debian\-installer/devel/modules.txt  fourni avec le paquet
+\fBdebian\-installer\fP pour plus de détails.
 
 .TP 
-\fBDepends:\fP <liste de paquet>
+\fBDepends:\fP\fI liste de paquets\fP
 C'est la liste des paquets exigés pour que ce paquet arrive à fonctionner de
 manière non triviale. Le programme de maintenance des paquets interdit
 l'installation d'un paquet quand les paquets répertoriés dans le champ
@@ -137,19 +138,19 @@ répertoriés dans les champs «\ Depends:\ » avant les scripts «\ postinst\ » des
 paquets qui dépendent d'eux. À l'inverse, lors d'une suppression les scripts
 «\ prerm\ » des paquets sont lancés avant ceux de leurs dépendances.
 .TP 
-\fBPre\-Depends:\fP <liste de paquet>
+\fBPre\-Depends:\fP\fI liste de paquets\fP
 C'est la liste des paquets qui doivent être installés \fBet\fP configurés avant
 que ce paquet puisse être installé. Habituellement, on utilise ce champ
 quand un paquet a besoin d'un autre paquet pour lancer son script
 «\ preinst\ ».
 .TP 
-\fBRecommends:\fP <liste de paquet>
+\fBRecommends:\fP\fI liste de paquets\fP
 C'est la liste des paquets qu'on trouverait avec ce paquet dans toute
 installation standard. Le programme de maintenance des paquets avertit
 l'utilisateur quand il installe un paquet sans installer les paquets
 répertoriés dans le champ \fBRecommends.\fP
 .TP 
-\fBSuggests:\fP <liste de paquet>
+\fBSuggests:\fP\fIliste de paquets\fP
 C'est la liste des paquets qui, associés avec ce paquet, peuvent améliorer
 son utilité\ ; néanmoins, une installation sans ces paquets est parfaitement
 raisonnable.
@@ -170,27 +171,27 @@ d'union). Voici les relations acceptées pour les versions\ : «\ >>\ »
 pour supérieur à, «\ <<\ » pour inférieur à, «\ >=\ » pour supérieur
 ou égal, «\ <=\ » pour inférieur ou égal, et «\ =\ » pour égal à.
 .TP 
-\fBBreaks:\fP <liste de paquets>
+\fBBreaks:\fP\fIliste de paquets\fP
 C'est une liste de paquets que ce paquet «\ casse\ », par exemple en révélant
 des bogues quand les paquets concernés dépendent de celui\-ci. Le programme
 de maintenance des paquets interdit la configuration de paquets cassés\ ;\ une
 méthode usuelle de résolution est la mise à jour des paquets mentionnés dans
 le champ \fBBreaks\fP.
 .TP 
-\fBConflicts:\fP <liste de paquets>
+\fBConflicts:\fP\fIliste de paquets\fP
 C'est une liste de paquets qui sont en conflit avec ce paquet\ ; ils
 contiennent par exemple des fichiers qui ont le même nom. Le programme de
 maintenance des paquets interdit l'installation simultanée de paquets en
 conflit. Deux paquets en conflit renseigneront une ligne \fBConflicts\fP avec
 le nom de l'autre paquet.
 .TP 
-\fBReplaces:\fP <liste de paquets>
+\fBReplaces:\fP\fI liste de paquets\fP
 C'est une liste de paquets que ce paquet remplace. Il peut ainsi remplacer
 les fichiers de ces autres paquets\ ; on se sert pour cela du champ
 \fBConflicts\fP pour forcer la suppression des autres paquets, si celui\-là
 possède aussi les mêmes fichiers que le paquet en conflit.
 .TP 
-\fBProvides:\fP  <liste de paquets>
+\fBProvides:\fP \fIliste de paquets\fP
 C'est une liste de paquets virtuels que ce paquet «\ remplit\ ». On s'en sert
 habituellement pour des paquets qui offrent le même service. Par exemple,
 sendmail et exim sont des serveurs de courrier, et donc ils «\ remplissent\ »
@@ -207,14 +208,15 @@ comme un «\ OU\ ». On peut donner une version optionnelle de la même façon que
 ci\-dessus dans les champs \fBBreaks\fP, \fBConflicts\fP et \fBReplaces\fP.
 .
 .TP 
-\fBBuilt\-Using:\fP <package list>
-This field lists extra source packages that were used during the build of
-this binary package.  This is an indication to the archive maintenance
-software that these extra source packages must be kept whilst this binary
-package is maintained.  This field must be a list of source package names
-with strict (=)  version relationships.  Note that the archive maintenance
-software is likely to refuse to accept an upload which declares a
-\fBBuilt\-Using\fP relationship which cannot be satisfied within the archive.
+\fBBuilt\-Using:\fP\fI liste de paquets\fP
+Ce champ affiche les paquets source supplémentaires utilisées lors de la
+construction du paquet binaire. Il permet d'indiquer aux logiciels de
+gestion de l'archive que des paquets source supplémentaires doivent être
+conservées tant que le paquet binaire est maintenu. Ce champ doit être une
+liste de paquets source avec des références strictes de version
+(=). Veuillez noter que les logiciels de gestion de l'archive risque de ne
+pas accepter un envoi qui déclare une relation \fBBuilt\-Using\fP qui ne peut
+pas être satisfaite dans l'archive.
 .
 .SH EXEMPLE
 .\" .RS

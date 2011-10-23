@@ -246,18 +246,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-PO4A_V = $(PO4A_V_$(V))
-PO4A_V_ = $(PO4A_V_$(AM_DEFAULT_VERBOSITY))
-PO4A_V_0 = @echo "  PO4A   $@";
-PO4A_RM_V = $(PO4A_RM_V_$(V))
-PO4A_RM_V_ = $(PO4A_RM_V_$(AM_DEFAULT_VERBOSITY))
-PO4A_RM_V_0 = @echo "  PO4ARM $@";
-PO4A_COMMON_OPTS = --previous --variable builddir=$(CURDIR)
-PO4A_BUILD_OPTS = $(PO4A_COMMON_OPTS) --no-backups
-PO4A_CLEAN_OPTS = $(PO4A_COMMON_OPTS) --rm-backups --rm-translations
-
-# Extract the list of languages from the po4a config file.
-LINGUAS_DIST = `sed -ne 's/^.*\[po4a_langs\] \(.*\)$$/\1/p' $(srcdir)/po/po4a.cfg`
 dist_man_MANS = deb-control.5 deb-src-control.5 deb-version.5 \
 	deb-shlibs.5 deb-split.5 deb-substvars.5 deb-symbols.5 \
 	deb-triggers.5 deb-old.5 deb-override.5 deb-extra-override.5 \
@@ -275,6 +263,13 @@ EXTRA_DIST = \
 	po/po4a.cfg \
 	po/dpkg-man.pot
 
+
+# Extract the list of languages from the po4a config file.
+LINGUAS_DIST = `sed -ne 's/^.*\[po4a_langs\] \(.*\)$$/\1/p' $(srcdir)/po/po4a.cfg`
+PO4A_V = $(PO4A_V_$(V))
+PO4A_V_ = $(PO4A_V_$(AM_DEFAULT_VERBOSITY))
+PO4A_V_0 = @echo "  PO4A   $@";
+PO4A_OPTS = --previous --srcdir $(srcdir) --destdir $(CURDIR) --no-backups
 all: all-am
 
 .SUFFIXES:
@@ -591,6 +586,9 @@ uninstall-man: uninstall-man1 uninstall-man5 uninstall-man8
 	uninstall-man uninstall-man1 uninstall-man5 uninstall-man8
 
 
+# If the user has not defined it let's use the default.
+LINGUAS ?= $(LINGUAS_DIST)
+
 all-local: all-local-@USE_PO4A@
 
 all-local-no:
@@ -598,24 +596,20 @@ all-local-yes: man.stamp
 
 # FIXME: Use a stamp file until po4a supports them internally.
 man.stamp:
-	$(PO4A_V) cd $(srcdir) && \
-	$(PO4A) $(PO4A_BUILD_OPTS) po/po4a.cfg
+	$(PO4A_V) $(PO4A) $(PO4A_OPTS) $(srcdir)/po/po4a.cfg
 	$(AM_V_at) touch $@
 
 clean-local: clean-local-@USE_PO4A@
 
 clean-local-no:
 clean-local-yes:
-	$(PO4A_RM_V) cd $(srcdir) && \
-	$(PO4A) $(PO4A_CLEAN_OPTS) po/po4a.cfg
+	rm -rf $(LINGUAS_DIST)
 	$(AM_V_at) rm -f man.stamp
 
-update-po:
-	$(PO4A_V) cd $(srcdir) && \
-	$(PO4A) $(PO4A_BUILD_OPTS) --force po/po4a.cfg
+.PHONY: update-po
 
-# If the user has not defined it let's use the default.
-LINGUAS ?= $(LINGUAS_DIST)
+update-po:
+	$(PO4A_V) $(PO4A) $(PO4A_OPTS) --force $(srcdir)/po/po4a.cfg
 
 install-data-local: install-data-local-@USE_PO4A@
 
@@ -663,8 +657,6 @@ dist-hook: man.stamp
 		$(mkdir_p) $(distdir)/$$lang; \
 		cp -r $(srcdir)/$$lang $(distdir)/; \
 	done
-
-.PHONY: update-po
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
