@@ -1,6 +1,11 @@
 #line 2 "trigdeferred.c"
+#line 37 "trigdeferred.l"
+#include <config.h>
+#include <compat.h>
 
-#line 4 "trigdeferred.c"
+
+
+#line 9 "trigdeferred.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -28,7 +33,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 35
+#define YY_FLEX_SUBMINOR_VERSION 39
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -181,7 +186,12 @@ typedef unsigned int flex_uint32_t;
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
-extern int trigdef_yyleng;
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
+typedef size_t yy_size_t;
+#endif
+
+extern yy_size_t trigdef_yyleng;
 
 extern FILE *trigdef_yyin, *trigdef_yyout;
 
@@ -190,6 +200,7 @@ extern FILE *trigdef_yyin, *trigdef_yyout;
 #define EOB_ACT_LAST_MATCH 2
 
     #define YY_LESS_LINENO(n)
+    #define YY_LINENO_REWIND_TO(ptr)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -206,11 +217,6 @@ extern FILE *trigdef_yyin, *trigdef_yyout;
 	while ( 0 )
 
 #define unput(c) yyunput( c, (yytext_ptr)  )
-
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
-#endif
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
@@ -229,7 +235,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	yy_size_t yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -299,8 +305,8 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 
 /* yy_hold_char holds the character lost when trigdef_yytext is formed. */
 static char yy_hold_char;
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-int trigdef_yyleng;
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+yy_size_t trigdef_yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
@@ -328,7 +334,7 @@ static void trigdef_yy_init_buffer (YY_BUFFER_STATE b,FILE *file  );
 
 YY_BUFFER_STATE trigdef_yy_scan_buffer (char *base,yy_size_t size  );
 YY_BUFFER_STATE trigdef_yy_scan_string (yyconst char *yy_str  );
-YY_BUFFER_STATE trigdef_yy_scan_bytes (yyconst char *bytes,int len  );
+YY_BUFFER_STATE trigdef_yy_scan_bytes (yyconst char *bytes,yy_size_t len  );
 
 void *trigdef_yyalloc (yy_size_t  );
 void *trigdef_yyrealloc (void *,yy_size_t  );
@@ -360,7 +366,7 @@ void trigdef_yyfree (void *  );
 
 /* Begin user sect3 */
 
-#define trigdef_yywrap(n) 1
+#define trigdef_yywrap() 1
 #define YY_SKIP_YYWRAP
 
 typedef unsigned char YY_CHAR;
@@ -509,16 +515,14 @@ char *trigdef_yytext;
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /* Reset the name to the default value (instead of using "trigdeferred.c")
  * so that automake (ylwrap) can find it. */
+#define YY_NO_INPUT 1
 
-#line 36 "trigdeferred.l"
 
-#include <config.h>
-#include <compat.h>
-
+#line 42 "trigdeferred.l"
 #include <sys/stat.h>
 #include <sys/fcntl.h>
 
@@ -530,14 +534,13 @@ char *trigdef_yytext;
 #include <dpkg/trigdeferred.h>
 #include <dpkg/triglib.h>
 
-#define YY_NO_INPUT
 #define YY_DECL int trigdef_parse(void)
 
 static struct varbuf fn, newfn;
 
 static const struct trigdefmeths *trigdef;
 
-#line 541 "trigdeferred.c"
+#line 544 "trigdeferred.c"
 
 #define INITIAL 0
 #define midline 1
@@ -577,7 +580,7 @@ FILE *trigdef_yyget_out (void );
 
 void trigdef_yyset_out  (FILE * out_str  );
 
-int trigdef_yyget_leng (void );
+yy_size_t trigdef_yyget_leng (void );
 
 char *trigdef_yyget_text (void );
 
@@ -723,11 +726,6 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 60 "trigdeferred.l"
-
-
-#line 730 "trigdeferred.c"
-
 	if ( !(yy_init) )
 		{
 		(yy_init) = 1;
@@ -754,6 +752,12 @@ YY_DECL
 		trigdef_yy_load_buffer_state( );
 		}
 
+	{
+#line 61 "trigdeferred.l"
+
+
+#line 760 "trigdeferred.c"
+
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = (yy_c_buf_p);
@@ -770,7 +774,7 @@ YY_DECL
 yy_match:
 		do
 			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)] ;
 			if ( yy_accept[yy_current_state] )
 				{
 				(yy_last_accepting_state) = yy_current_state;
@@ -808,18 +812,18 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 62 "trigdeferred.l"
+#line 63 "trigdeferred.l"
 /* whitespace */
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 63 "trigdeferred.l"
+#line 64 "trigdeferred.l"
 /* comments */
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 64 "trigdeferred.l"
+#line 65 "trigdeferred.l"
 {
 	trigdef->trig_begin(trigdef_yytext);
 	BEGIN(midline);
@@ -827,12 +831,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 69 "trigdeferred.l"
+#line 70 "trigdeferred.l"
 /* whitespace */
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 70 "trigdeferred.l"
+#line 71 "trigdeferred.l"
 {
 	if (trigdef_yytext[0] == '-' && trigdef_yytext[1])
 		ohshit(_("invalid package name `%.250s' in triggers deferred "
@@ -843,21 +847,21 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 76 "trigdeferred.l"
+#line 77 "trigdeferred.l"
 {
 	trigdef->trig_end();
 	BEGIN(0);
 	}
 	YY_BREAK
 case YY_STATE_EOF(midline):
-#line 80 "trigdeferred.l"
+#line 81 "trigdeferred.l"
 {
 	ohshit(_("truncated triggers deferred file `%.250s'"), fn.buf);
 	}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 84 "trigdeferred.l"
+#line 85 "trigdeferred.l"
 {
 	ohshit(_("syntax error in triggers deferred file `%.250s' at "
 	         "character `%s'%s"),
@@ -866,10 +870,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 90 "trigdeferred.l"
+#line 91 "trigdeferred.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 873 "trigdeferred.c"
+#line 877 "trigdeferred.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1001,6 +1005,7 @@ case YY_STATE_EOF(INITIAL):
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
 		} /* end of scanning one token */
+	} /* end of user's declarations */
 } /* end of trigdef_yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -1056,21 +1061,21 @@ static int yy_get_next_buffer (void)
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
 
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
+			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
 				(int) ((yy_c_buf_p) - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer )
 				{
-				int new_size = b->yy_buf_size * 2;
+				yy_size_t new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1101,7 +1106,7 @@ static int yy_get_next_buffer (void)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			(yy_n_chars), (size_t) num_to_read );
+			(yy_n_chars), num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars);
 		}
@@ -1196,7 +1201,7 @@ static int yy_get_next_buffer (void)
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 22);
 
-	return yy_is_jam ? 0 : yy_current_state;
+		return yy_is_jam ? 0 : yy_current_state;
 }
 
 #ifndef YY_NO_INPUT
@@ -1223,7 +1228,7 @@ static int yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			int offset = (yy_c_buf_p) - (yytext_ptr);
+			yy_size_t offset = (yy_c_buf_p) - (yytext_ptr);
 			++(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer(  ) )
@@ -1383,10 +1388,6 @@ static void trigdef_yy_load_buffer_state  (void)
 	trigdef_yyfree((void *) b  );
 }
 
-#ifndef __cplusplus
-extern int isatty (int );
-#endif /* __cplusplus */
-    
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
  * such as during a trigdef_yyrestart() or at EOF.
@@ -1499,7 +1500,7 @@ void trigdef_yypop_buffer_state (void)
  */
 static void trigdef_yyensure_buffer_stack (void)
 {
-	int num_to_alloc;
+	yy_size_t num_to_alloc;
     
 	if (!(yy_buffer_stack)) {
 
@@ -1596,12 +1597,12 @@ YY_BUFFER_STATE trigdef_yy_scan_string (yyconst char * yystr )
  * 
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE trigdef_yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len )
+YY_BUFFER_STATE trigdef_yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )
 {
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	int i;
+	yy_size_t i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -1683,7 +1684,7 @@ FILE *trigdef_yyget_out  (void)
 /** Get the length of the current token.
  * 
  */
-int trigdef_yyget_leng  (void)
+yy_size_t trigdef_yyget_leng  (void)
 {
         return trigdef_yyleng;
 }
@@ -1831,7 +1832,7 @@ void trigdef_yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 90 "trigdeferred.l"
+#line 91 "trigdeferred.l"
 
 
 

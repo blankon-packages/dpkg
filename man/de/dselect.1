@@ -1,14 +1,35 @@
+.\" dselect manual page - dselect(1)
+.\"
+.\" Copyright Â© 1995 Juho Vuori <javuori@cc.helsinki.fi>
+.\" Copyright Â© 2000 Josip Rodin
+.\" Copyright Â© 2001 Joost Kooij
+.\" Copyright Â© 2001 Wichert Akkerman <wakkerma@debian.org>
+.\" Copyright Â© 2010-2011 Guillem Jover <guillem@debian.org>
+.\"
+.\" This is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <https://www.gnu.org/licenses/>.
+.
 .\"*******************************************************************
 .\"
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dselect 1 2011\-08\-14 Debian\-Projekt Debian
-.SH NAME
+.TH dselect 1 2012\-04\-07 Debian\-Projekt Debian
+.SH BEZEICHNUNG
 dselect \- Debian\-Paketverwaltungsoberfläche
 .
 .SH ÜBERSICHT
-\fBdselect\fP [\fIOption\fP...] \fIAktion\fP
+\fBdselect\fP [\fIOption\fP ?] \fIAktion\fP
 .
 .SH BESCHREIBUNG
 \fBdselect\fP
@@ -43,7 +64,7 @@ Konfigurationsdatei \fI/etc/dpkg/dselect.cfg\fP oder in den Dateien im
 Konfigurationsverzeichnis \fI/etc/dpkg/dselect.cfg.d/\fP von \fBdselect\fP
 angegeben werden. Jede Zeile in der Konfigurationsdatei ist entweder eine
 Option (exakt identisch mit der Kommandozeilenoption, nur ohne einleitende
-Gedankenstriche) oder ein Kommentar (falls sie mit \fB#\fP beginnt).
+Bindestriche) oder ein Kommentar (falls sie mit \fB#\fP beginnt).
 .br
 .TP 
 \fB\-\-admindir\fP\fI Verzeichnis\fP
@@ -58,7 +79,7 @@ Aktiviere Debugging. Debug\-Informationen werden nach \fIDatei\fP gesendet.
 Aktiviert den Expertenmodus, d.h. zeigt keine möglicherweise nervenden
 Hilfeinformationen an.
 .TP 
-[\fB\-\-colour\fP|\fB\-\-color\fP \fIBildschirmteil:\fP[\fIVordergrund\fP],[\fIHintergrund\fP][\fI:Attr\fP[\fI+Attr+..\fP]]]
+[\fB\-\-colour\fP|\fB\-\-color\fP \fIBildschirmteil:\fP[\fIVordergrund\fP],[\fIHintergrund\fP][\fI:Attr\fP[\fI+Attr+?\fP]]]
 Konfiguriert die Bildschirmfarben. Dies funktioniert nur, falls Ihr
 Bildschirm Farben unterstützt. Diese Option kann mehrfach verwendet werden
 (und wird am besten in \fIdselect.cfg\fP verwendet). Jede Verwendung ändert die
@@ -215,7 +236,7 @@ markiert sind.
 Beendet das Programm mit dem Fehlercode Null (erfolgreich).
 .sp
 .
-.SH Paketauswahlverwaltung
+.SH PAKETAUSWAHLVERWALTUNG
 .sp
 .SS Einführung
 .sp
@@ -460,7 +481,7 @@ Zugriffsmethode, sie funktioniert nicht nur, sondern ist sogar flexibler als
 die eingebauten Zugriffsmethoden.
 .
 .SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2011 von Helge Kreutzmann
+Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
 angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
@@ -468,12 +489,3 @@ GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 \fBdpkg\fP(1), \fBapt\-get\fP(8), \fBsources.list\fP(5), \fBdeb\fP(5).
-.
-.SH AUTOREN
-\fBDselect\fP wurde von Ian Jackson (ijackson@gnu.ai.mit.edu) geschrieben. Die
-komplette Liste der Beitragenden kann mittels »dselect \-\-version«
-herausgefunden werden.
-.br
-Diese Handbuchseite wurde von Juho Vuori <javuori@cc.helsinki.fi>,
-Josip Rodin und Joost kooij geschrieben.
-

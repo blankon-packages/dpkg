@@ -8,13 +8,14 @@ AM_CPPFLAGS = \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DCONFIGDIR=\"$(pkgconfdir)\" \
 	-DADMINDIR=\"$(admindir)\" \
+	-DDEFAULT_TEXT_DOMAIN=\"@PACKAGE@\" \
 	-idirafter $(top_srcdir)/lib/compat \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/lib
 
 
 EXTRA_DIST = \
-	libdpkg.Versions \
+	libdpkg.map \
 	libdpkg.pc.in
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -26,13 +27,16 @@ libdpkg_a_SOURCES = \
 	dlist.h \
 	ar.c \
 	arch.c \
+	atomic-file.c \
 	buffer.c \
 	cleanup.c \
 	command.c \
 	compress.c \
 	dbdir.c \
 	dbmodify.c \
+	deb-version.c \
 	debug.c \
+	depcon.c \
 	dir.c \
 	dump.c \
 	ehandle.c \
@@ -41,9 +45,8 @@ libdpkg_a_SOURCES = \
 	file.c \
 	fields.c \
 	glob.c \
-	i18n.h \
+	i18n.c i18n.h \
 	log.c \
-	md5.c md5.h \
 	mlib.c \
 	namevalue.c \
 	nfmalloc.c \
@@ -60,8 +63,11 @@ libdpkg_a_SOURCES = \
 	pkg-show.c \
 	pkg-spec.c \
 	progname.c \
+	program.c \
 	progress.c \
+	report.c \
 	string.c \
+	strwide.c \
 	subproc.c \
 	tarfn.c \
 	test.h \
@@ -71,15 +77,16 @@ libdpkg_a_SOURCES = \
 	trigdeferred.l \
 	utils.c \
 	varbuf.c \
-	vercmp.c \
 	version.c
 
 pkginclude_HEADERS = \
 	ar.h \
 	arch.h \
+	atomic-file.h \
 	buffer.h \
 	command.h \
 	compress.h \
+	deb-version.h \
 	debug.h \
 	dir.h \
 	dpkg.h \
@@ -102,7 +109,9 @@ pkginclude_HEADERS = \
 	pkg-show.h \
 	pkg-spec.h \
 	progname.h \
+	program.h \
 	progress.h \
+	report.h \
 	string.h \
 	subproc.h \
 	tarfn.h \

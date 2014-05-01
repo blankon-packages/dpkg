@@ -1,9 +1,29 @@
+.\" dpkg manual page - dpkg-query(1)
+.\"
+.\" Copyright Â© 2001 Wichert Akkerman <wakkerma@debian.org>
+.\" Copyright Â© 2006-2007 Frank Lichtenheld <djpig@debian.org>
+.\" Copyright Â© 2006-2012 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2008-2011 RaphaÃ«l Hertzog <hertzog@debian.org>
+.\"
+.\" This is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <https://www.gnu.org/licenses/>.
+.
 .\"*******************************************************************
 .\"
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-query 1 2011\-08\-14 "Projet Debian" "suite dpkg"
+.TH dpkg\-query 1 03\-04\-2012 "Projet Debian" "suite dpkg"
 .SH NOM
 dpkg\-query \- Un outil pour interroger la base de données de dpkg
 .
@@ -16,10 +36,10 @@ connus par la base de données de \fBdpkg\fP.
 .
 .SH COMMANDES
 .TP 
-\fB\-l\fP, \fB\-\-list\fP [\fIpackage\-name\-pattern\fP...]
-Affiche les paquets correspondants au motif donné. Si aucun
+\fB\-l\fP, \fB\-\-list\fP [\fImotif\-de\-nom\-de\-paquet\fP...]
+Affiche les paquets correspondant au motif donné. Si aucun
 \fInom\-paquet\-motif\fP n'est indiqué, affiche tous les paquets de
-\fI/var/lib/dpkg/status\fP, sauf ceux qui ne sont pas installés (c'est à dire
+\fI/var/lib/dpkg/status\fP, sauf ceux qui ne sont pas installés (c'est\-à\-dire
 ceux qui ont été précédemment purgés). Les métacaractères ordinaires de
 l'interpréteur de commandes sont autorisés dans \fInom\-paquet\-motif\fP. Il
 faudra sans doute mettre \fInom\-paquet\-motif\fP entre apostrophes pour éviter
@@ -45,8 +65,8 @@ Action souhaitée\ :
 
 État du paquet\ :
 .nf
-  n = Non installé (Not\-installed
-)  c = Fichiers de configuration (Config\-files)
+  n = Non installé (Not\-installed)
+  c = Fichiers de configuration (Config\-files)
   H = Semi\-installé (Half\-installed)
   U = Décompressé (Unpacked)
   F = Semi\-configuré (Half\-configured)
@@ -70,50 +90,69 @@ automatiquement à la largeur du terminal. Ce format est destiné aux humains
 et la machine le lit mal. Voyez \fB\-W\fP (\fB\-\-show\fP) et \fB\-\-showformat\fP pour
 une possible configuration de ce format.
 .TP 
-\fB\-W\fP, \fB\-\-show\fP [\fIpackage\-name\-pattern\fP...]
-Tout comme l'option \fB\-\-list\fP, cette option affiche la liste des paquets qui
-correspondent au motif donné. La sortie peut cependant être formatée en
-utilisant l'option \fB\-\-showformat\fP. Le format de sortie par défaut est le
-suivant\ : une ligne pour chaque paquet, avec le nom et la version installée,
-séparé par une tabulation.
+\fB\-W\fP, \fB\-\-show\fP [\fImotif\-de\-nom\-de\-paquet\fP...]
+Just like the \fB\-\-list\fP option this will list all packages matching the
+given pattern. However the output can be customized using the
+\fB\-\-showformat\fP option.  The default output format gives one line per
+matching package, each line having the name (extended with the architecture
+qualifier for \fBMulti\-Arch\fP \fBsame\fP packages) and installed version of the
+package, separated by a tab.
 .TP 
 \fB\-s\fP, \fB\-\-status\fP \fInom\-paquet\fP ...
-Report status of specified package. This just displays the entry in the
-installed package status database. When multiple \fIpackage\-name\fP are listed,
-the requested status entries are separated by an empty line.
+Donne l'état du paquet indiqué. C'est simplement l'affichage de l'entrée de
+la base de données concernant les états des paquets installés. Lorsque des
+\fInoms\-de\-paquets\fP multiples sont indiqués, les entrées d'état demandées
+sont séparées par une ligne vide et sont dans l'ordre utilisé pour la liste
+de paramètres.
 .TP 
 \fB\-L\fP, \fB\-\-listfiles\fP \fInom\-paquet\fP...
-List files installed to your system from \fIpackage\-name\fP. When multiple
-\fIpackage\-name\fP are listed, the requested lists of files are separated by an
-empty line. However, note that files created by package\-specific
-installation\-scripts are not listed.
+Affiche la liste des fichiers du \fInom\-paquet\fP installés sur le
+système. Lorsque plusieurs \fInom\-paquet\fP sont indiqués, les différentes
+listes de fichiers sont séparées par une ligne vide et elles sont fournies
+dans l'ordre de la liste de paramètres. Il faut remarquer cependant que les
+fichiers créés par les scripts d'installation propres aux paquets ne sont
+pas affichés.
+.TP 
+\fB\-\-control\-list\fP \fInom\-de\-paquet\fP
+Affiche les fichiers de contrôle installés sur le système à partir de
+\fInom\-de\-paquet\fP. Ceux\-ci peuvent être utilisés en paramètres d'entrée de
+\fB\-\-control\-show\fP.
+.TP 
+\fB\-\-control\-show\fP \fInom\-de\-paquet\fP \fIfichier\-de\-contrôle\fP
+Affiche sur la sortie standard le \fIfichier\-de\-contrôle\fP installé sur le
+système pour \fInom\-de\-paquet\fP.
 .TP 
 \fB\-c\fP, \fB\-\-control\-path\fP \fInom\-paquet\fP [\fIfichier\-contrôle\fP]
-Affiche les chemins pour les fichiers de contrôle installés sur votre
-système pour \fInom\-paquet\fP. Si \fIfichier\-contrôle\fP est indiqué, seul le
-chemin pour ce fichier de contrôle sera affiché, s'il est
-présent. \fBAttention\fP\ :\ cette commande est semi\-publique et ne devrait être
-utilisée qu'en dernier ressort et si aucune autre interface n'est
-disponible. Elle pourrait devenir obsolète dans le futur si de meilleures
-interfaces sont mises en place ou si les défauts actuels d'architecture sont
-résolus.
+List paths for control files installed to your system from \fIpackage\-name\fP.
+If \fIcontrol\-file\fP is specified then only list the path for that control
+file if it is present.
+
+\fBWarning\fP: this command is deprecated as it gives direct access to the
+internal dpkg database, please switch to use \fB\-\-control\-list\fP and
+\fB\-\-control\-show\fP instead for all cases where those commands might give the
+same end result. Although there is still at least one case where this
+command is needed (i.e. when having to remove a damaging postrm maintainer
+script), and as long as there is no good solution for that, this command
+will not get removed.
 .TP 
 \fB\-S\fP, \fB\-\-search\fP \fImotif\-de\-nom\-a\-rechercher\fP...
-Search for packages that own files corresponding to the given pattern.
-Standard shell wildchars can be used in the pattern.  This command will not
-list extra files created by maintainer scripts, nor will it list
+Recherche les paquets propriétaires de fichiers dont le nom correspond au
+motif indiqué. On peut utiliser dans le motif tous les métacaractères de
+l'interpréteur de commandes. Cette commande ne donne pas les fichiers
+supplémentaires créés par les scripts du responsable de paquet, ni les
 alternatives.
 .TP 
 \fB\-p\fP, \fB\-\-print\-avail\fP \fInom\-paquet\fP...
-Display details about \fIpackage\-name\fP, as found in
-\fI/var/lib/dpkg/available\fP. When multiple \fIpackage\-name\fP are listed, the
-requested \fIavailable\fP entries are separated by an empty line.
+Affiche les détails relatifs à \fInom\-paquet\fP, tels que présents dans
+\fI/var/lib/dpkg/available\fP. Si des \fInom\-paquet\fP multiples sont indiqués,
+les entrées \fIavailable\fP correspondantes seront séparées par des lignes
+vides et apparaîtront dans l'ordre de la liste de paramètres.
 
-Users of APT\-based frontends should use \fBapt\-cache show\fP \fIpackage\-name\fP
-instead as the \fIavailable\fP file is only kept up\-to\-date when using
-\fBdselect\fP.
+Les utilisateurs des outils basés sur APT devraient plutôt utiliser la
+commande \fBapt\-cache show\fP \fInom\-paquet\fP car le fichier \fIavailable\fP n'est
+tenu à jour que lorsque \fBdselect\fP est utilisé.
 .TP 
-\fB\-h\fP, \fB\-\-help\fP
+\fB\-?\fP, \fB\-\-help\fP
 Affiche un message d'aide puis quitte.
 .TP 
 \fB\-\-version\fP
@@ -124,6 +163,11 @@ Affiche le numéro de version puis quitte.
 \fB\-\-admindir\fP=\fIdir\fP
 Change l'endroit où se trouve la base de données de \fBdpkg\fP. Par défaut,
 c'est \fI/var/lib/dpkg\fP.
+.TP 
+\fB\-\-load\-avail\fP
+Charge également le fichier available à l'utilisation des commandes
+\fB\-\-show\fP et \fB\-\-list\fP, ce qui désormais revient à n'interroger que le
+fichier status.
 .TP 
 \fB\-f\fP, \fB\-\-showformat=\fP\fIformat\fP
 Cette option sert à spécifier le format de sortie de l'option \fB\-\-show\fP. Ce
@@ -138,7 +182,7 @@ Dans la chaîne, \(lq\fB\e\fP\(rq déspécifie le caractère
 .fi
 
 \(lq\fB\e\fP\(rq avant un caractère supprime la signification du caractère qui
-suit. C'est utile pour les caractères \(lq\fB\e\fP\(rq and \(lq\fB$\fP\(rq.
+suit. C'est utile pour les caractères \(lq\fB\e\fP\(rq et \(lq\fB$\fP\(rq.
 
 L'information relative à un paquet peut être indiquée en insérant des appels
 de variables spécifiant des champs du paquet avec la syntaxe suivante\ :
@@ -151,19 +195,19 @@ conservés avec le paquet binaire le sont)\ :
 .nf
     \fBArchitecture\fP
     \fBBugs\fP
-    \fBConffiles\fP (internal)
-    \fBConfig\-Version\fP (internal)
+    \fBConffiles\fP (interne)
+    \fBConfig\-Version\fP (interne)
     \fBConflicts\fP
     \fBBreaks\fP
     \fBDepends\fP
     \fBDescription\fP
     \fBEnhances\fP
     \fBEssential\fP
-    \fBFilename\fP (internal, front\-end related)
+    \fBFilename\fP (interne, lié au programme frontal)
     \fBHomepage\fP
     \fBInstalled\-Size\fP
-    \fBMD5sum\fP (internal, front\-end related)
-    \fBMSDOS\-Filename\fP (internal, front\-end related)
+    \fBMD5sum\fP (interne, lié au programme frontal)
+    \fBMSDOS\-Filename\fP (interne, lié au programme frontal)
     \fBMaintainer\fP
     \fBOrigin\fP
     \fBPackage\fP
@@ -172,27 +216,41 @@ conservés avec le paquet binaire le sont)\ :
     \fBProvides\fP
     \fBRecommends\fP
     \fBReplaces\fP
-    \fBRevision\fP (obsolete)
+    \fBRevision\fP (obsolète)
     \fBSection\fP
-    \fBSize\fP (internal, front\-end related)
+    \fBSize\fP (interne, lié au programme frontal)
     \fBSource\fP
-    \fBStatus\fP (internal)
+    \fBStatus\fP (interne)
     \fBSuggests\fP
-    \fBTag\fP (usually not in the .deb but in the repository Packages files)
-    \fBTriggers\-Awaited\fP (internal)
-    \fBTriggers\-Pending\fP (internal)
+    \fBTag\fP (en général pas dans le .deb mais dans les fichiers Packages des dépôts)
+    \fBTriggers\-Awaited\fP (interne)
+    \fBTriggers\-Pending\fP (interne)
     \fBVersion\fP
 .fi
 
-Le format par défaut est le suivant\ :
-\(lq\fB${Package}\et${Version}\en\fP\(rq. Tous les autres champs du fichier
-status, par exemple des champs définis par l'utilisateur, peuvent être
-demandés. Ils seront affichés mais sans aucune mise en forme et aucune
-vérification n'est faite. Pour obtenir le nom du responsable de dpkg et la
-version installée, exécutez par exemple\ :
+Les champs suivants sont virtuels, créés par \fBdpkg\-query\fP à partir des
+valeurs d'autres champs (veuillez noter qu'il utilisent des noms qui ne sont
+pas valables comme noms de champs dans le fichiers de contrôle)\ :
 
 .nf
-  \fBdpkg\-query \-W \-f=\(aq${Package} ${Version}\et${Maintainer}\en\(aq dpkg\fP
+    \fBbinary:Package\fP
+    \fBbinary:Summary\fP
+    \fBdb:Status\-Abbrev\fP
+    \fBsource:Package\fP
+    \fBsource:Version\fP
+.fi
+
+The default format string is \(lq\fB${binary:Package}\et${Version}\en\fP\(rq.
+Actually, all other fields found in the status file (i.e. user defined
+fields) can be requested, too. They will be printed as\-is, though, no
+conversion nor error checking is done on them. \fBbinary:Package\fP is a
+special field that will print the package name with an architecture
+qualifier (like "libc6:amd64") if the package has a \fBMulti\-Arch\fP field with
+a value of \fBsame\fP, and as such its name could be ambiguous.  To get the
+name of the \fBdpkg\fP maintainer and the installed version, you could run:
+
+.nf
+  \fBdpkg\-query \-W \-f=\(aq${binary:Package} ${Version}\et${Maintainer}\en\(aq dpkg\fP
 .fi
 .
 .SH "CODE DE SORTIE"
@@ -201,25 +259,19 @@ version installée, exécutez par exemple\ :
 La requête demandée s'est correctement déroulée.
 .TP 
 \fB1\fP
-Des problèmes sont survenus lors de l'analyse de la ligne de commande ou
-bien pendant l'exécution de la requête. Cela peut être une absence de
-fichier ou de paquet (sauf pour \-\-control\-path).
+Problems were encountered while parsing the command line or performing the
+query, including no file or package being found (except for
+\fB\-\-control\-path\fP).
 .
 .SH ENVIRONNEMENT
 .TP 
 \fBDPKG_ADMINDIR\fP
 If set and the \fB\-\-admindir\fP option has not been specified, it will be used
-as the dpkg data directory.
+as the \fBdpkg\fP data directory.
 .TP 
 \fBCOLUMNS\fP
 Ce réglage influence la sortie de l'option \fB\-\-list\fP en modifiant la largeur
 d'affichage.
-.
-.SH AUTEUR
-Copyright \(co 2001 Wichert Akkerman
-.sp
-Ce programme est un logiciel libre\ ; voyez la «\ GNU General Public Licence\ »
-version 2 ou supérieure pour le copyright. Il n'y a PAS de garantie.
 .
 .SH "VOIR AUSSI"
 \fBdpkg\fP(1).

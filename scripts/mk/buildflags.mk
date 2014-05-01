@@ -3,7 +3,11 @@
 # CFLAGS: flags for the C compiler
 # CPPFLAGS: flags for the C preprocessor
 # CXXFLAGS: flags for the C++ compiler
-# FFLAGS: flags for the Fortran compiler
+# OBJCFLAGS: flags for the Objective C compiler
+# OBJCXXFLAGS: flags for the Objective C++ compiler
+# GCJFLAGS: flags for the GNU Java compiler
+# FFLAGS: flags for the Fortran 77 compiler
+# FCFLAGS: flags for the Fortran 9x compiler
 # LDFLAGS: flags for the linker
 #
 # You can also export them in the environment by setting
@@ -14,12 +18,25 @@
 
 dpkg_late_eval ?= $(or $(value DPKG_CACHE_$(1)),$(eval DPKG_CACHE_$(1) := $(shell $(2)))$(value DPKG_CACHE_$(1)))
 
-CFLAGS = $(call dpkg_late_eval,CFLAGS,dpkg-buildflags --get CFLAGS)
-CPPFLAGS = $(call dpkg_late_eval,CPPFLAGS,dpkg-buildflags --get CPPFLAGS)
-CXXFLAGS = $(call dpkg_late_eval,CXXFLAGS,dpkg-buildflags --get CXXFLAGS)
-FFLAGS = $(call dpkg_late_eval,FFLAGS,dpkg-buildflags --get FFLAGS)
-LDFLAGS = $(call dpkg_late_eval,LDFLAGS,dpkg-buildflags --get LDFLAGS)
+DPKG_BUILDFLAGS_LIST = CFLAGS CPPFLAGS CXXFLAGS OBJCFLAGS OBJCXXFLAGS \
+                       GCJFLAGS FFLAGS FCFLAGS LDFLAGS
+
+define dpkg_buildflags_export_envvar
+ifdef $(1)
+DPKG_BUILDFLAGS_EXPORT_ENVVAR += $(1)="$(value $(1))"
+endif
+endef
+
+$(eval $(call dpkg_buildflags_export_envvar,DEB_BUILD_MAINT_OPTIONS))
+$(foreach flag,$(DPKG_BUILDFLAGS_LIST),\
+  $(foreach operation,SET STRIP APPEND PREPEND,\
+    $(eval $(call dpkg_buildflags_export_envvar,DEB_$(flag)_MAINT_$(operation)))))
+
+dpkg_buildflags_setvar = $(1) = $(call dpkg_late_eval,$(1),$(DPKG_BUILDFLAGS_EXPORT_ENVVAR) dpkg-buildflags --get $(1))
+
+$(foreach flag,$(DPKG_BUILDFLAGS_LIST),\
+  $(eval $(call dpkg_buildflags_setvar,$(flag))))
 
 ifdef DPKG_EXPORT_BUILDFLAGS
-  export CFLAGS CPPFLAGS CXXFLAGS FFLAGS LDFLAGS
+  export $(DPKG_BUILDFLAGS_LIST)
 endif

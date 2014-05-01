@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -67,13 +67,16 @@ struct error_context {
   } handler_type;
 
   union {
-    error_handler *func;
+    error_handler_func *func;
     jmp_buf *jump;
   } handler;
 
+  struct {
+    error_printer_func *func;
+    const void *data;
+  } printer;
+
   struct cleanup_entry *cleanups;
-  void (*printerror)(const char *emsg, const char *contextstring);
-  const char *contextstring;
 };
 
 static struct error_context *volatile econtext = NULL;
@@ -126,15 +129,15 @@ error_context_new(void)
 }
 
 static void
-set_error_printer(struct error_context *ec, error_printer *printerror,
-                  const char *contextstring)
+set_error_printer(struct error_context *ec, error_printer_func *func,
+                  const void *data)
 {
-  ec->printerror = printerror;
-  ec->contextstring = contextstring;
+  ec->printer.func = func;
+  ec->printer.data = data;
 }
 
 static void
-set_func_handler(struct error_context *ec, error_handler *func)
+set_func_handler(struct error_context *ec, error_handler_func *func)
 {
   ec->handler_type = handler_type_func;
   ec->handler.func = func;
@@ -148,26 +151,28 @@ set_jump_handler(struct error_context *ec, jmp_buf *jump)
 }
 
 void
-push_error_context_func(error_handler *func, error_printer *printerror,
-                        const char *contextstring)
+push_error_context_func(error_handler_func *handler,
+                        error_printer_func *printer,
+                        const void *printer_data)
 {
   struct error_context *ec;
 
   ec = error_context_new();
-  set_error_printer(ec, printerror, contextstring);
-  set_func_handler(ec, func);
+  set_error_printer(ec, printer, printer_data);
+  set_func_handler(ec, handler);
   onerr_abort = 0;
 }
 
 void
-push_error_context_jump(jmp_buf *jump, error_printer *printerror,
-                        const char *contextstring)
+push_error_context_jump(jmp_buf *jumper,
+                        error_printer_func *printer,
+                        const void *printer_data)
 {
   struct error_context *ec;
 
   ec = error_context_new();
-  set_error_printer(ec, printerror, contextstring);
-  set_jump_handler(ec, jump);
+  set_error_printer(ec, printer, printer_data);
+  set_jump_handler(ec, jumper);
   onerr_abort = 0;
 }
 
@@ -178,7 +183,7 @@ push_error_context(void)
 }
 
 static void
-print_cleanup_error(const char *emsg, const char *contextstring)
+print_cleanup_error(const char *emsg, const void *data)
 {
   fprintf(stderr, _("%s: error while cleaning up:\n %s\n"),
           dpkg_get_progname(), emsg);
@@ -194,7 +199,8 @@ run_cleanups(struct error_context *econ, int flagsetin)
   jmp_buf recurse_jump;
   volatile int i, flagset;
 
-  if (econ->printerror) econ->printerror(errmsg,econ->contextstring);
+  if (econ->printer.func)
+    econ->printer.func(errmsg, econ->printer.data);
 
   if (++preventrecurse > 3) {
     onerr_abort++;
@@ -347,7 +353,7 @@ catch_fatal_error(void)
 }
 
 void
-print_fatal_error(const char *emsg, const char *contextstring)
+print_fatal_error(const char *emsg, const void *data)
 {
   fprintf(stderr, _("%s: error: %s\n"), dpkg_get_progname(), emsg);
 }
@@ -375,36 +381,8 @@ void ohshite(const char *fmt, ...) {
   run_error_handler();
 }
 
-static int warn_count = 0;
-
-int
-warning_get_count(void)
-{
-  return warn_count;
-}
-
 void
-warningv(const char *fmt, va_list args)
-{
-  char buf[1024];
-
-  warn_count++;
-  vsnprintf(buf, sizeof(buf), fmt, args);
-  fprintf(stderr, _("%s: warning: %s\n"), dpkg_get_progname(), buf);
-}
-
-void
-warning(const char *fmt, ...)
-{
-  va_list args;
-
-  va_start(args, fmt);
-  warningv(fmt, args);
-  va_end(args);
-}
-
-void
-do_internerr(const char *file, int line, const char *fmt, ...)
+do_internerr(const char *file, int line, const char *func, const char *fmt, ...)
 {
   va_list args;
   char buf[1024];
@@ -413,8 +391,8 @@ do_internerr(const char *file, int line, const char *fmt, ...)
   vsnprintf(buf, sizeof(buf), fmt, args);
   va_end(args);
 
-  fprintf(stderr, _("%s:%s:%d: internal error: %s\n"),
-          dpkg_get_progname(), file, line, buf);
+  fprintf(stderr, _("%s:%s:%d:%s: internal error: %s\n"),
+          dpkg_get_progname(), file, line, func, buf);
 
   abort();
 }

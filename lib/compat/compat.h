@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifndef COMPAT_H
@@ -30,6 +30,18 @@ extern "C" {
 #define offsetof(st, m) ((size_t)&((st *)NULL)->m)
 #endif
 
+#ifndef HAVE_MAKEDEV
+#define makedev(maj, min) ((((maj) & 0xff) << 8) | ((min) & 0xff))
+#endif
+
+#ifndef HAVE_O_NOFOLLOW
+#define O_NOFOLLOW 0
+#endif
+
+#ifndef HAVE_P_TMPDIR
+#define P_tmpdir "/tmp"
+#endif
+
 /*
  * Define WCOREDUMP if we don't have it already, coredumps won't be
  * detected, though.
@@ -38,16 +50,10 @@ extern "C" {
 #define WCOREDUMP(x) 0
 #endif
 
-#ifndef HAVE_STRTOUL
-#define strtoul strtol
-#endif
-
 #ifndef HAVE_VA_COPY
 #include <string.h>
 #define va_copy(dest, src) memcpy(&(dest), &(src), sizeof(va_list))
 #endif
-
-#include <strnlen.h>
 
 #ifndef HAVE_C99_SNPRINTF
 #include <stddef.h>
@@ -60,8 +66,19 @@ int vsnprintf(char *buf, size_t maxsize, const char *fmt, va_list args);
 #ifndef HAVE_ASPRINTF
 #include <stdarg.h>
 
-int asprintf(char *str, char const *fmt, ...);
-int vasprintf(char *str, const char *fmt, va_list args);
+int asprintf(char **str, char const *fmt, ...);
+int vasprintf(char **str, const char *fmt, va_list args);
+#endif
+
+#ifndef HAVE_STRNLEN
+size_t strnlen(const char *s, size_t n);
+#endif
+
+#ifndef HAVE_STRNDUP
+#include <stddef.h>
+
+#undef strndup
+char *strndup(const char *s, size_t n);
 #endif
 
 #ifndef HAVE_STRERROR

@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -56,17 +56,15 @@ const char *const sys_siglist[] = {
 extern const char *const sys_siglist[];
 #endif
 
-#ifndef HAVE_STRSIGNAL
 const char *
 strsignal(int s)
 {
 	static char buf[100];
 
-	if (s > 0 && s < sizeof(sys_siglist) / sizeof(sys_siglist[0]))
+	if (s > 0 && s < (int)(sizeof(sys_siglist) / sizeof(sys_siglist[0])))
 		return sys_siglist[s];
 
 	sprintf(buf, _("Unknown signal %d"), s);
 
 	return buf;
 }
-#endif

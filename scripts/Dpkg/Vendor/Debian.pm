@@ -15,21 +15,20 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package Dpkg::Vendor::Debian;
 
 use strict;
 use warnings;
 
-our $VERSION = "0.01";
+our $VERSION = '0.01';
 
-use base qw(Dpkg::Vendor::Default);
+use parent qw(Dpkg::Vendor::Default);
 
 use Dpkg::Gettext;
 use Dpkg::ErrorHandling;
 use Dpkg::Control::Types;
-use Dpkg::Vendor::Ubuntu;
 use Dpkg::BuildOptions;
 use Dpkg::Arch qw(get_host_arch debarch_to_debtriplet);
 
@@ -49,17 +48,11 @@ for Debian specific actions.
 sub run_hook {
     my ($self, $hook, @params) = @_;
 
-    if ($hook eq "keyrings") {
+    if ($hook eq 'keyrings') {
         return ('/usr/share/keyrings/debian-keyring.gpg',
                 '/usr/share/keyrings/debian-maintainers.gpg');
-    } elsif ($hook eq "register-custom-fields") {
-        return (
-            [ "register", "Dm-Upload-Allowed",
-              CTRL_INFO_SRC | CTRL_INDEX_SRC | CTRL_PKG_SRC ],
-            [ "insert_after", CTRL_INDEX_SRC, "Uploaders", "Dm-Upload-Allowed" ],
-            [ "insert_after", CTRL_PKG_SRC, "Uploaders", "Dm-Upload-Allowed" ],
-        );
-    } elsif ($hook eq "extend-patch-header") {
+    } elsif ($hook eq 'register-custom-fields') {
+    } elsif ($hook eq 'extend-patch-header') {
         my ($textref, $ch_info) = @params;
 	if ($ch_info->{'Closes'}) {
 	    foreach my $bug (split(/\s+/, $ch_info->{'Closes'})) {
@@ -67,11 +60,13 @@ sub run_hook {
 	    }
 	}
 
+	# XXX: Layer violation...
+	require Dpkg::Vendor::Ubuntu;
 	my $b = Dpkg::Vendor::Ubuntu::find_launchpad_closes($ch_info->{'Changes'});
 	foreach my $bug (@$b) {
 	    $$textref .= "Bug-Ubuntu: https://bugs.launchpad.net/bugs/$bug\n";
 	}
-    } elsif ($hook eq "update-buildflags") {
+    } elsif ($hook eq 'update-buildflags') {
 	$self->add_hardening_flags(@params);
     } else {
         return $self->SUPER::run_hook($hook, @params);
@@ -83,73 +78,124 @@ sub add_hardening_flags {
     my $arch = get_host_arch();
     my ($abi, $os, $cpu) = debarch_to_debtriplet($arch);
 
-    # Decide what's enabled
+    unless (defined $abi and defined $os and defined $cpu) {
+        warning(_g("unknown host architecture '%s'"), $arch);
+        ($abi, $os, $cpu) = ('', '', '');
+    }
+
+    # Features enabled by default for all builds.
     my %use_feature = (
-	"pie" => 0,
-	"stackprotector" => 1,
-	"fortify" => 1,
-	"format" => 1,
-	"relro" => 1,
-	"bindnow" => 0
+	pie => 0,
+	stackprotector => 1,
+	fortify => 1,
+	format => 1,
+	relro => 1,
+	bindnow => 0,
     );
-    my $opts = Dpkg::BuildOptions->new(envvar => "DEB_BUILD_MAINT_OPTIONS");
-    foreach my $feature (split(",", $opts->get("hardening") // "")) {
+
+    # Adjust features based on Maintainer's desires.
+    my $opts = Dpkg::BuildOptions->new(envvar => 'DEB_BUILD_MAINT_OPTIONS');
+    foreach my $feature (split(/,/, $opts->get('hardening') // '')) {
 	$feature = lc($feature);
 	if ($feature =~ s/^([+-])//) {
-	    my $value = ($1 eq "+") ? 1 : 0;
-	    if ($feature eq "all") {
+	    my $value = ($1 eq '+') ? 1 : 0;
+	    if ($feature eq 'all') {
 		$use_feature{$_} = $value foreach keys %use_feature;
 	    } else {
 		if (exists $use_feature{$feature}) {
 		    $use_feature{$feature} = $value;
 		} else {
-		    warning(_g("unknown hardening feature: %s"), $feature);
+		    warning(_g('unknown hardening feature: %s'), $feature);
 		}
 	    }
 	} else {
-	    warning(_g("incorrect value in hardening option of " .
-	               "DEB_BUILD_MAINT_OPTIONS: %s"), $feature);
+	    warning(_g('incorrect value in hardening option of ' .
+	               'DEB_BUILD_MAINT_OPTIONS: %s'), $feature);
 	}
     }
 
-    # PIE
-    if ($use_feature{"pie"} and
-	$os =~ /^(linux|knetbsd|hurd)$/ and
-	$cpu !~ /^(hppa|m68k|mips|mipsel|avr32)$/) {
-	# Only on linux/knetbsd/hurd (see #430455 and #586215)
-	# Disabled on hppa, m68k (#451192), mips/mipsel (#532821), avr32
-	# (#574716)
-	$flags->append("CFLAGS", "-fPIE");
-	$flags->append("CXXFLAGS", "-fPIE");
-	$flags->append("LDFLAGS", "-fPIE -pie");
+    # Mask features that are not available on certain architectures.
+    if ($os !~ /^(linux|knetbsd|hurd)$/ or
+	$cpu =~ /^(hppa|mips|mipsel|avr32)$/) {
+	# Disabled on non-linux/knetbsd/hurd (see #430455 and #586215).
+	# Disabled on hppa, mips/mipsel (#532821), avr32
+	#  (#574716).
+	$use_feature{pie} = 0;
     }
-    # Stack protector
-    if ($use_feature{"stackprotector"} and
-	$cpu !~ /^(ia64|alpha|mips|mipsel|hppa)$/ and $arch ne "arm") {
-	# Stack protector disabled on ia64, alpha, mips, mipsel, hppa.
+    if ($cpu =~ /^(ia64|alpha|mips|mipsel|hppa|arm64)$/ or $arch eq 'arm') {
+	# Stack protector disabled on ia64, alpha, arm64, mips, mipsel, hppa.
 	#   "warning: -fstack-protector not supported for this target"
 	# Stack protector disabled on arm (ok on armel).
 	#   compiler supports it incorrectly (leads to SEGV)
-	$flags->append("CFLAGS", "-fstack-protector --param=ssp-buffer-size=4");
-	$flags->append("CXXFLAGS", "-fstack-protector --param=ssp-buffer-size=4");
+	$use_feature{stackprotector} = 0;
     }
-    # Fortify
-    if ($use_feature{"fortify"}) {
-	$flags->append("CFLAGS", "-D_FORTIFY_SOURCE=2");
-	$flags->append("CXXFLAGS", "-D_FORTIFY_SOURCE=2");
+    if ($cpu =~ /^(ia64|hppa|avr32)$/) {
+	# relro not implemented on ia64, hppa, avr32.
+	$use_feature{relro} = 0;
     }
-    # Format
-    if ($use_feature{"format"}) {
-	$flags->append("CFLAGS", "-Wformat -Wformat-security -Werror=format-security");
-	$flags->append("CXXFLAGS", "-Wformat -Wformat-security -Werror=format-security");
+
+    # Mask features that might be influenced by other flags.
+    if ($flags->{build_options}->has('noopt')) {
+      # glibc 2.16 and later warn when using -O0 and _FORTIFY_SOURCE.
+      $use_feature{fortify} = 0;
     }
-    # Relro
-    if ($use_feature{"relro"} and $cpu !~ /^(ia64|hppa|avr32)$/) {
-	$flags->append("LDFLAGS", "-Wl,-z,relro");
+
+    # Handle logical feature interactions.
+    if ($use_feature{relro} == 0) {
+	# Disable bindnow if relro is not enabled, since it has no
+	# hardening ability without relro and may incur load penalties.
+	$use_feature{bindnow} = 0;
     }
+
+    # PIE
+    if ($use_feature{pie}) {
+	$flags->append('CFLAGS', '-fPIE');
+	$flags->append('OBJCFLAGS', '-fPIE');
+	$flags->append('OBJCXXFLAGS', '-fPIE');
+	$flags->append('FFLAGS', '-fPIE');
+	$flags->append('FCFLAGS', '-fPIE');
+	$flags->append('CXXFLAGS', '-fPIE');
+	$flags->append('GCJFLAGS', '-fPIE');
+	$flags->append('LDFLAGS', '-fPIE -pie');
+    }
+
+    # Stack protector
+    if ($use_feature{stackprotector}) {
+	$flags->append('CFLAGS', '-fstack-protector --param=ssp-buffer-size=4');
+	$flags->append('OBJCFLAGS', '-fstack-protector --param=ssp-buffer-size=4');
+	$flags->append('OBJCXXFLAGS', '-fstack-protector --param=ssp-buffer-size=4');
+	$flags->append('FFLAGS', '-fstack-protector --param=ssp-buffer-size=4');
+	$flags->append('FCFLAGS', '-fstack-protector --param=ssp-buffer-size=4');
+	$flags->append('CXXFLAGS', '-fstack-protector --param=ssp-buffer-size=4');
+	$flags->append('GCJFLAGS', '-fstack-protector --param=ssp-buffer-size=4');
+    }
+
+    # Fortify Source
+    if ($use_feature{fortify}) {
+	$flags->append('CPPFLAGS', '-D_FORTIFY_SOURCE=2');
+    }
+
+    # Format Security
+    if ($use_feature{format}) {
+	$flags->append('CFLAGS', '-Wformat -Werror=format-security');
+	$flags->append('CXXFLAGS', '-Wformat -Werror=format-security');
+	$flags->append('OBJCFLAGS', '-Wformat -Werror=format-security');
+	$flags->append('OBJCXXFLAGS', '-Wformat -Werror=format-security');
+    }
+
+    # Read-only Relocations
+    if ($use_feature{relro}) {
+	$flags->append('LDFLAGS', '-Wl,-z,relro');
+    }
+
     # Bindnow
-    if ($use_feature{"bindnow"}) {
-	$flags->append("LDFLAGS", "-Wl,-z,now");
+    if ($use_feature{bindnow}) {
+	$flags->append('LDFLAGS', '-Wl,-z,now');
+    }
+
+    # Store the feature usage.
+    while (my ($feature, $enabled) = each %use_feature) {
+	$flags->set_feature('hardening', $feature, $enabled);
     }
 }
 

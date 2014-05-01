@@ -1,9 +1,34 @@
+.\" dpkg manual page - dpkg(1)
+.\"
+.\" Copyright Â© 1996 Juho Vuori <javuori@cc.helsinki.fi>
+.\" Copyright Â© 1999 Jim Van Zandt <jrv@vanzandt.mv.com>
+.\" Copyright Â© 1999-2003 Wichert Akkerman <wakkerma@debian.org>
+.\" Copyright Â© 2000-2003 Adam Heath <doogie@debian.org>
+.\" Copyright Â© 2002 Josip Rodin
+.\" Copyright Â© 2004-2005 Scott James Remnant <keybuk@debian.org>
+.\" Copyright Â© 2006-2014 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2007-2008 Ian Jackson <ian@davenant.greenend.org.uk>
+.\" Copyright Â© 2008-2011 RaphaÃ«l Hertzog <hertzog@debian.org>
+.\"
+.\" This is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <https://www.gnu.org/licenses/>.
+.
 .\"*******************************************************************
 .\"
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg 1 2011\-08\-14 Debianprojektet Dpkg\-sviten
+.TH dpkg 1 2014\-04\-28 Debianprojektet Dpkg\-sviten
 .SH NAMN
 dpkg \- en mellannivåpakethanterare för Debian
 .
@@ -39,51 +64,51 @@ bakgrundsprogrammen anropas direkt.
 paket. Informationen delas in i tre klasser: \fBtillstånd\fP,
 \fBmarkeringstillstånd\fP och \fBflaggor\fP. Dessa värden är avsedda att
 huvudsakligen ändras via \fBdselect\fP.
-.SS PAKETTILLSTÅND
+.SS Pakettillstånd
 .TP 
-\fBej installerat\fP
+\fBej installerat\fP ("not\-installed")
 Paketet är inte installerat på ditt system.
 .TP 
-\fBkonfigurationsfiler\fP
+\fBkonfigurationsfiler\fP ("config\-files")
 Endast konfigurationsfilerna för paketet finns på systemet.
 .TP 
-\fBhalvt installerat\fP
+\fBhalvt installerat\fP ("half\-installed")
 Installationen av paketet har påbörjats, men av någon orsak inte slutförts.
 .TP 
-\fBuppackat\fP
+\fBuppackat\fP ("unpacked")
 Paketet är uppackat, men inte konfigurerat.
 .TP 
-\fBhalvt konfigurerat\fP
+\fBhalvt konfigurerat\fP ("half\-configured")
 Paketet är uppackat och konfigurationen har påbörjats, men av någon orsak
 inte slutförts.
 .TP 
-\fBväntar på utlösare\fP
+\fBväntar på utlösare\fP ("triggers\-awaited")
 Paketet väntar på hantering av utlösare av ett annat paket.
 .TP 
-\fButlösare väntar\fP
+\fButlösare väntar\fP ("triggers\-pending")
 Paketet har utlösts.
 .TP 
-\fBinstallerat\fP
+\fBinstallerat\fP (installed)
 Paketet är uppackat och korrekt inställt.
-.SS "MARKERINGSTILLSTÅND FÖR PAKET"
+.SS Paketvalstillstånd
 .TP 
-\fBinstallera\fP
+\fBinstallera\fP ("install")
 Paketet är markerat för installation.
 .TP 
-\fBhåll\fP
+\fBhåll\fP ("hold")
 Ett paket som är markerat med \fBhåll\fP hanteras inte av \fBdpkg\fP såvida inte
 det framtvingas med flaggan \fB\-\-force\-hold\fP.
 .TP 
-\fBta bort\fP
+\fBta bort\fP ("deinstall")
 Paketet är markerat för avinstallation (dvs. vi vill ta bort alla filer
 förutom konfigurationsfilerna).
 .TP 
-\fBrensa\fP
+\fBrensa\fP ("purge")
 Paketet är markerat för rensning (dvs. vi vill ta bort allting från
 systemkataloger, även konfigurationsfiler).
-.SS PAKETFLAGGOR
+.SS Paketflaggor
 .TP 
-\fBominstallation krävs\fP
+\fBominstallation krävs\fP ("reinst\-required")
 Ett paket markerat \fBominstallation krävs\fP är trasigt och kräver
 ominstallation. Dessa paket kan inte tas bort, såvida inte det framtvingas
 med flaggan \fB\-\-force\-remove\-reinstreq\fP.
@@ -177,13 +202,27 @@ Borttagning av ett paket består av följande steg:
 \fB3.\fP Kör \fIpostrm\fP\-skriptet
 .br
 .TP 
-\fB\-\-update\-avail\fP, \fB\-\-merge\-avail\fP \fIPackages\-fil\fP
-Uppdatera \fBdpkg\fPs och \fBdselect\fPs lista över vilka paket som finns
-tillgängliga. Med \fB\-\-merge\-avail\fP kombineras den gamla informationen med
-informationen från \fIPackages\-filen\fP. Med \fB\-\-update\-avail\fP ersätts den
-gamla informationen med informationen från
-\fIPackages\-filen\fP. \fIPackages\-filerna\fP som medföljer Debian heter helt
-enkelt \fIPackages\fP. \fBdpkg\fP behåller sin lista över tillgängliga paket i
+\fB\-V\fP, \fB\-\-verify\fP \fIpaketnamn\fP ...
+Verifies the integrity of \fIpackage\-name\fP or all packages if omitted, by
+comparing information from the package installed paths with information from
+the files taken from the package metadata stored in the \fBdpkg\fP
+database. The origin of the information in the database is the binary
+packages themselves, which gets collected at package unpack time during
+installation.
+
+The output format is selectable with the \fB\-\-verify\-format\fP option, which by
+default uses the \fBrpm\fP format, but that might change in the future, and as
+such, programs parsing this command output should be explicit about the
+format they expect.
+.TP 
+\fB\-\-update\-avail\fP, \fB\-\-merge\-avail\fP [\fIPackages\-file\fP]
+Update \fBdpkg\fP's and \fBdselect\fP's idea of which packages are available. With
+action \fB\-\-merge\-avail\fP, old information is combined with information from
+\fIPackages\-file\fP. With action \fB\-\-update\-avail\fP, old information is replaced
+with the information in the \fIPackages\-file\fP. The \fIPackages\-file\fP
+distributed with Debian is simply named \fIPackages\fP. If the \fIPackages\-file\fP
+argument is missing or named \fB\-\fP then it will be read from standard input
+(since dpkg 1.17.7). \fBdpkg\fP keeps its record of available packages in
 \fI/var/lib/dpkg/available\fP.
 
 Ett lättare enkelkommando för att hämta och uppdater \fIavailable\fP\-filen är
@@ -217,22 +256,47 @@ Sätt paketvalslistan med den fil som läses från standard in. Filen måste
 vara på formatet "\fIpaket\fP \fIstatus\fP", där status är en av \fBinstall\fP,
 \fBhold\fP, \fBdeinstall\fP eller \fBpurge\fP. Tomrader och kommentarsrader som
 börjar med "#" är också tillåtna.
+
+Filen \fIavailable\fP måste vara àjourförd för att kommandot skall vara av
+något värde, annars kommer okända paket att ignoreras med en varning. Se
+kommandona \fB\-\-update\-avail\fP och \fB\-\-merge\-avail\fP för mer information.
 .TP 
 \fB\-\-clear\-selections\fP
-Sätt det önskade tillståndete för varje icke\-grundläggande paket till
-avinstallera. Detta är avsett att användas direkt före \-\-set\-selections, för
-att avinstallera alla paket som inte finns med i listan som anges av
-\-\-set\-selections.
+Sätt det önskade tillståndet för varje icke\-grundläggande paket till
+avinstallera. Detta är avsett att användas direkt före \fB\-\-set\-selections\fP,
+för att avinstallera alla paket som inte finns med i listan som anges av
+\fB\-\-set\-selections\fP.
 .TP 
 \fB\-\-yet\-to\-unpack\fP
 Söker efter paket som markerats för installation men som av någon anledning
 ännu inte har installerats.
 .TP 
+\fB\-\-add\-architecture\fP \fIarkitektur\fP
+Lägg till \fIarkitektur\fP i listan över arkitekturer för vilka paket kan
+installeras utan att använda \fB\-\-force\-architecture\fP. Arkitekturen \fBdpkg\fP
+har byggts för (dvs. utdata från \fB\-\-print\-architecture\fP) är alltid en del
+av listan.
+.TP 
+\fB\-\-remove\-architecture\fP \fIarkitektur\fP
+Ta bort \fIarkitektur\fP från listan över arkitekturer för vilka paket kan
+installeras utan att använda \fB\-\-force\-architectures\fP. Om arkitekturen för
+närvarande används i databasen kommer operationen att vägras, såvida inte
+\fB\-\-force\-architectures\fP anges. Arkitekturen \fBdpkg\fP byggs för (dvs. utdata
+från \fB\-\-print\-architecture\fP) kan aldrig tas bort från listan.
 .TP 
 \fB\-\-print\-architecture\fP
 Visa arkitektur för paketen \fBdpkg\fP installerar (till exempel "i386").
 .TP 
+\fB\-\-print\-foreign\-architectures\fP
+Visa en lista, avdelad med nyradstecken, över extraarkitekturer \fBdpkg\fP har
+konfigurerats att tillåta installation av paket för.
+.TP 
 \fB\-\-compare\-versions \fP\fIver1 op ver2\fP
+.\" .TP
+.\" .B \-\-command\-fd \fIn\fP
+.\" Accept a series of commands on input file descriptor \fIn\fP. Note:
+.\" additional options set on the command line, and through this file descriptor,
+.\" are not reset for subsequent commands executed during the same run.
 Jämför versionsnummer, där \fIop\fP är en binär operator. \fBdpkg\fP returnerar
 framgång (noll) om det angivna värdet uppfylls, och misslyckande (icke\-noll)
 i annat fall. Det finns två grupper operatorer, vilka endast skiljer sig i
@@ -242,12 +306,7 @@ hanterar tom version som om den är senare än alla andra versioner: \fBlt\-nl
 le\-nl ge\-nl gt\-nl\fP. Dessa tillhandahålls endast för kompatibilitet med
 styrfilssyntaxen: \fB< << <= = >= >> >\fP.
 .TP 
-\fB\-\-command\-fd \fP\fIn\fP
-Läser en följd av kommandon från indatafilhandtag \fIn\fP. Observera:
-ytterligare flaggor som sätts på kommandoraden, och genom filhandtaget,
-återställs inte för kommandon som körs i en följd under samma körning.
-.TP 
-\fB\-\-help\fP
+\fB\-?\fP, \fB\-\-help\fP
 Visar en kortfattad hjälptext.
 .TP 
 \fB\-\-force\-help\fP
@@ -301,11 +360,11 @@ Se \fBdpkg\-query\fP(1) för ytterligare information om följande åtgärder:
 .
 .SH FLAGGOR
 Alla flaggorna kan ges både på kommandoraden och i \fBdpkg\fPs
-konfigurationsfil \fI/etc/dpkg/dpkg.cfg\fP eller filerna i
-konfigurationskatalogen \fI/etc/dpkg/dpkg.cfg.d/\fP. En rad i
-konfigurationsfilen är antingen en flagga (precis samma som på
-kommandoraden, men utan inledande bindestreck) eller en kommentar (om den
-börjar med ett \fB#\fP).
+konfigurationsfil \fI/etc/dpkg/dpkg.cfg\fP eller fragmentfilerna (vars namn
+motsvarar skalmönstret \(aq[0\-9a\-zA\-Z_\-]*\(aq) i konfigurationskatalogen
+\fI/etc/dpkg/dpkg.cfg.d/\fP. En rad i konfigurationsfilen är antingen en flagga
+(precis samma som på kommandoraden, men utan inledande bindestreck) eller en
+kommentar (om den börjar med ett \fB#\fP).
 .br
 .TP 
 \fB\-\-abort\-after=\fP\fIantal\fP
@@ -353,11 +412,11 @@ du förstöra din systeminstallation.\fP
 \fBdowngrade\fP(*): Installera ett paket även om en nyare version redan är
 installerad.
 
-\fIVarning: För närvarande undersöker inte dpkg beroenden vid nedgradering
-och kommer därför inte att varna dig om nedgraderingen bryter ett beroende
-för något paket. Detta kan ha allvarliga sidoeffekter, genom att nedgradera
-grundläggande systemkomponenter kan du riskera att göra hela systemet
-instabilt. Använd med tillförsikt.\fP
+\fIVarning: För närvarande undersöker inte\fP \fBdpkg\fP \fIberoenden vid
+nedgradering och kommer därför inte att varna dig om nedgraderingen bryter
+ett beroende för något paket. Detta kan ha allvarliga sidoeffekter, genom
+att nedgradera grundläggande systemkomponenter kan du riskera att göra hela
+systemet instabilt. Använd med tillförsikt.\fP
 
 \fBconfigure\-any\fP: Konfigurera även alla uppackade men ej konfigurerade paket
 på vilka det aktuella paketet beror.
@@ -383,18 +442,23 @@ fungera, så använd med tillförsikt.
 annat paket. Detta är farligt, eftersom det oftast leder till att vissa
 filer skrivs över.
 
-\fBconfmiss\fP: Installera alltid saknade konfigurationsfiler. Detta är
-farligt, eftersom det inte bibehåller ändringar (raderingar) av filer.
+\fBconfmiss\fP: Om en konfigurationsfil saknas och versionsnumret i paketet
+ändrades, installera alltid saknade konfigurationsfiler utan att
+fråga. Detta är farligt, eftersom det inte bibehåller ändringar (raderingar)
+av filer.
 
-\fBconfnew\fP: Installera alltid nya versioner av ändrade konfigurationsfiler
-utan att fråga, såvida inte \fB\-\-force\-confdef\fP också anges, i vilket fall
-det förvalda alternativet kommer att utföras.
+\fBconfnew\fP: Om en konfigurationsfil har modifierats och versionsnumret i
+paketet ändrades, installera alltid nya versioner av ändrade
+konfigurationsfiler utan att fråga, såvida inte \fB\-\-force\-confdef\fP också
+anges, i vilket fall det förvalda alternativet kommer att utföras.
 
-\fBconfold\fP: Installera aldrig nya versioner av ändrade konfigurationsfiler
-utan att fråga, såvida inte \fB\-\-force\-confdef\fP också anges, i vilket fall
-det förvalda alternativet kommer att utföras.
+\fBconfold\fP: Om en konfigurationsfil har modifierats och versionsnumret i
+paketet ändrades, behåll alltid gamla versioner av ändrade
+konfigurationsfiler utan att fråga, såvida inte \fB\-\-force\-confdef\fP också
+anges, i vilket fall det förvalda alternativet kommer att utföras.
 
-\fBconfdef\fP: Utför alltid förvalt alternativt för ändrade
+\fBconfdef\fP: Om en konfigurationsfil har modifierats och versionsnumret i
+paketet ändrades, välj alltid det förvalda alternativt för ändrade
 konfigurationsfiler. Om inget förval har angivits kommer programmet stanna
 och fråga användaren såvida inte \fB\-\-force\-confnew\fP eller \fB\-\-force\-confold\fP
 också angetts, i så fall används den för att bestämma vad som skall utföras.
@@ -487,24 +551,22 @@ kommer paket som tas bort att markeras för installation.
 .TP 
 \fB\-E\fP, \fB\-\-skip\-same\-version\fP
 Installera inte paketet om samma version av paketet redan är installerat.
-.P
+.TP 
 \fB\-\-pre\-invoke=\fP\fIkommando\fP
-.br
+.TQ
 \fB\-\-post\-invoke=\fP\fIkommando\fP
-.RS
-Sätter en anropshake \fIkommando\fP som körs via "sh \-c" före eller efter dpkg
-körs för åtgärderna \fIunpack\fP, \fIconfigure\fP, \fIinstal\fP, \fItriggers\-only\fP,
-\fIremove\fP och \fIpurge\fP. Flaggan kan anges flera gånger. Ordningen på
-flaggorna som anges behålls och de som anges i konfigurationsfilen har
-företräde. Miljövariabeln \fBDPKG_HOOK_ACTION\fP sätts för hakar i den
-nuvarande dpkg\-åtgärden. Observera: Skal kan anropa dpkg flera gånger per
-körning, vilket kan göra att hakarna körs fler gånger än förväntat.
-.RE
-.P
+Sätter en anropshake \fIkommando\fP som körs via "sh \-c" före eller efter
+\fBdpkg\fP körs för åtgärderna \fIunpack\fP, \fIconfigure\fP, \fIinstal\fP,
+\fItriggers\-only\fP, \fIremove\fP och \fIpurge\fP. Flaggan kan anges flera
+gånger. Ordningen på flaggorna som anges behålls och de som anges i
+konfigurationsfilen har företräde. Miljövariabeln \fBDPKG_HOOK_ACTION\fP sätts
+för hakar i den nuvarande \fBdpkg\fP\-åtgärden. Observera: Skal kan anropa
+\fBdpkg\fP flera gånger per körning, vilket kan göra att hakarna körs fler
+gånger än förväntat.
+.TP 
 \fB\-\-path\-exclude=\fP\fIfilnamnsmönster\fP
-.br
+.TQ
 \fB\-\-list\fP\fIfilnamnsmönster\fP
-.RS
 Sätt \fIfilnamnsmönster\fP som ett sökvägsfilter, antingen genom att exkludera
 eller åter inkludera tidigare exkluderade sökvägar som motsvarar det angivna
 mönstret under installationen.
@@ -536,7 +598,19 @@ för att ta bort alla dokumentationsfiler förutom upphovsrättsinformation.
 Dessa två flaggor kan anges flera gånger, och kan interfolieras med
 varandra. De hanteras båda i den givna ordningen och det är den sista regeln
 som motsvarar ett filnamn som fäller avgörandet.
-.RE
+.TP 
+\fB\-\-verify\-format\fP \fIformatnamn\fP
+Väljer utdataformat för kommandot \fB\-\-verify\fP.
+
+The only currently supported output format is \fBrpm\fP, which consists of a
+line for every path that failed any check. The lines start with 9 characters
+to report each specific check result, a '\fB?\fP' implies the check could not
+be done (lack of support, file permissions, etc), '\fB.\fP' implies the check
+passed, and an alphanumeric character implies a specific check failed;
+currently the only functional check is an md5sum verification against the
+stored value in the files database, denoted with a '\fB5\fP' on the third
+character. The line is followed by a space and an attribute character
+(currently '\fBc\fP' for conffiles), another space and the pathname.
 .TP 
 \fB\-\-status\-fd \fP\fIn\fP
 Sänd maskinläsbar paketstatus och förloppsinformation till filhandtag
@@ -592,44 +666,6 @@ rättas senare genom att köra: \fBdpkg \-\-configure \-\-pending\fP.
 \fB\-\-triggers\fP
 Överstyr ett tidigare \fB\-\-no\-triggers\fP.
 .
-.SH FILER
-.TP 
-\fI/etc/dpkg/dpkg.cfg\fP
-Konfigurationsfil med förvalda inställningar.
-.TP 
-\fI/var/log/dpkg.log\fP
-Förvald loggfil (se \fI/etc/dpkg/dpkg.cfg\fP(5) och flaggan \fB\-\-log\fP).
-.P
-Övriga filer som listas här finns i sina förvalda kataloger, se flaggan
-\fB\-\-admindir\fP för information om hur du ändrar placeringen av dessa filer.
-.TP 
-\fI/var/lib/dpkg/available\fP
-Lista över tillgängliga paket.
-.TP 
-\fI/var/lib/dpkg/status\fP
-Status för tillgängliga paket. Filen innehåller information om huruvida ett
-paket är markerat för borttagning eller ej, om det är installerat eller ej,
-osv. Se sektionen \fBINFORMATION OM PAKET\fP för ytterligare information.
-
-Statusfilen säkerhetskopieras dagligen i \fI/var/backups\fP. Det kan vara
-nyttigt om den går förlorad eller skrivs sönder på grund av problem med
-filsystemet.
-.P
-Följande filer är komponenter i det binära paketet. Se \fBdeb\fP(5) för
-ytterligare information om dem:
-.TP 
-\fIcontrol\fP
-.TP 
-\fIconffiles\fP
-.TP 
-\fIpreinst\fP
-.TP 
-\fIpostinst\fP
-.TP 
-\fIprerm\fP
-.TP 
-\fIpostrm\fP
-.
 .SH MILJÖVARIABLER
 .TP 
 \fBHOME\fP
@@ -670,8 +706,13 @@ Definieras av \fBdpkg\fP i utvecklarskriptets miljö till versionen av den
 instans av \fBdpkg\fP som körs för tillfället.
 .TP 
 \fBDPKG_MAINTSCRIPT_PACKAGE\fP
-Definieras av \fBdpkg\fP i utvecklarskriptets miljö till namnet på paketet som
-hanteras.
+Definieras av \fBdpkg\fP i utvecklarskriptets miljö till (det icke
+arkitekturkvalificerade) namnet på paketet som hanteras.
+.TP 
+\fBDPKG_MAINTSCRIPT_PACKAGE_REFCOUNT\fP
+Definieras av \fBdpkg\fP i utvecklarskriptets miljö till paketets
+referensräknare, dvs. antalet paketinstanser med ett tillstånd högre än
+\fBnot\-installed\fP. Sedan dpkg 1.17.2.
 .TP 
 \fBDPKG_MAINTSCRIPT_ARCH\fP
 Definieras av \fBdpkg\fP i utvecklarskriptets miljö till arkitekturen paketet
@@ -681,8 +722,54 @@ byggdes för.
 Definieras av \fBdpkg\fP i utvecklarskriptets miljö till namnet på det skript
 som körs (preinst, postinst, prerm, postrm).
 .
+.SH FILER
+.TP 
+\fI/etc/dpkg/dpkg.cfg.d/[0\-9a\-zA\-Z_\-]*\fP
+Konfigurationsfragmentfiler.
+.TP 
+\fI/etc/dpkg/dpkg.cfg\fP
+Konfigurationsfil med förvalda inställningar.
+.TP 
+\fI/var/log/dpkg.log\fP
+Förvald loggfil (se \fI/etc/dpkg/dpkg.cfg\fP(5) och flaggan \fB\-\-log\fP).
+.P
+Övriga filer som listas här finns i sina förvalda kataloger, se flaggan
+\fB\-\-admindir\fP för information om hur du ändrar placeringen av dessa filer.
+.TP 
+\fI/var/lib/dpkg/available\fP
+Lista över tillgängliga paket.
+.TP 
+\fI/var/lib/dpkg/status\fP
+Status för tillgängliga paket. Filen innehåller information om huruvida ett
+paket är markerat för borttagning eller ej, om det är installerat eller ej,
+osv. Se sektionen \fBINFORMATION OM PAKET\fP för ytterligare information.
+
+Statusfilen säkerhetskopieras dagligen i \fI/var/backups\fP. Det kan vara
+nyttigt om den går förlorad eller skrivs sönder på grund av problem med
+filsystemet.
+.P
+Följande filer är komponenter i det binära paketet. Se \fBdeb\fP(5) för
+ytterligare information om dem:
+.RS
+.nf
+\fIcontrol\fP
+\fIconffiles\fP
+\fIpreinst\fP
+\fIpostinst\fP
+\fIprerm\fP
+\fIpostrm\fP
+\fItriggers\fP
+.fi
+.RE
+.
+.SH PROGRAMFEL
+\fB\-\-no\-act\fP ger oftast mindre information än vad som vore hjälpsamt.
+.
 .SH EXEMPEL
-För att lista paket relaterade till textredigeringsprogrammet \fBvi\fP(1):
+För att lista paket relaterade till textredigeringsprogrammet \fBvi\fP(1)
+(observera att \fBdpkg\-query\fP inte längre läser in \fIavailable\fP\-filen som
+standard, och att flaggan \fBdpkg\-query\fP \fB\-\-load\-avail\fP istället bör
+användas för det):
 .br
      \fBdpkg \-l \(aq*vi*\(aq\fP
 .br
@@ -703,7 +790,7 @@ För att ta bort det installerade paketet elvis:
 .br
 
 För att installera ett paket måste du först leta på det i ett arkiv eller på
-en cd\-rom. Filen "available" visar att vim\-paketet finns i sektionen
+en cd\-rom. Filen \fIavailable\fP visar att vim\-paketet finns i sektionen
 "editors":
 .br
      \fBcd /media/cdrom/pool/main/v/vim\fP
@@ -715,8 +802,20 @@ För att göra en lokal kopia av paketmarkeringarna:
      \fBdpkg \-\-get\-selections >mitturval\fP
 .br
 
-Du kan överföra filen till en annan dator och installera den där genom att
-skriva:
+Du kan överföra filen till en annan dator, och efter att du har uppdaterat
+\fIavailable\fP\-filen där med ditt önskade pakethanterarskal (se
+https://wiki.debian.org/Teams/Dpkg/FAQ för mer information), till exempel:
+.br
+     \fBapt\-cache dumpavail | dpkg \-\-merge\-avail\fP
+.br
+or with dpkg 1.17.6 and earlier:
+.br
+     \fBavail=`mktemp`\fP
+     \fBapt\-cache dumpavail >"$avail"\fP
+     \fBdpkg \-\-merge\-avail "$avail"\fP
+     \fBrm "$avail"\fP
+.br
+så kan du installera den med:
 .br
      \fBdpkg \-\-clear\-selections\fP
      \fBdpkg \-\-set\-selections <mitturval\fP
@@ -736,14 +835,13 @@ Ytterligare funktioner kan erhållas genom att installera något av följande
 paket: \fBapt\fP, \fBaptitude\fP och \fBdebsums\fP.
 .
 .SH "SE ÄVEN"
+.ad l
+.nh
 \fBaptitude\fP(1), \fBapt\fP(1), \fBdselect\fP(1), \fBdpkg\-deb\fP(1), \fBdpkg\-query\fP(1),
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg.cfg\fP(5) och \fBdpkg\-reconfigure\fP(8).
-.
-.SH PROGRAMFEL
-\fB\-\-no\-act\fP ger oftast mindre information än vad som vore hjälpsamt.
 .
 .SH FÖRFATTARE
 Se \fB/usr/share/doc/dpkg/THANKS\fP för listan över personer som har bidragit
 till \fBdpkg\fP.
-.SH "ÖVERSÄTTNING"
+.SH ÖVERSÄTTNING
 Peter Krefting och Daniel Nylander.

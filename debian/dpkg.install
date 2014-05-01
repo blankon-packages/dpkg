@@ -1,8 +1,8 @@
 ../dpkg.cfg etc/dpkg
-../archtable usr/share/dpkg
 
 etc/dpkg/dpkg.cfg.d
 etc/alternatives
+sbin/start-stop-daemon
 usr/bin/dpkg
 usr/bin/dpkg-deb
 usr/bin/dpkg-divert
@@ -12,20 +12,8 @@ usr/bin/dpkg-split
 usr/bin/dpkg-statoverride
 usr/bin/dpkg-trigger
 usr/bin/update-alternatives
-usr/sbin
 usr/share/dpkg/*table
-#usr/share/locale/*/LC_MESSAGES/dpkg.mo
-usr/share/man/man1/dpkg-deb.1
-usr/share/man/man8/dpkg-divert.8
-usr/share/man/man1/dpkg-maintscript-helper.1
-usr/share/man/man1/dpkg-query.1
-usr/share/man/man1/dpkg-split.1
-usr/share/man/man8/dpkg-statoverride.8
-usr/share/man/man1/dpkg-trigger.1
-usr/share/man/man5/dpkg.cfg.5
-usr/share/man/man1/dpkg.1
-usr/share/man/man8/start-stop-daemon.8
-usr/share/man/man8/update-alternatives.8
+usr/share/locale/*/LC_MESSAGES/dpkg.mo
 var/lib/dpkg/alternatives
 var/lib/dpkg/info
 var/lib/dpkg/parts

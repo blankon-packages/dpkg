@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 %option prefix="trigdef_yy"
@@ -28,15 +28,17 @@
 %option nodefault
 %option perf-report
 %option warn
+%option noinput
 %option nounput
 
 %x midline
 
-%{
-
+%top {
 #include <config.h>
 #include <compat.h>
+}
 
+%{
 #include <sys/stat.h>
 #include <sys/fcntl.h>
 
@@ -48,7 +50,6 @@
 #include <dpkg/trigdeferred.h>
 #include <dpkg/triglib.h>
 
-#define YY_NO_INPUT
 #define YY_DECL int trigdef_parse(void)
 
 static struct varbuf fn, newfn;
