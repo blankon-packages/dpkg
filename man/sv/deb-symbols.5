@@ -48,12 +48,12 @@ exporteras från \fBobjdump\fP(1). En \fIberoendemall\fP är ett beroende där
 \fIminsta\-version\fP)" eller av ingenting (om ett ej versionsstyrt beroende
 anses tillräckligt).
 .P
-Each exported \fIsymbol\fP (listed as \fIname\fP@\fIversion\fP, with \fIversion\fP being
-"Base" if the library is not versioned) is associated to a
-\fIminimal\-version\fP of its dependency template (the main dependency template
-is always used and will end up being combined with the dependency template
-referenced by \fIid\-of\-dependency\-template\fP if present). The first
-alternative dependency template is numbered 1, the second one 2, etc.
+Varje exporterad \fIsymbol\fP (anges som \fInamn\fP@\fIversion\fP, där \fIversion\fP är
+"Base" om biblioteket inte är versionsstyrt) associeras med en
+\fIminsta\-version\fP i sin beroendemall (huvudberoendemallen används alltid och
+kommer att kombineras med beroendemallen som anges med
+\fIid\-för\-beroendemall\fP om den finns). Den första alternativa beroendemallen
+får nummer 1, den andra 2, osv.
 .P
 Alla poster i ett bibliotek kan även innehålla några fält med
 metainformation. Dessa fält lagras på rader som börjar med en asterisk. De

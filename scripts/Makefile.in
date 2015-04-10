@@ -16,12 +16,12 @@
 
 # Variables to be defined:
 #
-#  TEST_PREFIX - set to the path to prefix to each test case for execution
 #  TEST_VERBOSE - set to 0 (default) or 1 to control test suite verbosity
 #  TEST_ENV_VARS - environment variables to be set for the test suite
 #  TEST_COVERAGE - set to the perl module in charge of getting test coverage
 #  test_tmpdir - test suite temporary directory
-#  test_cases - list of test case files
+#  test_scripts - list of test case scripts
+#  test_programs - list of test case programs
 #  test_data - list of test data files
 
 
@@ -103,9 +103,11 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/dpkg-arch.m4 \
 	$(top_srcdir)/m4/dpkg-unicode.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
 	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -230,6 +232,7 @@ am__relativize = \
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
+AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -242,17 +245,22 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CURSES_LIBS = @CURSES_LIBS@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DOXYGEN = @DOXYGEN@
+DSYMUTIL = @DSYMUTIL@
+DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+FGREP = @FGREP@
 GCOV = @GCOV@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GMSGFMT = @GMSGFMT@
@@ -268,6 +276,7 @@ INTLLIBS = @INTLLIBS@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 LCOV = @LCOV@
 LCOV_GENHTML = @LCOV_GENHTML@
+LD = @LD@
 LDFLAGS = @LDFLAGS@
 LEX = @LEX@
 LEXLIB = @LEXLIB@
@@ -277,17 +286,27 @@ LIBINTL = @LIBINTL@
 LIBLZMA_LIBS = @LIBLZMA_LIBS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBTOOL = @LIBTOOL@
+LIPO = @LIPO@
+LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 MSGFMT = @MSGFMT@
 MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
+NM = @NM@
+NMEDIT = @NMEDIT@
+OBJDUMP = objdump -w -f -p -T -R
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
+PACKAGE_COPYRIGHT_HOLDER = @PACKAGE_COPYRIGHT_HOLDER@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
@@ -305,6 +324,7 @@ PO4A = @PO4A@
 POD2MAN = @POD2MAN@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
+SED = @SED@
 SELINUX_LIBS = @SELINUX_LIBS@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -323,8 +343,10 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
+ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 admindir = @admindir@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -416,7 +438,7 @@ EXTRA_DIST = \
 	dpkg-source.pl \
 	dpkg-vendor.pl \
 	changelog/debian.pl \
-	$(test_cases) \
+	$(test_scripts) \
 	$(test_data)
 
 CLEANFILES = \
@@ -453,6 +475,7 @@ nobase_dist_perllib_DATA = \
 	Dpkg/ErrorHandling.pm \
 	Dpkg/Exit.pm \
 	Dpkg/File.pm \
+	Dpkg/Getopt.pm \
 	Dpkg/Gettext.pm \
 	Dpkg/Index.pm \
 	Dpkg/Interface/Storable.pm \
@@ -506,23 +529,41 @@ TEST_ENV_VARS = \
 
 TEST_COVERAGE = $(PERL_COVERAGE)
 test_tmpdir = t.tmp
-test_cases = \
+test_scripts = \
 	t/Dpkg_Version.t \
 	t/Dpkg_Arch.t \
 	t/Dpkg_Package.t \
 	t/Dpkg_Shlibs_Cppfilt.t \
 	t/Dpkg_Shlibs.t \
+	t/Dpkg_BuildEnv.t \
+	t/Dpkg_BuildFlags.t \
 	t/Dpkg_BuildOptions.t \
+	t/Dpkg_BuildProfiles.t \
+	t/Dpkg_Checksums.t \
+	t/Dpkg_ErrorHandling.t \
+	t/Dpkg_Exit.t \
+	t/Dpkg_File.t \
+	t/Dpkg_Getopt.t \
+	t/Dpkg_Gettext.t \
+	t/Dpkg_Conf.t \
 	t/Dpkg_Deps.t \
 	t/Dpkg_Path.t \
 	t/Dpkg_Util.t \
+	t/Dpkg_Vars.t \
+	t/Dpkg_Interface_Storable.t \
 	t/Dpkg_Vendor.t \
 	t/Dpkg_Changelog.t \
 	t/Dpkg_Changelog_Ubuntu.t \
 	t/Dpkg_Control.t \
+	t/Dpkg_Index.t \
 	t/Dpkg_Substvars.t \
 	t/Dpkg_IPC.t \
 	t/Dpkg_Compression.t \
+	t/Dpkg_Source_Functions.t \
+	t/Dpkg_Source_Patch.t \
+	t/Dpkg_Source_Quilt.t \
+	t/Dpkg_Source_Archive.t \
+	t/Dpkg_Source_Package.t \
 	t/Dpkg_Dist_Files.t \
 	t/merge_changelogs.t
 
@@ -557,6 +598,12 @@ test_data = \
 	t/Dpkg_Shlibs/objdump.libc6-2.6 \
 	t/Dpkg_Shlibs/objdump.dbd-pg \
 	t/Dpkg_Shlibs/objdump.ls \
+	t/Dpkg_Source_Patch/c-style.patch \
+	t/Dpkg_Source_Patch/ghost-hunk.patch \
+	t/Dpkg_Source_Patch/index-+++.patch \
+	t/Dpkg_Source_Patch/index-alone.patch \
+	t/Dpkg_Source_Patch/index-inert.patch \
+	t/Dpkg_Source_Patch/partial.patch \
 	t/Dpkg_Changelog/countme \
 	t/Dpkg_Changelog/fields \
 	t/Dpkg_Changelog/misplaced-tz \
@@ -565,11 +612,13 @@ test_data = \
 	t/Dpkg_Control/control-1 \
 	t/Dpkg_Control/bogus-unsigned.dsc \
 	t/Dpkg_Control/bogus-armor-double.dsc \
+	t/Dpkg_Control/bogus-armor-formfeed.dsc \
 	t/Dpkg_Control/bogus-armor-no-sig.dsc \
 	t/Dpkg_Control/bogus-armor-trail.dsc \
 	t/Dpkg_Control/bogus-armor-inline.dsc \
 	t/Dpkg_Control/bogus-armor-nested.dsc \
 	t/Dpkg_Control/bogus-armor-spaces.dsc \
+	t/Dpkg_Source_Quilt/parse/debian/patches/series \
 	t/Dpkg_Substvars/substvars1 \
 	t/Dpkg_Dist_Files/files-byhand \
 	t/merge_changelogs/ch-old \
@@ -593,7 +642,6 @@ test_data_objects = \
 	t/Dpkg_Shlibs/libobjdump.basictags-i386.so \
 	t/Dpkg_Shlibs/libobjdump.patterns.so
 
-OBJDUMP = objdump -w -f -p -T -R
 TEST_RUNNER = '\
 	my $$harness = TAP::Harness->new({ \
 	    lib => [ "$(top_srcdir)/scripts" ], \
@@ -708,6 +756,12 @@ uninstall-changelogSCRIPTS:
 	files=`for p in $$list; do echo "$$p"; done | \
 	       sed -e 's,.*/,,;$(transform)'`; \
 	dir='$(DESTDIR)$(changelogdir)'; $(am__uninstall_files_from_dir)
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
 install-man3: $(man3_MANS)
 	@$(NORMAL_INSTALL)
 	@list1='$(man3_MANS)'; \
@@ -970,7 +1024,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic clean-local mostlyclean-am
+clean-am: clean-generic clean-libtool clean-local mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f Makefile
@@ -1024,7 +1078,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-generic
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
 pdf: pdf-recursive
 
@@ -1044,19 +1098,20 @@ uninstall-man: uninstall-man3
 	install-strip
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am check \
-	check-am check-local clean clean-generic clean-local \
-	cscopelist-am ctags ctags-am distclean distclean-generic \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-binSCRIPTS install-changelogSCRIPTS \
-	install-data install-data-am install-data-hook \
-	install-data-local install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-man3 \
-	install-nobase_dist_perllibDATA install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	check-am check-local clean clean-generic clean-libtool \
+	clean-local cscopelist-am ctags ctags-am distclean \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binSCRIPTS install-changelogSCRIPTS install-data \
+	install-data-am install-data-hook install-data-local \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-man3 install-nobase_dist_perllibDATA \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
+	ps ps-am tags tags-am uninstall uninstall-am \
 	uninstall-binSCRIPTS uninstall-changelogSCRIPTS \
 	uninstall-local uninstall-man uninstall-man3 \
 	uninstall-nobase_dist_perllibDATA
@@ -1139,7 +1194,7 @@ TEST_VERBOSE ?= 0
 check-clean:
 	[ -z "$(test_tmpdir)" ] || rm -fr $(test_tmpdir)
 
-check-local: $(test_data) $(test_cases)
+check-local: $(test_data) $(test_programs) $(test_scripts)
 	[ -z "$(test_tmpdir)" ] || $(MKDIR_P) $(test_tmpdir)
 	PATH="$(top_builddir)/src:$(top_builddir)/scripts:$(top_builddir)/utils:$(PATH)" \
 	  LC_ALL=C \
@@ -1148,9 +1203,8 @@ check-local: $(test_data) $(test_cases)
 	  PERL_DL_NONLAZY=1 \
 	  PERL5OPT=$(TEST_COVERAGE) \
 	  $(PERL) -MTAP::Harness -e $(TEST_RUNNER) \
-	    $(if $(TEST_PREFIX), \
-	         $(addprefix $(TEST_PREFIX)/,$(test_cases)), \
-	         $(addprefix $(srcdir)/,$(test_cases)))
+	    $(addprefix $(builddir)/,$(test_programs)) \
+	    $(addprefix $(srcdir)/,$(test_scripts))
 
 clean-local: check-clean coverage-clean
 	rm -fr man

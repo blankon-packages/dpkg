@@ -3,7 +3,7 @@
 .\" Copyright Â© 1995 Raul Miller
 .\" Copyright Â© 1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright Â© 2006-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2006-2014 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb 5 2013\-08\-08 Debian\-Projekt Debian
+.TH deb 5 2014\-05\-24 Debian\-Projekt Debian
 .SH BEZEICHNUNG
 deb \- Debian\-Binärpaketformat
 .SH ÜBERSICHT
@@ -84,7 +84,7 @@ Diese Mitglieder müssen in genau dieser Reihenfolge auftauchen. Aktuelle
 Implementationen sollten zusätzliche Mitglieder nach \fBdata.tar\fP
 ignorieren. Weitere Mitglieder könnten in der Zukunft definiert werden und
 werden (falls möglich) nach diesen drei platziert. Alle zusätzlichen
-Mitglieder, die nach \fBdebian\-binary\fP und vor \fBcontrol.tar.gz\fP oder
+Mitglieder, die nach \fBdebian\-binary\fP und vor \fBcontrol.tar\fP oder
 \fBdata.tar\fP eingefügt werden könnten und die problemlos von älteren
 Programmen ignoriert werden sollten, werden Namen haben, die mit einem
 Unterstrich »\fB_\fP« anfangen.
@@ -93,6 +93,13 @@ Solche neuen Mitglieder, die nicht problemlos ignoriert werden können,
 werden vor \fBdata.tar\fP mit Namen, die nicht mit einem Unterstrich anfangen,
 eingefügt oder werden (wahrscheinlicher) dazu führen, dass die
 Hauptversionsnummer erhöht wird.
+.SH MEDIENTYP
+.SS Aktuell
+application/vnd.debian.binary\-package
+.SS Veraltet
+application/x\-debian\-package
+.br
+application/x\-deb
 .SH ÜBERSETZUNG
 Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und

@@ -33,7 +33,7 @@ bibliothèques partagées dans ces fichiers est le suivant\ :
 .PP
 \fImodèle principal de dépendance de bibliothèque soname\fP
 .br
-[| \fImodèle\-alternatif\-de\-dépendance\fP]
+[| \fImodèle alternatif de dépendance\fP]
 .br
 [...]
 .br
@@ -48,28 +48,30 @@ une dépendance où \fI#MINVER#\fP est dynamiquement remplacé soit par une
 version comme "(>= \fIversion minimum\fP)" soit par rien (si une dépendance
 quelle que soit sa version est reconnue suffisante).
 .P
-Each exported \fIsymbol\fP (listed as \fIname\fP@\fIversion\fP, with \fIversion\fP being
-"Base" if the library is not versioned) is associated to a
-\fIminimal\-version\fP of its dependency template (the main dependency template
-is always used and will end up being combined with the dependency template
-referenced by \fIid\-of\-dependency\-template\fP if present). The first
-alternative dependency template is numbered 1, the second one 2, etc.
+Chaque \fIsymbole\fP exporté (noté \fInom\fP@\fIversion\fP, avec \fIversion\fP qui
+commence par "Base" si la bibliothèque n'a pas de version) est associé à une
+\fIversion minimale\fP dans son modèle de dépendance (le modèle principal de
+dépendance est toujours utilisé et se termine combiné avec le modèle de
+dépendance référencé par l'\fIid du modèle de dépendance\fP est présent). La
+première alternative au modèle de dépendance est numérotée 1, la seconde 2,
+etc.
 .P
-Each entry for a library can also have some fields of meta\-information.
-Those fields are stored on lines starting with an asterisk. Currently, the
-only valid fields are:
+Chaque entrée pour une bibliothèque peut aussi avoir des champs de
+méta\-information. Ces champs sont enregistrés dans des lignes qui débutent
+par un astérisque («\ *\ »). Actuellement, le seul champ valable est\ :
 .TP 
 \fBBuild\-Depends\-Package\fP
-It indicates the name of the "\-dev" package associated to the library and is
-used by \fBdpkg\-shlibdeps\fP to make sure that the dependency generated is at
-least as strict as the corresponding build dependency.
+Il indique le nom du paquet «\ \-dev\ » associé à la bibliothèque et est
+utilisé par \fBdpkg\-shlibdeps\fP pour s'assurer que la dépendance produite est
+au moins aussi stricte que la dépendance de construction correspondante.
 .TP 
 \fBIgnore\-Blacklist\-Groups\fP
-It indicates what blacklist groups should be ignored, as a whitespace
-separated list, so that the symbols contained in those groups get included
-in the output file. This should only be necessary for toolchain packages
-providing those blacklisted symbols. The available groups are system
-dependent, for ELF and GNU\-based systems these are \fBaeabi\fP and \fBgomp\fP.
+Il indique que les groupes blacklistés seront ignorés, sous forme de liste
+séparée par des espaces, afin que les symboles contenus dans ces groupes
+soient inclus dans le fichier de sortie. Cela sera seulement nécessaire pour
+les paquets de chaîne d'outils qui fournissent ces symboles blacklistés. Les
+groupes disponibles dépendent des systèmes et, pour les systèmes basés sur
+ELF et GNU, ce sont \fBaeabi\fP et \fBgomp\fP.
 .SH EXEMPLES
 .SS "Simple fichier de symboles"
 .PP

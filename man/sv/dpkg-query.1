@@ -117,17 +117,17 @@ Visar den \fIkontrollfil\fP som installerats på ditt system från \fIpaketnamn\fP
 på standard ut.
 .TP 
 \fB\-c\fP, \fB\-\-control\-path\fP \fIpaketnamn\fP [\fIcontrol\-filnamn\fP]
-List paths for control files installed to your system from \fIpackage\-name\fP.
-If \fIcontrol\-file\fP is specified then only list the path for that control
-file if it is present.
+Visar sökvägarna till kontrollfilerna som installerats på ditt system för
+\fIpaketnamn\fP. Om \fIkontrollfil\fP anges visas endast sökvägen för den
+kontrollfilen, om den finns.
 
-\fBWarning\fP: this command is deprecated as it gives direct access to the
-internal dpkg database, please switch to use \fB\-\-control\-list\fP and
-\fB\-\-control\-show\fP instead for all cases where those commands might give the
-same end result. Although there is still at least one case where this
-command is needed (i.e. when having to remove a damaging postrm maintainer
-script), and as long as there is no good solution for that, this command
-will not get removed.
+\fBVarning\fP: kommandot är föråldrat eftersom det ger direkt tillgång till den
+interna dpkg\-databasen, vi ber dig gå över till att istället använda
+\fB\-\-control\-list\fP och \fB\-\-control\-show\fP för alla tillfällen där dessa
+kommandon kan ge samma slutresultat. Så länge det finns åtminstone ett
+tillfälle där kommandot är nödvändigt (dvs. när man måste ta bort ett
+skadligt postrm\-utvecklarskript), och det inte finns någon bra lösning för
+det, kommer kommandot inte att tas bort.
 .TP 
 \fB\-S\fP, \fB\-\-search\fP \fIfilnamnssökmönster\fP ...
 Sök efter paket som äger filer som motsvarar det angivna mönstret. Alla
@@ -219,23 +219,44 @@ binärpaketet hamnar där):
 Följande är virtuella fält, genererade av \fBdpkg\-query\fP från värden från
 adnra fält (observera att dessa inte är giltiga namn för fält i
 kontrollfiler):
-
-.nf
-    \fBbinary:Package\fP
-    \fBbinary:Summary\fP
-    \fBdb:Status\-Abbrev\fP
-    \fBsource:Package\fP
-    \fBsource:Version\fP
-.fi
-
+.RS
+.TP 
+\fBbinary:Package\fP
+Innehåller binärpaketnamnet med en möjlig arkitekturkvalificerare, såsom
+"libc6:amd64" (sedan dpkg 1.16.2). Arkitekturkvalificeraren kommer endast
+att vara närvarande om paketet har ett \fBMulti\-Arch\fP\-fält med värdet
+\fBsame\fP. Detta gör paketnamnen entydiga.
+.TP 
+\fBbinary:Summary\fP
+Innehåller paketets korta beskrivning (sedan dpkg 1.16.2).
+.TP 
+\fBdb:Status\-Abbrev\fP
+Innehåller den förkortade paketstatusen, såsom \(lqii\(rq (sedan dpkg
+1.16.2).
+.TP 
+\fBdb:Status\-Want\fP
+Innehåller paketets önskade status, del av Status\-fältet (sedan dpkg
+1.17.11).
+.TP 
+\fBdb:Status\-Status\fP
+Innehåller paketets statusord, del av Status\-fältet (sedan dpkg 1.17.11).
+.TP 
+\fBdb:Status\-Eflag\fP
+Innehåller paketets statusfelflagga, del av Status\-fältet (sedan dpkg
+1.17.11).
+.TP 
+\fBsource:Package\fP
+Innehåller källkodsnamnet för binärpaketet (sedan dpkg 1.16.2).
+.TP 
+\fBsource:Version\fP
+Innehåller källkodsversionen för binärpaketet (sedan dpkg 1.16.2)
+.RE
+.IP
 Standardformatet är \(lq\fB${binary:Package}\et${Version}\en\fP\(rq. Alla andra
 fält som finns i statusfilen (även användardefinierade fält) kan faktiskt
 också hämtas. De visas dock som de är, ingen konvertering eller
-felkorrigering görs på dem. \fBbinary:Package\fP är ett specialfält som skriver
-ut paketnamnet med en arkitektursbeskrivning (som "libc6:amd64") om paketet
-har ett \fBMulti\-Arch\fP\-fält med värdet \fBsame\fP och dess namn som sådant kunde
-vara tvetydigt. För att hämta namnet på paketansvarig och installerad
-version av \fBdpkg\fP och kan du köra:
+felkorrigering görs på dem. För att hämta namnet på paketansvarig och
+installerad version av \fBdpkg\fP och kan du köra:
 
 .nf
   \fBdpkg\-query \-W \-f=\(aq${binary:Package} ${Version}\et${Maintainer}\en\(aq dpkg\fP

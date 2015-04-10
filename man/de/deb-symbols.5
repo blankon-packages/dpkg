@@ -68,11 +68,12 @@ erstellte Abhängigkeit mindestens genauso strikt ist wie die zugehörige
 Bau\-Abhängigkeit.
 .TP 
 \fBIgnore\-Blacklist\-Groups\fP
-It indicates what blacklist groups should be ignored, as a whitespace
-separated list, so that the symbols contained in those groups get included
-in the output file. This should only be necessary for toolchain packages
-providing those blacklisted symbols. The available groups are system
-dependent, for ELF and GNU\-based systems these are \fBaeabi\fP and \fBgomp\fP.
+Es gibt in einer durch Leerzeichen getrennten Liste an, welche
+Blacklist\-Gruppen ignoriert werden sollten, so dass Symbole, die in diesen
+Gruppen enthalten sind, in die Ausgabedatei aufgenommen werden. Dies sollte
+nur für Toolchain\-Pakete notwendig sein, die solche Symbole in Blacklists
+bereitstellen. Die verfügbaren Gruppen sind systemabhängig, für ELF\- und
+GNU\-basierte Systeme sind dies \fBaeabi\fP und \fBgomp\fP.
 .SH BEISPIELE
 .SS "Einfache Symboldatei"
 .PP

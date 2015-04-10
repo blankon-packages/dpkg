@@ -65,8 +65,11 @@ kommer programmet dessutom att misslyckas (du kan justera hur stora
 Symbolfilerna är bara riktigt nyttiga om de motsvarar hur paketet har
 utvecklats över flera versioner. De paketansvariga måste därför uppdatera
 dem varje gång en ny symbol läggs till så att dess associerade minimala
-version motsvarar verkligheten. För att göra detta på ett riktigt sätt finns
-det differensfiler i byggloggarna. I de flesta fall kan differensfilen
+version motsvarar verkligheten. Diffarna som finns i byggloggarna kan
+användas som startpunkt, men paketansvariga måste dessutom se till att
+beteendet på dessa symboler inte på något sätt har ändrat sig på ett sådant
+sätt att något som använder symbolerna och länkar mot den nya versionen
+slutar fungera med den gamla versionen. I de flesta fall kan differensfilen
 appliceras direkt på filen debian/\fIpaket\fP. Med det i åtanke så behövs det
 oftast ytterligare justeringar: det rekommenderas att skippa
 Debianrevisionen från det minimala versionsnummer så att den
@@ -84,6 +87,14 @@ Obsevera att du kan skriva kommentarer i symbols\-filer: alla rader med "#"
 som första tecken är kommentarer, såvida inte det börjar med "#include" (se
 stycket \fBAnvända inkluderingar\fP). Rader som börjar med "#MISSING:" är
 speciella kommentarer som dokumenterar symboler som har försvunnit.
+.P
+Glöm inte att kontrollera om de gamla symbolversionerna måste ökas. Det
+finns inget sätt för \fBdpkg\-gensymbols\fP att varna om detta. Att blint
+applicera diffen eller utgå från att inget har ändrats om diffen är tom,
+utan att se efter sådana ändringar, kan leda till att paket med lösa
+beroenden kan deklarera att de fungerar med äldre paket de inte kan fungera
+tillsammans med. Detta kommer introducera svårfunna problem vid (delvisa)
+uppgraderingar.{
 .SS "Använda #PACKAGE#\-substituering"
 .P
 I några sällsynta fall skiljer sig namnet på biblioteket mellan

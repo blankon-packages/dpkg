@@ -3,7 +3,7 @@
 .\" Copyright Â© 1995 Raul Miller
 .\" Copyright Â© 1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright Â© 2006-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2006-2014 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb 5 "8 agosto 2013" "Progetto Debian" Debian
+.TH deb 5 "24 maggio 2014" "Progetto Debian" Debian
 .SH NOME
 deb \- formato dei pacchetti binari di Debian
 .SH SINTASSI
@@ -83,13 +83,20 @@ implementazioni attuali dovrebbero ignorare ogni elemento addizionale dopo
 \fBdata.tar\fP. In futuro potrebbero essere definiti ulteriori elementi e, se
 possibile, verranno collocati dopo questi tre. Qualsiasi elemento
 addizionale che potrebbe essere necessario inserire dopo \fBdebian\-binary\fP e
-prima di \fBcontrol.tar.gz\fP o \fBdata.tar\fP, e che dovrebbe essere ignorato
-senza problemi dai programmi più vecchi, avrà il nome che inizia con un
-trattino basso: «\fB_\fP».
+prima di \fBcontrol.tar\fP o \fBdata.tar\fP, e che dovrebbe essere ignorato senza
+problemi dai programmi più vecchi, avrà il nome che inizia con un trattino
+basso: «\fB_\fP».
 .PP
 I nuovi elementi che non potranno essere ignorati senza problemi verranno
 inseriti prima di \fBdata.tar\fP con nomi che iniziano con un carattere diverso
 da un trattino basso oppure, più probabilmente, causeranno un aumento del
 numero principale di versione.
+.SH "TIPO MULTIMEDIALE"
+.SS Attuale
+application/vnd.debian.binary\-package
+.SS Deprecati
+application/x\-debian\-package
+.br
+application/x\-deb
 .SH "VEDERE ANCHE"
 \fBdeb\-old\fP(5), \fBdpkg\-deb\fP(1), \fBdeb\-control\fP(5).

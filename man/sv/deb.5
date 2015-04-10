@@ -3,7 +3,7 @@
 .\" Copyright Â© 1995 Raul Miller
 .\" Copyright Â© 1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright Â© 2006-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2006-2014 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb 5 2013\-08\-08 Debianprojektet Debian
+.TH deb 5 2014\-05\-24 Debianprojektet Debian
 .SH NAMN
 deb \- Debians binära paketformat
 .SH SYNOPS
@@ -79,13 +79,20 @@ Dessa poster måste ligga i exakt denna ordning. Nuvarande implementationer
 bör ignorera eventuella ytterligare poster efter \fBdata.tar\fP. Ytterligare
 poster kan komma att definieras i framtiden, och kommer (om möjligt)
 placeras efter dessa tre. Eventuella ytterligare poster som kan komma att
-behöva läggas till efter \fBdebian\-binary\fP och före \fBcontrol.tar.gz\fP eller
+behöva läggas till efter \fBdebian\-binary\fP och före \fBcontrol.tar\fP eller
 \fBdata.tar\fP och som kan ignoreras av äldre program utan problem kommer att
 ha namn som börjar med understreck, "\fB_\fP".
 .PP
 Nya poster som inte kommer att kunna ignoreras utan problem kommer att
 läggas in före \fBdata.tar\fP med namn som börjar med något annat än
 understreck, eller (mer troligt) göra att huvudversionsnumret ökas.
+.SH MEDIATYP
+.SS Nuvarande
+application/vnd.debian.binary\-package
+.SS Föråldrade
+application/x\-debian\-package
+.br
+application/x\-deb
 .SH "SE ÄVEN"
 \fBdeb\-old\fP(5), \fBdpkg\-deb\fP(1), \fBdeb\-control\fP(5).
 .SH ÖVERSÄTTNING

@@ -57,27 +57,38 @@ esegue l'hook \fBbinary\fP seguito da \fBfakeroot debian/rules\fP
 pacchetto sorgente usando \fB\-S\fP). Notare che \fItarget\-compilazione\fP e
 \fItarget\-binario\fP sono \fBbuild\fP e \fBbinary\fP (in modo predefinito o se viene
 specificata \fB\-b\fP) o \fBbuild\-arch\fP e \fBbinary\-arch\fP (se viene specificata
-\fB\-B\fP) oppure \fBbuild\-indep\fP e \fBbinary\-indep\fP (se viene specificata \fB\-A\fP).
+\fB\-B\fP o \fB\-G\fP) oppure \fBbuild\-indep\fP e \fBbinary\-indep\fP (se viene specificata
+\fB\-A\fP o \fB\-g\fP).
 .IP \fB6.\fP 3
 Esegue l'hook \fBchanges\fP e invoca \fBdpkg\-genchanges\fP per generare un file
 \&\fB.changes\fP. Molte opzioni di \fBdpkg\-buildpackage\fP vengono inoltrate a
 \fBdpkg\-genchanges\fP.
 .IP \fB7.\fP 3
-It runs the \fBpostclean\fP hook and if \fB\-tc\fP is specified, it will call
-\fBfakeroot debian/rules clean\fP again.
+Esegue l'hook \fBpostclean\fP e, se viene specificata l'opzione \fB\-tc\fP, invoca
+nuovamente \fBfakeroot debian/rules clean\fP.
 .IP \fB8.\fP 3
 Invoca \fBdpkg\-source \-\-after\-build\fP.
 .IP \fB9.\fP 3
 Esegue l'hook \fBcheck\fP e invoca uno strumento di controllo dei pacchetti per
-il file \fB.changes\fP (se è specificato un comando in DEB_CHECK_COMMAND o con
-\fB\-\-check\-command\fP).
+il file \fB.changes\fP (se è specificato un comando in \fBDEB_CHECK_COMMAND\fP o
+con \fB\-\-check\-command\fP).
 .IP \fB10.\fP 3
 Esegue l'hook \fBsign\fP e invoca \fBgpg2\fP o \fBgpg\fP per firmare il file \fB.dsc\fP
 (se esiste, a meno che non sia stata specificata l'opzione \fB\-us\fP o in
 compilazioni UNRELEASED) e il file \fB.changes\fP (a meno che non sia stata
 specificata l'opzione \fB\-us\fP o in compilazioni UNRELEASED).
+.IP \fB11.\fP 3
+Esegue l'hook \fBdone\fP.
 .
 .SH OPZIONI
+.TP 
+\fB\-g\fP
+Specifica una compilazione limitata ai pacchetti sorgente e indipendenti
+dall'architettura. Passata a \fBdpkg\-genchanges\fP.
+.TP 
+\fB\-G\fP
+Specifica una compilazione limitata ai pacchetti sorgente e che dipendono
+dall'architettura. Passata a \fBdpkg\-genchanges\fP.
 .TP 
 \fB\-b\fP
 Specifica una compilazione solo binaria, nessun file sorgente deve essere
@@ -131,33 +142,48 @@ eseguito con i permessi di root.
 \fB\-e\fP\fIindirizzo\-manutentore\fP
 Passate inalterate a \fBdpkg\-genchanges\fP. Vedere la sua pagina di manuale.
 .TP 
-\fB\-a\fP\fIarchitettura\fP
+\fB\-a\fP, \fB\-\-host\-arch\fP \fIarchitettura\fP
 Specifica l'architettura Debian per cui compilare. L'architettura della
 macchina in cui viene fatta la compilazione viene determinata
-automaticamente ed è anche il valore predefinito per la macchina host.
+automaticamente ed è anche il valore predefinito per la macchina ospite.
 .TP 
-\fB\-t\fP\fItipo\-sistema\-gnu\fP
+\fB\-t\fP, \fB\-\-host\-type\fP \fItipo\-sistema\-gnu\fP
 Specifica il tipo di sistema GNU per cui compilare. Può essere usata al
-posto di \-a o in aggiunta per scavalcare l'impostazione predefinita del tipo
-di sistema GNU dell'architettura Debian target.
+posto di \-\-host\-arch o in aggiunta per scavalcare l'impostazione predefinita
+del tipo di sistema GNU dell'architettura Debian ospite.
+.TP 
+\fB\-\-target\-arch\fP \fIarchitettura\fP
+Specifica l'architettura Debian per cui verranno compilati i binari. Il
+valore predefinito è la macchina ospite.
+.TP 
+\fB\-\-target\-type\fP \fItipo\-sistema\-gnu\fP
+Specifica il tipo di sistema GNU per cui verranno compilati i binari. Può
+essere usata al posto di \-\-target\-arch o in aggiunta per scavalcare
+l'impostazione predefinita del tipo di sistema GNU dell'architettura Debian
+di destinazione.
 .TP 
 \fB\-P\fP\fIprofilo\fP[\fB,\fP...]
-Specifica i profili da compilare, come elenco separato da virgole, senza il
-prefisso con lo spazio dei nomi «\fBprofile.\fP». Il comportamento predefinito
-è di non compilare per uno specifico profilo. Inoltre li aggiunge (come
-elenco separato da spazi) alla variabile d'ambiente \fBDEB_BUILD_PROFILES\fP
-che permette, ad esempio, ai file \fBdebian/rules\fP di usare questa
-informazione per compilazioni condizionali.
+Specifica i profili da compilare, come elenco separato da virgole. Il
+comportamento predefinito è di non compilare per uno specifico
+profilo. Inoltre li imposta (come elenco separato da spazi) come variabile
+d'ambiente \fBDEB_BUILD_PROFILES\fP che permette, ad esempio, ai file
+\fBdebian/rules\fP di usare questa informazione per compilazioni condizionali.
 .TP 
-\fB\-j\fP\fIcompiti\fP
-Numero di compiti che è permesso eseguire contemporaneamente; equivalente
+\fB\-j\fP[\fIcompiti\fP|\fBauto\fP]
+Numero di compiti che è permesso eseguire contemporaneamente, numero di
+compiti che corrispondono al numero di processori in linea se è specificata
+\fBauto\fP o numero illimitato se non è specificata \fIcompiti\fP; equivalente
 all'opzione omonima per \fBmake\fP(1). Verrà aggiunta alla variabile d'ambiente
 \fBMAKEFLAGS\fP, il che dovrebbe far sì che tutte le invocazioni successive di
 make ereditino l'opzione. Aggiunge anche \fBparallel=\fP\fIcompiti\fP alla
 variabile d'ambiente \fBDEB_BUILD_OPTIONS\fP che permette ai file debian/rules
 di usare questa informazione per i loro scopi. Se viene usata questa
 opzione, l'impostazione \fBparallel=\fP\fIcompiti\fP in \fBDEB_BUILD_OPTIONS\fP avrà
-la precedenza rispetto al valore \fB\-j\fP.
+la precedenza rispetto al valore \fB\-j\fP. Notare che il valore \fBauto\fP verrà
+sostituito dall'effettivo numero di processori attualmente attivi e pertanto
+non verrà propagato ad alcun processo figlio. Se il  numero di processori in
+linea non può essere inferito, allora il codice ripiegherà sull'uso di un
+numero illimitato.
 .TP 
 \fB\-D\fP
 Controlla le dipendenze e i conflitti di compilazione; si interrompe se non
@@ -168,7 +194,7 @@ Non controlla le dipendenze e i conflitti di compilazione.
 .TP 
 \fB\-nc\fP
 Non pulisce l'albero dei sorgenti (implica \fB\-b\fP se non è stata selezionata
-un'altra opzione tra \fB\-B\fP, \fB\-A\fP o \fB\-S\fP).
+un'altra opzione tra \fB\-F\fP, \fB\-g\fP, \fB\-G\fP, \fB\-B\fP, \fB\-A\fP o \fB\-S\fP).
 .TP 
 \fB\-tc\fP
 Pulisce l'albero dei sorgenti (usando \fIcomando\-per\-diventare\-root\fP
@@ -204,8 +230,8 @@ nome di percorso di \fB.changes\fP come argomento. Questo comando generalmente
 sarà \fBlintian\fP.
 .TP 
 \fB\-\-check\-option=\fP\fIopz\fP
-Pass option \fIopt\fP to the \fIcheck\-command\fP specified with
-\fBDEB_CHECK_COMMAND\fP or \fB\-\-check\-command\fP.
+Passa l'opzione \fIopt\fP al \fIcomando\-di\-controllo\fP specificato con
+\fBDEB_CHECK_COMMAND\fP o \fB\-\-check\-command\fP. Può essere usata più volte.
 .TP 
 \fB\-\-hook\-\fP\fInome\-hook\fP\fB=\fP\fIcomando\-hook\fP
 Imposta il codice di shell \fIcomando\-hook\fP specificato come hook
@@ -276,10 +302,10 @@ indipendentemente da \fB\-us\fP o \fB\-uc\fP o altre euristiche interne.
 Passate inalterate a \fBdpkg\-source\fP. Vedere la sua pagina di manuale.
 .TP 
 \fB\-\-source\-option=\fP\fIopz\fP
-Passa l'opzione \fIopz\fP a \fBdpkg\-source\fP.
+Passa l'opzione \fIopz\fP a \fBdpkg\-source\fP. Può essere usata più volte.
 .TP 
 \fB\-\-changes\-option=\fP\fIopz\fP
-Passa l'opzione \fIopz\fP a \fBdpkg\-genchanges\fP.
+Passa l'opzione \fIopz\fP a \fBdpkg\-genchanges\fP. Può essere usata più volte.
 .TP 
 \fB\-\-admindir=\fP\fIdir\fP
 .TQ
@@ -310,8 +336,7 @@ ignorata.
 \fBDEB_BUILD_PROFILES\fP
 Se impostata, il suo valore verrà usato come profili attivi da compilare per
 il pacchetto in fase di compilazione. È un elenco separato da spazi di nomi
-di profilo, senza il prefisso dello spazio dei nomi «\fBprofile.\fP». Viene
-scavalcata dall'opzione \fB\-P\fP.
+di profilo. Viene scavalcata dall'opzione \fB\-P\fP.
 
 .SS "Dipendenza dalle variabili di ambiente esportate"
 Anche se \fBdpkg\-buildpackage\fP esporta alcune variabili, \fBdebian/rules\fP non

@@ -124,17 +124,17 @@ Stampa sullo standard output il \fIfile\-controllo\fP installato nel sistema da
 \fInome\-pacchetto\fP.
 .TP 
 \fB\-c\fP, \fB\-\-control\-path\fP \fInome\-pacchetto\fP [\fIfile\-controllo\fP]
-List paths for control files installed to your system from \fIpackage\-name\fP.
-If \fIcontrol\-file\fP is specified then only list the path for that control
-file if it is present.
+Elenca i percorsi dei file di controllo installati nel sistema da
+\fInome\-pacchetto\fP. Se viene specificato \fIfile\-controllo\fP allora elenca solo
+il percorso di quel file di controllo, se presente.
 
-\fBWarning\fP: this command is deprecated as it gives direct access to the
-internal dpkg database, please switch to use \fB\-\-control\-list\fP and
-\fB\-\-control\-show\fP instead for all cases where those commands might give the
-same end result. Although there is still at least one case where this
-command is needed (i.e. when having to remove a damaging postrm maintainer
-script), and as long as there is no good solution for that, this command
-will not get removed.
+\fBAvvertimento\fP: questo comando è deprecato perché dà accesso diretto al
+database interno di dpkg; passare invece all'uso di \fB\-\-control\-list\fP e
+\fB\-\-control\-show\fP per tutti i casi in cui questi comandi possono fornire lo
+stesso risultato finale. Tuttavia, fino a che c'è ancora almeno un caso in
+cui è necessario questo comando (cioè quando si deve rimuovere uno script
+postrm del manutentore pericoloso) e fino a che non c'è una buona soluzione
+per il problema, questo comando non sarà rimosso.
 .TP 
 \fB\-S\fP, \fB\-\-search\fP \fImodello\-ricerca\-nomefile\fP...
 Cerca pacchetti a cui appartengono dei file che corrispondono al modello
@@ -231,25 +231,49 @@ vanno solo i campi interni o i campi memorizzati nel pacchetto binario):
 I seguenti sono campi virtuali, generati da \fBdpkg\-query\fP a partire dai
 valori di altri campi (notare che questi non usano nomi validi per i campi
 nei file di controllo):
-
-.nf
-    \fBbinary:Package\fP
-    \fBbinary:Summary\fP
-    \fBdb:Status\-Abbrev\fP
-    \fBsource:Package\fP
-    \fBsource:Version\fP
-.fi
-
+.RS
+.TP 
+\fBbinary:Package\fP
+Contiene il nome del pacchetto binario con un possibile qualificatore di
+architettura come «libc6:amd64» (a partire da dpkg 1.16.2). Il qualificatore
+di architettura sarà presente solo se il pacchetto ha un campo \fBMulti\-Arch\fP
+con un valore di \fBsame\fP. Ciò rende il nome di pacchetto non ambiguo.
+.TP 
+\fBbinary:Summary\fP
+Contiene la descrizione breve del pacchetto (a partire da dpkg 1.16.2).
+.TP 
+\fBdb:Status\-Abbrev\fP
+Contiene lo stato abbreviato del pacchetto, come \(lqii\(rq (a partire da
+dpkg 1.16.2).
+.TP 
+\fBdb:Status\-Want\fP
+Contiene lo stato richiesto del pacchetto, parte del campo Status (a partire
+da dpkg 1.17.11).
+.TP 
+\fBdb:Status\-Status\fP
+Contiene la parola di stato del pacchetto, parte del campo Status (a partire
+da dpkg 1.17.11).
+.TP 
+\fBdb:Status\-Eflag\fP
+Contiene il contrassegno di errore di stato del pacchetto, parte del campo
+Status (a partire da dpkg 1.17.11).
+.TP 
+\fBsource:Package\fP
+Contiene il nome del pacchetto sorgente per questo pacchetto binario (a
+partire da dpkg 1.16.2).
+.TP 
+\fBsource:Version\fP
+Contiene la versione del pacchetto sorgente per questo pacchetto binario (a
+partire da dpkg 1.16.2).
+.RE
+.IP
 La stringa di formato predefinita è
 \(lq\fB${binary:Package}\et${Version}\en\fP\(rq. Di fatto, è possibile
 richiedere anche tutti gli altri campi che si trovano nel file di stato
 (cioè i campi definiti dall'utente). Verranno però stampati come sono, senza
 che vanga fatta su di essi alcuna conversione o alcun controllo degli
-errori. \fBbinary:Package\fP è un campo speciale che stampa il nome del
-pacchetto con un identificativo dell'architettura (come «libc6:amd64») se il
-pacchetto ha un campo \fBMulti\-Arch\fP contenente il valore \fBsame\fP e pertanto
-il suo nome potrebbe essere ambiguo. Per ottenere il nome del manutentore di
-\fBdpkg\fP e la versione installata si può usare:
+errori. Per ottenere il nome del manutentore di \fBdpkg\fP e la versione
+installata si può usare:
 
 .nf
   \fBdpkg\-query \-W \-f=\(aq${binary:Package} ${Version}\et${Maintainer}\en\(aq dpkg\fP

@@ -1,5 +1,5 @@
 #line 2 "trigdeferred.c"
-#line 37 "trigdeferred.l"
+#line 38 "trigdeferred.l"
 #include <config.h>
 #include <compat.h>
 
@@ -503,6 +503,7 @@ char *trigdef_yytext;
  *
  * Copyright © 2007 Canonical Ltd
  * written by Ian Jackson <ian@chiark.greenend.org.uk>
+ * Copyright © 2008-2014 Guillem Jover <guillem@debian.org>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -522,9 +523,10 @@ char *trigdef_yytext;
 #define YY_NO_INPUT 1
 
 
-#line 42 "trigdeferred.l"
+#line 43 "trigdeferred.l"
 #include <sys/stat.h>
-#include <sys/fcntl.h>
+
+#include <fcntl.h>
 
 #include <dpkg/i18n.h>
 #include <dpkg/dpkg.h>
@@ -540,7 +542,7 @@ static struct varbuf fn, newfn;
 
 static const struct trigdefmeths *trigdef;
 
-#line 544 "trigdeferred.c"
+#line 546 "trigdeferred.c"
 
 #define INITIAL 0
 #define midline 1
@@ -753,10 +755,10 @@ YY_DECL
 		}
 
 	{
-#line 61 "trigdeferred.l"
+#line 63 "trigdeferred.l"
 
 
-#line 760 "trigdeferred.c"
+#line 762 "trigdeferred.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -812,18 +814,18 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 63 "trigdeferred.l"
+#line 65 "trigdeferred.l"
 /* whitespace */
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 64 "trigdeferred.l"
+#line 66 "trigdeferred.l"
 /* comments */
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 65 "trigdeferred.l"
+#line 67 "trigdeferred.l"
 {
 	trigdef->trig_begin(trigdef_yytext);
 	BEGIN(midline);
@@ -831,12 +833,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 70 "trigdeferred.l"
+#line 72 "trigdeferred.l"
 /* whitespace */
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 71 "trigdeferred.l"
+#line 73 "trigdeferred.l"
 {
 	if (trigdef_yytext[0] == '-' && trigdef_yytext[1])
 		ohshit(_("invalid package name `%.250s' in triggers deferred "
@@ -847,21 +849,21 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 77 "trigdeferred.l"
+#line 79 "trigdeferred.l"
 {
 	trigdef->trig_end();
 	BEGIN(0);
 	}
 	YY_BREAK
 case YY_STATE_EOF(midline):
-#line 81 "trigdeferred.l"
+#line 83 "trigdeferred.l"
 {
 	ohshit(_("truncated triggers deferred file `%.250s'"), fn.buf);
 	}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 85 "trigdeferred.l"
+#line 87 "trigdeferred.l"
 {
 	ohshit(_("syntax error in triggers deferred file `%.250s' at "
 	         "character `%s'%s"),
@@ -870,10 +872,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 91 "trigdeferred.l"
+#line 93 "trigdeferred.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 877 "trigdeferred.c"
+#line 879 "trigdeferred.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1832,7 +1834,7 @@ void trigdef_yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 91 "trigdeferred.l"
+#line 92 "trigdeferred.l"
 
 
 
@@ -1857,31 +1859,28 @@ constructfn(struct varbuf *vb, const char *dir, const char *tail)
  * Start processing of the triggers deferred file.
  *
  * @retval -1 Lock ENOENT with O_CREAT (directory does not exist).
- * @retval -2 Unincorp empty, tduf_writeifempty unset.
- * @retval -3 Unincorp ENOENT, tduf_writeifenoent unset.
- * @retval  1 Unincorp ENOENT, tduf_writeifenoent set.
+ * @retval -2 Unincorp empty, TDUF_WRITE_IF_EMPTY unset.
+ * @retval -3 Unincorp ENOENT, TDUF_WRITE_IF_ENOENT unset.
+ * @retval  1 Unincorp ENOENT, TDUF_WRITE_IF_ENOENT set.
  * @retval  2 Ok.
  *
  * For positive return values the caller must call trigdef_update_done!
  */
 enum trigdef_update_status
-trigdef_update_start(enum trigdef_updateflags uf)
+trigdef_update_start(enum trigdef_update_flags uf)
 {
-	struct stat stab;
-	int r;
-
 	triggersdir = dpkg_db_get_path(TRIGGERSDIR);
 
-	if (uf & tduf_write) {
+	if (uf & TDUF_WRITE) {
 		constructfn(&fn, triggersdir, TRIGGERSLOCKFILE);
 		if (lock_fd == -1) {
 			lock_fd = open(fn.buf, O_RDWR | O_CREAT | O_TRUNC, 0600);
 			if (lock_fd == -1) {
-				if (!(errno == ENOENT && (uf & tduf_nolockok)))
+				if (!(errno == ENOENT && (uf & TDUF_NO_LOCK_OK)))
 					ohshite(_("unable to open/create "
 					          "triggers lockfile `%.250s'"),
 					        fn.buf);
-				return tdus_error_no_dir;
+				return TDUS_ERROR_NO_DIR;
 			}
 		}
 
@@ -1892,17 +1891,6 @@ trigdef_update_start(enum trigdef_updateflags uf)
 	}
 
 	constructfn(&fn, triggersdir, TRIGGERSDEFERREDFILE);
-	r = stat(fn.buf, &stab);
-	if (r) {
-		if (errno != ENOENT)
-			ohshite(_("unable to stat triggers deferred file `%.250s'"),
-			        fn.buf);
-	} else if (!stab.st_size) {
-		if (!(uf & tduf_writeifempty)) {
-			pop_cleanup(ehflag_normaltidy);
-			return tdus_error_empty_deferred;
-		}
-	}
 
 	if (old_deferred)
 		fclose(old_deferred);
@@ -1911,13 +1899,28 @@ trigdef_update_start(enum trigdef_updateflags uf)
 		if (errno != ENOENT)
 			ohshite(_("unable to open triggers deferred file `%.250s'"),
 			        fn.buf);
-		if (!(uf & tduf_writeifenoent)) {
+		if (!(uf & TDUF_WRITE_IF_ENOENT)) {
 			pop_cleanup(ehflag_normaltidy);
-			return tdus_error_no_deferred;
+			return TDUS_ERROR_NO_DEFERRED;
+		}
+	} else {
+		struct stat stab;
+		int rc;
+
+		setcloexec(fileno(old_deferred), fn.buf);
+
+		rc = fstat(fileno(old_deferred), &stab);
+		if (rc < 0)
+			ohshite(_("unable to stat triggers deferred file `%.250s'"),
+			        fn.buf);
+
+		if (stab.st_size == 0 && !(uf & TDUF_WRITE_IF_EMPTY)) {
+			pop_cleanup(ehflag_normaltidy);
+			return TDUS_ERROR_EMPTY_DEFERRED;
 		}
 	}
 
-	if (uf & tduf_write) {
+	if (uf & TDUF_WRITE) {
 		constructfn(&newfn, triggersdir, TRIGGERSDEFERREDFILE ".new");
 		if (trig_new_deferred)
 			fclose(trig_new_deferred);
@@ -1925,15 +1928,17 @@ trigdef_update_start(enum trigdef_updateflags uf)
 		if (!trig_new_deferred)
 			ohshite(_("unable to open/create new triggers deferred file `%.250s'"),
 			        newfn.buf);
+
+		setcloexec(fileno(trig_new_deferred), newfn.buf);
 	}
 
 	if (!old_deferred)
-		return tdus_no_deferred;
+		return TDUS_NO_DEFERRED;
 
 	trigdef_yyrestart(old_deferred);
 	BEGIN(0);
 
-	return tdus_ok;
+	return TDUS_OK;
 }
 
 void

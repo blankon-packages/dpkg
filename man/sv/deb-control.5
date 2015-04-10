@@ -111,17 +111,17 @@ Lista över märken som beskriver paketets egenskaper. En beskrivningen och
 förteckning över kända märken finns i paketet \fBdebtags\fP.
 .TP 
 \fBMulti\-Arch:\fP \fBsame\fP|\fBforeign\fP|\fBallowed\fP|\fBno\fP
-This field is used to indicate how this package should behave on a
-multi\-arch installations. The value \fBsame\fP means that the package is
-co\-installable with itself, but it must not be used to satisfy the
-dependency of any package of a different architecture from itself. The value
-\fBforeign\fP means that the package is not co\-installable with itself, but
-should be allowed to satisfy the dependency of a package of a different arch
-from itself. The value \fBallowed\fP allows reverse\-dependencies to indicate in
-their Depends field that they accept a package from a foreign architecture,
-but has no effect otherwise.  The value \fBno\fP is the default when the field
-is omitted, in which case adding the field with an explicit \fBno\fP value is
-generally not needed.
+Det här fältet används för att ange hur paketet skall fungera på en
+flerarkitektursinstallation. Värdet \fBsame\fP (samma) betyder att paket kan
+saminstalleras med sig självt, men kan inte användas för att uppfylla
+beroenden för paket med en annan arkitektur än sig självt. Värdet \fBforeign\fP
+(främmande) betyder att paketet inte kan saminstalleras med sig självt, men
+att det kan användas för att uppfylla beroenden för paket med en annan
+arkitektur än sig självt. Värdet \fBallowed\fP (tillåtet) tillåter att omvända
+beroenden kan ange i sina Depends\-fält att de behöver ett paket från en
+främmande arkitektur, men har i övrigt ingen funktion. Värdet \fBno\fP är
+standard om fältet utesluts, i vilket fall det vanligtvis inte är nödvändigt
+att lägga till fältet med ett explicit \fBno\fP\-värde.
 .TP 
 \fBSource:\fP\fI källkodsnamn\fP
 Namnet på det källkodspaket som binärpaketet kommer från, om det skiljer sig

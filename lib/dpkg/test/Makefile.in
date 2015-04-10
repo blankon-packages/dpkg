@@ -16,12 +16,12 @@
 
 # Variables to be defined:
 #
-#  TEST_PREFIX - set to the path to prefix to each test case for execution
 #  TEST_VERBOSE - set to 0 (default) or 1 to control test suite verbosity
 #  TEST_ENV_VARS - environment variables to be set for the test suite
 #  TEST_COVERAGE - set to the perl module in charge of getting test coverage
 #  test_tmpdir - test suite temporary directory
-#  test_cases - list of test case files
+#  test_scripts - list of test case scripts
+#  test_programs - list of test case programs
 #  test_data - list of test data files
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
@@ -87,13 +87,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-check_PROGRAMS = t-test$(EXEEXT) t-test-skip$(EXEEXT) \
-	t-macros$(EXEEXT) t-error$(EXEEXT) t-string$(EXEEXT) \
-	t-buffer$(EXEEXT) t-path$(EXEEXT) t-progname$(EXEEXT) \
-	t-subproc$(EXEEXT) t-command$(EXEEXT) t-varbuf$(EXEEXT) \
-	t-ar$(EXEEXT) t-deb-version$(EXEEXT) t-arch$(EXEEXT) \
-	t-version$(EXEEXT) t-pkginfo$(EXEEXT) t-pkg-list$(EXEEXT) \
-	t-pkg-queue$(EXEEXT) t-trigger$(EXEEXT) t-mod-db$(EXEEXT)
+check_PROGRAMS = $(am__EXEEXT_1) t-tarextract$(EXEEXT)
 DIST_COMMON = $(top_srcdir)/check.am $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/build-aux/depcomp
 subdir = lib/dpkg/test
@@ -108,116 +102,134 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/dpkg-arch.m4 \
 	$(top_srcdir)/m4/dpkg-unicode.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
 	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+am__EXEEXT_1 = t-test$(EXEEXT) t-test-skip$(EXEEXT) t-macros$(EXEEXT) \
+	t-error$(EXEEXT) t-string$(EXEEXT) t-buffer$(EXEEXT) \
+	t-path$(EXEEXT) t-progname$(EXEEXT) t-subproc$(EXEEXT) \
+	t-command$(EXEEXT) t-varbuf$(EXEEXT) t-ar$(EXEEXT) \
+	t-deb-version$(EXEEXT) t-arch$(EXEEXT) t-version$(EXEEXT) \
+	t-pkginfo$(EXEEXT) t-pkg-list$(EXEEXT) t-pkg-queue$(EXEEXT) \
+	t-trigger$(EXEEXT) t-mod-db$(EXEEXT)
 t_ar_SOURCES = t-ar.c
 t_ar_OBJECTS = t-ar.$(OBJEXT)
 t_ar_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
-t_ar_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_ar_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 t_arch_SOURCES = t-arch.c
 t_arch_OBJECTS = t-arch.$(OBJEXT)
 t_arch_LDADD = $(LDADD)
-t_arch_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_arch_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_buffer_SOURCES = t-buffer.c
 t_buffer_OBJECTS = t-buffer.$(OBJEXT)
 t_buffer_LDADD = $(LDADD)
-t_buffer_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_buffer_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_command_SOURCES = t-command.c
 t_command_OBJECTS = t-command.$(OBJEXT)
 t_command_LDADD = $(LDADD)
-t_command_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_command_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_deb_version_SOURCES = t-deb-version.c
 t_deb_version_OBJECTS = t-deb-version.$(OBJEXT)
 t_deb_version_LDADD = $(LDADD)
-t_deb_version_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_deb_version_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_error_SOURCES = t-error.c
 t_error_OBJECTS = t-error.$(OBJEXT)
 t_error_LDADD = $(LDADD)
-t_error_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_error_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_macros_SOURCES = t-macros.c
 t_macros_OBJECTS = t-macros.$(OBJEXT)
 t_macros_LDADD = $(LDADD)
-t_macros_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_macros_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_mod_db_SOURCES = t-mod-db.c
 t_mod_db_OBJECTS = t-mod-db.$(OBJEXT)
 t_mod_db_LDADD = $(LDADD)
-t_mod_db_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_mod_db_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_path_SOURCES = t-path.c
 t_path_OBJECTS = t-path.$(OBJEXT)
 t_path_LDADD = $(LDADD)
-t_path_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_path_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_pkg_list_SOURCES = t-pkg-list.c
 t_pkg_list_OBJECTS = t-pkg-list.$(OBJEXT)
 t_pkg_list_LDADD = $(LDADD)
-t_pkg_list_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_pkg_list_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_pkg_queue_SOURCES = t-pkg-queue.c
 t_pkg_queue_OBJECTS = t-pkg-queue.$(OBJEXT)
 t_pkg_queue_LDADD = $(LDADD)
-t_pkg_queue_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_pkg_queue_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_pkginfo_SOURCES = t-pkginfo.c
 t_pkginfo_OBJECTS = t-pkginfo.$(OBJEXT)
 t_pkginfo_LDADD = $(LDADD)
-t_pkginfo_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_pkginfo_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_progname_SOURCES = t-progname.c
 t_progname_OBJECTS = t-progname.$(OBJEXT)
 t_progname_LDADD = $(LDADD)
-t_progname_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_progname_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_string_SOURCES = t-string.c
 t_string_OBJECTS = t-string.$(OBJEXT)
 t_string_LDADD = $(LDADD)
-t_string_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_string_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_subproc_SOURCES = t-subproc.c
 t_subproc_OBJECTS = t-subproc.$(OBJEXT)
 t_subproc_LDADD = $(LDADD)
-t_subproc_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_subproc_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
+t_tarextract_SOURCES = t-tarextract.c
+t_tarextract_OBJECTS = t-tarextract.$(OBJEXT)
+t_tarextract_LDADD = $(LDADD)
+t_tarextract_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_test_SOURCES = t-test.c
 t_test_OBJECTS = t-test.$(OBJEXT)
 t_test_LDADD = $(LDADD)
-t_test_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_test_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_test_skip_SOURCES = t-test-skip.c
 t_test_skip_OBJECTS = t-test-skip.$(OBJEXT)
 t_test_skip_LDADD = $(LDADD)
-t_test_skip_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_test_skip_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_trigger_SOURCES = t-trigger.c
 t_trigger_OBJECTS = t-trigger.$(OBJEXT)
 t_trigger_LDADD = $(LDADD)
-t_trigger_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_trigger_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_varbuf_SOURCES = t-varbuf.c
 t_varbuf_OBJECTS = t-varbuf.$(OBJEXT)
 t_varbuf_LDADD = $(LDADD)
-t_varbuf_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_varbuf_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 t_version_SOURCES = t-version.c
 t_version_OBJECTS = t-version.$(OBJEXT)
 t_version_LDADD = $(LDADD)
-t_version_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a $(am__DEPENDENCIES_1)
+t_version_DEPENDENCIES = $(top_builddir)/lib/dpkg/libdpkg.la \
+	$(am__DEPENDENCIES_1)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -236,12 +248,18 @@ am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_@AM_V@)
 am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
 am__v_CC_0 = @echo "  CC      " $@;
 am__v_CC_1 = 
 CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
@@ -249,11 +267,13 @@ am__v_CCLD_1 =
 SOURCES = t-ar.c t-arch.c t-buffer.c t-command.c t-deb-version.c \
 	t-error.c t-macros.c t-mod-db.c t-path.c t-pkg-list.c \
 	t-pkg-queue.c t-pkginfo.c t-progname.c t-string.c t-subproc.c \
-	t-test.c t-test-skip.c t-trigger.c t-varbuf.c t-version.c
+	t-tarextract.c t-test.c t-test-skip.c t-trigger.c t-varbuf.c \
+	t-version.c
 DIST_SOURCES = t-ar.c t-arch.c t-buffer.c t-command.c t-deb-version.c \
 	t-error.c t-macros.c t-mod-db.c t-path.c t-pkg-list.c \
 	t-pkg-queue.c t-pkginfo.c t-progname.c t-string.c t-subproc.c \
-	t-test.c t-test-skip.c t-trigger.c t-varbuf.c t-version.c
+	t-tarextract.c t-test.c t-test-skip.c t-trigger.c t-varbuf.c \
+	t-version.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -282,6 +302,7 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
+AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -294,17 +315,22 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CURSES_LIBS = @CURSES_LIBS@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DOXYGEN = @DOXYGEN@
+DSYMUTIL = @DSYMUTIL@
+DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+FGREP = @FGREP@
 GCOV = @GCOV@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GMSGFMT = @GMSGFMT@
@@ -320,6 +346,7 @@ INTLLIBS = @INTLLIBS@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 LCOV = @LCOV@
 LCOV_GENHTML = @LCOV_GENHTML@
+LD = @LD@
 LDFLAGS = @LDFLAGS@
 LEX = @LEX@
 LEXLIB = @LEXLIB@
@@ -329,17 +356,27 @@ LIBINTL = @LIBINTL@
 LIBLZMA_LIBS = @LIBLZMA_LIBS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBTOOL = @LIBTOOL@
+LIPO = @LIPO@
+LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 MSGFMT = @MSGFMT@
 MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
+NM = @NM@
+NMEDIT = @NMEDIT@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
+PACKAGE_COPYRIGHT_HOLDER = @PACKAGE_COPYRIGHT_HOLDER@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
@@ -357,6 +394,7 @@ PO4A = @PO4A@
 POD2MAN = @POD2MAN@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
+SED = @SED@
 SELINUX_LIBS = @SELINUX_LIBS@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -375,8 +413,10 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
+ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 admindir = @admindir@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -432,12 +472,43 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib
 
 LDADD = \
-	$(top_builddir)/lib/dpkg/libdpkg.a \
-	$(top_builddir)/lib/compat/libcompat.a \
+	$(top_builddir)/lib/dpkg/libdpkg.la \
 	$(LIBINTL)
 
-TEST_PREFIX = $(builddir)
-test_cases = $(check_PROGRAMS)
+EXTRA_DIST = \
+	$(test_scripts) \
+	$(nil)
+
+
+# The tests are sorted in order of increasing complexity.
+test_programs = \
+	t-test \
+	t-test-skip \
+	t-macros \
+	t-error \
+	t-string \
+	t-buffer \
+	t-path \
+	t-progname \
+	t-subproc \
+	t-command \
+	t-varbuf \
+	t-ar \
+	t-deb-version \
+	t-arch \
+	t-version \
+	t-pkginfo \
+	t-pkg-list \
+	t-pkg-queue \
+	t-trigger \
+	t-mod-db \
+	$(nil)
+
+test_scripts = \
+	t-tar.t \
+	$(nil)
+
+test_tmpdir = t.tmp
 TEST_RUNNER = '\
 	my $$harness = TAP::Harness->new({ \
 	    lib => [ "$(top_srcdir)/scripts" ], \
@@ -451,7 +522,7 @@ TEST_RUNNER = '\
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .o .obj
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/check.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -485,7 +556,13 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 $(am__aclocal_m4_deps):
 
 clean-checkPROGRAMS:
-	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
+	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
 
 t-ar$(EXEEXT): $(t_ar_OBJECTS) $(t_ar_DEPENDENCIES) $(EXTRA_t_ar_DEPENDENCIES) 
 	@rm -f t-ar$(EXEEXT)
@@ -547,6 +624,10 @@ t-subproc$(EXEEXT): $(t_subproc_OBJECTS) $(t_subproc_DEPENDENCIES) $(EXTRA_t_sub
 	@rm -f t-subproc$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(t_subproc_OBJECTS) $(t_subproc_LDADD) $(LIBS)
 
+t-tarextract$(EXEEXT): $(t_tarextract_OBJECTS) $(t_tarextract_DEPENDENCIES) $(EXTRA_t_tarextract_DEPENDENCIES) 
+	@rm -f t-tarextract$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(t_tarextract_OBJECTS) $(t_tarextract_LDADD) $(LIBS)
+
 t-test$(EXEEXT): $(t_test_OBJECTS) $(t_test_DEPENDENCIES) $(EXTRA_t_test_DEPENDENCIES) 
 	@rm -f t-test$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(t_test_OBJECTS) $(t_test_LDADD) $(LIBS)
@@ -588,6 +669,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-progname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-string.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-subproc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-tarextract.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-test-skip.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-trigger.Po@am__quote@
@@ -607,6 +689,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.c.lo:
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -728,7 +823,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-checkPROGRAMS clean-generic mostlyclean-am
+clean-am: clean-checkPROGRAMS clean-generic clean-libtool clean-local \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -783,7 +879,8 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
 pdf: pdf-am
 
@@ -798,16 +895,17 @@ uninstall-am:
 .MAKE: check-am install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am check-local clean \
-	clean-checkPROGRAMS clean-generic cscopelist-am ctags ctags-am \
-	distclean distclean-compile distclean-generic distclean-tags \
-	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	clean-checkPROGRAMS clean-generic clean-libtool clean-local \
+	cscopelist-am ctags ctags-am distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am
 
 
@@ -816,7 +914,7 @@ TEST_VERBOSE ?= 0
 check-clean:
 	[ -z "$(test_tmpdir)" ] || rm -fr $(test_tmpdir)
 
-check-local: $(test_data) $(test_cases)
+check-local: $(test_data) $(test_programs) $(test_scripts)
 	[ -z "$(test_tmpdir)" ] || $(MKDIR_P) $(test_tmpdir)
 	PATH="$(top_builddir)/src:$(top_builddir)/scripts:$(top_builddir)/utils:$(PATH)" \
 	  LC_ALL=C \
@@ -825,9 +923,10 @@ check-local: $(test_data) $(test_cases)
 	  PERL_DL_NONLAZY=1 \
 	  PERL5OPT=$(TEST_COVERAGE) \
 	  $(PERL) -MTAP::Harness -e $(TEST_RUNNER) \
-	    $(if $(TEST_PREFIX), \
-	         $(addprefix $(TEST_PREFIX)/,$(test_cases)), \
-	         $(addprefix $(srcdir)/,$(test_cases)))
+	    $(addprefix $(builddir)/,$(test_programs)) \
+	    $(addprefix $(srcdir)/,$(test_scripts))
+
+clean-local: check-clean
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

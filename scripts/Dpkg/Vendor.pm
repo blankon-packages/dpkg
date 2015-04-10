@@ -45,14 +45,14 @@ The files in $Dpkg::CONFDIR/origins/ can provide information about various
 vendors who are providing Debian packages. Currently those files look like
 this:
 
-  Vendor: BlankOn
-  Vendor-URL: http://www.blankonlinux.or.id/
-  Bugs: debbugs://dev.blankonlinux.or.id/
+  Vendor: Debian
+  Vendor-URL: https://www.debian.org/
+  Bugs: debbugs://bugs.debian.org
 
 If the vendor derives from another vendor, the file should document
 the relationship by listing the base distribution in the Parent field:
 
-  Parent: BlankOn
+  Parent: Debian
 
 The file should be named according to the vendor name.
 
@@ -187,6 +187,10 @@ sub run_vendor_hook {
 =head2 Version 1.01
 
 New function: get_vendor_dir().
+
+=head2 Version 1.00
+
+Mark the module as public.
 
 =cut
 
