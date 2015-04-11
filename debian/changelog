@@ -1,6 +1,8 @@
-dpkg (1.17.25+blankon1) tambora; urgency=medium
+dpkg (1.17.25blankon1) tambora; urgency=medium
 
   * Upstream release
+  * Debian/control: drop Build-depends libkvm-dev, this library only for
+    kfreebsd
 
  -- Mijortsa <azis.astrojim@surabaya.di.blankon.in>  Sat, 11 Apr 2015 01:30:16 +0700
 
