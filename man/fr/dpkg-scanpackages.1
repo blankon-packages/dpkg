@@ -25,83 +25,83 @@
 .\"*******************************************************************
 .TH dpkg\-scanpackages 1 07\-05\-2012 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
-dpkg\-scanpackages \- créer des fichiers d'index de paquets.
+dpkg\-scanpackages \- crÃ©er des fichiers d'index de paquets.
 .
 .SH SYNOPSIS
 \fBdpkg\-scanpackages\fP [\fIoption\fP...] \fIrep\-de\-binaires\fP
-[\fIfichier\-d'override\fP [\fIchemin\-à\-préfixer\fP]] \fB>\fP \fIPackages\fP
+[\fIfichier\-d'override\fP [\fIchemin\-Ã \-prÃ©fixer\fP]] \fB>\fP \fIPackages\fP
 .
 .SH DESCRIPTION
 \fBdpkg\-scanpackages\fP trie une arborescence contenant des paquets binaires
-Debian et crée un fichier «\ Packages\ » qui permettra à \fBapt\fP(8),
-\fBdselect\fP(1), ou à un autre programme, de savoir quels sont les paquets
-installables. Ces fichiers «\ Packages\ » sont semblables à ceux qu'on peut
-trouver sur les sites d'archives Debian ou sur des CD. Quand on crée un
-répertoire contenant des paquets qu'on veut installer sur un ensemble de
-machines, on peut se servir soi\-même de \fBdpkg\-scanpackages\fP.
+Debian et crÃ©e un fichier Â«\ Packages\ Â» qui permettra Ã  \fBapt\fP(8),
+\fBdselect\fP(1), ou Ã  un autre programme, de savoir quels sont les paquets
+installables. Ces fichiers Â«\ Packages\ Â» sont semblables Ã  ceux qu'on peut
+trouver sur les sites d'archives Debian ou sur des CD. Quand on crÃ©e un
+rÃ©pertoire contenant des paquets qu'on veut installer sur un ensemble de
+machines, on peut se servir soi\-mÃªme de \fBdpkg\-scanpackages\fP.
 .PP
-\fBNote\ :\fP Pour pouvoir accéder avec \fBapt\fP au fichier «\ Packages\ » créé, il
-faudra sans doute le compresser avec \fBbzip2\fP(1) (qui crée un fichier
-Packages.bz2) ou \fBgzip\fP(1) (qui crée un fichier Packages.gz). apt ignore
-les fichiers «\ Packages\ » non compressés, sauf pour des sources locales
-(c'est\-à\-dire \fBfile://\fP).
+\fBNote:\fP If you want to access the generated Packages file with \fBapt\fP you
+will probably need to compress the file with \fBxz\fP(1)  (generating a
+Packages.xz file), \fBbzip2\fP(1)  (generating a Packages.bz2 file) or
+\fBgzip\fP(1)  (generating a Packages.gz file). apt ignores uncompressed
+Packages files except on local access (i.e.  \fBfile://\fP sources).
 .PP
 \fIrep\-de\-binaires\fP est le nom de l'arborescence des paquets binaires (par
 exemple \fBcontrib/binary\-i386)\fP que l'on veut traiter. Il vaut mieux qu'elle
-soit relative à la racine de l'archive Debian\ ; ainsi chaque champ
-«\ Filename\ » dans le nouveau fichier «\ Packages\ » commencera par cette
-chaîne.
+soit relative Ã  la racine de l'archive Debian\ ; ainsi chaque champ
+Â«\ Filename\ Â» dans le nouveau fichier Â«\ Packages\ Â» commencera par cette
+chaÃ®ne.
 .PP
-\fIfichier\-d'override\fP est le nom du fichier qui contient les renseignements
-sur la manière dont le paquet s'insère dans la distribution (ce fichier peut
-être compressé)\ ; voir \fBdeb\-override\fP(5).
+\fIoverride\-file\fP is the name of a file to read which contains information
+about how the package fits into the distribution (the file can be compressed
+since dpkg 1.15.5); see \fBdeb\-override\fP(5).
 .PP
-\fIchemin\-à\-préfixer\fP est une chaîne facultative qui préfixera les champs
-«\ Filename\ ».
+\fIchemin\-Ã \-prÃ©fixer\fP est une chaÃ®ne facultative qui prÃ©fixera les champs
+Â«\ Filename\ Â».
 .PP
-S'il existe plusieurs versions d'un paquet, seule la plus récente est
-affichée en sortie. Si les paquets ont la même version mais diffèrent par
-l'architecture, seul le premier trouvé est utilisé.
+S'il existe plusieurs versions d'un paquet, seule la plus rÃ©cente est
+affichÃ©e en sortie. Si les paquets ont la mÃªme version mais diffÃ¨rent par
+l'architecture, seul le premier trouvÃ© est utilisÃ©.
 .
 .SH OPTIONS
 .TP 
 \fB\-t\fP, \fB\-\-type\fP \fItype\fP
-Recherche des fichiers *.\fItype\fP, plutôt que \fI*.deb\fP.
+Recherche des fichiers *.\fItype\fP, plutÃ´t que \fI*.deb\fP.
 .TP 
 \fB\-e\fP, \fB\-\-extra\-override\fP \fIfichier\fP
-Examine \fIfichier\fP à la recherche d'«\ overrides\ » supplémentaires (ce
-fichier peut être compressé). Voir \fBdeb\-extra\-override\fP(5) pour plus
-d'information sur le format utilisé.
+Scan \fIfile\fP to find supplementary overrides (the file can be compressed
+since dpkg 1.15.5).  See \fBdeb\-extra\-override\fP(5)  for more information on
+its format.
 .TP 
 \fB\-a\fP, \fB\-\-arch\fP \fIarch\fP
-Utilise un motif équivalent à \fI*_all.deb\fP et à \fI*_arch.deb\fP, plutôt que de
+Utilise un motif Ã©quivalent Ã  \fI*_all.deb\fP et Ã  \fI*_arch.deb\fP, plutÃ´t que de
 rechercher tous les fichiers debs.
 .TP 
 \fB\-h\fP, \fB\-\-hash\fP \fIliste\-de\-hachage\fP
-Générer uniquement le hachage de fichiers spécifiés (liste séparée par des
-virgules). Par défaut cela génére tous les hachages actuellement pris en
-charge. Valeurs supportées: \fBmd5\fP, \fBsha1\fP, \fBsha256\fP.
+Only generate file hashes for the comma\-specified list specified (since dpkg
+1.17.14).  The default is to generate all currently supported hashes.
+Supported values: \fBmd5\fP, \fBsha1\fP, \fBsha256\fP.
 .TP 
 \fB\-m\fP, \fB\-\-multiversion\fP
-Affiche tous les paquets trouvés en sortie.
+Affiche tous les paquets trouvÃ©s en sortie.
 .TP 
-\fB\-M\fP, \fB\-\-medium\fP \fIid\-chaîne\fP
-Ajoute un champ X\-Medium qui contient la valeur \fIid\-chaîne\fP. Ce champ est
-obligatoire si vous voulez créer des fichiers \fBPackages.cd\fP destinés à être
-utilisés avec la méthode multicd de dselect.
+\fB\-M\fP, \fB\-\-medium\fP \fIid\-chaÃ®ne\fP
+Add an \fBX\-Medium\fP field containing the value \fIid\-string\fP (since dpkg
+1.15.5).  This field is required if you want to generate \fBPackages.cd\fP
+files for use by the multicd access method of dselect.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
 Affiche un message d'aide puis quitte.
 .TP 
 \fB\-\-version\fP
-Affiche le numéro de version puis quitte.
+Affiche le numÃ©ro de version puis quitte.
 .
 .SH DIAGNOSTICS
 \fBdpkg\-scanpackages\fP affiche les erreurs habituelles qui se comprennent
-d'elles\-mêmes. Il affiche aussi des avertissements quand des paquets sont
-dans un mauvais sous\-répertoire, existent en double exemplaire, ont des
-champs «\ Filename\ » dans leur fichier «\ control\ », sont absents du fichier
-«\ override\ » ou bien dont les substitutions de responsable ne peuvent pas
+d'elles\-mÃªmes. Il affiche aussi des avertissements quand des paquets sont
+dans un mauvais sous\-rÃ©pertoire, existent en double exemplaire, ont des
+champs Â«\ Filename\ Â» dans leur fichier Â«\ control\ Â», sont absents du fichier
+Â«\ override\ Â» ou bien dont les substitutions de responsable ne peuvent pas
 s'appliquer.
 .
 .SH "VOIR AUSSI"
@@ -112,5 +112,5 @@ s'appliquer.
 .SH TRADUCTION
 Ariel VARDI <ariel.vardi@freesbee.fr>, 2002.
 Philippe Batailler, 2006.
-Nicolas François, 2006.
-Veuillez signaler toute erreur à <debian\-l10n\-french@lists.debian.org>.
+Nicolas FranÃ§ois, 2006.
+Veuillez signaler toute erreur Ã  <debian\-l10n\-french@lists.debian.org>.

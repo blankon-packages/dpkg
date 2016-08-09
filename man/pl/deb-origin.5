@@ -23,49 +23,54 @@
 .\"*******************************************************************
 .TH deb\-origin 5 2011\-11\-10 "Projekt Debian" Debian
 .SH NAZWA
-deb\-origin \- pliki informacyjne zaleøne od dostawcy
-.SH SK£ADNIA
+deb\-origin \- pliki informacyjne zale≈ºne od dostawcy
+.SH SK≈ÅADNIA
 \fB/etc/dpkg/origins/\fP\fInazwa\-pliku\fP
 .SH OPIS
-Pliki w \fB/etc/dpkg/origins\fP mog± zawieraÊ informacje o rÛønych dostawcach
-zapewniaj±cych pakiety Debiana. Sk≥adaj± siÍ z pewnej liczby pÛl lub linii
-komentarza, czyli linii zaczynaj±cych siÍ znakiem "\fB#\fP". Kaøde pole zaczyna
-siÍ od identyfikatora, takiego jak \fBVendor\fP lub \fBParent\fP (wielko∂Ê liter
-nie ma znaczenia), po ktÛrym nastÍpuj± dwukropek oraz warto∂Ê pola. Pola s±
-rozdzielane od siebie identyfikatorami pÛl. Innymi s≥owy, tekst pola moøe
-siÍ sk≥adaÊ z wielu linii, jednakøe narzÍdzia po≥±cz± te linie podczas
-przetwarzania warto∂ci pola.
-.SH "POLA WYMAGANE"
+The files in \fB/etc/dpkg/origins\fP can provide information about various
+vendors who are providing Debian packages.
+
+They contain a number of fields, or comments when the line starts with
+\(oq\fB#\fP\(cq.  Each field begins with a tag, such as \fBVendor\fP or \fBParent\fP,
+followed by a colon and the body of the field. Fields are delimited only by
+field tags. In other words, field text may be multiple lines in length, but
+the tools will join lines when processing the body of the field.
+
+The file should be named according to the vendor name.  The usual convention
+is to name the vendor file using the vendor name in all lowercase, but some
+variation is permitted.  Namely, spaces are mapped to dashes (\(oq\fB\-\fP\(cq),
+and the file can have the same casing as the value in \fBVendor\fP field, or it
+can be capitalized.
+.SH FIELDS
 .TP 
-\fBVendor:\fP\fI nazwa\-dostawcy\fP
-Warto∂Ê tego pola okre∂la nazwÍ dostawcy.
-.SH "POLA NIEWYMAGANE"
+\fBVendor:\fP \fIvendor\-name\fP (required)
+Warto≈õƒá tego pola okre≈õla nazwƒô dostawcy.
 .TP 
 \fBVendor\-URL:\fP\fI URL\-dostawcy\fP
-Warto∂Ê tego pola okre∂la URL dostawcy.
+Warto≈õƒá tego pola okre≈õla URL dostawcy.
 .TP 
 \fBBugs:\fP\fI bug\-url\fP
-Warto∂Ê pola okre∂la typ i adres systemu ∂ledzenia b≥ÍdÛw uøywanego przez
-danego dostawcÍ. Moøe byÊ to URL mailto lub debbugs
+Warto≈õƒá pola okre≈õla typ i adres systemu ≈õledzenia b≈Çƒôd√≥w u≈ºywanego przez
+danego dostawcƒô. Mo≈ºe byƒá to URL mailto lub debbugs
 (np. debbugs://bugs.debian.org/).
 .TP 
 \fBParent:\fP\fI nazwa\-dostawcy\fP
-Warto∂Ê tego pola okre∂la nazwÍ dostawcy, od ktÛrego pochodzi dany dostawca.
-.SH PRZYK£AD
+Warto≈õƒá tego pola okre≈õla nazwƒô dostawcy, od kt√≥rego pochodzi dany dostawca.
+.SH PRZYK≈ÅAD
 .nf
 Vendor: Debian
 Vendor\-URL: https://www.debian.org/
 Bugs: debbugs://bugs.debian.org
 .fi
-.SH "ZOBACZ TAKØE"
+.SH "ZOBACZ TAK≈ªE"
 \fBdpkg\-vendor\fP(1)
-.SH T£UMACZE
+.SH T≈ÅUMACZE
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br
-Bartosz FeÒski <fenio@debian.org>, 2004-2005
+Bartosz Fe≈Ñski <fenio@debian.org>, 2004-2005
 .br
 Robert Luberda <robert@debian.org>, 2006-2008
 .br
 Wiktor Wandachowicz <siryes@gmail.com>, 2008
 .br
-Micha≥ Ku≥ach <michal.kulach@gmail.com>, 2012
+Micha≈Ç Ku≈Çach <michal.kulach@gmail.com>, 2012

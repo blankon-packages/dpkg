@@ -22,34 +22,34 @@
 .\"*******************************************************************
 .TH deb\-extra\-override 5 2009\-08\-16 Debianprojektet dpkg\-verktygen
 .SH NAMN
-deb\-extra\-override \- Debianarkivets extra överstyrningsfil
+deb\-extra\-override \- Debianarkivets extra Ã¶verstyrningsfil
 .
 .SH SYNOPS
 override
 .
 .SH BESKRIVNING
-Även om det mesta av informationen om ett binär\-/källkodspaket finns i
-control\-/.dsc\-filen så kan allt överstyras när det exporteras till
-Packages\-/Sources\-filer. Den extra override\-filen innehåller dessa
-överstyrningar.
+Ã„ven om det mesta av informationen om ett binÃ¤r\-/kÃ¤llkodspaket finns i
+control\-/.dsc\-filen sÃ¥ kan allt Ã¶verstyras nÃ¤r det exporteras till
+Packages\-/Sources\-filer. Den extra override\-filen innehÃ¥ller dessa
+Ã¶verstyrningar.
 .PP
 Den extra override\-filen har ett enkelt blanksteg\-avdelat
-format. Kommentarer är tillåtna (markeras med ett \fB#\fP).
+format. Kommentarer Ã¤r tillÃ¥tna (markeras med ett \fB#\fP).
 .PP
 .in +5
-\fIpaket\fP \fIfältnamn\fP \fIvärde\fP
+\fIpaket\fP \fIfÃ¤ltnamn\fP \fIvÃ¤rde\fP
 .in -5
 .PP
-\fIpaket\fP är namnet på binär\-/källkodspaketet
+\fIpaket\fP Ã¤r namnet pÃ¥ binÃ¤r\-/kÃ¤llkodspaketet
 .PP
-\fIfältnamn\fP är namnet på fältet som skall överstyras. \fIvärde\fP är värdet som
-skall läggas in i fältet. Det kan innehålla blanksteg då raden delas upp i
+\fIfÃ¤ltnamn\fP Ã¤r namnet pÃ¥ fÃ¤ltet som skall Ã¶verstyras. \fIvÃ¤rde\fP Ã¤r vÃ¤rdet som
+skall lÃ¤ggas in i fÃ¤ltet. Det kan innehÃ¥lla blanksteg dÃ¥ raden delas upp i
 maximalt tre kolumner vid tolkning.
 .PP
-De extra override\-filer som används för att skapa den officiella listan över
-paket ("Packages") finns i \fIindices\fP\-katalogen på alla Debianspeglar.
+De extra override\-filer som anvÃ¤nds fÃ¶r att skapa den officiella listan Ã¶ver
+paket ("Packages") finns i \fIindices\fP\-katalogen pÃ¥ alla Debianspeglar.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 \fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1).
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-trigger(1)
 .\"
-.\" Copyright ¬© 2008-2011 Guillem Jover <guillem@debian.org>
+.\" Copyright ¬© 2008-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -20,82 +20,96 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-trigger 1 2011\-08\-14 "Projekt Debian" "uøytki dpkg"
+.TH dpkg\-trigger 1 2011\-08\-14 "Projekt Debian" "u≈ºytki dpkg"
 .SH NAZWA
-dpkg\-trigger \- program pomocniczy wyzwalaczy dla pakietÛw
+dpkg\-trigger \- program pomocniczy wyzwalaczy dla pakiet√≥w
 .
-.SH SK£ADNIA
+.SH SK≈ÅADNIA
 \fBdpkg\-trigger\fP [\fIopcja\fP...] \fInazwa\-wyzwalacza\fP
 .br
 \fBdpkg\-trigger\fP [\fIopcja\fP...] \fIpolecenie\fP
 .
 .SH OPIS
-\fBdpkg\-trigger\fP jest narzÍdziem, ktÛre pozwala jawnie aktywowaÊ wyzwalacze
+\fBdpkg\-trigger\fP jest narzƒôdziem, kt√≥re pozwala jawnie aktywowaƒá wyzwalacze
 oraz sprawdza wsparcie dla nich w uruchomionym \fBdpkg\fP.
 .PP
-Moøe byÊ uøyte przez skrypty opiekuna pakietu w sytuacjach z≥oøonych i
-ob≥oøonych warunkami, gdy wyzwalacze plikowe lub dyrektywy \fBactivate\fP z
-pliku kontrolnego triggers s± niewystarczaj±ce. Moøe byÊ rÛwnieø uøyte do
-testowania oraz przez administratorÛw systemu (proszÍ zauwaøyÊ, øe same
-wyzwalacze nie bÍd± uruchamiane przez \fBdpkg\-trigger\fP).
+Mo≈ºe byƒá u≈ºyte przez skrypty opiekuna pakietu w sytuacjach z≈Ço≈ºonych i
+ob≈Ço≈ºonych warunkami, gdy wyzwalacze plikowe lub dyrektywy \fBactivate\fP z
+pliku kontrolnego triggers sƒÖ niewystarczajƒÖce. Mo≈ºe byƒá r√≥wnie≈º u≈ºyte do
+testowania oraz przez administrator√≥w systemu (proszƒô zauwa≈ºyƒá, ≈ºe same
+wyzwalacze nie bƒôdƒÖ uruchamiane przez \fBdpkg\-trigger\fP).
 .PP
-Nierozpoznana sk≥adnia nazwy wyzwalacza stanowi b≥±d dla \fBdpkg\-trigger\fP.
+Nierozpoznana sk≈Çadnia nazwy wyzwalacza stanowi b≈ÇƒÖd dla \fBdpkg\-trigger\fP.
 .
 .SH POLECENIA
 .TP 
 \fB\-\-check\-supported\fP
-Sprawdza czy uruchomione \fBdpkg\fP obs≥uguje wyzwalacze (zwykle wywo≥ywane ze
-skryptu postinst). Program koÒczy siÍ z kodem \fB0\fP, je∂li uruchamiane jest
-\fBdpkg\fP wspieraj±ce wyzwalacze, lub z kodem \fB1\fP i komunikatem b≥Ídu na
+Sprawdza czy uruchomione \fBdpkg\fP obs≈Çuguje wyzwalacze (zwykle wywo≈Çywane ze
+skryptu postinst). Program ko≈Ñczy siƒô z kodem \fB0\fP, je≈õli uruchamiane jest
+\fBdpkg\fP wspierajƒÖce wyzwalacze, lub z kodem \fB1\fP i komunikatem b≈Çƒôdu na
 stderr w przeciwnym wypadku. Jednak normalnie lepiej jest po prostu
-aktywowaÊ potrzebny wyzwalacz, uøywaj±c \fBdpkg\-trigger\fP.
+aktywowaƒá potrzebny wyzwalacz, u≈ºywajƒÖc \fBdpkg\-trigger\fP.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Wy∂wietla informacjÍ o uøytkowaniu i koÒczy dzia≥anie.
+Wy≈õwietla informacjƒô o u≈ºytkowaniu i ko≈Ñczy dzia≈Çanie.
 .TP 
 \fB\-\-version\fP
-Wy∂wietla informacjÍ o wersji i pomy∂lnie koÒczy dzia≥anie.
+Wy≈õwietla informacjƒô o wersji i pomy≈õlnie ko≈Ñczy dzia≈Çanie.
 .
 .SH OPCJE
 .TP 
 \fB\-\-admindir=\fP\fIkatalog\fP
-Zmienia po≥oøenie bazy danych \fBdpkg\fP. Domy∂lnie jest to \fI/var/lib/dpkg\fP.
+Zmienia po≈Ço≈ºenie bazy danych \fBdpkg\fP. Domy≈õlnie jest to \fI/var/lib/dpkg\fP.
 .TP 
 \fB\-\-by\-package=\fP\fIpakiet\fP
-Wymuszenie pakietu oczekuj±cego na wyzwalacz. Normalnie ustawiane przez
-\fBdpkg\fP w zmiennej ∂rodowiskowej \fBDPKG_MAINTSCRIPT_PACKAGE\fP skryptu
-opiekuna pakietu, wskazuj±c nazwÍ pakietu, do ktÛrego naleøy skrypt (jest to
-warto∂Ê uøywana domy∂lnie).
+Wymuszenie pakietu oczekujƒÖcego na wyzwalacz. Normalnie ustawiane przez
+\fBdpkg\fP w zmiennej ≈õrodowiskowej \fBDPKG_MAINTSCRIPT_PACKAGE\fP skryptu
+opiekuna pakietu, wskazujƒÖc nazwƒô pakietu, do kt√≥rego nale≈ºy skrypt (jest to
+warto≈õƒá u≈ºywana domy≈õlnie).
 .TP 
 \fB\-\-no\-await\fP
-Ta opcja zapewnia, øe wywo≥uj±cy pakiet T (je∂li jest) nie potrzebuje
-oczekiwaÊ na przetworzenie tego wyzwalacza. Tzw. "zainteresowane" pakiet(y)
-I nie bÍd± dodane do listy pakietÛw oczekuj±cych na przetworzenie wyzwalacza
-dla T, a status T nie zostanie zmieniony. Moøna uwaøaÊ T za zainstalowany,
-mimo øe pakiet(y) I wyzwalacz mÛg≥ jeszcze nie zostaÊ przetworzony.
+Ta opcja zapewnia, ≈ºe wywo≈ÇujƒÖcy pakiet T (je≈õli jest) nie potrzebuje
+oczekiwaƒá na przetworzenie tego wyzwalacza. Tzw. "zainteresowane" pakiet(y)
+I nie bƒôdƒÖ dodane do listy pakiet√≥w oczekujƒÖcych na przetworzenie wyzwalacza
+dla T, a status T nie zostanie zmieniony. Mo≈ºna uwa≈ºaƒá T za zainstalowany,
+mimo ≈ºe pakiet(y) I wyzwalacz m√≥g≈Ç jeszcze nie zostaƒá przetworzony.
 .TP 
 \fB\-\-await\fP
-This option does the inverse of \fB\-\-no\-await\fP. It is currently the default
-behavior.
+This option does the inverse of \fB\-\-no\-await\fP (since dpkg 1.17.21).  It is
+currently the default behavior.
 .TP 
 \fB\-\-no\-act\fP
-Tylko test \- bez wykonywania øadnych zmian.
+Tylko test \- bez wykonywania ≈ºadnych zmian.
 .
-.SH ¶RODOWISKO
+.SH "KOD WYJ≈öCIA"
+.TP 
+\fB0\fP
+The requested action was successfully performed.  Or a check or assertion
+command returned true.
+.TP 
+\fB1\fP
+A check or assertion command returned false.
+.TP 
+\fB2\fP
+Fatal or unrecoverable error due to invalid command\-line usage, or
+interactions with the system, such as accesses to the database, memory
+allocations, etc.
+.
+.SH ≈öRODOWISKO
 .TP 
 \fBDPKG_ADMINDIR\fP
 If set and the \fB\-\-admindir\fP option has not been specified, it will be used
 as the \fBdpkg\fP data directory.
 .
-.SH "ZOBACZ TAKØE"
+.SH "ZOBACZ TAK≈ªE"
 \fBdpkg\fP(1), \fBdeb\-triggers\fP(5), \fB/usr/share/doc/dpkg\-dev/triggers.txt.gz\fP.
-.SH T£UMACZE
+.SH T≈ÅUMACZE
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br
-Bartosz FeÒski <fenio@debian.org>, 2004-2005
+Bartosz Fe≈Ñski <fenio@debian.org>, 2004-2005
 .br
 Robert Luberda <robert@debian.org>, 2006-2008
 .br
 Wiktor Wandachowicz <siryes@gmail.com>, 2008
 .br
-Micha≥ Ku≥ach <michal.kulach@gmail.com>, 2012
+Micha≈Ç Ku≈Çach <michal.kulach@gmail.com>, 2012

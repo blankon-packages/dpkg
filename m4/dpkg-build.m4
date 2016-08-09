@@ -29,6 +29,23 @@ AC_DEFUN([DPKG_BUILD_PROG], [
   AC_MSG_RESULT([$build_]AS_TR_SH([$1]))
 ])# DPKG_BUILD_PROG
 
+# DPKG_BUILD_DEVEL_DOCS()
+# ---------------------
+# Select what type of documentation to build. Either for development including
+# all symbol references, and extracting everything, or production documentation.
+AC_DEFUN([DPKG_BUILD_DEVEL_DOCS], [
+  AC_ARG_ENABLE([devel-docs],
+    AS_HELP_STRING([--disable-devel-docs], [build release docs]),
+    [build_devel_docs=$enable_devel_docs],
+    [build_devel_docs=yes]
+  )
+  AS_IF([test "x$build_devel_docs" = "xyes"], [
+    AC_SUBST([BUILD_DEVEL_DOCS], [YES])
+  ], [
+    AC_SUBST([BUILD_DEVEL_DOCS], [NO])
+  ])
+])# DPKG_BUILD_DOCS_MODE
+
 # DPKG_WITH_DIR(DIR, DEFAULT, DESCRIPTION)
 # -------------
 # Allow specifying alternate directories.
@@ -41,7 +58,6 @@ AC_DEFUN([DPKG_WITH_DIR], [
             [$1="$with_$1"])
   )
   AC_SUBST([$1])
-  AC_MSG_NOTICE([using directory $1 = '$$1'])
 ])# DPKG_WITH_DIR
 
 # DPKG_DEB_COMPRESSOR(COMP)
@@ -53,12 +69,11 @@ AC_DEFUN([DPKG_DEB_COMPRESSOR], [
                     [change default dpkg-deb build compressor])],
     [with_dpkg_deb_compressor=$withval], [with_dpkg_deb_compressor=$1])
   AS_CASE([$with_dpkg_deb_compressor],
-    [gzip|xz|bzip2], [:],
+    [gzip|xz], [:],
     [AC_MSG_ERROR([unsupported default compressor $with_dpkg_deb_compressor])])
   AC_DEFINE_UNQUOTED([DPKG_DEB_DEFAULT_COMPRESSOR],
                      [COMPRESSOR_TYPE_]AS_TR_CPP(${with_dpkg_deb_compressor}),
                      [default dpkg-deb build compressor])
-  AC_MSG_NOTICE([using default dpkg-deb compressor = $with_dpkg_deb_compressor])
 ]) # DPKG_DEB_COMPRESSOR
 
 # DPKG_DIST_CHECK(COND, ERROR)

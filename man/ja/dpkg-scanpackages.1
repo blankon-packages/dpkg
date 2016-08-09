@@ -23,83 +23,88 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-scanpackages 1 2012\-05\-07 "Debian Project" "dpkg ецб╝е╞егеъе╞ег"
-.SH ╠╛┴░
-dpkg\-scanpackages \- Packages едеєе╟е├епе╣е╒ебедеыд╬║ю└о
+.TH dpkg\-scanpackages 1 2012\-05\-07 "Debian Project" "dpkg уГжуГ╝уГЖуВгуГкуГЖуВг"
+.SH хРНхЙН
+dpkg\-scanpackages \- Packages уВдуГ│уГЗуГГуВпуВ╣уГХуВбуВдуГлуБоф╜ЬцИР
 .
-.SH ╜ё╝░
+.SH цЫ╕х╝П
 \fBdpkg\-scanpackages\fP [\fIoption\fP...] \fIbinary\-dir\fP [\fIoverride\-file\fP
 [\fIpath\-prefix\fP]] \fB>\fP \fIPackages\fP
 .
-.SH └т╠└
-\fBdpkg\-scanpackages\fP д╧бвDebian е╨еде╩еъе╤е├е▒б╝е╕д╬е─еъб╝длдщбвPackages е╒ебедеыдЄ└╕└од╣дыбгPackages
-е╒ебедеыд╧бведеєе╣е╚б╝еы▓─╟╜д╩е╤е├е▒б╝е╕дЄецб╝е╢д╦─є╝ид╣дыд┐дсд╦бв\fBapt\fP(8) дф \fBdselect\fP(1)
-д╩д╔д╦дшд├д╞═╤дддщдьдыбгд│джд╖д┐Packages е╒ебедеыд╧ Debian евб╝еледе╓е╡еде╚дф CD\-ROM
-д╩д╔д╟╗╚дядьд╞дддыдтд╬д╚╞▒д╕дтд╬д╟двдыбг┬┐┐Їд╬е▐е╖еєд╦едеєе╣е╚б╝еыдЄ╣╘джеэб╝елеыд╩е╤е├е▒б╝е╕д╬е╟егеьепе╚еъдЄ║ю└од╖д┐╛хд╟бв╝л╩мд╟
-\fBdpkg\-scanpackages\fP дЄ╗╚джд│д╚дтд╟дндыбг
+.SH шкмцШО
+\fBdpkg\-scanpackages\fP уБпуАБDebian уГРуВдуГКуГкуГСуГГуВ▒уГ╝уВ╕уБоуГДуГкуГ╝уБЛуВЙуАБPackages уГХуВбуВдуГлуВТчФЯцИРуБЩуВЛуАВPackages
+уГХуВбуВдуГлуБпуАБуВдуГ│уВ╣уГИуГ╝уГлхПпшГ╜уБкуГСуГГуВ▒уГ╝уВ╕уВТуГжуГ╝уВ╢уБлцПРчд║уБЩуВЛуБЯуВБуБлуАБ\fBapt\fP(8) уВД \fBdselect\fP(1)
+уБкуБйуБлуВИуБгуБжчФиуБДуВЙуВМуВЛуАВуБУуБЖуБЧуБЯPackages уГХуВбуВдуГлуБп Debian уВвуГ╝уВлуВдуГЦуВ╡уВдуГИуВД CD\-ROM
+уБкуБйуБзф╜┐уВПуВМуБжуБДуВЛуВВуБоуБихРМуБШуВВуБоуБзуБВуВЛуАВхдЪцХ░уБоуГЮуВ╖уГ│уБлуВдуГ│уВ╣уГИуГ╝уГлуВТшбМуБЖуГнуГ╝уВлуГлуБкуГСуГГуВ▒уГ╝уВ╕уБоуГЗуВгуГмуВпуГИуГкуВТф╜ЬцИРуБЧуБЯф╕КуБзуАБшЗкхИЖуБз
+\fBdpkg\-scanpackages\fP уВТф╜┐уБЖуБУуБиуВВуБзуБНуВЛуАВ
 .PP
-\fB├э╡н:\fP \fBapt\fP дЄ═╤ддд╞└╕└од╡дьд┐ Packages е╒ебедеыд╦евепе╗е╣д╣ды╛ь╣чд╧бв╢▓дщдпе╒ебедеыдЄ \fBbzip2\fP(1) д╟░╡╜╠д╣ды
-(Packages.bz2 дЄ└╕└од╣ды) длбв\fBgzip\fP(1) д╟░╡╜╠д╣ды (Packages.gz дЄ└╕└од╣ды) ╔м═╫дмдвдыд└дэджбгapt
-д╧еэб╝елеыевепе╗е╣ (\fBfile://\fP е╜б╝е╣) ░╩│░бв╚є░╡╜╠д╬ Packages е╒ебедеыдЄ╠╡╗ыд╣дыбг
+\fBNote:\fP If you want to access the generated Packages file with \fBapt\fP you
+will probably need to compress the file with \fBxz\fP(1)  (generating a
+Packages.xz file), \fBbzip2\fP(1)  (generating a Packages.bz2 file) or
+\fBgzip\fP(1)  (generating a Packages.gz file). apt ignores uncompressed
+Packages files except on local access (i.e.  \fBfile://\fP sources).
 .PP
-\fIbinary\-dir\fP д╧╜ш═¤д╣дые╨еде╩еъе╤е├е▒б╝е╕е─еъб╝д╬╠╛┴░д╟двды (╬удид╨ \fBcontrib/binary\-i386\fP д╩д╔)бгDebian
-евб╝еледе╓д╬еыб╝е╚д╦┬╨д╣ды┴ъ┬╨е╤е╣д╦д╖д╞дкдпд│д╚дм┐ф╛йд╡дьдыбгд│дьд╧бв┐╖╡м Packages е╒ебедеыд╦┤▐д▐дьд╞ддды│╞ Filename
-е╒егб╝еые╔д╧д│д╬╩╕╗·╬єд╟╗╧д▐дыдлдщд╟двдыбг
+\fIbinary\-dir\fP уБпхЗжчРЖуБЩуВЛуГРуВдуГКуГкуГСуГГуВ▒уГ╝уВ╕уГДуГкуГ╝уБохРНхЙНуБзуБВуВЛ (ф╛ЛуБИуБ░ \fBcontrib/binary\-i386\fP уБкуБй)уАВDebian
+уВвуГ╝уВлуВдуГЦуБоуГлуГ╝уГИуБлхп╛уБЩуВЛчЫ╕хп╛уГСуВ╣уБлуБЧуБжуБКуБПуБУуБиуБМцОихеиуБХуВМуВЛуАВуБУуВМуБпуАБцЦ░шжП Packages уГХуВбуВдуГлуБлхРлуБ╛уВМуБжуБДуВЛхРД Filename
+уГХуВгуГ╝уГлуГЙуБпуБУуБоцЦЗхнЧхИЧуБзхзЛуБ╛уВЛуБЛуВЙуБзуБВуВЛуАВ
 .PP
-\fIoverride\-file\fP д╧бве╤е├е▒б╝е╕дЄе╟еге╣е╚еъе╙ехб╝е╖ечеєд╦┼м╣чд╡д╗дыдшджд╦д╣дыд┐дсд╬╛Ё╩єдЄ┤▐дре╒ебедеыд╬╠╛┴░д╟двды
-(░╡╜╠е╒ебедеыд╬╛ь╣чдтдвды)бг\fBdeb\-override\fP(5) дЄ╗▓╛╚д╬д│д╚бг
+\fIoverride\-file\fP is the name of a file to read which contains information
+about how the package fits into the distribution (the file can be compressed
+since dpkg 1.15.5); see \fBdeb\-override\fP(5).
 .PP
-\fIpath\-prefix\fP д╧ Filename е╒егб╝еые╔д╦дкддд╞бве╤е╣д╬┴░д╦─╔▓├д╟дндыеке╫е╖ечеєд╬╩╕╗·╬єд╟двдыбг
+\fIpath\-prefix\fP уБп Filename уГХуВгуГ╝уГлуГЙуБлуБКуБДуБжуАБуГСуВ╣уБохЙНуБлш┐╜хКауБзуБНуВЛуВкуГЧуВ╖уГзуГ│уБоцЦЗхнЧхИЧуБзуБВуВЛуАВ
 .PP
-е╤е├е▒б╝е╕д╦╩г┐Їд╬е╨б╝е╕ечеєдмдвды╛ь╣чбв║╟┐╖д╬дтд╬д└д▒дм╜╨╬╧д╡дьдыбг╞▒░ьд╬е╨б╝е╕ечеєд╟евб╝ене╞епе┴еуд└д▒дм░█д╩ды╛ь╣чд╧бв║╟╜щд╬дтд╬д└д▒дм╗╚═╤д╡дьдыбг
+уГСуГГуВ▒уГ╝уВ╕уБлшдЗцХ░уБоуГРуГ╝уВ╕уГзуГ│уБМуБВуВЛха┤хРИуАБцЬАцЦ░уБоуВВуБоуБауБСуБМхЗ║хКЫуБХуВМуВЛуАВхРМф╕АуБоуГРуГ╝уВ╕уГзуГ│уБзуВвуГ╝уВнуГЖуВпуГБуГгуБауБСуБМчХ░уБкуВЛха┤хРИуБпуАБцЬАхИЭуБоуВВуБоуБауБСуБМф╜┐чФиуБХуВМуВЛуАВ
 .
-.SH еке╫е╖ечеє
+.SH уВкуГЧуВ╖уГзуГ│
 .TP 
 \fB\-t\fP, \fB\-\-type\fP \fItype\fP
-*.deb д╬┬хдядъд╦ *.\fItype\fP е╤е├е▒б╝е╕дЄ╕б║ўд╬┬╨╛▌д╚д╣дыбг
+*.deb уБоф╗гуВПуВКуБл *.\fItype\fP уГСуГГуВ▒уГ╝уВ╕уВТцдЬч┤вуБохп╛ш▒буБиуБЩуВЛуАВ
 .TP 
 \fB\-e\fP, \fB\-\-extra\-override\fP \fIfile\fP
-─╔▓├д╬ override дЄ│╬╟зд╣дыд┐дсд╦бв\fIfile\fP дЄ─┤║║д╣ды
-(е╒ебедеыд╧░╡╜╠д╡дьд╞ддд╞дтдшдд)бге╒ебедеыд╬╖┴╝░д╦┤╪д╣ды╛▄║┘д╧бв\fBdeb\-extra\-override\fP(5) дЄ╗▓╛╚д╬д│д╚бг
+Scan \fIfile\fP to find supplementary overrides (the file can be compressed
+since dpkg 1.15.5).  See \fBdeb\-extra\-override\fP(5)  for more information on
+its format.
 .TP 
 \fB\-a\fP, \fB\-\-arch\fP \fIarch\fP
-д╣д┘д╞д╬ deb е╒ебедеыдЄ╕б║ўд╣ды┬хдядъд╦бв\fI*_all.deb\fP дкдшд╙ \fI*_arch.deb\fP д╚ддд├д┐е╤е┐б╝еєдЄ╕б║ўд╣дыбг
+уБЩуБ╣уБжуБо deb уГХуВбуВдуГлуВТцдЬч┤вуБЩуВЛф╗гуВПуВКуБлуАБ\fI*_all.deb\fP уБКуВИуБ│ \fI*_arch.deb\fP уБиуБДуБгуБЯуГСуВ┐уГ╝уГ│уВТцдЬч┤вуБЩуВЛуАВ
 .TP 
 \fB\-h\fP, \fB\-\-hash\fP \fIhash\-list\fP
-Only generate file hashes for the comma\-specified list specified.  The
-default is to generate all currently supported hashes.  Supported values:
-\fBmd5\fP, \fBsha1\fP, \fBsha256\fP.
+Only generate file hashes for the comma\-specified list specified (since dpkg
+1.17.14).  The default is to generate all currently supported hashes.
+Supported values: \fBmd5\fP, \fBsha1\fP, \fBsha256\fP.
 .TP 
 \fB\-m\fP, \fB\-\-multiversion\fP
-д▀д─длд├д┐е╤е├е▒б╝е╕д╣д┘д╞дЄ╜╨╬╧д╣дыбг
+уБ┐уБдуБЛуБгуБЯуГСуГГуВ▒уГ╝уВ╕уБЩуБ╣уБжуВТхЗ║хКЫуБЩуВЛуАВ
 .TP 
 \fB\-M\fP, \fB\-\-medium\fP \fIid\-string\fP
-\fIid\-string\fP д╬├═дЄ┤▐др X\-Medium е╒егб╝еые╔дЄ─╔▓├д╣дыбгд│д╬е╒егб╝еые╔д╧dselect д╬ multicd access
-method дЄ╗╚═╤д╣дыд┐дсд╦ \fBPackages.cd\fP е╒ебедеыдЄ└╕└од╣ды╛ь╣чд╦╔м═╫д╚д╩дыбг
+Add an \fBX\-Medium\fP field containing the value \fIid\-string\fP (since dpkg
+1.15.5).  This field is required if you want to generate \fBPackages.cd\fP
+files for use by the multicd access method of dselect.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-═°═╤╩¤╦бдЄ╔╜╝ид╖д╞╜к╬╗д╣дыбг
+хИйчФицЦ╣ц│ХуВТшбичд║уБЧуБжч╡Вф║ЖуБЩуВЛуАВ
 .TP 
 \fB\-\-version\fP
-е╨б╝е╕ечеє╛Ё╩єдЄ╔╜╝ид╖д╞╜к╬╗д╣дыбг
+уГРуГ╝уВ╕уГзуГ│цГЕха▒уВТшбичд║уБЧуБжч╡Вф║ЖуБЩуВЛуАВ
 .
-.SH ┐╟├╟есе├е╗б╝е╕
-\fBdpkg\-scanpackages\fP д╬еиещб╝есе├е╗б╝е╕д╧─╠╛я╝л╠└д╟двдыбгд▐д┐бв╔╘┼м└┌д╩е╟егеьепе╚еъд╦двдыбв╜┼╩гд╖д╞дддыбвcontrol е╒ебедеыд╦
-Filename е╒егб╝еые╔дмдвдыбвoverride е╒ебедеыд╦┬╕║▀д╖д╩ддбв╠╡╕·д╩есеєе╞е╩д╬├╓┤╣дмдвдыд╚ддд├д┐е╤е├е▒б╝е╕д╦┬╨д╣ды╖┘╣Ёдт╣╘джбг
+.SH ши║цЦнуГбуГГуВ╗уГ╝уВ╕
+\fBdpkg\-scanpackages\fP уБоуВиуГйуГ╝уГбуГГуВ╗уГ╝уВ╕уБпщАЪх╕╕шЗкцШОуБзуБВуВЛуАВуБ╛уБЯуАБф╕НщБйхИЗуБкуГЗуВгуГмуВпуГИуГкуБлуБВуВЛуАБщЗНшдЗуБЧуБжуБДуВЛуАБcontrol уГХуВбуВдуГлуБл
+Filename уГХуВгуГ╝уГлуГЙуБМуБВуВЛуАБoverride уГХуВбуВдуГлуБлхнШхЬиуБЧуБкуБДуАБчДбхК╣уБкуГбуГ│уГЖуГКуБоч╜оцПЫуБМуБВуВЛуБиуБДуБгуБЯуГСуГГуВ▒уГ╝уВ╕уБлхп╛уБЩуВЛшнжхСКуВВшбМуБЖуАВ
 .
-.SH ┤╪╧в╣р╠▄
+.SH щЦвщАгщаЕчЫо
 .ad l
 .nh
 \fBdpkg\fP(1), \fBdselect\fP(1), \fBdeb\-override\fP(5), \fBdeb\-extra\-override\fP(5),
 \fBdpkg\-scansources\fP(1).
-.SH ╦▌╠ї╝╘
-╣т╢╢ ┤Ё┐о <monyo@monyo.com>.
-┤ю└е ╣└ <kise@fuyuneko.jp>.
-┤╪╕═ ╣м░ь <sekido@mbox.kyoto-inet.or.jp>.
-╞щ├л ▒╔┼╕ <nabe@debian.or.jp>.
-┴╥▀╖ ╦╛ <nabetaro@debian.or.jp>.
-└╨└ю ╦╙ <ishikawa@linux.or.jp>.
-▒н╗Ї ╩╕╔╥ <ukai@debian.or.jp>.
-├ц╠ю ╔Ё═║ <nakano@apm.seikei.ac.jp>.
-.SH ╦▌╠ї╣╗└╡
+.SH ч┐╗ши│шАЕ
+щлШцйЛ хЯ║ф┐б <monyo@monyo.com>.
+хЦЬчАм ц╡й <kise@fuyuneko.jp>.
+щЦвцИ╕ х╣╕ф╕А <sekido@mbox.kyoto-inet.or.jp>.
+щНЛш░╖ цаДх▒Х <nabe@debian.or.jp>.
+хАЙц╛д цЬЫ <nabetaro@debian.or.jp>.
+чЯ│х╖Э чЭж <ishikawa@linux.or.jp>.
+щ╡Ьщг╝ цЦЗцХП <ukai@debian.or.jp>.
+ф╕нщЗО цнжщЫД <nakano@apm.seikei.ac.jp>.
+.SH ч┐╗ши│цабцнг
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

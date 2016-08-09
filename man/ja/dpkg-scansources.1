@@ -22,68 +22,70 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-scansources 1 2011\-08\-14 "Debian Project" "dpkg ¥æ¡¼¥Æ¥£¥ê¥Æ¥£"
-.SH Ì¾Á°
-dpkg\-scansources \- ¥½¡¼¥¹¥¤¥ó¥Ç¥Ã¥¯¥¹¥Õ¥¡¥¤¥ë¤ÎºîÀ®
+.TH dpkg\-scansources 1 2011\-08\-14 "Debian Project" "dpkg ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£"
+.SH åå‰
+dpkg\-scansources \- ã‚½ãƒ¼ã‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆ
 .
-.SH ½ñ¼°
+.SH æ›¸å¼
 \fBdpkg\-scansources\fP [\fIoption\fP...] \fIbinary\-dir\fP [\fIoverride\-file\fP
 [\fIpath\-prefix\fP]] \fB>\fP \fISources\fP
 .
-.SH ÀâÌÀ
-\fBdpkg\-scansources\fP ¤Ï¡¢\fI.dsc\fP ¥Õ¥¡¥¤¥ë¤Î¤¿¤á¤Ë¡¢»ØÄê¤µ¤ì¤¿ \fIbinary\-dir\fP ¤ò¸¡º÷¤¹¤ë¡£¤³¤ì¤Ï Debian
-¥½¡¼¥¹¥¤¥ó¥Ç¥Ã¥¯¥¹¤òÀ¸À®¤·¡¢É¸½à½ĞÎÏ¤Ë½ĞÎÏ¤¹¤ë¤¿¤á¤ËÍÑ¤¤¤é¤ì¤ë¡£
+.SH èª¬æ˜
+\fBdpkg\-scansources\fP ã¯ã€\fI.dsc\fP ãƒ•ã‚¡ã‚¤ãƒ«ã®ãŸã‚ã«ã€æŒ‡å®šã•ã‚ŒãŸ \fIbinary\-dir\fP ã‚’æ¤œç´¢ã™ã‚‹ã€‚ã“ã‚Œã¯ Debian
+ã‚½ãƒ¼ã‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ç”Ÿæˆã—ã€æ¨™æº–å‡ºåŠ›ã«å‡ºåŠ›ã™ã‚‹ãŸã‚ã«ç”¨ã„ã‚‰ã‚Œã‚‹ã€‚
 .PP
 The \fIoverride\-file\fP, if given, is used to set priorities in the resulting
 index records and to override the maintainer field given in the \fI.dsc\fP
-files. The file can be compressed. See \fBdeb\-override\fP(5)  for the format of
-this file. Note: Since the override file is indexed by binary, not source
-packages, there's a bit of a problem here. The current implementation uses
-the highest priority of all the binary packages produced by a \fI.dsc\fP file
-for the priority of the source package, and the override entry for the first
-binary package listed in the \fI.dsc\fP file to modify maintainer
-information. This might change.
+files.  The file can be compressed (since dpkg 1.15.5).  See
+\fBdeb\-override\fP(5)  for the format of this file. Note: Since the override
+file is indexed by binary, not source packages, there's a bit of a problem
+here. The current implementation uses the highest priority of all the binary
+packages produced by a \fI.dsc\fP file for the priority of the source package,
+and the override entry for the first binary package listed in the \fI.dsc\fP
+file to modify maintainer information. This might change.
 .PP
-\fIpath\-prefix\fP ¤¬»ØÄê¤µ¤ì¤¿¾ì¹ç¡¢À¸À®¤µ¤ì¤¿¥½¡¼¥¹¥¤¥ó¥Ç¥Ã¥¯¥¹¤Ë¤ª¤±¤ë directory ¥Õ¥£¡¼¥ë¥É¤ÎÀèÆ¬¤ËÁŞÆş¤µ¤ì¤ë¡£¤³¤ì¤ÏÄÌ¾ï
-directory ¥Õ¥£¡¼¥ë¥É¤ËDebian ¥¢¡¼¥«¥¤¥Ö³¬ÁØ¥È¥Ã¥×¤«¤é¤Î¥Ñ¥¹¤ò´Ş¤á¤¿¤¤¾ì¹ç¤Ë»ÈÍÑ¤¹¤ë¡£
+\fIpath\-prefix\fP ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆã€ç”Ÿæˆã•ã‚ŒãŸã‚½ãƒ¼ã‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«ãŠã‘ã‚‹ directory ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å…ˆé ­ã«æŒ¿å…¥ã•ã‚Œã‚‹ã€‚ã“ã‚Œã¯é€šå¸¸
+directory ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«Debian ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–éšå±¤ãƒˆãƒƒãƒ—ã‹ã‚‰ã®ãƒ‘ã‚¹ã‚’å«ã‚ãŸã„å ´åˆã«ä½¿ç”¨ã™ã‚‹ã€‚
 .
 .PP
-\fBÃíµ­:\fP \fBapt\fP(8) ¤òÍÑ¤¤¤ÆÀ¸À®¤µ¤ì¤¿ Sources ¥Õ¥¡¥¤¥ë¤Ë¥¢¥¯¥»¥¹¤¹¤ë¾ì¹ç¤Ï¡¢¶²¤é¤¯¥Õ¥¡¥¤¥ë¤ò \fBgzip\fP(1) ¤Ç°µ½Ì¤¹¤ë
-(Sources.gz ¤òÀ¸À®¤¹¤ë) É¬Í×¤¬¤¢¤ë¤À¤í¤¦¡£apt ¤Ï¥í¡¼¥«¥ë¥¢¥¯¥»¥¹ (\fBfile://\fP ¥½¡¼¥¹) °Ê³°¡¢Èó°µ½Ì¤Î Sources
-¥Õ¥¡¥¤¥ë¤òÌµ»ë¤¹¤ë¡£
+\fBæ³¨è¨˜:\fP \fBapt\fP(8) ã‚’ç”¨ã„ã¦ç”Ÿæˆã•ã‚ŒãŸ Sources ãƒ•ã‚¡ã‚¤ãƒ«ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹å ´åˆã¯ã€æã‚‰ããƒ•ã‚¡ã‚¤ãƒ«ã‚’ \fBgzip\fP(1) ã§åœ§ç¸®ã™ã‚‹
+(Sources.gz ã‚’ç”Ÿæˆã™ã‚‹) å¿…è¦ãŒã‚ã‚‹ã ã‚ã†ã€‚apt ã¯ãƒ­ãƒ¼ã‚«ãƒ«ã‚¢ã‚¯ã‚»ã‚¹ (\fBfile://\fP ã‚½ãƒ¼ã‚¹) ä»¥å¤–ã€éåœ§ç¸®ã® Sources
+ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç„¡è¦–ã™ã‚‹ã€‚
 .
-.SH ¥ª¥×¥·¥ç¥ó
+.SH ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 .IP "\fB\-n\fP, \fB\-\-no\-sort\fP" 4
-¥¤¥ó¥Ç¥Ã¥¯¥¹¥ì¥³¡¼¥É¤ò¥½¡¼¥È¤·¤Ê¤¤¡£ÄÌ¾ï¤³¤ì¤Ï¥½¡¼¥¹¥Ñ¥Ã¥±¡¼¥¸Ì¾¤Ë¤è¤Ã¤Æ¥½¡¼¥È¤µ¤ì¤ë¡£
+ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’ã‚½ãƒ¼ãƒˆã—ãªã„ã€‚é€šå¸¸ã“ã‚Œã¯ã‚½ãƒ¼ã‚¹ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸åã«ã‚ˆã£ã¦ã‚½ãƒ¼ãƒˆã•ã‚Œã‚‹ã€‚
 .TP 
 .IP "\fB\-e\fP, \fB\-\-extra\-override\fP \fIfile\fP" 4
-ÄÉ²Ã¤Î override ¤ò³ÎÇ§¤¹¤ë¤¿¤á¤Ë¡¢\fIfile\fP ¤òÄ´ºº¤¹¤ë
-(¥Õ¥¡¥¤¥ë¤Ï°µ½Ì¤µ¤ì¤Æ¤¤¤Æ¤â¤è¤¤)¡£¥Õ¥¡¥¤¥ë¤Î·Á¼°¤Ë´Ø¤¹¤ë¾ÜºÙ¤Ï¡¢\fBdeb\-extra\-override\fP(5) ¤ò»²¾È¤Î¤³¤È¡£
+Scan \fIfile\fP to find supplementary overrides (since dpkg 1.15.4; the file
+can be compressed since dpkg 1.15.5).  See \fBdeb\-extra\-override\fP(5)  for
+more information on its format.
 .IP "\fB\-s\fP, \fB\-\-source\-override\fP \fIfile\fP" 4
-\fIfile\fP ¤ò¥½¡¼¥¹ override ¥Õ¥¡¥¤¥ë¤È¤·¤Æ»ÈÍÑ¤¹¤ë (¥Õ¥¡¥¤¥ë¤Ï°µ½Ì¤µ¤ì¤Æ¤¤¤Æ¤â¤è¤¤)¡£¥Ç¥Õ¥©¥ë¥È¤Ï override ¥Õ¥¡¥¤¥ë¤ÎÌ¾Á°¤Ë
-\&\fI.src\fP ¤òÉÕ²Ã¤·¤¿Ì¾Á°¤¬ÍÑ¤¤¤é¤ì¤ë¡£
+Use \fIfile\fP as the source override file (the file can be compressed since
+dpkg 1.15.5).  The default is the name of the override file you specified
+with \fI.src\fP appended.
 .sp
-¥½¡¼¥¹ override ¥Õ¥¡¥¤¥ë¤Î·Á¼°¤Ï¥Ğ¥¤¥Ê¥ê override ¥Õ¥¡¥¤¥ë¤È¤Ï°Û¤Ê¤ê¡¢¶õÇòÊ¸»ú¤Ç¶èÀÚ¤é¤ì¤¿ 2 ¤Ä¤Î¥Õ¥£¡¼¥ë¥É¤Î¤ß¤«¤é¤Ê¤ë¡£1
-ÈÖÌÜ¤Î¥Õ¥£¡¼¥ë¥É¤Ï¥½¡¼¥¹¥Ñ¥Ã¥±¡¼¥¸Ì¾¤Ç¤¢¤ê¡¢2
-ÈÖÌÜ¤Ï¥»¥¯¥·¥ç¥óÌ¾¤Ç¤¢¤ë¡£´·½¬¤Ë½¾¤¤¡¢¶õÇò¹Ô¤È¥³¥á¥ó¥È¹Ô¤ÏÌµ»ë¤µ¤ì¤ë¡£¤¢¤ë¥Ñ¥Ã¥±¡¼¥¸¤¬Î¾Êı¤Î¥Õ¥¡¥¤¥ë¤Ë¸½¤ì¤¿¾ì¹ç¡¢¥»¥¯¥·¥ç¥ó¤ÎÀßÄê¤Ë¤ª¤¤¤Æ¤Ï¡¢¥½¡¼¥¹
-override ¥Õ¥¡¥¤¥ë¤¬Í¥Àè¤µ¤ì¤ë¡£
+ã‚½ãƒ¼ã‚¹ override ãƒ•ã‚¡ã‚¤ãƒ«ã®å½¢å¼ã¯ãƒã‚¤ãƒŠãƒª override ãƒ•ã‚¡ã‚¤ãƒ«ã¨ã¯ç•°ãªã‚Šã€ç©ºç™½æ–‡å­—ã§åŒºåˆ‡ã‚‰ã‚ŒãŸ 2 ã¤ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã¿ã‹ã‚‰ãªã‚‹ã€‚1
+ç•ªç›®ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ã‚½ãƒ¼ã‚¹ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸åã§ã‚ã‚Šã€2
+ç•ªç›®ã¯ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã§ã‚ã‚‹ã€‚æ…£ç¿’ã«å¾“ã„ã€ç©ºç™½è¡Œã¨ã‚³ãƒ¡ãƒ³ãƒˆè¡Œã¯ç„¡è¦–ã•ã‚Œã‚‹ã€‚ã‚ã‚‹ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ãŒä¸¡æ–¹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã«ç¾ã‚ŒãŸå ´åˆã€ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®è¨­å®šã«ãŠã„ã¦ã¯ã€ã‚½ãƒ¼ã‚¹
+override ãƒ•ã‚¡ã‚¤ãƒ«ãŒå„ªå…ˆã•ã‚Œã‚‹ã€‚
 .IP \fB\-\-debug\fP 4
-¥Ç¥Ğ¥Ã¥°¤òÍ­¸ú¤Ë¤¹¤ë
+ãƒ‡ãƒãƒƒã‚°ã‚’æœ‰åŠ¹ã«ã™ã‚‹
 .IP \fB\-\-help\fP 4
-ÍøÍÑÊıË¡¤òÉ½¼¨¤·¤Æ½ªÎ»¤¹¤ë¡£
+åˆ©ç”¨æ–¹æ³•ã‚’è¡¨ç¤ºã—ã¦çµ‚äº†ã™ã‚‹ã€‚
 .IP \fB\-\-version\fP 4
-¥Ğ¡¼¥¸¥ç¥ó¾ğÊó¤òÉ½¼¨¤·¤Æ½ªÎ»¤¹¤ë¡£
+ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ã‚’è¡¨ç¤ºã—ã¦çµ‚äº†ã™ã‚‹ã€‚
 .
-.SH ´ØÏ¢¹àÌÜ
+.SH é–¢é€£é …ç›®
 \fBdeb\-override\fP(5), \fBdeb\-extra\-override\fP(5), \fBdpkg\-scanpackages\fP(1).
-.SH ËİÌõ¼Ô
-¹â¶¶ ´ğ¿® <monyo@monyo.com>.
-´îÀ¥ ¹À <kise@fuyuneko.jp>.
-´Ø¸Í ¹¬°ì <sekido@mbox.kyoto-inet.or.jp>.
-ÆéÃ« ±ÉÅ¸ <nabe@debian.or.jp>.
-ÁÒß· Ë¾ <nabetaro@debian.or.jp>.
-ÀĞÀî ËÓ <ishikawa@linux.or.jp>.
-±­»ô Ê¸ÉÒ <ukai@debian.or.jp>.
-ÃæÌî ÉğÍº <nakano@apm.seikei.ac.jp>.
-.SH ËİÌõ¹»Àµ
+.SH ç¿»è¨³è€…
+é«˜æ©‹ åŸºä¿¡ <monyo@monyo.com>.
+å–œç€¬ æµ© <kise@fuyuneko.jp>.
+é–¢æˆ¸ å¹¸ä¸€ <sekido@mbox.kyoto-inet.or.jp>.
+é‹è°· æ „å±• <nabe@debian.or.jp>.
+å€‰æ¾¤ æœ› <nabetaro@debian.or.jp>.
+çŸ³å· ç¦ <ishikawa@linux.or.jp>.
+éµœé£¼ æ–‡æ• <ukai@debian.or.jp>.
+ä¸­é‡ æ­¦é›„ <nakano@apm.seikei.ac.jp>.
+.SH ç¿»è¨³æ ¡æ­£
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

@@ -28,82 +28,82 @@
 dpkg\-scanpackages \- skapar indexfilerna Packages
 .
 .SH SYNOPS
-\fBdpkg\-scanpackages\fP [\fIflagga\fP...] \fIbinärkatalog\fP [\fIöverstyrningsfil\fP
-[\fIsökvägsprefix\fP]] \fB>\fP \fIPackages\fP
+\fBdpkg\-scanpackages\fP [\fIflagga\fP...] \fIbinÃ¤rkatalog\fP [\fIÃ¶verstyrningsfil\fP
+[\fIsÃ¶kvÃ¤gsprefix\fP]] \fB>\fP \fIPackages\fP
 .
 .SH BESKRIVNING
-\fBdpkg\-scanpackages\fP går genom ett träd av Debianbinärpaket och skapar en
-Packages\-fil, som \fBapt\fP(8), \fBdselect\fP(8) osv. använder för att berätta för
-användaren vilka paket som kan installeras. Dessa Packages\-filer är desamma
-som de som finns på Debianarkivspeglar och cd\-rom:ar. Du kan använda
-\fBdpkg\-scanpackages\fP själv för att skapa en katalog med lokala paket att
-installera på en klase maskiner.
+\fBdpkg\-scanpackages\fP gÃ¥r genom ett trÃ¤d av DebianbinÃ¤rpaket och skapar en
+Packages\-fil, som \fBapt\fP(8), \fBdselect\fP(8) osv. anvÃ¤nder fÃ¶r att berÃ¤tta fÃ¶r
+anvÃ¤ndaren vilka paket som kan installeras. Dessa Packages\-filer Ã¤r desamma
+som de som finns pÃ¥ Debianarkivspeglar och cd\-rom:ar. Du kan anvÃ¤nda
+\fBdpkg\-scanpackages\fP sjÃ¤lv fÃ¶r att skapa en katalog med lokala paket att
+installera pÃ¥ en klase maskiner.
 .PP
-\fBObservera:\fP Om du vill läsa den skapade Packages\-filen med \fBapt\fP måste du
-antagligen komprimera filen med \fBbzip2\fP(1) (vilket skapar filen
-Packages.bz2) eller \fBgzip\fP(1) (vilket skapar filen Packages.gz). apt
-ignorerar okomprimerade Packages\-filer, förutom vid lokal åtkomst
-(dvs. \fBfile://\fP\-källor).
+\fBNote:\fP If you want to access the generated Packages file with \fBapt\fP you
+will probably need to compress the file with \fBxz\fP(1)  (generating a
+Packages.xz file), \fBbzip2\fP(1)  (generating a Packages.bz2 file) or
+\fBgzip\fP(1)  (generating a Packages.gz file). apt ignores uncompressed
+Packages files except on local access (i.e.  \fBfile://\fP sources).
 .PP
-\fIbinärkatalog\fP är namnet på trädet med binärpaketen som skall hanteras
-(till exempel \fBcontrib/binary\-i386\fP). Det är bäst att skapa den relativt
-till roten på Debianarkivet eftersom all filnamnsfält i den skapade
-Packages\-filen kommer inledas med strängen.
+\fIbinÃ¤rkatalog\fP Ã¤r namnet pÃ¥ trÃ¤det med binÃ¤rpaketen som skall hanteras
+(till exempel \fBcontrib/binary\-i386\fP). Det Ã¤r bÃ¤st att skapa den relativt
+till roten pÃ¥ Debianarkivet eftersom all filnamnsfÃ¤lt i den skapade
+Packages\-filen kommer inledas med strÃ¤ngen.
 .PP
-\fIöverstyrningsfil\fP är namnet på en fil som skall läsas in och som
-innehåller information om hur paketet passar in i distributionen (kan vara
-en komprimerad fil); se \fBdeb\-override\fP(5).
+\fIoverride\-file\fP is the name of a file to read which contains information
+about how the package fits into the distribution (the file can be compressed
+since dpkg 1.15.5); see \fBdeb\-override\fP(5).
 .PP
-\fIsökvägsprefix\fP är en frivillig sträng som läggs till i början i
-filnamnsfältet.
+\fIsÃ¶kvÃ¤gsprefix\fP Ã¤r en frivillig strÃ¤ng som lÃ¤ggs till i bÃ¶rjan i
+filnamnsfÃ¤ltet.
 .PP
-Om mer än en version av ett paket upptäcks kommer endast den senaste att tas
+Om mer Ã¤n en version av ett paket upptÃ¤cks kommer endast den senaste att tas
 med i utdata. Om de har samma version och bara skiljer i arkitektur kommer
-bara den första som hittas att användas.
+bara den fÃ¶rsta som hittas att anvÃ¤ndas.
 .
 .SH FLAGGOR
 .TP 
 \fB\-t\fP, \fB\-\-test\fP \fItyp\fP
-Sök efter *.\fItyp\fP\-paket, i stället för *.deb.
+SÃ¶k efter *.\fItyp\fP\-paket, i stÃ¤llet fÃ¶r *.deb.
 .TP 
 \fB\-e\fP, \fB\-\-extra\-override\fP \fIfil\fP
-Läs \fIfil\fP för att hitta ytterligare överstyrningar (filen kan vara
-komprimerad). Se \fBdeb\-extra\-override\fP(5) för mer information om dess
-format.
+Scan \fIfile\fP to find supplementary overrides (the file can be compressed
+since dpkg 1.15.5).  See \fBdeb\-extra\-override\fP(5)  for more information on
+its format.
 .TP 
 \fB\-a\fP, \fB\-\-arch\fP \fIarkitektur\fP
-Använd ett mönster som består av \fI*_all.deb\fP och \fI*_arkitektur.deb\fP
-istället för att söka efter alla deb\-arkiv.
+AnvÃ¤nd ett mÃ¶nster som bestÃ¥r av \fI*_all.deb\fP och \fI*_arkitektur.deb\fP
+istÃ¤llet fÃ¶r att sÃ¶ka efter alla deb\-arkiv.
 .TP 
 \fB\-h\fP, \fB\-\-hash\fP \fIhashlista\fP
-Skapar bara filhashar för den angivna kommaseparerade listan. Standard är
-att generera alla hashar som stöds. Värden som stöds är: \fBmd5\fP, \fBsha1\fP,
-\fBsha256\fP.
+Only generate file hashes for the comma\-specified list specified (since dpkg
+1.17.14).  The default is to generate all currently supported hashes.
+Supported values: \fBmd5\fP, \fBsha1\fP, \fBsha256\fP.
 .TP 
 \fB\-m\fP, \fB\-\-multiversion\fP
 Ta med alla paket som hittas i utdata.
 .TP 
-\fB\-M\fP, \fB\-\-medium\fP \fIidsträng\fP
-Lägg till ett X\-Medium\-fält som innehåller värdet \fIidsträng\fP. Fältet är
-nödvändigt om du vill generera \fBPackages.cd\fP\-filer som kan användas med
-dselect:s multicd\-åtkomstmetod.
+\fB\-M\fP, \fB\-\-medium\fP \fIidstrÃ¤ng\fP
+Add an \fBX\-Medium\fP field containing the value \fIid\-string\fP (since dpkg
+1.15.5).  This field is required if you want to generate \fBPackages.cd\fP
+files for use by the multicd access method of dselect.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Visar hjälpskärm och avslutar.
+Visar hjÃ¤lpskÃ¤rm och avslutar.
 .TP 
 \fB\-\-version\fP
 Visar version och avslutar.
 .
 .SH DIAGNOSTIK
-\fBdpkg\-scanpackages\fP skriver ut de vanliga självförklarande felen. Det
-varnar även om paket ligger i fel katalog har dubbletter, har ett
-Filename\-fält i sin control\-fil, saknas från överstyrningsfilen, eller har
+\fBdpkg\-scanpackages\fP skriver ut de vanliga sjÃ¤lvfÃ¶rklarande felen. Det
+varnar Ã¤ven om paket ligger i fel katalog har dubbletter, har ett
+Filename\-fÃ¤lt i sin control\-fil, saknas frÃ¥n Ã¶verstyrningsfilen, eller har
 substitueringar utan effekt skrivna av paketansvariga.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 .ad l
 .nh
 \fBdpkg\fP(1), \fBdselect\fP(1), \fBdeb\-override\fP(5), \fBdeb\-extra\-override\fP(5),
 \fBdpkg\-scansources\fP(1).
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

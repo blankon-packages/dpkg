@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-distaddfile(1)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -23,22 +23,22 @@
 .\"*******************************************************************
 .TH dpkg\-distaddfile 1 2012\-05\-04 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH BEZEICHNUNG
-dpkg\-distaddfile \- Einträge zu debian/files hinzufügen
+dpkg\-distaddfile \- EintrÃ¤ge zu debian/files hinzufÃ¼gen
 .
-.SH ÜBERSICHT
-\fBdpkg\-distaddfile\fP [\fIOption\fP ?]\fI Dateiname Bereich Priorität\fP
+.SH ÃœBERSICHT
+\fBdpkg\-distaddfile\fP [\fIOption\fP â€¦]\fI Dateiname Sektion PrioritÃ¤t\fP
 .
 .SH BESCHREIBUNG
-\fBdpkg\-distaddfile\fP fügt einen Eintrag für eine benannte Datei in
+\fBdpkg\-distaddfile\fP fÃ¼gt einen Eintrag fÃ¼r eine benannte Datei in
 \fBdebian/files\fP hinzu.
 
-Es erwartet drei nicht\-Options\-Argumente, den Dateinamen, den Bereich und
-die Priorität für die \fB.changes\fP\-Datei.
+Es erwartet drei nicht\-Options\-Argumente, den Dateinamen, die Sektion und
+die PrioritÃ¤t fÃ¼r die \fB.changes\fP\-Datei.
 
 Der Dateiname sollte relativ zum Verzeichnis angegeben werden, in dem
 \fBdpkg\-genchanges\fP die Dateien erwartet, normalerweise \fB..\fP, statt ein
 relativer Pfadname zu dem aktuellen Verzeichnis zu sein, wenn
-\fBdpkg\-distaddfile\fP ausgeführt wird.
+\fBdpkg\-distaddfile\fP ausgefÃ¼hrt wird.
 .
 .SH OPTIONEN
 .TP 
@@ -56,12 +56,12 @@ Gebe die Version aus und beende sich.
 .TP 
 \fBdebian/files\fP
 Die Liste der erzeugten Dateien, die Teil des vorbereiteten Uploads
-sind. \fBdpkg\-distaddfile\fP kann dazu verwendet werden, zusätzliche Dateien
-hinzuzufügen.
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+sind. \fBdpkg\-distaddfile\fP kann dazu verwendet werden, zusÃ¤tzliche Dateien
+hinzuzufÃ¼gen.
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.

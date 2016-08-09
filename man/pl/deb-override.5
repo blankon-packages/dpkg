@@ -23,48 +23,48 @@
 .\"*******************************************************************
 .TH deb\-override 5 2011\-08\-14 "Projekt Debian" "programy pomocnicze dpkg"
 .SH NAZWA
-deb\-override \- plik nadpisaÒ archiwum Debiana
+deb\-override \- plik nadpisa≈Ñ archiwum Debiana
 .
-.SH SK£ADNIA
+.SH SK≈ÅADNIA
 override
 .
 .SH OPIS
-Chociaø wiÍkszo∂Ê informacji o pakiecie moøna znaleºÊ w pliku kontrolnym, to
-niektÛre z nich s± zarz±dzane centralnie przez carÛw dystrybucji, a nie
-przez opiekuna, aby zachowaÊ ogÛln± spÛjno∂Ê. Do tego s≥uøy plik nadpisaÒ.
+Chocia≈º wiƒôkszo≈õƒá informacji o pakiecie mo≈ºna znale≈∫ƒá w pliku kontrolnym, to
+niekt√≥re z nich sƒÖ zarzƒÖdzane centralnie przez car√≥w dystrybucji, a nie
+przez opiekuna, aby zachowaƒá og√≥lnƒÖ sp√≥jno≈õƒá. Do tego s≈Çu≈ºy plik nadpisa≈Ñ.
 .PP
-Plik nadpisaÒ ma prosty format pÛl rozdzielonych bia≥ymi znakami
-(spacjami). Dozwolone s± komentarze (zaczynaj±ce siÍ od \fB#\fP).
+Plik nadpisa≈Ñ ma prosty format p√≥l rozdzielonych bia≈Çymi znakami
+(spacjami). Dozwolone sƒÖ komentarze (zaczynajƒÖce siƒô od \fB#\fP).
 .PP
 .in +5
 \fIpakiet\fP \fIpriorytet\fP \fIsekcja\fP [\fIinformacje\-o\-opiekunie\fP]
 .in -5
 .PP
-\fIpakiet\fP jest nazw± pakietu. Ignorowane s± wpisy w pliku nadpisaÒ dotycz±ce
-pakietÛw nie znajduj±cych siÍ w drzewie pakietÛw binarnych.
+\fIpakiet\fP jest nazwƒÖ pakietu. Ignorowane sƒÖ wpisy w pliku nadpisa≈Ñ dotyczƒÖce
+pakiet√≥w nie znajdujƒÖcych siƒô w drzewie pakiet√≥w binarnych.
 .PP
-\fIpriorytet\fP i \fIsekcja\fP odnosz± siÍ do odpowiednich pÛl kontrolnych plikÛw
-\&.deb. Dozwolone warto∂ci s± wypisane w zasadach Debiana.
+\fIpriority\fP and \fIsection\fP correspond to the respective control fields
+available in the .deb. The allowed values are specific to each distribution
+archive.
 .PP
-\fIinformacje_o_opiekunie\fP, jeøeli s± obecne, mog± byÊ albo sam± nazw±
-opiekuna bezwarunkowego nadpisania, albo s± w postaci \fIstary_opiekun\fP
-\fB=>\fP \fInowy_opiekun\fP, by przeprowadziÊ zamianÍ informacji o opiekunie.
+\fIinformacje_o_opiekunie\fP, je≈ºeli sƒÖ obecne, mogƒÖ byƒá albo samƒÖ nazwƒÖ
+opiekuna bezwarunkowego nadpisania, albo sƒÖ w postaci \fIstary_opiekun\fP
+\fB=>\fP \fInowy_opiekun\fP, by przeprowadziƒá zamianƒô informacji o opiekunie.
 .PP
-Pliki nadpisaÒ uøywane do stworzenia oficjalnego pliku Packages moøna
-znaleºÊ w katalogu \fIindices\fP na kaødym mirrorze Debiana.
+Pliki nadpisa≈Ñ u≈ºywane do stworzenia oficjalnego pliku Packages mo≈ºna
+znale≈∫ƒá w katalogu \fIindices\fP na ka≈ºdym mirrorze Debiana.
 .
-.SH "ZOBACZ TAKØE"
+.SH "ZOBACZ TAK≈ªE"
 .ad l
 .nh
-\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1),
-\fB/usr/share/doc/debian\-policy/policy.html/index.html\fP.
-.SH T£UMACZE
+\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1).
+.SH T≈ÅUMACZE
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br
-Bartosz FeÒski <fenio@debian.org>, 2004-2005
+Bartosz Fe≈Ñski <fenio@debian.org>, 2004-2005
 .br
 Robert Luberda <robert@debian.org>, 2006-2008
 .br
 Wiktor Wandachowicz <siryes@gmail.com>, 2008
 .br
-Micha≥ Ku≥ach <michal.kulach@gmail.com>, 2012
+Micha≈Ç Ku≈Çach <michal.kulach@gmail.com>, 2012

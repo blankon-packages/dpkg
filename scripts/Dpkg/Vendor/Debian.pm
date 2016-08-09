@@ -1,4 +1,5 @@
 # Copyright © 2009-2011 Raphaël Hertzog <hertzog@debian.org>
+# Copyright © 2009, 2011-2015 Guillem Jover <guillem@debian.org>
 #
 # Hardening build flags handling derived from work of:
 # Copyright © 2009-2011 Kees Cook <kees@debian.org>
@@ -24,13 +25,13 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use parent qw(Dpkg::Vendor::Default);
-
 use Dpkg::Gettext;
 use Dpkg::ErrorHandling;
 use Dpkg::Control::Types;
 use Dpkg::BuildOptions;
 use Dpkg::Arch qw(get_host_arch debarch_to_debtriplet);
+
+use parent qw(Dpkg::Vendor::Default);
 
 =encoding utf8
 
@@ -40,8 +41,8 @@ Dpkg::Vendor::Debian - Debian vendor object
 
 =head1 DESCRIPTION
 
-This vendor object customize the behaviour of dpkg scripts
-for Debian specific actions.
+This vendor object customizes the behaviour of dpkg scripts for Debian
+specific behavior and policies.
 
 =cut
 
@@ -51,6 +52,10 @@ sub run_hook {
     if ($hook eq 'keyrings') {
         return ('/usr/share/keyrings/debian-keyring.gpg',
                 '/usr/share/keyrings/debian-maintainers.gpg');
+    } elsif ($hook eq 'builtin-build-depends') {
+        return qw(build-essential:native);
+    } elsif ($hook eq 'builtin-build-conflicts') {
+        return ();
     } elsif ($hook eq 'register-custom-fields') {
     } elsif ($hook eq 'extend-patch-header') {
         my ($textref, $ch_info) = @params;
@@ -69,6 +74,7 @@ sub run_hook {
     } elsif ($hook eq 'update-buildflags') {
 	$self->_add_qa_flags(@params);
 	$self->_add_reproducible_flags(@params);
+	$self->_add_sanitize_flags(@params);
 	$self->_add_hardening_flags(@params);
     } else {
         return $self->SUPER::run_hook($hook, @params);
@@ -90,12 +96,12 @@ sub _parse_build_options {
 		if (exists $use_feature->{$feature}) {
 		    $use_feature->{$feature} = $value;
 		} else {
-		    warning(_g('unknown %s feature in %s variable: %s'),
+		    warning(g_('unknown %s feature in %s variable: %s'),
 		            $area, $variable, $feature);
 		}
 	    }
 	} else {
-	    warning(_g('incorrect value in %s option of %s variable: %s'),
+	    warning(g_('incorrect value in %s option of %s variable: %s'),
 	            $area, $variable, $feature);
 	}
     }
@@ -151,20 +157,105 @@ sub _add_reproducible_flags {
 
     # Default feature states.
     my %use_feature = (
-        timeless => 0,
+        timeless => 1,
+        fixdebugpath => 1,
     );
+
+    my $build_path;
 
     # Adjust features based on user or maintainer's desires.
     $self->_parse_feature_area('reproducible', \%use_feature);
+
+    # Mask features that might have an unsafe usage.
+    if ($use_feature{fixdebugpath}) {
+        require Cwd;
+
+        $build_path = $ENV{DEB_BUILD_PATH} || Cwd::cwd();
+
+        # If we have any unsafe character in the path, disable the flag,
+        # so that we do not need to worry about escaping the characters
+        # on output.
+        if ($build_path =~ m/[^-+:.0-9a-zA-Z~\/_]/) {
+            $use_feature{fixdebugpath} = 0;
+        }
+    }
 
     # Warn when the __TIME__, __DATE__ and __TIMESTAMP__ macros are used.
     if ($use_feature{timeless}) {
        $flags->append('CPPFLAGS', '-Wdate-time');
     }
 
+    # Avoid storing the build path in the debug symbols.
+    if ($use_feature{fixdebugpath}) {
+        my $map = '-fdebug-prefix-map=' . $build_path . '=.';
+        $flags->append('CFLAGS', $map);
+        $flags->append('CXXFLAGS', $map);
+        $flags->append('OBJCFLAGS', $map);
+        $flags->append('OBJCXXFLAGS', $map);
+        $flags->append('FFLAGS', $map);
+        $flags->append('FCFLAGS', $map);
+        $flags->append('GCJFLAGS', $map);
+    }
+
     # Store the feature usage.
     while (my ($feature, $enabled) = each %use_feature) {
        $flags->set_feature('reproducible', $feature, $enabled);
+    }
+}
+
+sub _add_sanitize_flags {
+    my ($self, $flags) = @_;
+
+    # Default feature states.
+    my %use_feature = (
+        address => 0,
+        thread => 0,
+        leak => 0,
+        undefined => 0,
+    );
+
+    # Adjust features based on user or maintainer's desires.
+    $self->_parse_feature_area('sanitize', \%use_feature);
+
+    # Handle logical feature interactions.
+    if ($use_feature{address} and $use_feature{thread}) {
+        # Disable the thread sanitizer when the address one is active, they
+        # are mutually incompatible.
+        $use_feature{thread} = 0;
+    }
+    if ($use_feature{address} or $use_feature{thread}) {
+        # Disable leak sanitizer, it is implied by the address or thread ones.
+        $use_feature{leak} = 0;
+    }
+
+    if ($use_feature{address}) {
+        my $flag = '-fsanitize=address -fno-omit-frame-pointer';
+        $flags->append('CFLAGS', $flag);
+        $flags->append('CXXFLAGS', $flag);
+        $flags->append('LDFLAGS', '-fsanitize=address');
+    }
+
+    if ($use_feature{thread}) {
+        my $flag = '-fsanitize=thread';
+        $flags->append('CFLAGS', $flag);
+        $flags->append('CXXFLAGS', $flag);
+        $flags->append('LDFLAGS', $flag);
+    }
+
+    if ($use_feature{leak}) {
+        $flags->append('LDFLAGS', '-fsanitize=leak');
+    }
+
+    if ($use_feature{undefined}) {
+        my $flag = '-fsanitize=undefined';
+        $flags->append('CFLAGS', $flag);
+        $flags->append('CXXFLAGS', $flag);
+        $flags->append('LDFLAGS', $flag);
+    }
+
+    # Store the feature usage.
+    while (my ($feature, $enabled) = each %use_feature) {
+       $flags->set_feature('sanitize', $feature, $enabled);
     }
 }
 
@@ -174,7 +265,7 @@ sub _add_hardening_flags {
     my ($abi, $os, $cpu) = debarch_to_debtriplet($arch);
 
     unless (defined $abi and defined $os and defined $cpu) {
-        warning(_g("unknown host architecture '%s'"), $arch);
+        warning(g_("unknown host architecture '%s'"), $arch);
         ($abi, $os, $cpu) = ('', '', '');
     }
 
@@ -193,15 +284,15 @@ sub _add_hardening_flags {
     $self->_parse_feature_area('hardening', \%use_feature);
 
     # Mask features that are not available on certain architectures.
-    if ($os !~ /^(?:linux|knetbsd|hurd)$/ or
+    if ($os !~ /^(?:linux|kfreebsd|knetbsd|hurd)$/ or
 	$cpu =~ /^(?:hppa|avr32)$/) {
-	# Disabled on non-linux/knetbsd/hurd (see #430455 and #586215).
+	# Disabled on non-(linux/kfreebsd/knetbsd/hurd).
 	# Disabled on hppa, avr32
 	#  (#574716).
 	$use_feature{pie} = 0;
     }
-    if ($cpu =~ /^(?:ia64|alpha|hppa)$/ or $arch eq 'arm') {
-	# Stack protector disabled on ia64, alpha, hppa.
+    if ($cpu =~ /^(?:ia64|alpha|hppa|nios2)$/ or $arch eq 'arm') {
+	# Stack protector disabled on ia64, alpha, hppa, nios2.
 	#   "warning: -fstack-protector not supported for this target"
 	# Stack protector disabled on arm (ok on armel).
 	#   compiler supports it incorrectly (leads to SEGV)

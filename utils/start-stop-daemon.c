@@ -67,11 +67,13 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <sys/select.h>
 #include <sys/ioctl.h>
 
 #include <assert.h>
 #include <errno.h>
 #include <limits.h>
+#include <time.h>
 #include <fcntl.h>
 #include <dirent.h>
 #include <ctype.h>
@@ -136,8 +138,6 @@
 #define PROCESS_NAME_SIZE MAXCOMLEN
 #endif
 
-#define MIN_POLL_INTERVAL 20000 /* µs */
-
 #if defined(SYS_ioprio_set) && defined(linux)
 #define HAVE_IOPRIO_SET
 #endif
@@ -167,6 +167,16 @@ enum action_code {
 	ACTION_STATUS,
 };
 
+/* Time conversion constants. */
+enum {
+	NANOSEC_IN_SEC      = 1000000000L,
+	NANOSEC_IN_MILLISEC = 1000000L,
+	NANOSEC_IN_MICROSEC = 1000L,
+};
+
+/* The minimum polling interval, 20ms. */
+static const long MIN_POLL_INTERVAL = 20 * NANOSEC_IN_MILLISEC;
+
 static enum action_code action;
 static bool testmode = false;
 static int quietmode = 0;
@@ -190,7 +200,7 @@ static char *startas = NULL;
 static pid_t match_pid = -1;
 static pid_t match_ppid = -1;
 static const char *pidfile = NULL;
-static char what_stop[1024];
+static char *what_stop = NULL;
 static const char *progname = "";
 static int nicelevel = 0;
 static int umask_value = -1;
@@ -287,30 +297,58 @@ xmalloc(int size)
 }
 
 static char *
-xstrdup(const char *str)
+xstrndup(const char *str, size_t n)
 {
 	char *new_str;
 
-	new_str = strdup(str);
+	new_str = strndup(str, n);
 	if (new_str)
 		return new_str;
-	fatal("strdup(%s) failed", str);
+	fatal("strndup(%s, %zu) failed", str, n);
 }
 
 static void
-xgettimeofday(struct timeval *tv)
+timespec_gettime(struct timespec *ts)
 {
-	if (gettimeofday(tv, NULL) != 0)
+#if defined(_POSIX_TIMERS) && _POSIX_TIMERS > 0 && \
+    defined(_POSIX_MONOTONIC_CLOCK) && _POSIX_MONOTONIC_CLOCK > 0
+	if (clock_gettime(CLOCK_MONOTONIC, ts) < 0)
+		fatal("clock_gettime failed");
+#else
+	struct timeval tv;
+
+	if (gettimeofday(&tv, NULL) != 0)
 		fatal("gettimeofday failed");
+
+	ts->tv_sec = tv.tv_sec;
+	ts->tv_nsec = tv.tv_usec * NANOSEC_IN_MICROSEC;
+#endif
+}
+
+#define timespec_cmp(a, b, OP) \
+	(((a)->tv_sec == (b)->tv_sec) ? \
+	 ((a)->tv_nsec OP (b)->tv_nsec) : \
+	 ((a)->tv_sec OP (b)->tv_sec))
+
+static void
+timespec_sub(struct timespec *a, struct timespec *b, struct timespec *res)
+{
+	res->tv_sec = a->tv_sec - b->tv_sec;
+	res->tv_nsec = a->tv_nsec - b->tv_nsec;
+	if (res->tv_nsec < 0) {
+		res->tv_sec--;
+		res->tv_nsec += NANOSEC_IN_SEC;
+	}
 }
 
 static void
-tmul(struct timeval *a, int b)
+timespec_mul(struct timespec *a, int b)
 {
+	long nsec = a->tv_nsec * b;
+
 	a->tv_sec *= b;
-	a->tv_usec *= b;
-	a->tv_sec = a->tv_sec + a->tv_usec / 1000000;
-	a->tv_usec %= 1000000;
+	a->tv_sec += nsec / NANOSEC_IN_SEC;
+	a->tv_nsec = nsec % NANOSEC_IN_SEC;
 }
 
 static char *
@@ -507,61 +545,75 @@ static void
 usage(void)
 {
 	printf(
-"Usage: start-stop-daemon [<option> ...] <command>\n"
-"\n"
+"Usage: start-stop-daemon [<option>...] <command>\n"
+"\n");
+
+	printf(
 "Commands:\n"
-"  -S|--start -- <argument> ...  start a program and pass <arguments> to it\n"
-"  -K|--stop                     stop a program\n"
-"  -T|--status                   get the program status\n"
-"  -H|--help                     print help information\n"
-"  -V|--version                  print version\n"
-"\n"
+"  -S, --start -- <argument>...  start a program and pass <arguments> to it\n"
+"  -K, --stop                    stop a program\n"
+"  -T, --status                  get the program status\n"
+"  -H, --help                    print help information\n"
+"  -V, --version                 print version\n"
+"\n");
+
+	printf(
 "Matching options (at least one is required):\n"
-"     --pid <pid>                pid to check\n"
-"     --ppid <ppid>              parent pid to check\n"
-"  -p|--pidfile <pid-file>       pid file to check\n"
-"  -x|--exec <executable>        program to start/check if it is running\n"
-"  -n|--name <process-name>      process name to check\n"
-"  -u|--user <username|uid>      process owner to check\n"
-"\n"
+"      --pid <pid>               pid to check\n"
+"      --ppid <ppid>             parent pid to check\n"
+"  -p, --pidfile <pid-file>      pid file to check\n"
+"  -x, --exec <executable>       program to start/check if it is running\n"
+"  -n, --name <process-name>     process name to check\n"
+"  -u, --user <username|uid>     process owner to check\n"
+"\n");
+
+	printf(
 "Options:\n"
-"  -g|--group <group|gid>        run process as this group\n"
-"  -c|--chuid <name|uid[:group|gid]>\n"
+"  -g, --group <group|gid>       run process as this group\n"
+"  -c, --chuid <name|uid[:group|gid]>\n"
 "                                change to this user/group before starting\n"
 "                                  process\n"
-"  -s|--signal <signal>          signal to send (default TERM)\n"
-"  -a|--startas <pathname>       program to start (default is <executable>)\n"
-"  -r|--chroot <directory>       chroot to <directory> before starting\n"
-"  -d|--chdir <directory>        change to <directory> (default is /)\n"
-"  -N|--nicelevel <incr>         add incr to the process' nice level\n"
-"  -P|--procsched <policy[:prio]>\n"
+"  -s, --signal <signal>         signal to send (default TERM)\n"
+"  -a, --startas <pathname>      program to start (default is <executable>)\n"
+"  -r, --chroot <directory>      chroot to <directory> before starting\n"
+"  -d, --chdir <directory>       change to <directory> (default is /)\n"
+"  -N, --nicelevel <incr>        add incr to the process' nice level\n"
+"  -P, --procsched <policy[:prio]>\n"
 "                                use <policy> with <prio> for the kernel\n"
 "                                  process scheduler (default prio is 0)\n"
-"  -I|--iosched <class[:prio]>   use <class> with <prio> to set the IO\n"
+"  -I, --iosched <class[:prio]>  use <class> with <prio> to set the IO\n"
 "                                  scheduler (default prio is 4)\n"
-"  -k|--umask <mask>             change the umask to <mask> before starting\n"
-"  -b|--background               force the process to detach\n"
-"  -C|--no-close                 do not close any file descriptor\n"
-"  -m|--make-pidfile             create the pidfile before starting\n"
-"    |--remove-pidfile           delete the pidfile after stopping\n"
-"  -R|--retry <schedule>         check whether processes die, and retry\n"
-"  -t|--test                     test mode, don't do anything\n"
-"  -o|--oknodo                   exit status 0 (not 1) if nothing done\n"
-"  -q|--quiet                    be more quiet\n"
-"  -v|--verbose                  be more verbose\n"
-"\n"
+"  -k, --umask <mask>            change the umask to <mask> before starting\n"
+"  -b, --background              force the process to detach\n"
+"  -C, --no-close                do not close any file descriptor\n"
+"  -m, --make-pidfile            create the pidfile before starting\n"
+"      --remove-pidfile          delete the pidfile after stopping\n"
+"  -R, --retry <schedule>        check whether processes die, and retry\n"
+"  -t, --test                    test mode, don't do anything\n"
+"  -o, --oknodo                  exit status 0 (not 1) if nothing done\n"
+"  -q, --quiet                   be more quiet\n"
+"  -v, --verbose                 be more verbose\n"
+"\n");
+
+	printf(
 "Retry <schedule> is <item>|/<item>/... where <item> is one of\n"
 " -<signal-num>|[-]<signal-name>  send that signal\n"
 " <timeout>                       wait that many seconds\n"
 " forever                         repeat remainder forever\n"
 "or <schedule> may be just <timeout>, meaning <signal>/<timeout>/KILL/<timeout>\n"
-"\n"
+"\n");
+
+	printf(
 "The process scheduler <policy> can be one of:\n"
 "  other, fifo or rr\n"
-"\n"
+"\n");
+
+	printf(
 "The IO scheduler <class> can be one of:\n"
 "  real-time, best-effort or idle\n"
-"\n"
+"\n");
+
+	printf(
 "Exit status:\n"
 "  0 = done\n"
 "  1 = nothing done (=> 0 if --oknodo)\n"
@@ -695,14 +747,15 @@ validate_proc_schedule(void)
 static void
 parse_proc_schedule(const char *string)
 {
-	char *policy_str, *prio_str;
+	char *policy_str;
+	size_t policy_len;
 	int prio = 0;
 
-	policy_str = xstrdup(string);
-	policy_str = strtok(policy_str, ":");
-	prio_str = strtok(NULL, ":");
+	policy_len = strcspn(string, ":");
+	policy_str = xstrndup(string, policy_len);
 
-	if (prio_str && parse_unsigned(prio_str, 10, &prio) != 0)
+	if (string[policy_len] == ':' &&
+	    parse_unsigned(string + policy_len + 1, 10, &prio) != 0)
 		fatal("invalid process scheduler priority");
 
 	proc_sched = xmalloc(sizeof(*proc_sched));
@@ -726,14 +779,15 @@ parse_proc_schedule(const char *string)
 static void
 parse_io_schedule(const char *string)
 {
-	char *class_str, *prio_str;
+	char *class_str;
+	size_t class_len;
 	int prio = 4;
 
-	class_str = xstrdup(string);
-	class_str = strtok(class_str, ":");
-	prio_str = strtok(NULL, ":");
+	class_len = strcspn(string, ":");
+	class_str = xstrndup(string, class_len);
 
-	if (prio_str && parse_unsigned(prio_str, 10, &prio) != 0)
+	if (string[class_len] == ':' &&
+	    parse_unsigned(string + class_len + 1, 10, &prio) != 0)
 		fatal("invalid IO scheduler priority");
 
 	io_sched = xmalloc(sizeof(*io_sched));
@@ -932,6 +986,7 @@ parse_options(int argc, char * const *argv)
 	const char *schedule_str = NULL;
 	const char *proc_schedule_str = NULL;
 	const char *io_schedule_str = NULL;
+	size_t changeuser_len;
 	int c;
 
 	for (;;) {
@@ -995,9 +1050,13 @@ parse_options(int argc, char * const *argv)
 		case 'c':  /* --chuid <username>|<uid> */
 			/* We copy the string just in case we need the
 			 * argument later. */
-			changeuser = xstrdup(optarg);
-			changeuser = strtok(changeuser, ":");
-			changegroup = strtok(NULL, ":");
+			changeuser_len = strcspn(optarg, ":");
+			changeuser = xstrndup(optarg, changeuser_len);
+			if (optarg[changeuser_len] == ':') {
+				if (optarg[changeuser_len + 1] == '\0')
+					fatal("missing group name");
+				changegroup = optarg + changeuser_len + 1;
+			}
 			break;
 		case 'g':  /* --group <group>|<gid> */
 			changegroup = optarg;
@@ -1342,17 +1401,17 @@ static bool
 pid_is_exec(pid_t pid, const struct stat *esb)
 {
 	struct stat sb;
-	int error, name[4];
+	int error, mib[4];
 	size_t len;
 	char pathname[PATH_MAX];
 
-	name[0] = CTL_KERN;
-	name[1] = KERN_PROC;
-	name[2] = KERN_PROC_PATHNAME;
-	name[3] = pid;
+	mib[0] = CTL_KERN;
+	mib[1] = KERN_PROC;
+	mib[2] = KERN_PROC_PATHNAME;
+	mib[3] = pid;
 	len = sizeof(pathname);
 
-	error = sysctl(name, 4, pathname, &len, NULL, 0);
+	error = sysctl(mib, 4, pathname, &len, NULL, 0);
 	if (error != 0 && errno != ESRCH)
 		return false;
 	if (len == 0)
@@ -1459,6 +1518,28 @@ pid_is_child(pid_t pid, pid_t ppid)
 
 	return pst.pst_ppid == ppid;
 }
+#elif defined(OSFreeBSD)
+static bool
+pid_is_child(pid_t pid, pid_t ppid)
+{
+	struct kinfo_proc kp;
+	int rc, mib[4];
+	size_t len;
+
+	mib[0] = CTL_KERN;
+	mib[1] = KERN_PROC;
+	mib[2] = KERN_PROC_PID;
+	mib[3] = pid;
+	len = sizeof(kp);
+
+	rc = sysctl(mib, 4, &kp, &len, NULL, 0);
+	if (rc != 0 && errno != ESRCH)
+		return false;
+	if (len == 0 || len != sizeof(kp))
+		return false;
+
+	return kp.ki_ppid == ppid;
+}
 #elif defined(HAVE_KVM_H)
 static bool
 pid_is_child(pid_t pid, pid_t ppid)
@@ -1522,6 +1603,28 @@ pid_is_user(pid_t pid, uid_t uid)
 	if (pstat_getproc(&pst, sizeof(pst), (size_t)0, (int)pid) < 0)
 		return false;
 	return ((uid_t)pst.pst_uid == uid);
+}
+#elif defined(OSFreeBSD)
+static bool
+pid_is_user(pid_t pid, uid_t uid)
+{
+	struct kinfo_proc kp;
+	int rc, mib[4];
+	size_t len;
+
+	mib[0] = CTL_KERN;
+	mib[1] = KERN_PROC;
+	mib[2] = KERN_PROC_PID;
+	mib[3] = pid;
+	len = sizeof(kp);
+
+	rc = sysctl(mib, 4, &kp, &len, NULL, 0);
+	if (rc != 0 && errno != ESRCH)
+		return false;
+	if (len == 0 || len != sizeof(kp))
+		return false;
+
+	return kp.ki_ruid == uid;
 }
 #elif defined(HAVE_KVM_H)
 static bool
@@ -1612,6 +1715,28 @@ pid_is_cmd(pid_t pid, const char *name)
 	if (pstat_getproc(&pst, sizeof(pst), (size_t)0, (int)pid) < 0)
 		return false;
 	return (strcmp(pst.pst_ucomm, name) == 0);
+}
+#elif defined(OSFreeBSD)
+static bool
+pid_is_cmd(pid_t pid, const char *name)
+{
+	struct kinfo_proc kp;
+	int rc, mib[4];
+	size_t len;
+
+	mib[0] = CTL_KERN;
+	mib[1] = KERN_PROC;
+	mib[2] = KERN_PROC_PID;
+	mib[3] = pid;
+	len = sizeof(kp);
+
+	rc = sysctl(mib, 4, &kp, &len, NULL, 0);
+	if (rc != 0 && errno != ESRCH)
+		return false;
+	if (len == 0 || len != sizeof(kp))
+		return false;
+
+	return strcmp(kp.ki_comm, name) == 0;
 }
 #elif defined(HAVE_KVM_H)
 static bool
@@ -1788,6 +1913,46 @@ do_procinit(void)
 
 	return prog_status;
 }
+#elif defined(OSFreeBSD)
+static enum status_code
+do_procinit(void)
+{
+	struct kinfo_proc *kp;
+	int rc, mib[3];
+	size_t len = 0;
+	int nentries, i;
+	enum status_code prog_status = STATUS_DEAD;
+
+	mib[0] = CTL_KERN;
+	mib[1] = KERN_PROC;
+	mib[2] = KERN_PROC_PROC;
+
+	rc = sysctl(mib, 3, NULL, &len, NULL, 0);
+	if (rc != 0 && errno != ESRCH)
+		return false;
+	if (len == 0)
+		return false;
+
+	kp = xmalloc(len);
+	rc = sysctl(mib, 3, kp, &len, NULL, 0);
+	if (rc != 0 && errno != ESRCH)
+		return false;
+	if (len == 0)
+		return false;
+	nentries = len / sizeof(*kp);
+
+	for (i = 0; i < nentries; i++) {
+		enum status_code pid_status;
+
+		pid_status = pid_check(kp[i].ki_pid);
+		if (pid_status < prog_status)
+			prog_status = pid_status;
+	}
+
+	free(kp);
+
+	return prog_status;
+}
 #elif defined(HAVE_KVM_H)
 static enum status_code
 do_procinit(void)
@@ -1838,7 +2003,7 @@ do_findprocs(void)
 		return do_procinit();
 }
 
-static void
+static int
 do_start(int argc, char **argv)
 {
 	int devnull_fd = -1;
@@ -1850,7 +2015,7 @@ do_start(int argc, char **argv)
 	if (found) {
 		if (quietmode <= 0)
 			printf("%s already running.\n", execname ? execname : "process");
-		exit(exitnodo);
+		return exitnodo;
 	}
 	if (testmode && quietmode <= 0) {
 		printf("Would start %s ", startas);
@@ -1876,7 +2041,7 @@ do_start(int argc, char **argv)
 		printf(".\n");
 	}
 	if (testmode)
-		exit(0);
+		return 0;
 	if (quietmode < 0)
 		printf("Starting %s...\n", startas);
 	*--argv = startas;
@@ -1997,11 +2162,18 @@ do_stop_summary(int retry_nr)
 	printf(".\n");
 }
 
-static void
-set_what_stop(const char *str)
+static void DPKG_ATTR_PRINTF(1)
+set_what_stop(const char *format, ...)
 {
-	strncpy(what_stop, str, sizeof(what_stop));
-	what_stop[sizeof(what_stop) - 1] = '\0';
+	va_list arglist;
+	int rc;
+
+	va_start(arglist, format);
+	rc = vasprintf(&what_stop, format, arglist);
+	va_end(arglist);
+
+	if (rc < 0)
+		fatal("cannot allocate formatted string");
 }
 
 /*
@@ -2027,44 +2199,44 @@ set_what_stop(const char *str)
 static bool
 do_stop_timeout(int timeout, int *n_killed, int *n_notkilled)
 {
-	struct timeval stopat, before, after, interval, maxinterval;
+	struct timespec stopat, before, after, interval, maxinterval;
 	int rc, ratio;
 
-	xgettimeofday(&stopat);
+	timespec_gettime(&stopat);
 	stopat.tv_sec += timeout;
 	ratio = 1;
 	for (;;) {
-		xgettimeofday(&before);
-		if (timercmp(&before, &stopat, >))
+		timespec_gettime(&before);
+		if (timespec_cmp(&before, &stopat, >))
 			return false;
 
 		do_stop(0, n_killed, n_notkilled);
 		if (!*n_killed)
 			return true;
 
-		xgettimeofday(&after);
+		timespec_gettime(&after);
 
-		if (!timercmp(&after, &stopat, <))
+		if (!timespec_cmp(&after, &stopat, <))
 			return false;
 
 		if (ratio < 10)
 			ratio++;
 
-		timersub(&stopat, &after, &maxinterval);
-		timersub(&after, &before, &interval);
-		tmul(&interval, ratio);
+		timespec_sub(&stopat, &after, &maxinterval);
+		timespec_sub(&after, &before, &interval);
+		timespec_mul(&interval, ratio);
 
-		if (interval.tv_sec < 0 || interval.tv_usec < 0)
-			interval.tv_sec = interval.tv_usec = 0;
+		if (interval.tv_sec < 0 || interval.tv_nsec < 0)
+			interval.tv_sec = interval.tv_nsec = 0;
 
-		if (timercmp(&interval, &maxinterval, >))
+		if (timespec_cmp(&interval, &maxinterval, >))
 			interval = maxinterval;
 
 		if (interval.tv_sec == 0 &&
-		    interval.tv_usec <= MIN_POLL_INTERVAL)
-			interval.tv_usec = MIN_POLL_INTERVAL;
+		    interval.tv_nsec <= MIN_POLL_INTERVAL)
+			interval.tv_nsec = MIN_POLL_INTERVAL;
 
-		rc = select(0, NULL, NULL, NULL, &interval);
+		rc = pselect(0, NULL, NULL, NULL, &interval, NULL);
 		if (rc < 0 && errno != EINTR)
 			fatal("select() failed for pause");
 	}
@@ -2100,17 +2272,17 @@ run_stop_schedule(void)
 	}
 
 	if (cmdname)
-		set_what_stop(cmdname);
+		set_what_stop("%s", cmdname);
 	else if (execname)
-		set_what_stop(execname);
+		set_what_stop("%s", execname);
 	else if (pidfile)
-		sprintf(what_stop, "process in pidfile '%.200s'", pidfile);
+		set_what_stop("process in pidfile '%s'", pidfile);
 	else if (match_pid > 0)
-		sprintf(what_stop, "process with pid %d", match_pid);
+		set_what_stop("process with pid %d", match_pid);
 	else if (match_ppid > 0)
-		sprintf(what_stop, "process(es) with parent pid %d", match_ppid);
+		set_what_stop("process(es) with parent pid %d", match_ppid);
 	else if (userspec)
-		sprintf(what_stop, "process(es) owned by '%.200s'", userspec);
+		set_what_stop("process(es) owned by '%s'", userspec);
 	else
 		fatal("internal error, no match option, please report");
 
@@ -2173,19 +2345,11 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (action == ACTION_START)
-		do_start(argc, argv);
-
-	if (action == ACTION_STOP) {
-		int i = run_stop_schedule();
-		exit(i);
-	}
-
-	if (action == ACTION_STATUS) {
-		enum status_code prog_status;
-
-		prog_status = do_findprocs();
-		exit(prog_status);
-	}
+		return do_start(argc, argv);
+	else if (action == ACTION_STOP)
+		return run_stop_schedule();
+	else if (action == ACTION_STATUS)
+		return do_findprocs();
 
 	return 0;
 }

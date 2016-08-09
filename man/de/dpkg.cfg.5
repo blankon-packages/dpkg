@@ -1,7 +1,7 @@
 .\" dpkg manual page - dpkg.cfg(5)
 .\"
 .\" Copyright Â© 2002 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright Â© 2009 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2009, 2013, 2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -26,12 +26,12 @@
 dpkg.cfg \- dpkg Konfigurationsdatei
 .
 .SH BESCHREIBUNG
-Diese Datei enthält Standardoptionen für dpkg. Jede Zeile enthält eine
-einzelne Option, die exakt die gleiche wie für die normalen
-Kommandozeilen\-Option von dpkg sind, abgesehen von den einleitenden
-Bindestrichen, die hier nicht verwendet werden. Anführungszeichen (»Quotes«)
+Diese Datei enthÃ¤lt Standardoptionen fÃ¼r dpkg. Jede Zeile enthÃ¤lt eine
+einzelne Option, die exakt die gleiche wie fÃ¼r die normalen
+Befehlszeilen\-Option von dpkg sind, abgesehen von den einleitenden
+Bindestrichen, die hier nicht verwendet werden. AnfÃ¼hrungszeichen (Â»QuotesÂ«)
 um Optionswerte werden entfernt. Kommentare sind durch Einleiten einer Zeile
-mit einem Rautenzeichen ("\fB#\fP") erlaubt.
+mit einem Rautenzeichen (\(oq\fB#\fP\(cq) erlaubt.
 .
 .SH DATEIEN
 \fI/etc/dpkg/dpkg.cfg.d/[0\-9a\-zA\-Z_\-]*\fP
@@ -40,16 +40,12 @@ mit einem Rautenzeichen ("\fB#\fP") erlaubt.
 .br
 \fI~/.dpkg.cfg\fP
 .
-.SH AUTOR
-Lesen Sie \fI/usr/share/doc/dpkg/THANKS\fP für die Liste der Leute, die zu
-\fBdpkg\fP beigetragen haben.
-.
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 \fBdpkg\fP(1).

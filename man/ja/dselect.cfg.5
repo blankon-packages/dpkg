@@ -1,7 +1,7 @@
 .\" dselect manual page - dselect.cfg(5)
 .\"
 .\" Copyright Â© 2002 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright Â© 2009-2011 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2009-2011, 2013, 2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -22,36 +22,33 @@
 .\"
 .\"*******************************************************************
 .TH dselect.cfg 5 2011\-07\-03 "Debian Project" "dpkg suite"
-.SH Ì¾Á°
-dselect.cfg \- dselect ¤ÎÀßÄê¥Õ¥¡¥¤¥ë
+.SH åå‰
+dselect.cfg \- dselect ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«
 .
-.SH ÀâÌÀ
+.SH èª¬æ˜
 This file contains default options for dselect. Each line contains a single
 option which is exactly the same as a normal command line option for dselect
 except for the leading hyphens which are not used here. Quotes surrounding
 option values are stripped. Comments are allowed by starting a line with a
-hash sign ("\fB#\fP").
+hash sign (\(oq\fB#\fP\(cq).
 .
-.SH ¥Õ¥¡¥¤¥ë
+.SH ãƒ•ã‚¡ã‚¤ãƒ«
 \fI/etc/dpkg/dselect.cfg.d/[0\-9a\-zA\-Z_\-]*\fP
 .br
 \fI/etc/dpkg/dselect.cfg\fP
 .br
 \fI~/.dselect.cfg\fP
 .
-.SH ºî¼Ô
-\fBdselect\fP ¤Ë¹×¸¥¤·¤¿¿Í¤Î¥ê¥¹¥È¤Ï \fB/usr/share/doc/dpkg/THANKS\fP ¤ò»²¾È¤Î¤³¤È¡£
-.
-.SH ´ØÏ¢¹àÌÜ
+.SH é–¢é€£é …ç›®
 \fBdselect\fP(1)
-.SH ËİÌõ¼Ô
-¹â¶¶ ´ğ¿® <monyo@monyo.com>.
-´îÀ¥ ¹À <kise@fuyuneko.jp>.
-´Ø¸Í ¹¬°ì <sekido@mbox.kyoto-inet.or.jp>.
-ÆéÃ« ±ÉÅ¸ <nabe@debian.or.jp>.
-ÁÒß· Ë¾ <nabetaro@debian.or.jp>.
-ÀĞÀî ËÓ <ishikawa@linux.or.jp>.
-±­»ô Ê¸ÉÒ <ukai@debian.or.jp>.
-ÃæÌî ÉğÍº <nakano@apm.seikei.ac.jp>.
-.SH ËİÌõ¹»Àµ
+.SH ç¿»è¨³è€…
+é«˜æ©‹ åŸºä¿¡ <monyo@monyo.com>.
+å–œç€¬ æµ© <kise@fuyuneko.jp>.
+é–¢æˆ¸ å¹¸ä¸€ <sekido@mbox.kyoto-inet.or.jp>.
+é‹è°· æ „å±• <nabe@debian.or.jp>.
+å€‰æ¾¤ æœ› <nabetaro@debian.or.jp>.
+çŸ³å· ç¦ <ishikawa@linux.or.jp>.
+éµœé£¼ æ–‡æ• <ukai@debian.or.jp>.
+ä¸­é‡ æ­¦é›„ <nakano@apm.seikei.ac.jp>.
+.SH ç¿»è¨³æ ¡æ­£
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

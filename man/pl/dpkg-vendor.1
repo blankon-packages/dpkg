@@ -20,60 +20,60 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-vendor 1 2011\-11\-10 "Projekt Debian" "uøytki dpkg"
+.TH dpkg\-vendor 1 2011\-11\-10 "Projekt Debian" "u≈ºytki dpkg"
 .SH NAZWA
-dpkg\-vendor \- odczytuje informacjÍ o twÛrcach dystrybucji
+dpkg\-vendor \- odczytuje informacjƒô o tw√≥rcach dystrybucji
 .
-.SH SK£ADNIA
+.SH SK≈ÅADNIA
 \fBdpkg\-vendor\fP [\fIopcja\fP...] \fIpolecenie\fP
 .
 .SH OPIS
-\fBdpkg\-vendor\fP jest narzÍdziem pozwalaj±cym na odczytywanie informacji o
-twÛrcach wymienionych w \fB/etc/dpkg/origins\fP. \fB/etc/dpkg/origins/default\fP
-zawiera informacje dotycz±ce aktualnego twÛrcy.
+\fBdpkg\-vendor\fP jest narzƒôdziem pozwalajƒÖcym na odczytywanie informacji o
+tw√≥rcach wymienionych w \fB/etc/dpkg/origins\fP. \fB/etc/dpkg/origins/default\fP
+zawiera informacje dotyczƒÖce aktualnego tw√≥rcy.
 .
 .SH POLECENIA
 .TP 
-\fB\-\-is\fP\fI twÛrca\fP
-KoÒczy siÍ zwracaj±c \fB0\fP je∂li aktualny twÛrca to \fItwÛrca\fP. W przeciwnym
-wypadku koÒczy siÍ zwracaj±c warto∂Ê rÛøn± od zera.
+\fB\-\-is\fP\fI tw√≥rca\fP
+Exits with \fB0\fP if the current vendor is \fIvendor\fP. Otherwise exits with
+\fB1\fP.
 .TP 
-\fB\-\-derives\-from\fP\fI twÛrca\fP
+\fB\-\-derives\-from\fP\fI tw√≥rca\fP
 Exits with \fB0\fP if the current vendor distribution is a derivative of
-\fIvendor\fP, otherwise exits with non\-zero. It uses the \fBParent\fP field to
-browse all ancestors of the current vendor.
+\fIvendor\fP, otherwise exits with \fB1\fP.  It uses the \fBParent\fP field to browse
+all ancestors of the current vendor.
 .TP 
 \fB\-\-query\fP\fI pole\fP
-Wy∂wietla na standardowym wyj∂ciu warto∂Ê okre∂lonego \fIpola\fP odczytanego z
-informacji dotycz±cych aktualnego twÛrcy.
+Wy≈õwietla na standardowym wyj≈õciu warto≈õƒá okre≈õlonego \fIpola\fP odczytanego z
+informacji dotyczƒÖcych aktualnego tw√≥rcy.
 .TP 
 \fB\-\-help\fP
-Wy∂wietla informacjÍ o uøytkowaniu i koÒczy dzia≥anie.
+Wy≈õwietla informacjƒô o u≈ºytkowaniu i ko≈Ñczy dzia≈Çanie.
 .TP 
 \fB\-\-version\fP
-Wy∂wietla informacjÍ o wersji i pomy∂lnie koÒczy dzia≥anie.
+Wy≈õwietla informacjƒô o wersji i pomy≈õlnie ko≈Ñczy dzia≈Çanie.
 .
 .SH OPCJE
 .TP 
-\fB\-\-vendor\fP\fI twÛrca\fP
-Przyjmuje, øe aktualnym twÛrc± jest \fItwÛrca\fP, zamiast okre∂lania tego przez
-zmienn± ∂rodowiska \fBDEB_VENDOR\fP lub odczyt z \fB/etc/dpkg/origins/default\fP.
+\fB\-\-vendor\fP\fI tw√≥rca\fP
+Przyjmuje, ≈ºe aktualnym tw√≥rcƒÖ jest \fItw√≥rca\fP, zamiast okre≈õlania tego przez
+zmiennƒÖ ≈õrodowiska \fBDEB_VENDOR\fP lub odczyt z \fB/etc/dpkg/origins/default\fP.
 .
-.SH ¶RODOWISKO
+.SH ≈öRODOWISKO
 .TP 
 \fBDEB_VENDOR\fP
-Ustawienie okre∂laj±ce aktualnego twÛrcÍ. Je∂li nie jest ustawione, aktualny
-twÛrca zostanie okre∂lony poprzez odczytanie z \fB/etc/dpkg/origins/default\fP.
+Ustawienie okre≈õlajƒÖce aktualnego tw√≥rcƒô. Je≈õli nie jest ustawione, aktualny
+tw√≥rca zostanie okre≈õlony poprzez odczytanie z \fB/etc/dpkg/origins/default\fP.
 .
-.SH "ZOBACZ TAKØE"
+.SH "ZOBACZ TAK≈ªE"
 \fBdeb\-origin\fP(5).
-.SH T£UMACZE
+.SH T≈ÅUMACZE
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br
-Bartosz FeÒski <fenio@debian.org>, 2004-2005
+Bartosz Fe≈Ñski <fenio@debian.org>, 2004-2005
 .br
 Robert Luberda <robert@debian.org>, 2006-2008
 .br
 Wiktor Wandachowicz <siryes@gmail.com>, 2008
 .br
-Micha≥ Ku≥ach <michal.kulach@gmail.com>, 2012
+Micha≈Ç Ku≈Çach <michal.kulach@gmail.com>, 2012

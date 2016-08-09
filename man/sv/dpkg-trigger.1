@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-trigger(1)
 .\"
-.\" Copyright Â© 2008-2011 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2008-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -22,36 +22,36 @@
 .\"*******************************************************************
 .TH dpkg\-trigger 1 2011\-08\-14 Debianprojektet Dpkg\-sviten
 .SH NAMN
-dpkg\-trigger \- ett verktyg för paketutlösare
+dpkg\-trigger \- ett verktyg fÃ¶r paketutlÃ¶sare
 .
 .SH SYNOPS
-\fBdpkg\-trigger\fP [\fIflaggor\fP...] \fIutlösarnamn\fP
+\fBdpkg\-trigger\fP [\fIflaggor\fP...] \fIutlÃ¶sarnamn\fP
 .br
 \fBdpkg\-trigger\fP [\fIflaggor\fP...] \fIkommando\fP
 .
 .SH BESKRIVNING
-\fBdpkg\-trigger\fP är ett verktyg för att explicit aktivera utlösare och för
-att testa om de stöds av den körande \fBdpkg\fP.
+\fBdpkg\-trigger\fP Ã¤r ett verktyg fÃ¶r att explicit aktivera utlÃ¶sare och fÃ¶r
+att testa om de stÃ¶ds av den kÃ¶rande \fBdpkg\fP.
 .PP
-Det kan användas av utvecklarskript i komplexa och villkorliga situationer
-där filutlösare, eller det deklarativa \fBactivate\fP\-direktivet i
-utlösarstyrfilen inte kan uttrycka det som behövs. Det kan även användas för
-test och av systemadministratörer (men observera att utlösarna inte kommer
-att faktiskt köras av \fBdpkg\-trigger\fP).
+Det kan anvÃ¤ndas av utvecklarskript i komplexa och villkorliga situationer
+dÃ¤r filutlÃ¶sare, eller det deklarativa \fBactivate\fP\-direktivet i
+utlÃ¶sarstyrfilen inte kan uttrycka det som behÃ¶vs. Det kan Ã¤ven anvÃ¤ndas fÃ¶r
+test och av systemadministratÃ¶rer (men observera att utlÃ¶sarna inte kommer
+att faktiskt kÃ¶ras av \fBdpkg\-trigger\fP).
 .PP
-Okända utlösarnamnsyntaxer är ett fel för \fBdpkg\-trigger\fP.
+OkÃ¤nda utlÃ¶sarnamnsyntaxer Ã¤r ett fel fÃ¶r \fBdpkg\-trigger\fP.
 .
 .SH KOMMANDON
 .TP 
 \fB\-\-check\-supported\fP
-Se om den \fBdpkg\fP som körs stöder utlösare (anropas vanligtvis från ett
-postinst\-skript). Avslutar med \fB0\fP om en \fBdpkg\fP med utlösarstöd har kört,
-eller \fB1\fP med ett felmeddelande på standard fel om inte. Det är dock
-normalt sett bättre att bara aktivera den önskade utlösaren med
+Se om den \fBdpkg\fP som kÃ¶rs stÃ¶der utlÃ¶sare (anropas vanligtvis frÃ¥n ett
+postinst\-skript). Avslutar med \fB0\fP om en \fBdpkg\fP med utlÃ¶sarstÃ¶d har kÃ¶rt,
+eller \fB1\fP med ett felmeddelande pÃ¥ standard fel om inte. Det Ã¤r dock
+normalt sett bÃ¤ttre att bara aktivera den Ã¶nskade utlÃ¶saren med
 \fBdpkg\-trigger\fP.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Visar hjälpskärm och avslutar.
+Visar hjÃ¤lpskÃ¤rm och avslutar.
 .TP 
 \fB\-\-version\fP
 Visar version och avslutar.
@@ -59,34 +59,48 @@ Visar version och avslutar.
 .SH FLAGGOR
 .TP 
 \fB\-\-admindir=\fP\fIkat\fP
-Ändra platsen för \fBdpkg\fP\-databasen. Förval är \fI/var/lib/dpkg\fP.
+Ã„ndra platsen fÃ¶r \fBdpkg\fP\-databasen. FÃ¶rval Ã¤r \fI/var/lib/dpkg\fP.
 .TP 
 \fB\-\-by\-package=\fP\fIpaket\fP
-Överstyr den som väntar på en utlösare (sätts vanligen av \fBdpkg\fP genom
-miljövariabeln \fBDPKG_MAINTSCRIPT_PACKAGE\fP i utvecklarskript, för att namnge
-det paket som skriptet tillhör, och detta används som standard).
+Ã–verstyr den som vÃ¤ntar pÃ¥ en utlÃ¶sare (sÃ¤tts vanligen av \fBdpkg\fP genom
+miljÃ¶variabeln \fBDPKG_MAINTSCRIPT_PACKAGE\fP i utvecklarskript, fÃ¶r att namnge
+det paket som skriptet tillhÃ¶r, och detta anvÃ¤nds som standard).
 .TP 
 \fB\-\-no\-await\fP
-Denna flagga gör så att det anropade paketet T (om det finns) inte behöver
-vänta på hantering av utlösaren; det/de intresserade paketet/paketen I
-kommer inte läggas till T:s väntelista för hantering av utlösare och T:s
-status ändras inte. T kan anses vara installerat även om I kanske ännu inte
-har hanterat utlösaren.
+Denna flagga gÃ¶r sÃ¥ att det anropade paketet T (om det finns) inte behÃ¶ver
+vÃ¤nta pÃ¥ hantering av utlÃ¶saren; det/de intresserade paketet/paketen I
+kommer inte lÃ¤ggas till T:s vÃ¤ntelista fÃ¶r hantering av utlÃ¶sare och T:s
+status Ã¤ndras inte. T kan anses vara installerat Ã¤ven om I kanske Ã¤nnu inte
+har hanterat utlÃ¶saren.
 .TP 
 \fB\-\-await\fP
-Flaggan gör det motsatta mot \fB\-\-no\-await\fP. Det är för närvarande
-standardbetendet.
+This option does the inverse of \fB\-\-no\-await\fP (since dpkg 1.17.21).  It is
+currently the default behavior.
 .TP 
 \fB\-\-no\-act\fP
-Bara testa, ändra inte på någonting.
+Bara testa, Ã¤ndra inte pÃ¥ nÃ¥gonting.
 .
-.SH MILJÖVARIABLER
+.SH RETURVÃ„RDE
+.TP 
+\fB0\fP
+The requested action was successfully performed.  Or a check or assertion
+command returned true.
+.TP 
+\fB1\fP
+A check or assertion command returned false.
+.TP 
+\fB2\fP
+Fatal or unrecoverable error due to invalid command\-line usage, or
+interactions with the system, such as accesses to the database, memory
+allocations, etc.
+.
+.SH MILJÃ–VARIABLER
 .TP 
 \fBDPKG_ADMINDIR\fP
-Om satt, och flaggan \fB\-\-admindir\fP inte har angivits, används värdet som
-datakatalog för \fBdpkg\fP.
+Om satt, och flaggan \fB\-\-admindir\fP inte har angivits, anvÃ¤nds vÃ¤rdet som
+datakatalog fÃ¶r \fBdpkg\fP.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 \fBdpkg\fP(1), \fBdeb\-triggers\fP(5), \fB/usr/share/doc/dpkg\-dev/triggers.txt.gz\fP.
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

@@ -24,10 +24,15 @@ endif
 update_alternatives_SOURCES = \
 	update-alternatives.c
 
+update_alternatives_CPPFLAGS = \
+	-DALT_TMP_EXT=\".dpkg-tmp\" \
+	-DADMINDIR_ENVVAR=\"DPKG_ADMINDIR\" \
+	$(AM_CPPFLAGS)
+
 update_alternatives_LDADD = \
 	../lib/compat/libcompat.la \
 	$(LIBINTL) \
-	$(UA_LIBS)
+	$(nil)
 
 sbin_PROGRAMS =
 
@@ -39,7 +44,9 @@ start_stop_daemon_SOURCES = \
 
 start_stop_daemon_LDADD = \
 	../lib/compat/libcompat.la \
-	$(SSD_LIBS)
+	$(PS_LIBS) \
+	$(KVM_LIBS) \
+	$(nil)
 endif
 
 install-data-local:

@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-split(1)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2011 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-split 1 "4 luglio 2011" "Progetto Debian" "utilità dpkg"
+.TH dpkg\-split 1 "4 luglio 2011" "Progetto Debian" "utilitÃ  dpkg"
 .SH NOME
 dpkg\-split \- strumento per suddividere/unire archivi di pacchetto Debian
 .
@@ -29,14 +29,14 @@ dpkg\-split \- strumento per suddividere/unire archivi di pacchetto Debian
 \fBdpkg\-split\fP [\fIopzione\fP...] \fIcomando\fP
 .
 .SH DESCRIZIONE
-\fBdpkg\-split\fP suddivide i file dei pacchetti binari Debian in parti più
+\fBdpkg\-split\fP suddivide i file dei pacchetti binari Debian in parti piÃ¹
 piccole e li riassembla, per permettere l'archiviazione di grandi file di
 pacchetto su supporti piccoli, come floppy disk.
 
-Può essere utilizzato manualmente usando le opzioni \fB\-\-split\fP, \fB\-\-join\fP e
+PuÃ² essere utilizzato manualmente usando le opzioni \fB\-\-split\fP, \fB\-\-join\fP e
 \fB\-\-info\fP.
 
-Ha anche una modalità automatica, invocata usando l'opzione \fB\-\-auto\fP, con
+Ha anche una modalitÃ  automatica, invocata usando l'opzione \fB\-\-auto\fP, con
 la quale mantiene una coda di parti viste ma non ancora riassemblate, e
 riassembla un file di pacchetto quando ha visto tutte le sue parti. Le
 opzioni \fB\-\-listq\fP e \fB\-\-discard\fP permettono la gestione della coda.
@@ -48,10 +48,10 @@ problemi.
 .SH COMANDI
 .TP 
 \fB\-s\fP, \fB\-\-split\fP \fIarchivio\-completo\fP [\fIprefisso\fP]
-Suddivide un singolo pacchetto binario Debian in più parti.
+Suddivide un singolo pacchetto binario Debian in piÃ¹ parti.
 
-Le parti vengono chiamate \fIprefisso\fP\fB.\fP\fIN\fP\fBof\fP\fIM\fP\fB.deb\fP dove \fIN\fP è il
-numero della parte, cominciando da 1, e \fIM\fP è il numero totale delle parti
+Le parti vengono chiamate \fIprefisso\fP\fB.\fP\fIN\fP\fBof\fP\fIM\fP\fB.deb\fP dove \fIN\fP Ã¨ il
+numero della parte, cominciando da 1, e \fIM\fP Ã¨ il numero totale delle parti
 (entrambi in forma decimale).
 
 Se non viene specificato un \fIprefisso\fP, allora viene usato il nome file
@@ -60,11 +60,11 @@ Se non viene specificato un \fIprefisso\fP, allora viene usato il nome file
 .TP 
 \fB\-j\fP, \fB\-\-join\fP \fIparte\fP...
 Unisce insieme le parti di un pacchetto, riassemblando il file originale
-così come era prima che fosse suddiviso.
+cosÃ¬ come era prima che fosse suddiviso.
 
 I file delle parti specificati come argomenti devono rappresentare tutte le
 parti dello stesso identico file binario originale. Ogni parte deve essere
-presente una ed una sola volta nell'elenco degli argomenti, anche se non è
+presente una ed una sola volta nell'elenco degli argomenti, anche se non Ã¨
 necessario che le parti siano elencate in ordine.
 
 Naturalmente, le parti devono essere state tutte generate specificando, al
@@ -86,7 +86,7 @@ producono invece un messaggio che informa della cosa (ma sempre sullo
 standard output).
 .TP 
 \fB\-a\fP, \fB\-\-auto \-o\fP \fIoutput\-completo parte\fP
-Accoda automaticamente le parti e riassembla un pacchetto se ciò è
+Accoda automaticamente le parti e riassembla un pacchetto se ciÃ² Ã¨
 possibile.
 
 La \fIparte\fP specificata viene esaminata e confrontata con altre parti dello
@@ -94,18 +94,18 @@ stesso pacchetto (se presenti) nella coda delle parti dei file pacchetto.
 
 Se sono disponibili tutte le parti del file pacchetto a cui appartiene
 \fIparte\fP, allora il pacchetto viene riassemblato e scritto in
-\fIoutput\-completo\fP (che normalmente non dovrebbe essere già esistente,
-benché ciò non causi un errore).
+\fIoutput\-completo\fP (che normalmente non dovrebbe essere giÃ  esistente,
+benchÃ© ciÃ² non causi un errore).
 
 Altrimenti, la \fIparte\fP viene copiata nella coda e non viene creato
 \fIoutput\-completo\fP.
 
-Se \fIparte\fP non è una parte di un pacchetto binario suddiviso, allora
-\fBdpkg\-split\fP terminerà con lo stato \fB1\fP; se si verifica qualche altro
-problema allora terminerà con lo stato \fB2\fP.
+Se \fIparte\fP non Ã¨ una parte di un pacchetto binario suddiviso, allora
+\fBdpkg\-split\fP terminerÃ  con lo stato \fB1\fP; se si verifica qualche altro
+problema allora terminerÃ  con lo stato \fB2\fP.
 
 Quando si usa \fB\-\-auto\fP deve essere specificata l'opzione \fB\-\-output\fP o
-\fB\-o\fP. (Se ciò non fosse obbligatorio il programma che sta invocando
+\fB\-o\fP. (Se ciÃ² non fosse obbligatorio il programma che sta invocando
 l'azione non saprebbe quale file di output attendersi.)
 .TP 
 \fB\-l\fP, \fB\-\-listq\fP
@@ -120,7 +120,7 @@ Questo scarta parti dalla coda di quelle in attesa delle parti restanti del
 proprio pacchetto.
 
 Se non viene specificato alcun \fIpacchetto\fP, allora la coda viene svuotata
-completamente; se ne è specificato qualcuno, allora vengono eliminate solo
+completamente; se ne Ã¨ specificato qualcuno, allora vengono eliminate solo
 le parti dei pacchetti indicati.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
@@ -133,34 +133,34 @@ Mostra la versione ed esce.
 .TP 
 \fB\-\-depotdir\fP\fI directory\fP
 Specifica una directory alternativa per la coda delle parti in attesa di
-essere automaticamente riassemblate. Il valore predefinito è
+essere automaticamente riassemblate. Il valore predefinito Ã¨
 \fB/var/lib/dpkg\fP.
 .TP 
 \fB\-S\fP, \fB\-\-partsize\fP \fIkibibyte\fP
 Specifica la dimensione massima, in kibibyte (1024 byte), delle parti quando
-viene fatta la suddivisione. Il valore predefinito è 450 KiB.
+viene fatta la suddivisione. Il valore predefinito Ã¨ 450 KiB.
 .TP 
 \fB\-o\fP, \fB\-\-output\fP \fIoutput\-completo\fP
 Specifica il nome del file di output per il riassemblamento.
 
 Questo valore scavalca quello predefinito per il riassemblaggio manuale
-(\fB\-\-join\fP) ed è obbligatorio per la messa in coda o il riassemblaggio
+(\fB\-\-join\fP) ed Ã¨ obbligatorio per la messa in coda o il riassemblaggio
 automatici (\fB\-\-auto\fP).
 .TP 
 \fB\-Q\fP, \fB\-\-npquiet\fP
 Quando vengono fatti una messa in coda o un riassemblaggio automatici,
 \fBdpkg\-split\fP stampa solitamente un messaggio se gli viene passata una
-\fIparte\fP che non è una parte di un pacchetto binario. Questa opzione
+\fIparte\fP che non Ã¨ una parte di un pacchetto binario. Questa opzione
 disabilita tali messaggi per permettere a programmi come \fBdpkg\fP di gestire
 sia pacchetti suddivisi sia non suddivisi, senza produrre messaggi spuri.
 .TP 
 \fB\-\-msdos\fP
-Forza la compatibilità con MSDOS dei nomi file in output generati da
+Forza la compatibilitÃ  con MSDOS dei nomi file in output generati da
 \fB\-\-split\fP.
 
 Questo storpia il prefisso, o quello predefinito derivato dal nome file di
 input o quello fornito come argomento: i caratteri alfanumerici vengono resi
-minuscoli, i caratteri «+» vengono sostituiti da \fBx\fP e tutti gli altri
+minuscoli, i caratteri Â«+Â» vengono sostituiti da \fBx\fP e tutti gli altri
 caratteri vengono eliminati.
 
 Il risultato viene quindi troncato alla lunghezza necessaria e vengono
@@ -178,9 +178,9 @@ Si verifica solo con \fB\-\-auto\fP e indica che il file \fIparte\fP non era una
 parte di un pacchetto binario.
 .TP 
 \fB2\fP
-Si è verificato un qualche problema, come una chiamata di sistema fallita o
-un file che sembrava una parte di pacchetto ma che era corrotto, un errore
-nell'uso o qualche altro problema.
+Fatal or unrecoverable error due to invalid command\-line usage, a file that
+looked like a package part file but was corrupted, or interactions with the
+system, such as accesses to the database, memory allocations, etc.
 .
 .SH FILE
 .TP 
@@ -189,7 +189,7 @@ La directory predefinita per la coda dei file delle parti in attesa di
 essere automaticamente riassemblate.
 
 I nomi dei file usati in questa directory sono nel formato interno di
-\fBdpkg\-split\fP ed è improbabile che siano utili per altri programmi; in ogni
+\fBdpkg\-split\fP ed Ã¨ improbabile che siano utili per altri programmi; in ogni
 caso non si dovrebbe fare affidamento sul formato del nome file.
 .
 .SH BUG
@@ -197,7 +197,7 @@ I dettagli completi sui pacchetti nella coda sono impossibili da ottenere a
 meno che l'utente non guardi da solo nella directory della coda.
 
 Non esiste un modo semplice per testare se un file che potrebbe essere una
-parte di un pacchetto binario lo è realmente.
+parte di un pacchetto binario lo Ã¨ realmente.
 .
 .SH "VEDERE ANCHE"
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg\-deb\fP(1), \fBdpkg\fP(1).

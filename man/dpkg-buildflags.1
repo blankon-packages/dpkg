@@ -2,7 +2,7 @@
 .\"
 .\" Copyright © 2010-2011 Raphaël Hertzog <hertzog@debian.org>
 .\" Copyright © 2011 Kees Cook <kees@debian.org>
-.\" Copyright © 2011-2014 Guillem Jover <guillem@debian.org>
+.\" Copyright © 2011-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ The configuration files can contain comments on lines starting with a hash
 .BI \-\-dump
 Print to standard output all compilation flags and their values. It prints
 one flag per line separated from its value by an equal sign
-("\fIflag\fP=\fIvalue\fP"). This is the default action.
+(\(lq\fIflag\fP=\fIvalue\fP\(rq). This is the default action.
 .TP
 .BI \-\-list
 Print the list of flags supported by the current vendor
@@ -75,9 +75,9 @@ information about them.
 .TP
 .BI \-\-status
 Display any information that can be useful to explain the behaviour of
-\fBdpkg\-buildflags\fP: relevant environment variables, current vendor,
-state of all feature flags. Also print the resulting compiler flags with
-their origin.
+\fBdpkg\-buildflags\fP (since dpkg 1.16.5): relevant environment variables,
+current vendor, state of all feature flags.
+Also print the resulting compiler flags with their origin.
 
 This is intended to be run from \fBdebian/rules\fP, so that the build log
 keeps a clear trace of the build flags used. This can be useful to diagnose
@@ -134,9 +134,11 @@ the flag is set/modified by an environment-specific configuration.
 .RE
 .TP
 .BI \-\-query\-features " area"
-Print the features enabled for a given area. The only currently recognized
-areas are \fBqa\fP, \fBreproducible\fP and \fBhardening\fP,
-see the \fBFEATURE AREAS\fP section for more details.
+Print the features enabled for a given area (since dpkg 1.16.2).
+The only currently recognized
+areas on Debian and derivatives are \fBqa\fP, \fBreproducible\fP,
+\fBsanitize\fP and \fBhardening\fP, see the \fBFEATURE AREAS\fP
+section for more details.
 Exits with 0 if the area is known otherwise exits with 1.
 .IP
 The output is in RFC822 format, with one section per feature.
@@ -200,26 +202,31 @@ to support other languages).
 .P
 Each area feature can be enabled and disabled in the \fBDEB_BUILD_OPTIONS\fP
 and \fBDEB_BUILD_MAINT_OPTIONS\fP environment variable's area value with the
-"+" and "\-" modifier.
-For example, to enable the \fBhardening\fP "pie" feature and disable the
-"fortify" feature you can do this in \fBdebian/rules\fP:
+\(oq\fB+\fP\(cq and \(oq\fB\-\fP\(cq modifier.
+For example, to enable the \fBhardening\fP \(lqpie\(rq feature and disable the
+\(lqfortify\(rq feature you can do this in \fBdebian/rules\fP:
 .P
   export DEB_BUILD_MAINT_OPTIONS=hardening=+pie,\-fortify
 .P
 The special feature \fBall\fP (valid in any area) can be used to enable or
 disable all area features at the same time.
 Thus disabling everything in the \fBhardening\fP area and enabling only
-"format" and "fortify" can be achieved with:
+\(lqformat\(rq and \(lqfortify\(rq can be achieved with:
 .P
   export DEB_BUILD_MAINT_OPTIONS=hardening=\-all,+format,+fortify
 .
-.SS Quality Assurance (QA)
+.SS qa
 Several compile-time options (detailed below) can be used to help detect
 problems in the source code or build system.
 .TP
 .B bug
 This setting (disabled by default) adds any warning option that reliably
 detects problematic source code. The warnings are fatal.
+The only currently supported flags are \fBCFLAGS\fP and \fBCXXFLAGS\fP
+with flags set to \fB\-Werror=array\-bounds\fP, \fB\%\-Werror=clobbered\fP,
+\fB\%\-Werror=implicit\-function\-declaration\fP and
+\fB\%\-Werror=volatile\-register\-var\fP.
+.
 .TP
 .B canary
 This setting (disabled by default) adds dummy canary options to the build
@@ -230,7 +237,29 @@ The only currently supported flags are \fBCPPFLAGS\fP, \fBCFLAGS\fP,
 to \fB\-D__DEB_CANARY_\fP\fIflag\fP_\fIrandom-id\fP\fB__\fP, and
 \fBLDFLAGS\fP set to \fB\-Wl,\-z,deb-canary\-\fP\fIrandom-id\fP.
 .
-.SS Hardening
+.SS sanitize
+Several compile-time options (detailed below) can be used to help sanitize
+a resulting binary against memory corruptions, memory leaks, use after free,
+threading data races and undefined behavior bugs.
+.TP
+.B address
+This setting (disabled by default) adds \fB\-fsanitize=address\fP to
+\fBLDFLAGS\fP and \fB\-fsanitize=address \-fno\-omit\-frame\-pointer\fP to
+\fBCFLAGS\fP and \fBCXXFLAGS\fP.
+.TP
+.B thread
+This setting (disabled by default) adds \fB\-fsanitize=thread\fP to
+\fBCFLAGS\fP, \fBCXXFLAGS\fP and \fBLDFLAGS\fP.
+.TP
+.B leak
+This setting (disabled by default) adds \fB\-fsanitize=leak\fP to
+\fBLDFLAGS\fP. It gets automatically disabled if either the \fBaddress\fP
+or the \fBthread\fP features are enabled, as they imply it.
+.TP
+.B undefined
+This setting (disabled by default) adds \fB\-fsanitize=undefined\fP to
+\fBCFLAGS\fP, \fBCXXFLAGS\fP and \fBLDFLAGS\fP.
+.SS hardening
 Several compile-time options (detailed below) can be used to help harden
 a resulting binary against memory corruption attacks, or provide
 additional warning messages during compilation.
@@ -248,7 +277,7 @@ calls to \fBprintf\fP and \fBscanf\fP functions where the format string is
 not a string literal and there are no format arguments, as in
 \fBprintf(foo);\fP instead of \fPprintf("%s", foo);\fP
 This may be a security hole if the format string came from untrusted
-input and contains "%n".
+input and contains \(oq%n\(cq.
 .
 .TP
 .B fortify
@@ -258,7 +287,7 @@ to \fBCPPFLAGS\fP. During code generation the compiler
 knows a great deal of information about buffer sizes (where possible), and
 attempts to replace insecure unlimited length buffer function calls with
 length-limited ones. This is especially useful for old, crufty code.
-Additionally, format strings in writable memory that contain '%n' are
+Additionally, format strings in writable memory that contain \(oq%n\(cq are
 blocked. If an application depends on such a format string, it will need
 to be worked around.
 
@@ -333,23 +362,62 @@ locations to bounce off of during a memory corruption attack.
 This is not compatible with \fB\-fPIC\fP so care must be taken when
 building shared objects.
 
+Static libraries can be used by programs or other shared libraries.
+Depending on the flags used to compile all the objects within a static
+library, these libraries will be usable by different sets of objects:
+
+.RS
+.TP
+none
+Cannot be linked into a PIE program, nor a shared library.
+.TP
+.B \-fPIE
+Can be linked into any program, but not a shared library.
+.TP
+.B \-fPIC
+Can be linked into any program and shared library.
+.RE
+
+.IP
+Unconditionally passing \fB\-fPIE\fP, \fB\-fpie\fP or \fB\-pie\fP to a
+build-system using libtool is safe as these flags will get stripped when
+building shared libraries.
+Otherwise on projects that build both programs and shared libraries you
+might need to make sure that when building the shared libraries \fB\-fPIC\fP
+is always passed last (so that it overrides any previous \fB\-PIE\fP) to
+compilation flags such as \fBCFLAGS\fP, and \fB\-shared\fP is passed last
+(so that it overrides any previous \fB\-pie\fP) to linking flags such as
+\fBLDFLAGS\fP.
+
+.IP
 Additionally, since PIE is implemented via a general register, some
-architectures (most notably i386) can see performance losses of up to
+register starved architectures (but not including i386 anymore since
+optimizations implemented in gcc >= 5) can see performance losses of up to
 15% in very text-segment-heavy application workloads; most workloads
 see less than 1%. Architectures with more general registers (e.g. amd64)
 do not see as high a worst-case penalty.
-.SS Reproducibility
+.SS reproducible
 The compile-time options detailed below can be used to help improve
 build reproducibility or provide additional warning messages during
 compilation. Except as noted below, these are enabled by default for
 architectures that support them.
 .TP
 .B timeless
-This setting (disabled by default) adds
+This setting (enabled by default) adds
 .B \-Wdate\-time
 to \fBCPPFLAGS\fP.
 This will cause warnings when the \fB__TIME__\fP, \fB__DATE__\fP and
-\fB__TIMESTAMP__\fP macros are used.
+\fB\%__TIMESTAMP__\fP macros are used.
+.
+.TP
+.B fixdebugpath
+This setting (enabled by default) adds
+.BI \%\-fdebug\-prefix\-map= BUILDPATH =.
+to \fBCFLAGS\fP, \fBCXXFLAGS\fP, \fBOBJCFLAGS\fP, \fBOBJCXXFLAGS\fP,
+\fBGCJFLAGS\fP, \fBFFLAGS\fP and \fBFCFLAGS\fP where \fBBUILDPATH\fP is
+set to the top-level directory of the package being built.
+This has the effect of removing the build path from any generated debug
+symbols.
 .
 .SH ENVIRONMENT
 There are 2 sets of environment variables doing the same operations, the
@@ -392,6 +460,16 @@ various area features that affect build flags.
 The \fBDEB_BUILD_MAINT_OPTIONS\fP variable overrides any setting in the
 \fBDEB_BUILD_OPTIONS\fP feature areas.
 See the \fBFEATURE AREAS\fP section for details.
+.TP
+.B DEB_VENDOR
+This setting defines the current vendor.
+If not set, it will discover the current vendor by reading
+\fB\%/etc/dpkg/origins/default\fP.
+.TP
+.B DEB_BUILD_PATH
+This variable sets the build path (since dpkg 1.18.8) to use in features
+such as \fBfixdebugpath\fP so that they can be controlled by the caller.
+This variable is currently Debian and derivatives-specific.
 .
 .SH FILES
 .SS Configuration files
@@ -399,7 +477,9 @@ See the \fBFEATURE AREAS\fP section for details.
 .B /etc/dpkg/buildflags.conf
 System wide configuration file.
 .TP
-.BR $XDG_CONFIG_HOME/dpkg/buildflags.conf " or " $HOME/.config/dpkg/buildflags.conf
+.BR $XDG_CONFIG_HOME/dpkg/buildflags.conf " or "
+.TQ
+.BR $HOME/.config/dpkg/buildflags.conf
 User configuration file.
 .SS Packaging support
 .TP
@@ -418,7 +498,7 @@ $(MAKE) $(shell dpkg\-buildflags \-\-export=cmdline)
 .fi
 .RE
 .PP
-To set build flags in a shell script or shell fragment, "eval" can be
+To set build flags in a shell script or shell fragment, \fBeval\fP can be
 used to interpret the output and to export the flags in the environment:
 .PP
 .RS 4
@@ -450,7 +530,7 @@ options to configure or \fBmake\fP(1) directly, as shown above.
 For other build systems, or when you need more fine-grained control
 about which flags are passed where, you can use \fB\-\-get\fP. Or you
 can include \fBbuildflags.mk\fP instead, which takes care of calling
-\fBdpkg\-buildflags\fP and storing the build flags in make variables.
+\fB\%dpkg\-buildflags\fP and storing the build flags in make variables.
 .PP
 If you want to export all buildflags into the environment (where they
 can be picked up by your build system):

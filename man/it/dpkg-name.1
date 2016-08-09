@@ -1,7 +1,7 @@
 .\" dpkg manual page - dpkg-name(1)
 .\"
 .\" Copyright Â© 1995-1996 Erick Branderhorst
-.\" Copyright Â© 2007-2012 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2007-2013, 2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-name 1 "15 aprile 2012" "Progetto Debian" "utilità dpkg"
+.TH dpkg\-name 1 "15 aprile 2012" "Progetto Debian" "utilitÃ  dpkg"
 .SH NOME
 dpkg\-name \- rinomina i pacchetti Debian in nomi completi di pacchetto
 .
@@ -33,17 +33,17 @@ dpkg\-name \- rinomina i pacchetti Debian in nomi completi di pacchetto
 Questa pagina di manuale documenta il programma \fBdpkg\-name\fP, che fornisce
 un modo facile per rinominare i pacchetti \fBDebian\fP nei loro nomi di
 pacchetto completi. Un nome di pacchetto completo ha la forma
-\fIpacchetto\fP\fB_\fP\fIversione\fP\fB_\fP\fIarchitettura\fP\fB.\fP\fItipo\-pacchetto\fP, così
+\fIpacchetto\fP\fB_\fP\fIversione\fP\fB_\fP\fIarchitettura\fP\fB.\fP\fItipo\-pacchetto\fP, cosÃ¬
 come specificato nel file control del pacchetto. La parte \fIversione\fP del
-nome del file è formata dall'informazione sulla versione originale del
+nome del file Ã¨ formata dall'informazione sulla versione originale del
 software seguita facoltativamente da un trattino e dalle informazioni sulla
-revisione. La parte \fItipo\-pacchetto\fP viene presa dal campo «package\-type»
+revisione. La parte \fItipo\-pacchetto\fP viene presa dal campo Â«package\-typeÂ»
 se esiste, altrimenti viene usato il valore predefinito \fBdeb\fP.
 .
 .SH OPZIONI
 .TP 
 \fB\-a\fP, \fB\-\-no\-architecture\fP
-Il nome del file di destinazione non conterrà le informazioni
+Il nome del file di destinazione non conterrÃ  le informazioni
 sull'architettura.
 .TP 
 \fB\-k\fP, \fB\-\-symlink\fP
@@ -54,20 +54,20 @@ I file esistenti verranno sovrascritti se hanno lo stesso nome del file di
 destinazione.
 .TP 
 \fB\-s\fP, \fB\-\-subdir\fP [\fIdir\fP]
-I file verranno spostati in una sottodirectory. Se la directory fornita come
-argomento esiste, allora i file verranno spostati in quella directory,
-altrimenti il nome della directory di destinazione viene estratto dal campo
-relativo alla sezione nella parte di controllo del pacchetto. La directory
-di destinazione sarà «unstable/binary\-\fIarchitettura\fP/\fIsezione\fP. Se nella
-parte di controllo non viene trovata la sezione, viene usato «no\-section» e,
-in questo caso così come per le sezioni «non\-free» e «contrib», la directory
-di destinazione è «\fIsezione\fP/binary\-\fIarchitettura\fP». Il campo della
-sezione non è obbligatorio per cui molti pacchetti finiscono nell'area
-«no\-section». Usare questa opzione con cautela perché crea confusione.
+Files will be moved into a subdirectory. If the directory given as argument
+exists the files will be moved into that directory otherwise the name of the
+target directory is extracted from the section field in the control part of
+the package. The target directory will be
+\(Founstable/binary\-\fIarchitecture\fP/\fIsection\fP\(Fc.  If the section is not
+found in the control, then \fBno\-section\fP is assumed, and in this case, as
+well as for sections \fBnon\-free\fP and \fBcontrib\fP the target directory is
+\(Fo\fIsection\fP/binary\-\fIarchitecture\fP\(Fc.  The section field is not
+required so a lot of packages will find their way to the \fBno\-section\fP
+area.  Use this option with care, it's messy.
 .TP 
 \fB\-c\fP, \fB\-\-create\-dir\fP
-Questa opzione può essere usata insieme all'opzione \fB\-s\fP. Se non viene
-trovata una directory target, verrà creata automaticamente. \fBUsare questa
+Questa opzione puÃ² essere usata insieme all'opzione \fB\-s\fP. Se non viene
+trovata una directory target, verrÃ  creata automaticamente. \fBUsare questa
 opzione con cautela.\fP
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
@@ -79,7 +79,7 @@ Mostra la versione ed esce.
 .SH BUG
 Alcuni pacchetti non seguono la struttura dei nomi
 \fIpacchetto\fP\fB_\fP\fIversione\fP\fB_\fP\fIarchitettura\fP\fB.deb\fP. I pacchetti
-rinominati con \fBdpkg\-name\fP seguiranno questa struttura. Generalmente ciò
+rinominati con \fBdpkg\-name\fP seguiranno questa struttura. Generalmente ciÃ²
 non ha effetto su come i pacchetti vengono installati da \fBdselect\fP(1) o
 \fBdpkg\fP(1), ma altri strumenti di installazione possono fare affidamento su
 questa struttura dei nomi.
@@ -87,22 +87,22 @@ questa struttura dei nomi.
 .SH ESEMPI
 .TP 
 \fBdpkg\-name pinco\-pallo.deb\fP
-Il file «pinco\-pallo.deb» verrà rinominato in pinco\-pallo_1.0\-2_i386.deb o
-qualcosa del genere (in base alle informazioni contenute nella parte di
-controllo di «pinco\-pallo.deb»).
+The file \fBbar\-foo.deb\fP will be renamed to bar\-foo_1.0\-2_i386.deb or
+something similar (depending on whatever information is in the control part
+of \fBbar\-foo.deb\fP).
 .TP 
 \fBfind /root/debian/ \-name \(aq*.deb\(aq | xargs \-n 1 dpkg\-name \-a\fP
-Tutti i file con estensione «deb» nella directory /root/debian e nelle sue
-sottodirectory verranno rinominati, se necessario, da \fBdpkg\-name\fP in nomi
-senza informazioni sull'architettura.
+All files with the extension \fBdeb\fP in the directory /root/debian and its
+subdirectory's will be renamed by \fBdpkg\-name\fP if required into names with
+no architecture information.
 .TP 
 \fBfind \-name \(aq*.deb\(aq | xargs \-n 1 dpkg\-name \-a \-o \-s \-c\fP
-\fBNon usarlo.\fP Se lo si fa, il proprio archivio verrà completamente
-stravolto perché molti pacchetti vengono forniti senza l'informazione sulla
+\fBNon usarlo.\fP Se lo si fa, il proprio archivio verrÃ  completamente
+stravolto perchÃ© molti pacchetti vengono forniti senza l'informazione sulla
 sezione. \fBNon usarlo.\fP
 .TP 
 \fBdpkg\-deb \-\-build debian\-tmp && dpkg\-name \-o \-s .. debian\-tmp.deb\fP
-Questo può essere usato quando si creano nuovi pacchetti.
+Questo puÃ² essere usato quando si creano nuovi pacchetti.
 .
 .SH "VEDERE ANCHE"
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg\fP(1), \fBdpkg\-deb\fP(1), \fBfind\fP(1),

@@ -2,7 +2,7 @@
 .\"
 .\" Copyright © 2007-2011 Raphaël Hertzog <hertzog@debian.org>
 .\" Copyright © 2009-2010 Modestas Vainius <modestas@vainius.eu>
-.\" Copyright © 2012-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright © 2012-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -22,20 +22,20 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-gensymbols 1 2013\-09\-06 "Debian Project" "dpkg �桼�ƥ���ƥ�"
-.SH ̾��
-dpkg\-gensymbols \- ����ܥ�ե����� (��ͭ�饤�֥��ΰ�¸����) ������
+.TH dpkg\-gensymbols 1 2014\-12\-29 "Debian Project" "dpkg ユーティリティ"
+.SH 名前
+dpkg\-gensymbols \- シンボルファイル (共有ライブラリの依存情報) の生成
 .
-.SH ��
+.SH 書式
 \fBdpkg\-gensymbols\fP [\fIoption\fP...]
 .
-.SH ����
-\fBdpkg\-gensymbols\fP �ϰ��Ū�ʥӥ�ɥĥ꡼ (�ǥե���ȤǤ� debian/tmp)
-�ʲ��ˤ���饤�֥���õ�������������ξ���򵭺ܤ��� \fIsymbols\fP �ե�������������롣���Υե����뤬���Ǥʤ���硢�ե�����ϥӥ�ɥĥ꡼��
-DEBIAN ���֥ǥ��쥯�ȥ�˥��󥹥ȡ��뤵�졢�ǽ�Ū�˥ѥå��������������ե�����˴ޤޤ�롣
+.SH 説明
+\fBdpkg\-gensymbols\fP は一時的なビルドツリー (デフォルトでは debian/tmp)
+以下にあるライブラリを探しだし、それらの情報を記載した \fIsymbols\fP ファイルを生成する。このファイルが空でない場合、ファイルはビルドツリーの
+DEBIAN サブディレクトリにインストールされ、最終的にパッケージの制御情報ファイルに含まれる。
 .P
-�����Υե�����������κݤˤϡ����Ͼ���Ȥ��ơ����ƥʤˤ�ä��󶡤���륷��ܥ�ե����뤬�Ѥ����롣����ܥ�ե�����Ȥ��ơ��ʲ��Υե����뤬��ǧ�����
-(�ǽ�˸��Ĥ��ä��ե����뤬�Ѥ�����):
+これらのファイルの生成の際には、入力情報として、メンテナによって提供されるシンボルファイルが用いられる。シンボルファイルとして、以下のファイルが確認される
+(最初に見つかったファイルが用いられる):
 .IP \(bu 4
 debian/\fIpackage\fP.symbols.\fIarch\fP
 .IP \(bu 4
@@ -53,10 +53,10 @@ without breaking backwards compatibility. It's the responsibility of the
 maintainer to keep those files up\-to\-date and accurate, but
 \fBdpkg\-gensymbols\fP helps with that.
 .P
-�������줿����ܥ�ե����뤬���ƥʤ��󶡤����ΤȰۤʤäƤ�����硢\fBdpkg\-gensymbols\fP
-�������κ�ʬ��ɽ�����롣����������̤ξ��ϡ��������Ԥ����� (�ɤ����٤��̤����̤ȸ��ʤ����ˤĤ��Ƥ�Ĵ����ǽ�Ǥ��롣\fB\-c\fP
-���ץ����򻲾ȤΤ���)��
-.SH ����ܥ�ե�����Υ��ƥʥ�
+生成されたシンボルファイルがメンテナが提供するものと異なっていた場合、\fBdpkg\-gensymbols\fP
+は双方の差分を表示する。相違点が大量の場合は、処理を失敗させる (どの程度の量を大量と見なすかについては調整可能である。\fB\-c\fP
+オプションを参照のこと)。
+.SH シンボルファイルのメンテナンス
 The symbols files are really useful only if they reflect the evolution of
 the package through several releases. Thus the maintainer has to update them
 every time that a new symbol is added so that its associated minimal version
@@ -70,12 +70,14 @@ needed: it's recommended for example to drop the Debian revision from the
 minimal version so that backports with a lower version number but the same
 upstream version still satisfy the generated dependencies.  If the Debian
 revision can't be dropped because the symbol really got added by the Debian
-specific change, then one should suffix the version with "~".
+specific change, then one should suffix the version with \(oq\fB~\fP\(cq.
 .P
-����ܥ�ե�����˲��餫�Υѥå���Ŭ�Ѥ������ˡ����ƥʤ������ˤ��줬ɬ�פ��ɤ�������ٳ�ǧ���뤳�ȡ���������ܥ뤬�������뤳�Ȥ����ꤵ��Ƥ��ʤ����ᡢ�ѥå��Ͽ������Ԥ��ɲä��������α���Τ����ۤǤ��롣
+シンボルファイルに何らかのパッチを適用する前に、メンテナは本当にそれが必要かどうかを再度確認すること。公開シンボルが削除されることは想定されていないため、パッチは新しい行を追加するだけに留めるのが理想である。
 .P
-����ܥ�ե�����˥����Ȥ򵭺ܤ��뤳�Ȥ�Ǥ��롣'#' ����Ϥޤ�Ԥ�'#include' (\fBUsing includes\fP ���������򻲾�)
-����Ϥޤ����Τ����������Ȥȸ��ʤ���롣'#MISSING:' ����Ϥޤ�Ԥϡ��ʤ��ʤä�����ܥ�ˤĤ��Ƶ��ܤ��줿���̤ʥ����Ȥ��̣���롣
+Note that you can put comments in symbols files: any line with \(oq#\(cq as
+the first character is a comment except if it starts with \(oq#include\(cq
+(see section \fBUsing includes\fP).  Lines starting with \(oq#MISSING:\(cq are
+special comments documenting symbols that have disappeared.
 .P
 Do not forget to check if old symbol versions need to be increased.  There
 is no way \fBdpkg\-gensymbols\fP can warn about this. Blindly applying the diff
@@ -83,12 +85,12 @@ or assuming there is nothing to change if there is no diff, without checking
 for such changes, can lead to packages with loose dependencies that claim
 they can work with older packages they cannot work with. This will introduce
 hard to find bugs with (partial)  upgrades.
-.SS "#PACKAGE# �ִ��λ���"
+.SS "#PACKAGE# 置換の使用"
 .P
-���ǤϤ��뤬���������ƥ�����ˤ�äƥ饤�֥��̾���ۤʤ��礬���롣����ܥ�ե�����˥ѥå�����̾��ϡ��ɥ����ɤ��뤳�Ȥ��򤱤뤿�ᡢ\fI#PACKAGE#\fP
-�ޡ�������Ѥ��뤳�Ȥ��Ǥ��롣����ϥ���ܥ�ե�����Υ��󥹥ȡ�����˼ºݤΥѥå�����̾���ִ�����롣\fI#MINVER#\fP
-�ޡ����Ȱۤʤꡢ\fI#PACKAGE#\fP ���Х��ʥ�ѥå�������Υ���ܥ�ե�����˸���뤳�ȤϷ褷�Ƥʤ���
-.SS ����ܥ륿���λ���
+稀ではあるが、アーキテクチャによってライブラリ名が異なる場合がある。シンボルファイルにパッケージ名をハードコードすることを避けるため、\fI#PACKAGE#\fP
+マークを使用することができる。これはシンボルファイルのインストール時に実際のパッケージ名に置換される。\fI#MINVER#\fP
+マークと異なり、\fI#PACKAGE#\fP がバイナリパッケージ内のシンボルファイルに現れることは決してない。
+.SS シンボルタグの使用
 .P
 Symbol tagging is useful for marking symbols that are special in some way.
 Any symbol can have an arbitrary number of tags associated with it. While
@@ -96,20 +98,20 @@ all tags are parsed and stored, only some of them are understood by
 \fBdpkg\-gensymbols\fP and trigger special handling of the symbols. See
 subsection \fBStandard symbol tags\fP for reference of these tags.
 .P
-�����ϥ���ܥ�̾���������֤��� (����ʸ����֤ˤ���뤳�ȤϤǤ��ʤ�)��\fB(\fP ����Ϥޤ�\fB)\fP �ǽ���ꡢ�֤˺��� 1
-�ĤΥ����򵭺ܤ���ɬ�פ����롣ʣ���Υ����� \fB|\fP ʸ���Ƕ��ڤ롣�ƥ����ˤϡ�����̾�Ȥδ֤� \fB=\fP
-ʸ���Ƕ��ڤä��������ͤ����ꤹ�뤳�Ȥ�Ǥ��롣����̾���ͤˤϡ����̤�ʸ�� \fB)\fP \fB|\fP \fB=\fP
-�������Ǥ�դ�ʸ����ޤ�뤳�Ȥ��Ǥ��롣������³������ܥ�̾�ˤϡ�\fB'\fP �⤷���� \fB"\fP
-ʸ���ǥ������Ȥ��뤳�Ȥǡ�����ʸ����ޤ�뤳�Ȥ��Ǥ��롣������������ܥ�˥��������ꤵ��Ƥ��ʤ��ä���硢�������Ȥϥ���ܥ�̾�ΰ����ȸ��ʤ��졢�ǽ�Υ��ڡ����ޤǤ�����ܥ�̾��ǧ������롣
+タグはシンボル名の前に設置され (空白文字を間にいれることはできない)、\fB(\fP から始まり\fB)\fP で終わり、間に最低 1
+つのタグを記載する必要がある。複数のタグは \fB|\fP 文字で区切る。各タグには、タグ名との間を \fB=\fP
+文字で区切った形式で値を設定することもできる。タグ名と値には、特別な文字 \fB)\fP \fB|\fP \fB=\fP
+を除き、任意の文字を含めることができる。タグに続くシンボル名には、\fB'\fP もしくは \fB"\fP
+文字でクオートすることで、空白文字を含めることができる。ただし、シンボルにタグが設定されていなかった場合、クオートはシンボル名の一部と見なされ、最初のスペースまでがシンボル名と認識される。
 .P
  (tag1=i am marked|tag name with space)"tagged quoted symbol"@Base 1.0
  (optional)tagged_unquoted_symbol@Base 1.0 1
  untagged_symbol@Base 1.0
 .P
-������� 1 ���ܤΥ���ܥ�� \fItagged quoted symbol\fP �Ȥ���̾���Ǥ��ꡢ\fIi am marked\fP �Ȥ����ͤ����
-\fItag1\fP �Ȥ��������� \fItag name with space\fP �Ȥ����ͤ�����ʤ������� 2 �Ĥ����ꤵ��Ƥ��롣2 ���ܤΥ���ܥ��
-\fItagged_unquoted_symbol\fP �Ȥ���̾���� \fIoptional\fP
-�Ȥ���̾���Υ��������ꤵ��Ƥ��롣�Ǹ�Υ���ܥ�ϰ���Ū�ʥ����Τʤ�����ܥ����Ǥ��롣
+設定例の 1 番目のシンボルは \fItagged quoted symbol\fP という名前であり、\fIi am marked\fP という値を持つ
+\fItag1\fP というタグと \fItag name with space\fP という値を持たないタグの 2 つが設定されている。2 番目のシンボルは
+\fItagged_unquoted_symbol\fP という名前で \fIoptional\fP
+という名前のタグが設定されている。最後のシンボルは一般的なタグのないシンボルの例である。
 .P
 Since symbol tags are an extension of the \fBdeb\-symbols\fP(5) format, they can
 only be part of the symbols files used in source packages (those files
@@ -121,55 +123,85 @@ requirements of their standard tags and strips all tags from the output. On
 the contrary, in template mode (\fB\-t\fP) all symbols and their tags (both
 standard and unknown ones)  are kept in the output and are written in their
 original form as they were loaded.
-.SS ɸ�ॷ��ܥ륿��
+.SS 標準シンボルタグ
 .TP 
 \fBoptional\fP
-optional �ȥޡ������줿����ܥ�Ϥ��ĤǤ�饤�֥�꤫�������뤳�Ȥ��Ǥ��롣����ˤ�ä� \fBdpkg\-gensymbols\fP
-�˼��Ԥ��뤳�ȤϷ褷�Ƥʤ�����������������줿 optional �Υ���ܥ�ϡ��������ѥå������Υ�ӥ����ơ��ˤ����ơ���ʬ������� MISSING
-�Ȥ��ƻĤ�³���롣���ε�ư�ϡ����ƥʤ��Ф��ơ����Υ���ܥ�򥷥�ܥ�ե����뤫�������뤫�����٥饤�֥����ɲä���ɬ�פ����뤳�Ȥ����Τ��뤿��˹Ԥ��롣������
-MISSING �Ȥ���������Ƥ��� optional ����ܥ뤬�������Υ�ӥ��������褷�����ϡ��Ǿ��С��������ѹ������� "existing"
-���ơ��������ᤵ��롣
+A symbol marked as optional can disappear from the library at any time and
+that will never cause \fBdpkg\-gensymbols\fP to fail. However, disappeared
+optional symbols will continuously appear as MISSING in the diff in each new
+package revision.  This behaviour serves as a reminder for the maintainer
+that such a symbol needs to be removed from the symbol file or readded to
+the library. When the optional symbol, which was previously declared as
+MISSING, suddenly reappears in the next revision, it will be upgraded back
+to the \(lqexisting\(rq status with its minimum version unchanged.
 
-���Υ����ϥ���ܥ�κ���� ABI �θߴ�����»�ʤ�ʤ��褦�ʥץ饤�١��Ȥʥ���ܥ��ͭ�ѤǤ��롣�㤨�С�C++
-�ƥ�ץ졼�ȤΥ��󥹥��󥹲���¿���������ʬ�व��롣����¾�Υ�����Ʊ�͡����Υ����ˤ�Ǥ�դ��ͤ����ꤹ�뤳�Ȥ��Ǥ��롣����ϥ���ܥ뤬 optional
-�ȸ��ʤ������ͳ�򼨤�����˻��Ѥ��뤳�Ȥ��Ǥ��롣
+このタグはシンボルの削除が ABI の互換性を損なわないようなプライベートなシンボルに有用である。例えば、C++
+テンプレートのインスタンス化の多くがこれに分類される。その他のタグと同様、このタグには任意の値を設定することができる。これはシンボルが optional
+と見なされる理由を示すために使用することができる。
 .TP 
-\fBarch=\fP\fIarchitecture list\fP
-���Υ����ˤ�ꡢ����ܥ뤬¸�ߤ��Ƥ���Ϥ��Υ������ƥ��������ꤹ�뤳�Ȥ���ǽ�ˤʤ롣�饤�֥���ȯ�����줿����ܥ�ˤ�ꡢ����ܥ�Υꥹ�Ȥ��������줿�ݤˤ⡢���ߤΥۥ��ȤΥ������ƥ�����˴�Ϣ���ʤ��������ƥ�����˸�ͭ�Υ���ܥ�ϡ�¸�ߤ��Ƥ��ʤ���ΤȤ��ư����롣���ߤΥۥ��ȤΥ������ƥ�����˴�Ϣ���륢�����ƥ�����˸�ͭ�Υ���ܥ뤬�饤�֥���¸�ߤ��Ƥ��ʤ����ϡ�����ܥ뤬¸�ߤ��ʤ������̾�ν������Ԥ�졢�����餯�ϡ�\fBdpkg\-gensymbols\fP
-����ߤ�������������Ȥˤʤ���������������������ƥ������¸�Υ���ܥ뤬¸�ߤ��Ƥ�����ˡ�¸�ߤ��Ƥ���Ϥ����Ȥ���Ƥ��ʤ����
-(���ߤΥۥ��ȤΥ������ƥ����㤬�����˵��ܤ���Ƥ��ʤ����) �ϡ��������ƥ��������¸�Ȥ��ư�����
-(�������ƥ�����Υ����κ���Ȥ����ѹ����Ԥ��뤿�ᡢ����ܥ�Ϻ�ʬ����Ȥ��Ƹ����) ��������������ܥ�Ȥ��Ƥϰ����ʤ���
+\fBarch=\fP\fIarchitecture\-list\fP
+.TQ
+\fBarch\-bits=\fP\fIarchitecture\-bits\fP
+.TQ
+\fBarch\-endian=\fP\fIarchitecture\-endianness\fP
+These tags allow one to restrict the set of architectures where the symbol
+is supposed to exist. The \fBarch\-bits\fP and \fBarch\-endian\fP tags are supported
+since dpkg 1.18.0. When the symbols list is updated with the symbols
+discovered in the library, all arch\-specific symbols which do not concern
+the current host architecture are treated as if they did not exist. If an
+arch\-specific symbol matching the current host architecture does not exist
+in the library, normal procedures for missing symbols apply and it may cause
+\fBdpkg\-gensymbols\fP to fail. On the other hand, if the arch\-specific symbol
+is found when it was not supposed to exist (because the current host
+architecture is not listed in the tag or does not match the endianness and
+bits), it is made arch neutral (i.e. the arch, arch\-bits and arch\-endian
+tags are dropped and the symbol will appear in the diff due to this change),
+but it is not considered as new.
 
-�ǥե���Ȥ���ƥ�ץ졼�ȥ⡼�ɤ�ư���ݤˤϡ��������ƥ������ͭ�Υ���ܥ����ǡ����ߤΥۥ��ȤΥ������ƥ�����˹��פ����ΤΤߤ�����ܥ�ե�����˽񤭹��ޤ�롣�������ƥ�ץ졼�ȥ⡼�ɤ�ư��Ƥ�����ϡ��������ƥ������ͭ�Υ���ܥ�Τ��٤�
-(�ۤʤ륢�����ƥ�����Τ�Τ�ޤ�) ������ܥ�ե�����˽񤭹��ޤ�롣
+デフォルトの非テンプレートモードで動作する際には、アーキテクチャ固有のシンボルの中で、現在のホストのアーキテクチャに合致するもののみがシンボルファイルに書き込まれる。一方、テンプレートモードで動作している場合は、アーキテクチャ固有のシンボルのすべて
+(異なるアーキテクチャのものも含む) がシンボルファイルに書き込まれる。
 
-The format of \fIarchitecture list\fP is the same as the one used in the
+The format of \fIarchitecture\-list\fP is the same as the one used in the
 \fBBuild\-Depends\fP field of \fIdebian/control\fP (except the enclosing square
 brackets []). For example, the first symbol from the list below will be
 considered only on alpha, any\-amd64 and ia64 architectures, the second only
 on linux architectures, while the third one anywhere except on armel.
 
- (arch=alpha any\-amd64 ia64)a_64bit_specific_symbol@Base 1.0
+ (arch=alpha any\-amd64 ia64)64bit_specific_symbol@Base 1.0
  (arch=linux\-any)linux_specific_symbol@Base 1.0
  (arch=!armel)symbol_armel_does_not_have@Base 1.0
+
+The \fIarchitecture\-bits\fP is either \fB32\fP or \fB64\fP.
+
+ (arch\-bits=32)32bit_specific_symbol@Base 1.0
+ (arch\-bits=64)64bit_specific_symbol@Base 1.0
+
+The \fIarchitecture\-endianness\fP is either \fBlittle\fP or \fBbig\fP.
+
+ (arch\-endian=little)little_endian_specific_symbol@Base 1.0
+ (arch\-endian=big)big_endian_specific_symbol@Base 1.0
+
+Multiple restrictions can be chained.
+
+ (arch\-bits=32|arch\-endian=little)32bit_le_symbol@Base 1.0
 .TP 
 \fBignore\-blacklist\fP
 dpkg\-gensymbols
-�ϡ��ġ����������ξܺ٤ʼ����������Ѱʳ��Ǥ��̾�¸�ߤ��ʤ����ᡢ����ܥ�ե��������¸�ߤ��٤��ǤϤʤ�����ܥ뤫��ʤ�����Ū�ʥ֥�å��ꥹ�Ȥ���äƤ��롣�ʤ�餫����ͳ�ˤ�ꡢ����ܥ�ե�����ˤ�����������ܥ�ΰ�Ĥ��ܵ��ǲä��������ϡ�\fBignore\-blacklist\fP
-�����򥷥�ܥ���դ���ɬ�פ����롣����ϡ� libgcc �Τ褦�����٥�ʥġ����������Υ饤�֥��ΰ�����ɬ�פʾ�礬���롣
+は、ツールチェインの詳細な実装の副作用以外では通常存在しないため、シンボルファイル中に存在すべきではないシンボルからなる内部的なブラックリストを持っている。なんらかの理由により、シンボルファイルにこうしたシンボルの一つを本気で加えたい場合は、\fBignore\-blacklist\fP
+タグをシンボルに付ける必要がある。これは、 libgcc のような低レベルなツールチェインのライブラリの一部で必要な場合がある。
 .TP 
 \fBc++\fP
-\fIc++\fP ����ܥ�ѥ�����򼨤����ʲ��� \fB����ܥ�ѥ�����λ���\fP ���֥��������⻲�ȤΤ��ȡ�
+\fIc++\fP シンボルパターンを示す。以下の \fBシンボルパターンの使用\fP サブセクションも参照のこと。
 .TP 
 \fBsymver\fP
-\fIsymver\fP (����ܥ�С������) ����ܥ�ѥ�����򼨤����ʲ��� \fB����ܥ�ѥ�����λ���\fP ���֥��������⻲�ȤΤ��ȡ�
+\fIsymver\fP (シンボルバージョン) シンボルパターンを示す。以下の \fBシンボルパターンの使用\fP サブセクションも参照のこと。
 .TP 
 \fBregex\fP
-\fIregex\fP ����ܥ�ѥ�����򼨤����ʲ��� \fB����ܥ�ѥ�����λ���\fP ���֥��������⻲�ȤΤ��ȡ�
-.SS ����ܥ�ѥ�����λ���
+\fIregex\fP シンボルパターンを示す。以下の \fBシンボルパターンの使用\fP サブセクションも参照のこと。
+.SS シンボルパターンの使用
 .P
-ɸ�ॷ��ܥ�Ȱۤʤꡢ�ѥ�����ˤϥ饤�֥�꤬�������ݡ��Ȥ���ʣ���μ¥���ܥ뤬�ޤޤ줦�롣\fBdpkg\-gensymbols\fP
-�ϡ�����ܥ�ե�����ˤ�ä�����Υ���ܥ�ȴ�Ϣ�դ�����\fI���ʤ�\fP�Ƽ¥���ܥ�ˤĤ��ơ��ѥ�����ȤΥޥå��󥰤�Ԥ����ǽ�˥ѥ�����˥ޥå����������ǡ�����ܥ�δ���Ū�ʵ�ǽ�Ȥ��ơ��ѥ�����Υ��������°�����Ѥ����롣�ѥ�����˥ޥå����ʤ��ä���硢���Υ���ܥ�Ͽ���������ܥ�ȸ��ʤ���롣
+標準シンボルと異なり、パターンにはライブラリがエクスポートする複数の実シンボルが含まれうる。\fBdpkg\-gensymbols\fP
+は、シンボルファイルによって特定のシンボルと関連付けられて\fIいない\fP各実シンボルについて、パターンとのマッチングを行う。最初にパターンにマッチした時点で、シンボルの基本的な機能として、パターンのタグおよび属性が用いられる。パターンにマッチしなかった場合、そのシンボルは新しいシンボルと見なされる。
 
 A pattern is considered lost if it does not match any symbol in the
 library. By default this will trigger a \fBdpkg\-gensymbols\fP failure under
@@ -187,17 +219,17 @@ the specification serves as an expression to be matched against
 \fIname@version\fP of the real symbol. In order to distinguish among different
 pattern types, a pattern will typically be tagged with a special tag.
 
-���ߤΤȤ�����\fBdpkg\-gensymbols\fP �� 3 �Ĥδ���Ū�ʥѥ����󥿥��פ򥵥ݡ��Ȥ��Ƥ���:
+現在のところ、\fBdpkg\-gensymbols\fP は 3 つの基本的なパターンタイプをサポートしている:
 .TP  3
 \fBc++\fP
-���Υѥ������ \fIc++\fP �����򼨤�������� (\fBc++filt\fP(1) �桼�ƥ���ƥ��ˤ�äƽ��Ϥ��줿) �ǥ����ɤ��줿
-(demangled) ����ܥ�̾�ˤ�� C++
-����ܥ�ˤΤߥޥå����롣���Υѥ�����ϡ��ǥ����ɤ��줿̾����Ʊ��Ǥ��뤬�����󥳡��ɤ��줿����ܥ�̾���������ƥ�����ˤ�äƤФ�Ф�Ǥ���褦�ʥ���ܥ�˥ޥå�����������������ͭ�ѤǤ��롣������������ܥ�ΰ�ĤΥ��롼�פ���\fInon\-virtual
+このパターンは \fIc++\fP タグを示す。これは (\fBc++filt\fP(1) ユーティリティによって出力された) デコードされた
+(demangled) シンボル名による C++
+シンボルにのみマッチする。このパターンは、デコードされた名前は同一であるが、エンコードされたシンボル名がアーキテクチャによってばらばらであるようなシンボルにマッチさせたい場合に非常に有用である。こうしたシンボルの一つのグループが、\fInon\-virtual
 thunks\fP
-�ȸƤФ���Τǡ����󥳡��ɤ��줿̾���˥������ƥ������¸�Υ��ե��åȤ������ޤ�륷��ܥ�Ǥ��롣���Υѥ�����μ���Ȥ��ơ����������ɷѾ��ˤ����ơ����۷Ѿ��Ǥʤ����󥯥���ܥ��ɬ�פȤ��벾�ۥǥ��ȥ饯�����󤲤��롣32
-�ӥåȥ������ƥ������� _ZThn8_N3NSB6ClassDD1Ev@Base �Ȥʤ륷��ܥ뤬 64 �ӥåȤǤ�
-_ZThn16_N3NSB6ClassDD1Ev@Base �ȤʤäƤ��ޤ����Ǥ��äƤ⡢������ñ��� \fIc++\fP
-�ѥ�����ǥޥå������뤳�Ȥ��Ǥ��롣
+と呼ばれるもので、エンコードされた名前にアーキテクチャ依存のオフセットが埋め込まれるシンボルである。このパターンの実例として、ダイアモンド継承において、仮想継承でないサンクシンボルを必要とする仮想デストラクタが挙げられる。32
+ビットアーキテクチャ上で _ZThn8_N3NSB6ClassDD1Ev@Base となるシンボルが 64 ビットでは
+_ZThn16_N3NSB6ClassDD1Ev@Base となってしまう場合であっても、これらを単一の \fIc++\fP
+パターンでマッチさせることができる。
 .RS
 .PP
 libdummy.so.1 libdummy1 #MINVER#
@@ -205,19 +237,19 @@ libdummy.so.1 libdummy1 #MINVER#
  (c++)"non\-virtual thunk to NSB::ClassD::~ClassD()@Base" 1.0
  [...]
 .P
-�嵭�Υǥ����ɤ��줿̾���ϡ��ʲ��Υ��ޥ�ɤ�¹Ԥ��뤳�ȤǼ����Ǥ���:
+上記のデコードされた名前は、以下のコマンドを実行することで取得できる:
 .PP
  $ echo '_ZThn8_N3NSB6ClassDD1Ev@Base' | c++filt
 .P
-���󥳡��ɤ��줿̾�����饤�֥����ǰ�դ��������Ƥ������Ǥ��äƤ⡢�ǥ����ɤ��줿̾������̤Ǥ���ɬ�פϤʤ������Ĥ��μ¥���ܥ�Υǥ����ɤ��줿̾����Ʊ���Ǥ�����⤢�롣����ϡ��㤨�в��۷Ѿ��Ǥʤ����󥯥���ܥ��ʣ���ʷѾ������꤬�Ԥ��Ƥ�����䡢��Ⱦ�Υ��󥹥ȥ饯���ȥǥ��ȥ饯���ˤĤ��Ƹ�����
-(��������g++ �ϡ��������Ф����̾� 2 �Ĥμ¥���ܥ����������)���������������������ͤ� ABI
-��٥��ȯ�����Ƥ����ΤǤ��ꡢ����ܥ�ե�������ʼ����㲼�������ΤǤϤʤ���
+エンコードされた名前がライブラリ内で一意に定義されていた場合であっても、デコードされた名前が一位である必要はない。幾つかの実シンボルのデコードされた名前が同じである場合もある。これは、例えば仮想継承でないサンクシンボルに複雑な継承の設定が行われている場合や、大半のコンストラクタとデストラクタについて言える
+(ただし、g++ は、これらに対して通常 2 つの実シンボルを生成する)。ただし、こうした衝突は ABI
+レベルで発生しているものであり、シンボルファイルの品質を低下させるものではない。
 .RE
 .TP 
 \fBsymver\fP
-���Υѥ�����ϡ�\fIsymver\fP
-�����򼨤���������ȥ��ƥʥ󥹤���Ƥ���饤�֥��Ǥϡ�����ܥ뤬�С�������������Ƥ��ꡢ�ƥС�����󤬥���ܥ���ɲä��줿���åץ��ȥ꡼��ΥС��������б��դ����Ƥ��롣���ξ�硢\fIsymver\fP
-�ѥ��������Ѥ��뤳�Ȥǡ�����ΥС��������б��դ���줿Ǥ�դΥ���ܥ�˥ޥå������뤳�Ȥ���ǽ�Ǥ��롣�ʲ�����򼨤�:
+このパターンは、\fIsymver\fP
+タグを示す。きちんとメンテナンスされているライブラリでは、シンボルがバージョン管理されており、各バージョンがシンボルの追加されたアップストリームのバージョンに対応付けられている。この場合、\fIsymver\fP
+パターンを使用することで、特定のバージョンに対応付けられた任意のシンボルにマッチさせることが可能である。以下に例を示す:
 .RS
 .PP
 libc.so.6 libc6 #MINVER#
@@ -226,113 +258,113 @@ libc.so.6 libc6 #MINVER#
  (symver)GLIBC_2.7 2.7
  access@GLIBC_2.0 2.2
 .PP
-GLIBC_2.0 ����� GLIBC_2.7 �ΥС��������б��դ���줿���٤ƤΥ���ܥ�ϡ�access@GLIBC_2.0
-����ܥ�����������С�����󤬳ơ� 2.0 ����� 2.7 �Ȥʤ롣��Ԥϡ�"(symver)GLIBC_2.0" �ѥ�����˥ޥå����뤬��libc6
-�С������ 2.2 ������¤ΰ�¸�ط��Ȥʤ롣����ϡ�����ܥ�λ��꤬�ѥ�����ˤ��ޥå����ͥ�褵��뤿��Ǥ��롣
+GLIBC_2.0 および GLIBC_2.7 のバージョンに対応付けられたすべてのシンボルは、access@GLIBC_2.0
+シンボルを除き、最低バージョンが各々 2.0 および 2.7 となる。後者は、"(symver)GLIBC_2.0" パターンにマッチするが、libc6
+バージョン 2.2 が最低限の依存関係となる。これは、シンボルの指定がパターンによるマッチより優先されるためである。
 .P
-�Ť������Υ磻��ɥ����ɤΥѥ����� (����ܥ�̾�ե�����ɤ� "*@version" �����) �ϡ�"(symver|optional)version"
-�ϡ��ޤ����ݡ��Ȥ���Ƥ��뤬���ѻ�ͽ��ȤʤäƤ�������α�դ��뤳�ȡ��㤨�С�"*@GLIBC_2.0 2.0"
-�Ȥ���ɽ���ϡ�Ʊ��ư��򤵤������ΤǤ���С�"(symver|optional)GLIBC_2.0 2.0" �˽������٤��Ǥ��롣
+古い形式のワイルドカードのパターン (シンボル名フィールドで "*@version" を指定) は、"(symver|optional)version"
+は、まだサポートされているが、廃止予定となっている点に留意すること。例えば、"*@GLIBC_2.0 2.0"
+という表記は、同じ動作をさせたいのであれば、"(symver|optional)GLIBC_2.0 2.0" に修正すべきである。
 .RE
 .TP 
 \fBregex\fP
-����ɽ���ѥ������ \fIregex\fP �����ǻ��ꤵ��롣����ϡ�����ܥ�̾�ե�����ɤǻ��ꤵ�줿 perl
-����������ɽ���˥ޥå����롣����ɽ���Ǥ��뤿�ᡢ\fI^\fP ʸ������Ϥ�뤳�Ȥ�˺��ʤ����ȡ�����ʤ��С��¥���ܥ� \fIname@version\fP
-��Ǥ�դ���ʬ�˥ޥå������ǽ�������롣�ʲ�����򼨤�:
+正規表現パターンは \fIregex\fP タグで指定される。これは、シンボル名フィールドで指定された perl
+形式の正規表現にマッチする。正規表現であるため、\fI^\fP 文字から始めることを忘れないこと、さもなくば、実シンボル \fIname@version\fP
+の任意の部分にマッチする可能性がある。以下に例を示す:
 .RS
 .PP
 libdummy.so.1 libdummy1 #MINVER#
  (regex)"^mystack_.*@Base$" 1.0
  (regex|optional)"private" 1.0
 .P
-1 ���ܤΥѥ�����ˤϡ�"mystack_new@Base", "mystack_push@Base", "mystack_pop@Base"
-�Τ褦�ʥ���ܥ뤬�ޥå����뤬��"ng_mystack_new@Base" �ϥޥå����ʤ���2 ���ܤΥѥ�����ˤϡ�"private"
-�Ȥ���ʸ�����ޤ�̾���Τ��٤ƤΥ���ܥ�˥ޥå������ޥå���������ܥ�̾�� \fIoptional\fP �����˰����Ѥ���롣
+1 番目のパターンには、"mystack_new@Base", "mystack_push@Base", "mystack_pop@Base"
+のようなシンボルがマッチするが、"ng_mystack_new@Base" はマッチしない。2 番目のパターンには、"private"
+という文字列を含む名前のすべてのシンボルにマッチし、マッチしたシンボル名が \fIoptional\fP タグに引き継がれる。
 .RE
 .P
-���Ҥ�������Ū�ʥѥ�����ϡ����������Ȥ��¤�ʣ�礷���Ѥ��Ƥ�褤�����ξ�硢�ѥ�����ϥ����ǻ��ꤵ�줿��˽�������롣�ʲ�����ˤ����ơ�
+前述した基本的なパターンは、整合性がとれる限り複合して用いてもよい。その場合、パターンはタグで指定された順に処理される。以下の例において、
 .PP
  (c++|regex)"^NSA::ClassA::Private::privmethod\ed\e(int\e)@Base" 1.0
  (regex|c++)N3NSA6ClassA7Private11privmethod\edEi@Base 1.0
 .P
-ξ���Υѥ�����Ȥ⡢"_ZN3NSA6ClassA7Private11privmethod1Ei@Base" ����ܥ��
-"_ZN3NSA6ClassA7Private11privmethod2Ei@Base" ����ܥ�˥ޥå����롣1
-���ܤΥѥ�����Ǥϡ�����Υ���ܥ�̾�� 1 ���ܤ� C++
-����ܥ�˥ǥ����ɤ��졢�ǥ����ɤ��줿����ܥ�̾���Ѥ�������ɽ���ˤ��ޥå����Ԥ��롣������2
-���ܤΥѥ�����˥ޥå�������硢����ɽ��������Υ���ܥ�̾�˥ޥå��������θ夽�Υ���ܥ�̾���ǥ����ɤ��줿��ǡ�C++
-����ܥ�̾�Ȥ���ɾ������롣�����줫�δ��ܥѥ�����Υޥå��󥰤˼��Ԥ���ȡ����Τ����Ԥȸ��ʤ���롣���Τ��ᡢ�㤨��
-"__N3NSA6ClassA7Private11privmethod\edEi@Base" �ϡ������� C++
-����ܥ�Ǥʤ����ᡢ�ɤ���Υѥ�����ˤ�ޥå����ʤ��ȸ��ʤ���롣
+両方のパターンとも、"_ZN3NSA6ClassA7Private11privmethod1Ei@Base" シンボルと
+"_ZN3NSA6ClassA7Private11privmethod2Ei@Base" シンボルにマッチする。1
+番目のパターンでは、本来のシンボル名が 1 番目に C++
+シンボルにデコードされ、デコードされたシンボル名を用いて正規表現によりマッチが行われる。一方、2
+番目のパターンにマッチした場合、正規表現が本来のシンボル名にマッチし、その後そのシンボル名がデコードされた上で、C++
+シンボル名として評価される。いずれかの基本パターンのマッチングに失敗すると、全体が失敗と見なされる。そのため、例えば
+"__N3NSA6ClassA7Private11privmethod\edEi@Base" は、正しい C++
+シンボルでないため、どちらのパターンにもマッチしないと見なされる。
 .P
-����Ū�ˡ����٤ƤΥѥ�����ϥ����ꥢ�� (����Ū�� \fIc++\fP �� \fIsymver\fP) �����ѥѥ����� (\fIregex\fP
-�����Ǥ�դδ��ܥѥ�������Ȥ߹�碌) �Ȥ��� 2 �ĤΥ��롼�פ����̤���롣����Ū�ʥ����ꥢ���١����Υѥ�������Ф���ޥå��󥰤� (O(1))
-�Ǥ��뤿���®�Ǥ��뤬�����ѥѥ�����ϳƥ���ܥ���Ф��� O(N) (N \- ����Ū�ʥѥ�����ο�)
-�Ȥʤ롣���Τ��ᡢ���ѥѥ������¿�Ѥ������ʤ����Ȥ�侩���롣
+一般的に、すべてのパターンはエイリアス (基本的な \fIc++\fP と \fIsymver\fP) と汎用パターン (\fIregex\fP
+および任意の基本パターンの組み合わせ) という 2 つのグループに大別される。基本的なエイリアスベースのパターンに対するマッチングは (O(1))
+であるため高速であるが、汎用パターンは各シンボルに対して O(N) (N \- 汎用的なパターンの数)
+となる。そのため、汎用パターンを多用しすぎないことを推奨する。
 .P
-�Ȥ߹�碌�Υѥ�����Ʊ���¥���ܥ�˥ޥå�������硢�����ꥢ�� (\fIc++\fP��\fIsymver\fP �ν�)
-�����ѥѥ��������ͥ�褵��롣���ѥѥ�����ϡ��ޥå��󥰤���������ޤǡ�����ܥ�ե�����Υƥ�ץ졼�Ȥ˵��ܤ��줿��˥ޥå��󥰤��ߤ롣���������ƥ�ץ졼�ȥե�����Υ���ȥ�˵��ܤ��줿�������Ȥǽ������뤳�ȤϿ侩����ʤ�������ϡ�\fBdpkg\-gensymbols\fP
-����ʬ����������ݤˡ�̾�����ѿ�����ˤʤäƤ��뤳�Ȥ�����Ȥ��Ƥ��뤿��Ǥ��롣
-.SS "include �λ���"
+組み合わせのパターンが同じ実シンボルにマッチした場合、エイリアス (\fIc++\fP、\fIsymver\fP の順)
+が汎用パターンよりも優先される。汎用パターンは、マッチングに成功するまで、シンボルファイルのテンプレートに記載された順にマッチングを試みる。ただし、テンプレートファイルのエントリに記載された順序を手作業で修正することは推奨されない。これは、\fBdpkg\-gensymbols\fP
+が差分を生成する際に、名前が英数字順になっていることを前提としているためである。
+.SS "include の使用"
 .P
-�������ݡ��Ȥ��줿��Ϣ�Υ���ܥ뤬�������ƥ�����ˤ��ۤʤäƤ����硢ñ��Υ���ܥ�ե�����Ǥ����ؤʾ�礬���롣���ξ�硢include
-�ǥ��쥯�ƥ��֤ˤ�ꡢ�ʲ��Τ褦����ˡ�ǡ�����������夵���뤳�Ȥ��Ǥ�����⤢��:
+エクスポートされた一連のシンボルがアーキテクチャにより異なっている場合、単一のシンボルファイルでは不便な場合がある。その場合、include
+ディレクティブにより、以下のような方法で、利便性を向上させることができる場合もある:
 .IP \(bu 4
-���Ф������ե�����ζ�����ʬ����Ф�����ǡ�include �ǥ��쥯�ƥ��֤򼡤ˤ褦���Ѥ��ơ������ե������
-\fIpackage\fP.symbols.\fIarch\fP �ե��������������:
+外出ししたファイルの共通部分を取り出した上で、include ディレクティブを次にように用いて、該当ファイルを
+\fIpackage\fP.symbols.\fIarch\fP ファイルに挿入する:
 
 #include "\fIpackages\fP.symbols.common"
 .IP \(bu
-include �ǥ��쥯�ƥ��֤ˤϡ�¾�Υ���ܥ�Ʊ�ͥ������ղä��Ƥ�褤:
+include ディレクティブには、他のシンボル同様タグを付加してもよい:
 
 (tag|..|tagN)#include "file\-to\-include"
 
-��̤Ȥ��ơ�\fIfile\-to\-include\fP ������������뤹�٤ƤΥ���ܥ뤬 \fItag\fP ... \fItagN\fP
-�˥ǥե���Ȥǥ����Ť����줿�ȸ��ʤ���롣���ε�ǽ���Ѥ��ơ��ʲ��Τ褦�˶��̤� \fIpackage\fP.symbols
-�ե���������������ǡ�����򥢡����ƥ������ͭ�Υ���ܥ�ե�������������뤳�Ȥ�Ǥ���:
+結果として、\fIfile\-to\-include\fP から挿入されるすべてのシンボルが \fItag\fP ... \fItagN\fP
+にデフォルトでタグづけされたと見なされる。この機能を用いて、以下のように共通の \fIpackage\fP.symbols
+ファイルを作成した上で、それをアーキテクチャ固有のシンボルファイルに挿入することもできる:
 
   common_symbol1@Base 1.0
  (arch=amd64 ia64 alpha)#include "package.symbols.64bit"
  (arch=!amd64 !ia64 !alpha)#include "package.symbols.32bit"
   common_symbol2@Base 1.0
 .P
-����ܥ�ե������ 1 �Ԥ����ɤ߼��졢include �ǥ��쥯�ƥ��֤�����С����ٽ�������롣�Ĥޤꡢ���������ե����������� include
-�ǥ��쥯�ƥ��֤�����¸�ߤ��Ƥ������꤬��񤭤�����ǽ���⤢�ꡢinclude
-�ǥ��쥯�ƥ��֤θ��¸�ߤ��Ƥ�������ˤ�ꡢ�������줿�ե���������꤬��񤭤���뤳�Ȥ⤢�롣���������ե������¸�ߤ���Ǥ�դΥ���ܥ� (�̤�
-#include �ǥ��쥯�ƥ��֤�ޤ�)
-�Ǥϡ��������������ɲä��뤳�Ȥ⡢�Ѿ����줿�������ͤ��񤭤��뤳�Ȥ�Ǥ��뤬������ܥ뤫��Ѿ����줿�����������뤳�ȤϤǤ��ʤ���
+シンボルファイルは 1 行ずつ読み取られ、include ディレクティブがあれば、都度処理される。つまり、挿入されるファイルの設定で include
+ディレクティブの前に存在していた設定が上書きされる可能性もあり、include
+ディレクティブの後に存在している設定により、挿入されたファイルの設定が上書きされることもある。挿入されるファイルに存在する任意のシンボル (別の
+#include ディレクティブを含む)
+では、新しいタグを追加することも、継承されたタグの値を上書きすることもできるが、シンボルから継承されたタグを削除することはできない。
 .P
-�������줿�ե�����ǡ��饤�֥��� SONAME
-��ޤ�إå��Ԥ򷫤��֤����Ȥ��ǽ�Ǥ��롣���ξ�硢�����ޤ��ɤ߹�����إå��ԤϤ��٤ƾ�񤭤���롣������������Ū�ˡ��إå��Ԥν�ʣ���򤱤�٤��Ǥ��롣������򤱤���ˡ�ΰ�Ĥ�ʲ��˼���:
+挿入されたファイルで、ライブラリの SONAME
+を含むヘッダ行を繰り返すことも可能である。その場合、そこまで読み込んだヘッダ行はすべて上書きされる。ただし、一般的に、ヘッダ行の重複は避けるべきである。これを避ける方法の一つを以下に示す:
 .PP
 #include "libsomething1.symbols.common"
  arch_specific_symbol@Base 1.0
-.SS �侩�����饤�֥�����
+.SS 推奨されるライブラリ管理
 .P
-Ŭ�ڤ˰ݻ�����Ƥ���饤�֥�����ħ��ʲ��˼���:
+適切に維持されているライブラリの特徴を以下に示す:
 .IP \(bu 4
-API ���ѹ����ʤ� (��������ܥ�ξü��ϰ��ڤʤ�����������������ܥ뤬�ɲä����ΤߤǤ���)��SONAME ���ѹ��ʳ��˸ߴ�����»�ʤ� API
-���ѹ����Ԥ��ʤ���
+API の変更がなく (公開シンボルの消失は一切なく、新しい公開シンボルが追加されるのみである)、SONAME の変更以外に互換性を損なう API
+の変更が行われない。
 .IP \(bu 4
-����Ū�ˤϡ�ABI �ΰ�������ݻ����뤿�ᡢ����Ū���ѹ��� API �γ�ĥ������ƥ���ܥ�ΥС������������Ԥ��Ƥ��롣
+理想的には、ABI の安定性を維持するため、内部的な変更と API の拡張を除いてシンボルのバージョン管理が行われている。
 .IP \(bu 4
-���������ܥ�򥨥����ݡ��Ȥ��ʤ� (������������ܥ�ϻ���� optional �Υ����Ť��򤷤Ƥ������Ȥ�Ǥ���)��
+非公開シンボルをエクスポートしない (そうしたシンボルは暫定で optional のタグづけをしておくこともできる)。
 .P
-����ܥ�ե��������ƥʥ󥹤����ǡ��ɲä��줿�������줿�ꤷ������ܥ���İ����뤳�Ȥ��񤷤��ʤ������ߴ����Τʤ� API �� ABI
-���ѹ����İ�����Τ��񤷤������ƥʤˤϥ��åץ��ȥ꡼��� changelog
-���ɤ߹���ǡ��侩�����饤�֥������Υ롼�뤬����Ƥ��ʤ�����õ���������Ȥ������롣����Ū�����꤬ȯ�����줿�顢���åץ��ȥ꡼��γ�ȯ�Ԥ����Τ��뤳�ȡ�Debian
-�ȼ��λ����н���⡢���åץ��ȥ꡼��¦�Ǥν��������˾�ޤ�����
-.SH ���ץ����
+シンボルファイルをメンテナンスする上で、追加されたり削除されたりしたシンボルを把握することは難しくないが、互換性のない API や ABI
+の変更を把握するのは難しい。メンテナにはアップストリームの changelog
+を読み込んで、推奨されるライブラリ管理のルールが守られていない点を探しだすことが求められる。潜在的な問題が発見されたら、アップストリームの開発者に通知すること。Debian
+独自の暫定対処よりも、アップストリーム側での修正が常に望ましい。
+.SH オプション
 .TP 
 \fB\-P\fP\fIpackage\-build\-dir\fP
-debian/tmp ������� \fIpackage\-build\-dir\fP ����ǧ���롣
+debian/tmp の代わりに \fIpackage\-build\-dir\fP 内を確認する。
 .TP 
 \fB\-p\fP\fIpackage\fP
-�ѥå�����̾��������롣debian/control �ե������ʣ���ΥХ��ʥ�ѥå����������ܤ���Ƥ��� (�⤷���� debian/control
-�ե����뤬¸�ߤ��ʤ�) ����ɬ�ܤǤ��롣
+パッケージ名を定義する。debian/control ファイルに複数のバイナリパッケージが記載されている (もしくは debian/control
+ファイルが存在しない) 場合は必須である。
 .TP 
 \fB\-v\fP\fIversion\fP
-�ѥå������ΥС�������������롣�ǥե���Ȥ� debian/changelog
-����������줿�С�������Ѥ����롣�������ѥå������ĥ꡼�ʳ��ǸƤӽФ��줿�ݤ�ɬ�ܤǤ��롣
+パッケージのバージョンを定義する。デフォルトは debian/changelog
+から取得されたバージョンが用いられる。ソースパッケージツリー以外で呼び出された際は必須である。
 .TP 
 \fB\-e\fP\fIlibrary\-file\fP
 Only analyze libraries explicitly listed instead of finding all public
@@ -342,7 +374,7 @@ multiple libraries with a single argument (otherwise you need multiple
 \fB\-e\fP).
 .TP 
 \fB\-I\fP\fIfilename\fP
-\fIfilename\fP �򡢥ѥå�������Ʊ�����륷��ܥ�ե��������������ݤΥ�ե���󥹥ե�����Ȥ��ƻ��Ѥ��롣
+\fIfilename\fP を、パッケージに同梱するシンボルファイルを生成する際のリファレンスファイルとして使用する。
 .TP 
 \fB\-O\fP[\fIfilename\fP]
 Print the generated symbols file to standard output or to \fIfilename\fP if
@@ -362,10 +394,10 @@ Moreover, some symbols might be omitted when writing a standard
 symbols are always written to the symbol file template.
 .TP 
 \fB\-c\fP\fI[0\-4]\fP
-�������줿����ܥ�ե������١����Ȥ����Ѥ����ƥ�ץ졼�ȥե��������Ӥ���ݤΥ����å����ܤ�������롣�ǥե���ȤΥ�٥�� 1
-�Ǥ��롣��٥��夲��Ȥ���㤤��٥�Υ����å����ܤ��٤Ƥ˲ä��ơ����¿���Υ����å����Ԥ��롣��٥� 0 ����ꤷ����硢��˼��Ԥ��ʤ�����٥� 1
-�ϡ����Ĥ��Υ���ܥ뤬�ü��������˼��ԤȤʤ롣��٥� 2 �Ͽ���������ܥ뤬�и����Ƥ⼺�ԤȤʤ롣��٥� 3
-�ϥ饤�֥�꤬�ü�����ȼ��ԤȤʤ롣��٥� 4 �ϥ饤�֥�꤬�и��������ˤ⼺�ԤȤʤ롣
+生成されたシンボルファイルをベースとして用いたテンプレートファイルと比較する際のチェック項目を定義する。デフォルトのレベルは 1
+である。レベルを上げるとより低いレベルのチェック項目すべてに加えて、より多くのチェックが行われる。レベル 0 を指定した場合、常に失敗しない。レベル 1
+は、幾つかのシンボルが消失した場合に失敗となる。レベル 2 は新しいシンボルが出現しても失敗となる。レベル 3
+はライブラリが消失すると失敗となる。レベル 4 はライブラリが出現した場合にも失敗となる。
 
 This value can be overridden by the environment variable
 \fBDPKG_GENSYMBOLS_CHECK_LEVEL\fP.
@@ -377,22 +409,22 @@ libraries or new/lost symbols. This option only disables informational
 output but not the checks themselves (see \fB\-c\fP option).
 .TP 
 \fB\-a\fP\fIarch\fP
-����ܥ�ե�����ν����κݤˡ�\fIarch\fP
-��ۥ��ȤΥ������ƥ�����ȸ��ʤ������Υ��ץ����ϡ��Х��ʥ�ե����뤬�������Ѳ�ǽ�ʾ��ˡ�����ܥ�ե�����亹ʬ�������������ݤ˻��Ѥ��롣
+シンボルファイルの処理の際に、\fIarch\fP
+をホストのアーキテクチャと見なす。このオプションは、バイナリファイルが既に利用可能な場合に、シンボルファイルや差分情報を生成する際に使用する。
 .TP 
 \fB\-d\fP
-�ǥХå��⡼�ɤ�ͭ�������롣\fBdpkg\-gensymbols\fP ��ư��򼨤����̤Υ�å�������ɽ������롣
+デバッグモードを有効化する。\fBdpkg\-gensymbols\fP の動作を示す大量のメッセージが表示される。
 .TP 
 \fB\-V\fP
-��Ĺ�⡼�ɤ�ͭ�������롣�������줿����ܥ�ե�����ˤϡ��ѻߤ��줿����ܥ뤬�����ȤȤ��ƻĤ���롣����˥ƥ�ץ졼�ȥ⡼�ɤξ�硢�ѥ����󥷥�ܥ�ˤĤ��ơ��ѥ�����ȥޥå������¥���ܥ�ΰ����⥳���ȤȤ��ƻĤ���롣
+冗長モードを有効化する。生成されたシンボルファイルには、廃止されたシンボルがコメントとして残される。さらにテンプレートモードの場合、パターンシンボルについて、パターンとマッチした実シンボルの一覧もコメントとして残される。
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-������ˡ��ɽ�����ƽ�λ���롣
+利用方法を表示して終了する。
 .TP 
 \fB\-\-version\fP
-�С����������ɽ�����ƽ�λ���롣
+バージョン情報を表示して終了する。
 .
-.SH ��Ϣ����
+.SH 関連項目
 \fBhttps://people.redhat.com/drepper/symbol\-versioning\fP
 .br
 \fBhttps://people.redhat.com/drepper/goodpractice.pdf\fP
@@ -400,14 +432,14 @@ output but not the checks themselves (see \fB\-c\fP option).
 \fBhttps://people.redhat.com/drepper/dsohowto.pdf\fP
 .br
 \fBdeb\-symbols\fP(5), \fBdpkg\-shlibdeps\fP(1).
-.SH ������
-�ⶶ �� <monyo@monyo.com>.
-���� �� <kise@fuyuneko.jp>.
-�ظ� ���� <sekido@mbox.kyoto-inet.or.jp>.
-��ë ��Ÿ <nabe@debian.or.jp>.
-��߷ ˾ <nabetaro@debian.or.jp>.
-���� �� <ishikawa@linux.or.jp>.
-���� ʸ�� <ukai@debian.or.jp>.
-���� ��ͺ <nakano@apm.seikei.ac.jp>.
-.SH ��������
+.SH 翻訳者
+高橋 基信 <monyo@monyo.com>.
+喜瀬 浩 <kise@fuyuneko.jp>.
+関戸 幸一 <sekido@mbox.kyoto-inet.or.jp>.
+鍋谷 栄展 <nabe@debian.or.jp>.
+倉澤 望 <nabetaro@debian.or.jp>.
+石川 睦 <ishikawa@linux.or.jp>.
+鵜飼 文敏 <ukai@debian.or.jp>.
+中野 武雄 <nakano@apm.seikei.ac.jp>.
+.SH 翻訳校正
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

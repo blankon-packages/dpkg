@@ -1,7 +1,8 @@
 .\" dpkg manual page - deb-substvars(5)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
+.\" Copyright Â© 2006-2009,2012-2015 Guillem Jover <guillem@debian.org>
 .\" Copyright Â© 2009-2010 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -22,7 +23,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-substvars 5 15\-07\-2009 "Projet Debian" "Utilitaires de dpkg"
+.TH deb\-substvars 5 2015\-01\-20 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
 deb\-substvars \- Variables de substitution de source Debian
 .
@@ -31,41 +32,41 @@ substvars
 .
 .SH DESCRIPTION
 Avant que \fBdpkg\-source\fP, \fBdpkg\-gencontrol\fP et \fBdpkg\-genchanges\fP
-n'écrivent leurs informations de contrôle (dans le fichier source de
-contrôle \fB.dsc\fP pour \fBdpkg\-source\fP et sur la sortie standard pour
-\fBdpkg\-gencontrol\fP et \fBdpkg\-genchanges\fP), ils réalisent quelques
+n'Ã©crivent leurs informations de contrÃ´le (dans le fichier source de
+contrÃ´le \fB.dsc\fP pour \fBdpkg\-source\fP et sur la sortie standard pour
+\fBdpkg\-gencontrol\fP et \fBdpkg\-genchanges\fP), ils rÃ©alisent quelques
 substitutions de variables dans le fichier de sortie.
 
 Une substitution de variable est de la forme\ : \fB${\fP\fInom\-variable\fP\fB}\fP. Les
-noms de variable consistent en caractères alphanumériques, traits d'union et
-«\ deux points\ »\ ; ils commencent par une lettre ou un chiffre. La
-substitution se fait répétitivement jusqu'à ce qu'il n'en reste aucune à
-faire\ ; le texte entier du champ après la substitution est réexaminé pour
+noms de variable consistent en caractÃ¨res alphanumÃ©riques, traits d'union et
+Â«\ deux points\ Â»\ ; ils commencent par une lettre ou un chiffre. La
+substitution se fait rÃ©pÃ©titivement jusqu'Ã  ce qu'il n'en reste aucune Ã 
+faire\ ; le texte entier du champ aprÃ¨s la substitution est rÃ©examinÃ© pour
 chercher d'autres substitutions.
 
-Quand toutes les substitutions ont été faites, chaque occurrence de la
-chaîne \fB${}\fP (laquelle n'est pas une substitution autorisée) est remplacée
+Quand toutes les substitutions ont Ã©tÃ© faites, chaque occurrence de la
+chaÃ®ne \fB${}\fP (laquelle n'est pas une substitution autorisÃ©e) est remplacÃ©e
 par un signe \fB$\fP.
 
-Alors que le remplacement de variables est effectué sur tous les champs de
-contrôle, certains de ces champs sont utilisés et nécessaires pendant la
-construction alors même que la substitution n'a pas encore pu être
-effectuée. Cela explique pourquoi il n'est pas possible d'utiliser de
+Alors que le remplacement de variables est effectuÃ© sur tous les champs de
+contrÃ´le, certains de ces champs sont utilisÃ©s et nÃ©cessaires pendant la
+construction alors mÃªme que la substitution n'a pas encore pu Ãªtre
+effectuÃ©e. Cela explique pourquoi il n'est pas possible d'utiliser de
 variables dans les champs \fBPackage\fP, \fBSource\fP et \fBArchitecture\fP.
 
-La substitution de variables se fait dans le contexte des champs après leur
-analyse. En conséquence, si vous souhaitez qu'une variable soit remplacée
-sur plusieurs lignes, il n'est pas nécessaire de placer une espace après le
-retour à la ligne. Cela se fait implicitement quand le champ est
-affiché. Par exemple, si la variable \fB${Description}\fP est positionnée sur
-«\ foo est bar.${Newline}foo est super.\ » et si vous avez le champ suivant\ :
+La substitution de variables se fait dans le contexte des champs aprÃ¨s leur
+analyse. En consÃ©quence, si vous souhaitez qu'une variable soit remplacÃ©e
+sur plusieurs lignes, il n'est pas nÃ©cessaire de placer une espace aprÃ¨s le
+retour Ã  la ligne. Cela se fait implicitement quand le champ est
+affichÃ©. Par exemple, si la variable \fB${Description}\fP est positionnÃ©e sur
+Â«\ foo est bar.${Newline}foo est super.\ Â» et si vous avez le champ suivant\ :
 
  Description: application foo
   ${Description}
   .
   Encore du texte.
 
-Le résultat final sera\ :
+Le rÃ©sultat final sera\ :
 
  Description: application foo
   foo est bar.
@@ -73,73 +74,79 @@ Le résultat final sera\ :
   .
   Encore du texte.
 
-On peut définir les variables en utilisant l'option commune \fB\-V\fP. On peut
+On peut dÃ©finir les variables en utilisant l'option commune \fB\-V\fP. On peut
 aussi se servir du fichier \fBdebian/substvars\fP (ou tout autre fichier avec
-l'option \fB\-T\fP). Ce fichier est composé de lignes de la forme suivante\ :
-\fInom\fP\fB=\fP\fIvaleur\fP. Les espaces résiduelles sur chaque ligne, les lignes
-vides et les lignes qui commencent par un symbole \fB#\fP sont ignorées.
+l'option \fB\-T\fP). Ce fichier est composÃ© de lignes de la forme suivante\ :
+\fInom\fP\fB=\fP\fIvaleur\fP. Les espaces rÃ©siduelles sur chaque ligne, les lignes
+vides et les lignes qui commencent par un symbole \fB#\fP sont ignorÃ©es.
 
 En outre, les variables standard suivantes sont disponibles\ :
 .TP 
 \fBArch\fP
-L'architecture pour laquelle on construit (tirée de \fBdpkg
-\-\-print\-architecture\fP).
+The current host architecture (i.e. the architecture the package is being
+built for, the equivalent of \fBDEB_HOST_ARCH\fP).
 .TP 
 \fBsource:Version\fP
 La version du paquet source.
 .TP 
 \fBsource:Upstream\-Version\fP
-La version amont du paquet source, avec éventuellement l'«\ epoch\ » de la
+La version amont du paquet source, avec Ã©ventuellement l'Â«\ epoch\ Â» de la
 version debian.
 .TP 
 \fBbinary:Version\fP
-La version du paquet binaire (qui peut être différente de source:Version
+La version du paquet binaire (qui peut Ãªtre diffÃ©rente de source:Version
 dans un binNMU par exemple).
 .TP 
 \fBSource\-Version\fP
 La version du paquet source, selon le fichier changelog. Cette variable est
-maintenant \fBdéconseillée\fP car sa signification est distincte de sa
-fonction. Utilisez plutôt \fBsource:Version\fP ou \fBbinary:Version\fP.
+maintenant \fBdÃ©conseillÃ©e\fP car sa signification est distincte de sa
+fonction. Utilisez plutÃ´t \fBsource:Version\fP ou \fBbinary:Version\fP.
 .TP 
 \fBInstalled\-Size\fP
-La taille de tous les fichiers installés du paquet. Cette valeur est copiée
-dans le champ adéquat du fichier «\ control\ »\ ; quand on fixe cette variable,
-cela modifie la valeur de ce champ. Quand elle est indéterminée,
-\fBdpkg\-gencontrol\fP utilise la commande \fBdu \-k debian/tmp\fP pour trouver une
-valeur par défaut.
+The approximate total size of the package's installed files. This value is
+copied into the corresponding control file field; setting it will modify the
+value of that field. If this variable is not set \fBdpkg\-gencontrol\fP will
+compute the default value by accumulating the size of each regular file and
+symlink rounded to 1 KiB used units, and a baseline of 1 KiB for any other
+filesystem object type.
+
+\fBNote:\fP Take into account that this can only ever be an approximation, as
+the actual size used on the installed system will depend greatly on the
+filesystem used and its parameters, which might end up using either more or
+less space than the specified in this field.
 .TP 
 \fBExtra\-Size\fP
-L'espace disque supplémentaire utilisé pour l'installation du paquet. Quand
-on fixe cette variable, on ajoute sa valeur à la valeur de la variable
-\fBInstalled\-Size\fP (qu'elle soit définie explicitement ou calculée par
-défaut) avant que la variable \fBInstalled\-Size\fP ne soit copiée dans le champ
-du fichier «\ control\ ».
+L'espace disque supplÃ©mentaire utilisÃ© pour l'installation du paquet. Quand
+on fixe cette variable, on ajoute sa valeur Ã  la valeur de la variable
+\fBInstalled\-Size\fP (qu'elle soit dÃ©finie explicitement ou calculÃ©e par
+dÃ©faut) avant que la variable \fBInstalled\-Size\fP ne soit copiÃ©e dans le champ
+du fichier Â«\ control\ Â».
 .TP 
 \fBF:\fP\fIfieldname\fP
-La valeur du champ \fIfieldname\fP affiché en sortie et qui doit être
+La valeur du champ \fIfieldname\fP affichÃ© en sortie et qui doit Ãªtre
 classiquement en majuscules. Quand on fixe ces variables, cela ne prend
-effet que là où elles sont effectivement développées.
+effet que lÃ  oÃ¹ elles sont effectivement dÃ©veloppÃ©es.
 .TP 
 \fBFormat\fP
 La version du format du fichier \fB.changes\fP produite par la version des
-scripts construisant le source. Quand on détermine cette variable, le
-contenu du champ \fBFormat\fP dans le fichier \fB.changes\fP est aussi modifié.
+scripts construisant le source. Quand on dÃ©termine cette variable, le
+contenu du champ \fBFormat\fP dans le fichier \fB.changes\fP est aussi modifiÃ©.
 .TP 
 \fBNewline\fP, \fBSpace\fP, \fBTab\fP
-Ces variables contiennent chacune le caractère correspondant.
+Ces variables contiennent chacune le caractÃ¨re correspondant.
 .TP 
 \fBshlibs:\fP\fIdependencyfield\fP
-Les variables déterminées de cette façon sont produites par
+Les variables dÃ©terminÃ©es de cette faÃ§on sont produites par
 \fBdpkg\-shlibdeps\fP.
 .TP 
 \fBdpkg:Upstream\-Version\fP
 La version amont de dpkg.
 .TP 
 \fBdpkg:Version\fP
-La version complète de dpkg.
+La version complÃ¨te de dpkg.
 .LP
-Quand une variable est référencée mais n'est pas définie, cela produit un
-avertissement et une valeur nulle est supposée.
+Quand une variable est rÃ©fÃ©rencÃ©e mais n'est pas dÃ©finie, cela produit un
+avertissement et une valeur nulle est supposÃ©e.
 .
 .SH FICHIERS
 .TP 
@@ -154,5 +161,5 @@ La liste des variables de substitution et leurs valeurs.
 .SH TRADUCTION
 Ariel VARDI <ariel.vardi@freesbee.fr>, 2002.
 Philippe Batailler, 2006.
-Nicolas François, 2006.
-Veuillez signaler toute erreur à <debian\-l10n\-french@lists.debian.org>.
+Nicolas FranÃ§ois, 2006.
+Veuillez signaler toute erreur Ã  <debian\-l10n\-french@lists.debian.org>.

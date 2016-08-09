@@ -21,47 +21,47 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-shlibs 5 2012\-02\-08 "Debian Project" "dpkg ¥æ¡¼¥Æ¥£¥ê¥Æ¥£"
-.SH Ì¾Á°
-deb\-shlibs \- Debian ¶¦Í­¥é¥¤¥Ö¥é¥ê¾ğÊó¥Õ¥¡¥¤¥ë
+.TH deb\-shlibs 5 2012\-02\-08 "Debian Project" "dpkg ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£"
+.SH åå‰
+deb\-shlibs \- Debian å…±æœ‰ãƒ©ã‚¤ãƒ–ãƒ©ãƒªæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«
 .
-.SH ÀâÌÀ
+.SH èª¬æ˜
 .PP
-\fBshlibs\fP ¥Õ¥¡¥¤¥ë¤Ï¡¢¶¦Í­¥é¥¤¥Ö¥é¥ê¤Î¥Õ¥¡¥¤¥ëÌ¾¤È¥Ğ¡¼¥¸¥ç¥ó (\fIsoname\fP)
-¤ò¥Ñ¥Ã¥±¡¼¥¸À©¸æ¥Õ¥¡¥¤¥ë¤Ë½àµò¤·¤¿°ÍÂ¸´Ø·¸¾ğÊó¤ËÂĞ±şÉÕ¤±¤ë¤¿¤á¤Î¤â¤Î¤Ç¤¢¤ë¡£1 ¹Ô¤Ë 1
-¤Ä¤Î¥¨¥ó¥È¥ê¤òµ­½Ò¤¹¤ë¡£¶õÇò¹Ô¤¬¤¢¤Ã¤Æ¤Ï\fB¤Ê¤é¤Ê¤¤\fP¡£\fB#\fP
-Ê¸»ú¤«¤é»Ï¤Ş¤ë¹Ô¤Ï¥³¥á¥ó¥È¹Ô¤È¸«¤Ê¤µ¤ìÌµ»ë¤µ¤ì¤ë¤¬¡¢¤½¤ì°Ê³°¤Î¹Ô¤Ï·Á¼°¤ËÂ§¤Ã¤¿¤â¤Î¤Ç¤Ê¤±¤ì¤Ğ¤Ê¤é¤Ê¤¤¡£
+\fBshlibs\fP ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã€å…±æœ‰ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ãƒ•ã‚¡ã‚¤ãƒ«åã¨ãƒãƒ¼ã‚¸ãƒ§ãƒ³ (\fIsoname\fP)
+ã‚’ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸åˆ¶å¾¡ãƒ•ã‚¡ã‚¤ãƒ«ã«æº–æ‹ ã—ãŸä¾å­˜é–¢ä¿‚æƒ…å ±ã«å¯¾å¿œä»˜ã‘ã‚‹ãŸã‚ã®ã‚‚ã®ã§ã‚ã‚‹ã€‚1 è¡Œã« 1
+ã¤ã®ã‚¨ãƒ³ãƒˆãƒªã‚’è¨˜è¿°ã™ã‚‹ã€‚ç©ºç™½è¡ŒãŒã‚ã£ã¦ã¯\fBãªã‚‰ãªã„\fPã€‚\fB#\fP
+æ–‡å­—ã‹ã‚‰å§‹ã¾ã‚‹è¡Œã¯ã‚³ãƒ¡ãƒ³ãƒˆè¡Œã¨è¦‹ãªã•ã‚Œç„¡è¦–ã•ã‚Œã‚‹ãŒã€ãã‚Œä»¥å¤–ã®è¡Œã¯å½¢å¼ã«å‰‡ã£ãŸã‚‚ã®ã§ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 .IP
 [\fItype\fP\fB:\fP] \fIlibrary\fP \fIversion\fP \fIdependencies\fP
 .PP
-\fIlibrary\fP ¤È \fIversion\fP ¥Õ¥£¡¼¥ë¥É¤Ï¶õÇòÊ¸»ú¤Ç¶èÀÚ¤é¤ì¤ë¤¬¡¢\fIdependencies\fP
-¥Õ¥£¡¼¥ë¥É¤Ï¹ÔËö¤Ş¤Ç¤ÎÈÏ°Ï¤¬¤¹¤Ù¤Æ´Ş¤Ş¤ì¤ë¡£\fItype\fP ¥Õ¥£¡¼¥ë¥É¤Ï¥ª¥×¥·¥ç¥ó¤Ç¡¢ÄÌ¾ïÉÔÍ×¤Ç¤¢¤ë¡£
+\fIlibrary\fP ã¨ \fIversion\fP ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ç©ºç™½æ–‡å­—ã§åŒºåˆ‡ã‚‰ã‚Œã‚‹ãŒã€\fIdependencies\fP
+ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯è¡Œæœ«ã¾ã§ã®ç¯„å›²ãŒã™ã¹ã¦å«ã¾ã‚Œã‚‹ã€‚\fItype\fP ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§ã€é€šå¸¸ä¸è¦ã§ã‚ã‚‹ã€‚
 .PP
-\fIdependencies\fP ¥Õ¥£¡¼¥ë¥É¤Ï¡¢¥Ğ¥¤¥Ê¥êÀ©¸æ¥Õ¥¡¥¤¥ë¤Ë¤ª¤±¤ë \fBDepends\fP
-¥Õ¥£¡¼¥ë¥É¤ÈÆ±¤¸Ê¸Ë¡¤Ç¤¢¤ë¡£\fBdeb\-control\fP(5) ¤ò»²¾È¤Î¤³¤È¡£¾ÜºÙ¤Ï Debian Policy Manual ¤â»²¾È¤Î¤³¤È¡£
+The \fIdependencies\fP field has the same syntax as the \fBDepends\fP field in a
+binary control file, see \fBdeb\-control\fP(5).
 .
-.SH Îã
+.SH ä¾‹
 .PP
-°ìÈÌÅª¤ÊÎã¤È¤·¤Æ¡¢Îã¤¨¤Ğ¡¢\fIlibcrunch.so.1\fP ¤È¤¤¤¦ soname ¤Î¥é¥¤¥Ö¥é¥ê¥Õ¥¡¥¤¥ë¤òÄó¶¡¤¹¤ë \fIlibcrunch1\fP
-¤È¤¤¤¦¥Ñ¥Ã¥±¡¼¥¸¤Î \fBshlibs\fP ¥Õ¥¡¥¤¥ë¤Ï¡¢¼¡¤Î¤è¤¦¤Ë¤Ê¤ë:
+ä¸€èˆ¬çš„ãªä¾‹ã¨ã—ã¦ã€ä¾‹ãˆã°ã€\fIlibcrunch.so.1\fP ã¨ã„ã† soname ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãƒ•ã‚¡ã‚¤ãƒ«ã‚’æä¾›ã™ã‚‹ \fIlibcrunch1\fP
+ã¨ã„ã†ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã® \fBshlibs\fP ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã€æ¬¡ã®ã‚ˆã†ã«ãªã‚‹:
 .IP
 libcrunch 1 libcrunch1 (>= 1.2\-1)
 .PP
-\fIdependencies\fP
-¤Ç¤Ï¡¢Ä¾¶á¤Ç¥·¥ó¥Ü¥ë¤¬ÄÉ²Ã¤µ¤ì¤¿¥Ğ¡¼¥¸¥ç¥ó¤Î»ØÄê¤¬É¬¿Ü¤Ç¤¢¤ë¡£¾åµ­¤ÎÎã¤Ï¡¢Ä¾¶á¤Ç¥·¥ó¥Ü¥ë¤¬ÄÉ²Ã¤µ¤ì¤¿¤Î¤Ï¡¢\fIlibcrunch\fP ¥Ğ¡¼¥¸¥ç¥ó 1.2
-¤Ç¤¢¤ë¤³¤È¤ò°ÕÌ£¤¹¤ë¡£dependencies (°ÍÂ¸´Ø·¸) ¤ò¸·Ì©¤Ëµ¬Äê¤¹¤ëÉ¬Í×¤¬¤¢¤ëÍıÍ³¤Ï¤³¤ì¤À¤±¤Ç¤Ï¤Ê¤¤¡£¾ÜºÙ¤Ï Debian Policy
-Manual ¤ò»²¾È¤Î¤³¤È¡£
+The \fIdependencies\fP must mention the most recent version of the package that
+added new symbols to the library: in the above example, new symbols were
+added to version 1.2 of \fIlibcrunch\fP.  This is not the only reason the
+dependencies might need to be tightened.
 .
-.SH ´ØÏ¢¹àÌÜ
+.SH é–¢é€£é …ç›®
 \fBdeb\-control\fP(5), \fBdpkg\-shlibdeps\fP(1), \fBdeb\-symbols\fP(5).
-.SH ËİÌõ¼Ô
-¹â¶¶ ´ğ¿® <monyo@monyo.com>.
-´îÀ¥ ¹À <kise@fuyuneko.jp>.
-´Ø¸Í ¹¬°ì <sekido@mbox.kyoto-inet.or.jp>.
-ÆéÃ« ±ÉÅ¸ <nabe@debian.or.jp>.
-ÁÒß· Ë¾ <nabetaro@debian.or.jp>.
-ÀĞÀî ËÓ <ishikawa@linux.or.jp>.
-±­»ô Ê¸ÉÒ <ukai@debian.or.jp>.
-ÃæÌî ÉğÍº <nakano@apm.seikei.ac.jp>.
-.SH ËİÌõ¹»Àµ
+.SH ç¿»è¨³è€…
+é«˜æ©‹ åŸºä¿¡ <monyo@monyo.com>.
+å–œç€¬ æµ© <kise@fuyuneko.jp>.
+é–¢æˆ¸ å¹¸ä¸€ <sekido@mbox.kyoto-inet.or.jp>.
+é‹è°· æ „å±• <nabe@debian.or.jp>.
+å€‰æ¾¤ æœ› <nabetaro@debian.or.jp>.
+çŸ³å· ç¦ <ishikawa@linux.or.jp>.
+éµœé£¼ æ–‡æ• <ukai@debian.or.jp>.
+ä¸­é‡ æ­¦é›„ <nakano@apm.seikei.ac.jp>.
+.SH ç¿»è¨³æ ¡æ­£
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

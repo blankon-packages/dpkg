@@ -22,47 +22,55 @@
 .\"
 .\"*******************************************************************
 .TH deb\-origin 5 2011\-11\-10 "Debian Project" Debian
-.SH Ì¾Á°
-deb\-origin \- ¥Ù¥ó¥À¸ÇÍ­¾ğÊó¥Õ¥¡¥¤¥ë
-.SH ½ñ¼°
+.SH åå‰
+deb\-origin \- ãƒ™ãƒ³ãƒ€å›ºæœ‰æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«
+.SH æ›¸å¼
 \fB/etc/dpkg/origins/\fP\fIfilename\fP
-.SH ÀâÌÀ
-\fB/etc/dpkg/origins\fP ¤Ë¤¢¤ë¥Õ¥¡¥¤¥ë¤Ï¡¢Debian ¥Ñ¥Ã¥±¡¼¥¸¤òÄó¶¡¤¹¤ëÍÍ¡¹¤Ê¥Ù¥ó¥À¤Î¾ğÊó¤òÄó¶¡¤¹¤ë¡£¥Õ¥¡¥¤¥ë¤Ï¥Õ¥£¡¼¥ë¥É¹Ô¤ä
-\&\fB'#'\fP ¤Ç»Ï¤Ş¤ë¥³¥á¥ó¥È¹Ô¤«¤é¤Ê¤ë¡£³Æ¥Õ¥£¡¼¥ë¥É¹Ô¤Ï \fBVendor\fP ¤ä \fBParent\fP
-¤È¤¤¤Ã¤¿¥Õ¥£¡¼¥ë¥É¥¿¥°¤Ç»Ï¤Ş¤ê¡¢¥³¥í¥ó¤Î¸å¤Ë¥Õ¥£¡¼¥ë¥ÉËÜÂÎ (ÃÍ)
-¤¬Â³¤¯¡£¥Õ¥£¡¼¥ë¥É¤¬¥Õ¥£¡¼¥ë¥É¥¿¥°°Ê³°¤Ç¶èÀÚ¤é¤ì¤ë¤³¤È¤Ï¤Ê¤¤¡£¸À¤¤´¹¤¨¤ë¤È¡¢¥Õ¥£¡¼¥ë¥ÉËÜÂÎ¤Î¥Æ¥­¥¹¥È¤ÏÊ£¿ô¹Ô¤Ë¤Ş¤¿¤¬¤Ã¤Æ¤â¹½¤ï¤Ê¤¤¡£¤¿¤À¤·¡¢¥¤¥ó¥¹¥È¡¼¥ë¤ò¹Ô¤¦¥Ä¡¼¥ë¤ÏÄÌ¾ï¥Õ¥£¡¼¥ë¥ÉËÜÂÎ¤ò½èÍı¤¹¤ëºİ¤Ë¤½¤ì¤é¤ò
-1 ¹Ô¤Ë¤Ş¤È¤á¤Æ¤·¤Ş¤¦¡£
-.SH É¬¿Ü¥Õ¥£¡¼¥ë¥É
+.SH èª¬æ˜
+The files in \fB/etc/dpkg/origins\fP can provide information about various
+vendors who are providing Debian packages.
+
+They contain a number of fields, or comments when the line starts with
+\(oq\fB#\fP\(cq.  Each field begins with a tag, such as \fBVendor\fP or \fBParent\fP,
+followed by a colon and the body of the field. Fields are delimited only by
+field tags. In other words, field text may be multiple lines in length, but
+the tools will join lines when processing the body of the field.
+
+The file should be named according to the vendor name.  The usual convention
+is to name the vendor file using the vendor name in all lowercase, but some
+variation is permitted.  Namely, spaces are mapped to dashes (\(oq\fB\-\fP\(cq),
+and the file can have the same casing as the value in \fBVendor\fP field, or it
+can be capitalized.
+.SH FIELDS
 .TP 
-\fBVendor:\fP\fI vendor\-name\fP
-¤³¤Î¥Õ¥£¡¼¥ë¥É¤ÎÃÍ¤Ë¤è¤Ã¤Æ¥Ù¥ó¥ÀÌ¾¤¬·è¤Ş¤ë¡£
-.SH ¥ª¥×¥·¥ç¥ó¥Õ¥£¡¼¥ë¥É
+\fBVendor:\fP \fIvendor\-name\fP (required)
+ã“ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å€¤ã«ã‚ˆã£ã¦ãƒ™ãƒ³ãƒ€åãŒæ±ºã¾ã‚‹ã€‚
 .TP 
 \fBVendor\-URL:\fP\fI vendor\-url\fP
-¤³¤Î¥Õ¥£¡¼¥ë¥É¤ÎÃÍ¤Ë¤è¤Ã¤Æ¥Ù¥ó¥À¤Î URL ¤¬·è¤Ş¤ë¡£
+ã“ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å€¤ã«ã‚ˆã£ã¦ãƒ™ãƒ³ãƒ€ã® URL ãŒæ±ºã¾ã‚‹ã€‚
 .TP 
 \fBBugs:\fP\fI bug\-url\fP
-¤³¤Î¥Õ¥£¡¼¥ë¥É¤ÎÃÍ¤Ë¤è¤Ã¤Æ¡¢¤³¤Î¥Ù¥ó¥À¤¬»ÈÍÑ¤·¤Æ¤¤¤ë¥Ğ¥°¥È¥é¥Ã¥­¥ó¥°¥·¥¹¥Æ¥à¤Î¼ïÎà¤ä¥¢¥É¥ì¥¹¤¬·è¤Ş¤ë¡£¤³¤ì¤Ï¡¢mailto URL ¤ä debbugs
-URL (Îã¤¨¤Ğ debbugs://bugs.debian.org/ ¤Ê¤É) ¤È¤¤¤Ã¤¿ÃÍ¤ò¤È¤ë¡£
+ã“ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å€¤ã«ã‚ˆã£ã¦ã€ã“ã®ãƒ™ãƒ³ãƒ€ãŒä½¿ç”¨ã—ã¦ã„ã‚‹ãƒã‚°ãƒˆãƒ©ãƒƒã‚­ãƒ³ã‚°ã‚·ã‚¹ãƒ†ãƒ ã®ç¨®é¡ã‚„ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒæ±ºã¾ã‚‹ã€‚ã“ã‚Œã¯ã€mailto URL ã‚„ debbugs
+URL (ä¾‹ãˆã° debbugs://bugs.debian.org/ ãªã©) ã¨ã„ã£ãŸå€¤ã‚’ã¨ã‚‹ã€‚
 .TP 
 \fBParent:\fP\fI vendor\-name\fP
-¤³¤Î¥Õ¥£¡¼¥ë¥É¤ÎÃÍ¤Ë¤è¤Ã¤Æ¡¢¤³¤Î¥Ù¥ó¥À¤ÎÍ³Íè¤È¤Ê¤ë¥Ù¥ó¥ÀÌ¾¤¬·è¤Ş¤ë¡£
-.SH Îã
+ã“ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å€¤ã«ã‚ˆã£ã¦ã€ã“ã®ãƒ™ãƒ³ãƒ€ã®ç”±æ¥ã¨ãªã‚‹ãƒ™ãƒ³ãƒ€åãŒæ±ºã¾ã‚‹ã€‚
+.SH ä¾‹
 .nf
 Vendor: Debian
 Vendor\-URL: https://www.debian.org/
 Bugs: debbugs://bugs.debian.org
 .fi
-.SH ´ØÏ¢¹àÌÜ
+.SH é–¢é€£é …ç›®
 \fBdpkg\-vendor\fP(1)
-.SH ËİÌõ¼Ô
-¹â¶¶ ´ğ¿® <monyo@monyo.com>.
-´îÀ¥ ¹À <kise@fuyuneko.jp>.
-´Ø¸Í ¹¬°ì <sekido@mbox.kyoto-inet.or.jp>.
-ÆéÃ« ±ÉÅ¸ <nabe@debian.or.jp>.
-ÁÒß· Ë¾ <nabetaro@debian.or.jp>.
-ÀĞÀî ËÓ <ishikawa@linux.or.jp>.
-±­»ô Ê¸ÉÒ <ukai@debian.or.jp>.
-ÃæÌî ÉğÍº <nakano@apm.seikei.ac.jp>.
-.SH ËİÌõ¹»Àµ
+.SH ç¿»è¨³è€…
+é«˜æ©‹ åŸºä¿¡ <monyo@monyo.com>.
+å–œç€¬ æµ© <kise@fuyuneko.jp>.
+é–¢æˆ¸ å¹¸ä¸€ <sekido@mbox.kyoto-inet.or.jp>.
+é‹è°· æ „å±• <nabe@debian.or.jp>.
+å€‰æ¾¤ æœ› <nabetaro@debian.or.jp>.
+çŸ³å· ç¦ <ishikawa@linux.or.jp>.
+éµœé£¼ æ–‡æ• <ukai@debian.or.jp>.
+ä¸­é‡ æ­¦é›„ <nakano@apm.seikei.ac.jp>.
+.SH ç¿»è¨³æ ¡æ­£
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

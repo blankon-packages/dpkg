@@ -1,7 +1,7 @@
 .\" dpkg manual page - dpkg-maintscript-helper(1)
 .\"
 .\" Copyright Â© 2010-2012 RaphaÃ«l Hertzog <hertzog@debian.org>
-.\" Copyright Â© 2011-2014 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2011-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 .\"*******************************************************************
 .TH dpkg\-maintscript\-helper 1 2014\-09\-01 Debianprojektet Dpkg\-sviten
 .SH NAMN
-dpkg\-maintscript\-helper \- går runt kända dpkg\-begränsningar i paketskript
+dpkg\-maintscript\-helper \- gÃ¥r runt kÃ¤nda dpkg\-begrÃ¤nsningar i paketskript
 .
 .SH SYNOPS
 \fBdpkg\-maintscript\-helper\fP \fIkommando\fP [\fIflagga\fP...] \fB\-\-\fP
@@ -38,218 +38,223 @@ dpkg\-maintscript\-helper \- går runt kända dpkg\-begränsningar i paketskript
 \fBmv_conffile\fP \fIgammalkonffil\fP \fInykonffil\fP [\fItidigare\-version\fP
 [\fIpaket\fP]]
 .P
-\fBsymlink_to_dir\fP \fIsökväg\fP \fIgammalt\-mål\fP [\fItidigare\-version\fP [\fIpaket\fP]]
+\fBsymlink_to_dir\fP \fIsÃ¶kvÃ¤g\fP \fIgammalt\-mÃ¥l\fP [\fItidigare\-version\fP [\fIpaket\fP]]
 .P
-\fBdir_to_symlink\fP \fIsökväg\fP \fInytt\-mål\fP [\fItidigare\-version\fP [\fIpaket\fP]]
+\fBdir_to_symlink\fP \fIsÃ¶kvÃ¤g\fP \fInytt\-mÃ¥l\fP [\fItidigare\-version\fP [\fIpaket\fP]]
 .
 .SH BESKRIVNING
 .P
-Programmet skrevs för att köras i paketskript för att utföra en del åtgärder
-som \fBdpkg\fP (ännu) inte själv kan hantera, antingen på grund av designval
-eller på grund av nuvarande begränsningar.
+Programmet skrevs fÃ¶r att kÃ¶ras i paketskript fÃ¶r att utfÃ¶ra en del Ã¥tgÃ¤rder
+som \fBdpkg\fP (Ã¤nnu) inte sjÃ¤lv kan hantera, antingen pÃ¥ grund av designval
+eller pÃ¥ grund av nuvarande begrÃ¤nsningar.
 .P
-Många av dessa åtgärder kräver samordnade åtgärder från flera paketskript
-(\fBpreint\fP, \fBpostinst\fP, \fBprerm\fP, \fBpostrm\fP). För att undvika misstag
-räcker det att lägga in ett och samma anrop i alla skript, varpå programmet
-anpassar sitt beteende beroende på miljövariabeln \fBDPKG_MAINTSCRIPT_NAME\fP
-och på paketskriptets parametrar, vilka du måste vidaresända efter dubbla
+MÃ¥nga av dessa Ã¥tgÃ¤rder krÃ¤ver samordnade Ã¥tgÃ¤rder frÃ¥n flera paketskript
+(\fBpreint\fP, \fBpostinst\fP, \fBprerm\fP, \fBpostrm\fP). FÃ¶r att undvika misstag
+rÃ¤cker det att lÃ¤gga in ett och samma anrop i alla skript, varpÃ¥ programmet
+anpassar sitt beteende beroende pÃ¥ miljÃ¶variabeln \fBDPKG_MAINTSCRIPT_NAME\fP
+och pÃ¥ paketskriptets parametrar, vilka du mÃ¥ste vidaresÃ¤nda efter dubbla
 bindestreck.
 .
 .SH "DELADE PARAMETRAR"
 .TP 
 \fItidigare\-version\fP
 Anger den senaste version av paketet vars uppgradering skall orsaka
-händelsen. Det är viktigt att beräkna \fItidigare\-version\fP korrekt så att
-operationerna utförs korrekt även om användaren byggt om paketet med en
-lokal version. Om \fItidigare\-version\fP är tom eller utelämnas försöks
-operationen vid varje uppgradering (notera: det är säkrare att ange
-versionen och endast försöka utföra operationen en gång).
+hÃ¤ndelsen. Det Ã¤r viktigt att berÃ¤kna \fItidigare\-version\fP korrekt sÃ¥ att
+operationerna utfÃ¶rs korrekt Ã¤ven om anvÃ¤ndaren byggt om paketet med en
+lokal version. Om \fItidigare\-version\fP Ã¤r tom eller utelÃ¤mnas fÃ¶rsÃ¶ks
+operationen vid varje uppgradering (notera: det Ã¤r sÃ¤krare att ange
+versionen och endast fÃ¶rsÃ¶ka utfÃ¶ra operationen en gÃ¥ng).
 
-Om konffilen inte har sänts med i flera versioner och du nu uppdaterar
-utvecklarskripten till att städa bort den gamla filen bör
-\fItidigare\-version\fP baseras på den version av paketet du nu förbereder, inte
-den första version av paketet som saknade konffilen. Detta gäller på samma
-sätt för alla andra åtgärder.
+Om konffilen inte har sÃ¤nts med i flera versioner och du nu uppdaterar
+utvecklarskripten till att stÃ¤da bort den gamla filen bÃ¶r
+\fItidigare\-version\fP baseras pÃ¥ den version av paketet du nu fÃ¶rbereder, inte
+den fÃ¶rsta version av paketet som saknade konffilen. Detta gÃ¤ller pÃ¥ samma
+sÃ¤tt fÃ¶r alla andra Ã¥tgÃ¤rder.
 
-Som ett exempel, för en konffil som togs bort i version \fB2.0\-1\fP av ett
-paket bör \fItidigareversion\fP sättas till \fB2.0\-1~\fP. Detta får konffilen att
-tas bort även om användaren bygger om den tidigare versionen \fB1.0\-1\fP som
-\fB1.0\-1local1\fP. Eller ett paket som bytt en sökväg från att vara en
-symbolisk länk (skeppad i version \fB1.0\-1\fP) till en katalog (skeppad i
-version \fB2.0\-1\fP), men bara utfört själva ändringen i utvecklarskripten i
-version \fB3.0\-1\fP, bör sätta \fItidigareversion\fP till \fB3.0\-1~\fP.
+Som ett exempel, fÃ¶r en konffil som togs bort i version \fB2.0\-1\fP av ett
+paket bÃ¶r \fItidigareversion\fP sÃ¤ttas till \fB2.0\-1~\fP. Detta fÃ¥r konffilen att
+tas bort Ã¤ven om anvÃ¤ndaren bygger om den tidigare versionen \fB1.0\-1\fP som
+\fB1.0\-1local1\fP. Eller ett paket som bytt en sÃ¶kvÃ¤g frÃ¥n att vara en
+symbolisk lÃ¤nk (skeppad i version \fB1.0\-1\fP) till en katalog (skeppad i
+version \fB2.0\-1\fP), men bara utfÃ¶rt sjÃ¤lva Ã¤ndringen i utvecklarskripten i
+version \fB3.0\-1\fP, bÃ¶r sÃ¤tta \fItidigareversion\fP till \fB3.0\-1~\fP.
 .TP 
 \fIpaket\fP
-Paketnamnet. När paketet är "Multi\-Arch: same", måste parametern inkludera
-arkitekturskvalificering. Om tomt eller utelämnat används miljövariabeln
-\fBDPKG_MAINTSCRIPT_PACKAGE\fP (som satt av \fBdpkg\fP).
+The package name. When the package is \(lqMulti\-Arch: same\(rq this
+parameter must include the architecture qualifier, otherwise it should
+\fBnot\fP usually include the architecture qualifier (as it would disallow
+cross\-grades, or switching from being architecture specific to architecture
+\fBall\fP or vice versa).  If the parameter is empty or omitted, the
+\fBDPKG_MAINTSCRIPT_PACKAGE\fP and \fBDPKG_MAINTSCRIPT_ARCH\fP environment
+variables (as set by \fBdpkg\fP)  will be used to generate an arch\-qualified
+package name.
 .TP 
 \fB\-\-\fP
-Alla parametrar till utvecklarskripten måste vidaresändas till programmen
+Alla parametrar till utvecklarskripten mÃ¥ste vidaresÃ¤ndas till programmen
 efter \fB\-\-\fP.
-.SH "KONFFIL\-RELATERADE ÅTGÄRDER"
+.SH "KONFFIL\-RELATERADE Ã…TGÃ„RDER"
 .P
-När ett paket uppgraderas kommer \fBdpkg\fP inte att automatiskt ta bort en
-konffil (en konfigurationsfil för vilken \fBdpkg\fP skall behålla användarens
-ändringar) om den inte finns i den nya versionen. Det finns två
-grundläggande skäl till detta; den första är att konffilen kan ha tappats av
-misstag och nästa version kan komma att återställa den, varpå användaren
-inte vill tappa sina ändringar. Den andra är att för att göra det möjligt
-för paket att gå över från en dpkg\-hanterad konffil till en fil som hanteras
+NÃ¤r ett paket uppgraderas kommer \fBdpkg\fP inte att automatiskt ta bort en
+konffil (en konfigurationsfil fÃ¶r vilken \fBdpkg\fP skall behÃ¥lla anvÃ¤ndarens
+Ã¤ndringar) om den inte finns i den nya versionen. Det finns tvÃ¥
+grundlÃ¤ggande skÃ¤l till detta; den fÃ¶rsta Ã¤r att konffilen kan ha tappats av
+misstag och nÃ¤sta version kan komma att Ã¥terstÃ¤lla den, varpÃ¥ anvÃ¤ndaren
+inte vill tappa sina Ã¤ndringar. Den andra Ã¤r att fÃ¶r att gÃ¶ra det mÃ¶jligt
+fÃ¶r paket att gÃ¥ Ã¶ver frÃ¥n en dpkg\-hanterad konffil till en fil som hanteras
 av paketets skript, vanligtvis genom ett verktyg som debconf eller ucf.
 .P
-Det innebär att, om paketet menar att byta namn eller ta bort en
-konfigurationsfil, så måste det göra så explicit, och då kan
-\fBdpkg\-maintscript\-helper\fP användas för att implementera en elegant
+Det innebÃ¤r att, om paketet menar att byta namn eller ta bort en
+konfigurationsfil, sÃ¥ mÃ¥ste det gÃ¶ra sÃ¥ explicit, och dÃ¥ kan
+\fBdpkg\-maintscript\-helper\fP anvÃ¤ndas fÃ¶r att implementera en elegant
 borttagning och flyttning av konffiler i paketscripten.
 .
 .SS "Ta bort en konffil"
 .P
-Om en konffil helt tas bort bör den tas bort från disk, såvida inte
-användaren har modifierat den. Om det finns lokala ändringar bör de
-bibehållas. Om paketuppgraderingen avbryts bör inte konffilen som just blev
-föråldras försvinna.
+Om en konffil helt tas bort bÃ¶r den tas bort frÃ¥n disk, sÃ¥vida inte
+anvÃ¤ndaren har modifierat den. Om det finns lokala Ã¤ndringar bÃ¶r de
+bibehÃ¥llas. Om paketuppgraderingen avbryts bÃ¶r inte konffilen som just blev
+fÃ¶rÃ¥ldras fÃ¶rsvinna.
 .P
-Allt detta implementeras genom att lägga in följande skalkod i paketskripten
+Allt detta implementeras genom att lÃ¤gga in fÃ¶ljande skalkod i paketskripten
 \fBpreinst\fP, \fBpostinst\fP och \fBpostrm\fP:
 .P
     dpkg\-maintscript\-helper rm_conffile \e
         \fIkonffil\fP \fItidigare\-version\fP \fIpaket\fP \-\- "$@"
 .P
-\fIkonffil\fP är namnet på konffilen som skall tas bort.
+\fIkonffil\fP Ã¤r namnet pÃ¥ konffilen som skall tas bort.
 .P
-Aktuell implementation: i \fBpreinst\fP kontrolleras om konffilen ändrades och
-i så fall byts namnet på den till antingen \fIkonffil\fP\fB.dpkg\-remove\fP (om
+Aktuell implementation: i \fBpreinst\fP kontrolleras om konffilen Ã¤ndrades och
+i sÃ¥ fall byts namnet pÃ¥ den till antingen \fIkonffil\fP\fB.dpkg\-remove\fP (om
 inte modifierad) eller till \fIkonffil\fP\fB.dpkg\-backup\fP (om modifierad). I
-\fBpostinst\fP byts namnet på den sistnämnda filen till \fIkonffil\fP\fB.dpkg\-bak\fP
-och behålls som referens om den innehåller ändringar av användaren, medan
+\fBpostinst\fP byts namnet pÃ¥ den sistnÃ¤mnda filen till \fIkonffil\fP\fB.dpkg\-bak\fP
+och behÃ¥lls som referens om den innehÃ¥ller Ã¤ndringar av anvÃ¤ndaren, medan
 den tidigare kommer att tas bort. Om paketuppgraderingen avbryts kommer
 \fBpostrm\fP att ominstallera den ursprungliga konffilen. Vid borttagning
-kommer \fBpostrm\fP även att ta bort \fB.dpkg\-bak\fP\-filen som behållits fram till
+kommer \fBpostrm\fP Ã¤ven att ta bort \fB.dpkg\-bak\fP\-filen som behÃ¥llits fram till
 dess.
 .
-.SS "Byta namn på en konffil"
+.SS "Byta namn pÃ¥ en konffil"
 .P
-Om en konffil flyttas från en plats till en annan måste du se till att du
-flyttar med eventuella ändringar gjorda av användaren. Detta kan först verka
-vara en enkel ändring av \fBpreinst\fP\-skriptet, men det kommer leda till att
-användaren ombeds att godkänna ändringar i konffilen för \fBdpkg\fP, även om
-denne inte är ansvarig för dem.
+Om en konffil flyttas frÃ¥n en plats till en annan mÃ¥ste du se till att du
+flyttar med eventuella Ã¤ndringar gjorda av anvÃ¤ndaren. Detta kan fÃ¶rst verka
+vara en enkel Ã¤ndring av \fBpreinst\fP\-skriptet, men det kommer leda till att
+anvÃ¤ndaren ombeds att godkÃ¤nna Ã¤ndringar i konffilen fÃ¶r \fBdpkg\fP, Ã¤ven om
+denne inte Ã¤r ansvarig fÃ¶r dem.
 .P
-En elegant namnändring kan implementeras genom att lägga in följande skalkod
+En elegant namnÃ¤ndring kan implementeras genom att lÃ¤gga in fÃ¶ljande skalkod
 i paketskripten \fBpreinst\fP, \fBpostinst\fP och \fBpostrm\fP:
 .P
     dpkg\-maintscript\-helper mv_conffile \e
         \fIgammalkonffil\fP \fInykonffil\fP \fItidigare\-version\fP \fIpaket\fP \-\- "$@"
 .P
-\fIgammalkonffil\fP och \fInykonffil\fP är de gamla och nya namnen på konffilen
+\fIgammalkonffil\fP och \fInykonffil\fP Ã¤r de gamla och nya namnen pÃ¥ konffilen
 vars namn skall bytas.
 .P
-Aktuell implementation: I \fBpreinst\fP kontrolleras om konffilen har ändrats,
-om ja lämnas den kvar på plats, annars byts namnet på den till
+Aktuell implementation: I \fBpreinst\fP kontrolleras om konffilen har Ã¤ndrats,
+om ja lÃ¤mnas den kvar pÃ¥ plats, annars byts namnet pÃ¥ den till
 \fIgammalkonffil\fP\fB.dpkg\-remove\fP. Vid konfigurering tar \fBpostinst\fP bort
-\fIgammalkonffil\fP\fB.dpkg\-remove\fP och byter namn på \fIgammalkonffil\fP till
+\fIgammalkonffil\fP\fB.dpkg\-remove\fP och byter namn pÃ¥ \fIgammalkonffil\fP till
 \fInykonffil\fP om \fIgammalkonffil\fP fortfarande finns. Vid avbruten
-uppgradering eller installation byter \fBpostrm\fP tillbaka namnet från
-\fIgammalkonffil\fP\fB.dpkg\-remove\fP till \fIgammalkonffil\fP om så behövs.
+uppgradering eller installation byter \fBpostrm\fP tillbaka namnet frÃ¥n
+\fIgammalkonffil\fP\fB.dpkg\-remove\fP till \fIgammalkonffil\fP om sÃ¥ behÃ¶vs.
 .
-.SH "VÄXLING MELLAN SYMLÄNKAR OCH KATALOGER"
+.SH "VÃ„XLING MELLAN SYMLÃ„NKAR OCH KATALOGER"
 .
 Vid uppgradering av ett paket kommer \fBdpkg\fP inte att automatiskt byta ut en
-symbolisk länk mot en katalog, eller omvänt. Nedgraderingar stöds inte och
-sökvägen kommer lämnas som den var.
+symbolisk lÃ¤nk mot en katalog, eller omvÃ¤nt. Nedgraderingar stÃ¶ds inte och
+sÃ¶kvÃ¤gen kommer lÃ¤mnas som den var.
 .
-.SS "Byta en symbolisk länk mot en katalog"
+.SS "Byta en symbolisk lÃ¤nk mot en katalog"
 .
-Om en symbolisk länk byts mot en riktig katalog måste du se till att den
-symboliska länken tas bort innan uppackningen. Detta kan först verka vara en
-enkel ändring av \fBpreinst\fP\-skriptet, men det kommer leda till vissa problem
-om den lokale administratören har justerat den symboliska länken, eller om
+Om en symbolisk lÃ¤nk byts mot en riktig katalog mÃ¥ste du se till att den
+symboliska lÃ¤nken tas bort innan uppackningen. Detta kan fÃ¶rst verka vara en
+enkel Ã¤ndring av \fBpreinst\fP\-skriptet, men det kommer leda till vissa problem
+om den lokale administratÃ¶ren har justerat den symboliska lÃ¤nken, eller om
 paketet skall nedgraderas.
 .P
-En elegant namnändring kan implementeras genom att lägga in följande skalkod
+En elegant namnÃ¤ndring kan implementeras genom att lÃ¤gga in fÃ¶ljande skalkod
 i paketskripten \fBpreinst\fP, \fBpostinst\fP och \fBpostrm\fP:
 .P
     dpkg\-maintscript\-helper symlink_to_dir \e
-        \fIsökväg\fP \fIgammalt\-mål\fP \fItidigare\-version\fP \fIpaket\fP \-\- "$@"
+        \fIsÃ¶kvÃ¤g\fP \fIgammalt\-mÃ¥l\fP \fItidigare\-version\fP \fIpaket\fP \-\- "$@"
 .P
-\fIsökväg\fP är den absoluta sökvägen för den gamla symboliska länken (sökvägen
-kommer vara en katalog när installationen är färdig) och \fIgammalt\-mål\fP är
-målet på den tidigare symboliska länken i \fIsökväg\fP. Den kan antingen vara
-absolut eller relativ till katalogen som innehåller \fIsökväg\fP.
+\fIsÃ¶kvÃ¤g\fP Ã¤r den absoluta sÃ¶kvÃ¤gen fÃ¶r den gamla symboliska lÃ¤nken (sÃ¶kvÃ¤gen
+kommer vara en katalog nÃ¤r installationen Ã¤r fÃ¤rdig) och \fIgammalt\-mÃ¥l\fP Ã¤r
+mÃ¥let pÃ¥ den tidigare symboliska lÃ¤nken i \fIsÃ¶kvÃ¤g\fP. Den kan antingen vara
+absolut eller relativ till katalogen som innehÃ¥ller \fIsÃ¶kvÃ¤g\fP.
 .P
-Aktuell implementation: I \fBpreinst\fP kontrolleras om den symboliska länken
-finns och pekar på \fIgammalt\-mål\fP, om inte lämnas den kvar, i annat fall
-byts namnet ut mot \fIsökväg\fP\fB.dpkg\-backup\fP. Vid konfigurering tar
-\fBpostinst\fP bort \fIsökväg\fP\fB.dpkg\-bakcup\fP om \fIsökväg\fP\fB.dpkg\-backup\fP
-fortfarande är en symbolisk länk. Vid avbruten uppgradering eller
-installation byter \fBpostrm\fP tillbaka namnet från \fIsökväg\fP\fB.dpkg\-bakcup\fP
-till \fIsökväg\fP om så behövs.
+Aktuell implementation: I \fBpreinst\fP kontrolleras om den symboliska lÃ¤nken
+finns och pekar pÃ¥ \fIgammalt\-mÃ¥l\fP, om inte lÃ¤mnas den kvar, i annat fall
+byts namnet ut mot \fIsÃ¶kvÃ¤g\fP\fB.dpkg\-backup\fP. Vid konfigurering tar
+\fBpostinst\fP bort \fIsÃ¶kvÃ¤g\fP\fB.dpkg\-bakcup\fP om \fIsÃ¶kvÃ¤g\fP\fB.dpkg\-backup\fP
+fortfarande Ã¤r en symbolisk lÃ¤nk. Vid avbruten uppgradering eller
+installation byter \fBpostrm\fP tillbaka namnet frÃ¥n \fIsÃ¶kvÃ¤g\fP\fB.dpkg\-bakcup\fP
+till \fIsÃ¶kvÃ¤g\fP om sÃ¥ behÃ¶vs.
 .
-.SS "Byta en symbolisk länk mot en katalog"
+.SS "Byta en symbolisk lÃ¤nk mot en katalog"
 .
-Om en riktig katalog byts mot en symbolisk länk måste du se till att
-katalogen tas bort innan uppackningen. Detta kan först verka vara en enkel
-ändring av \fBpreinst\fP\-skriptet, men det kommer leda till vissa problem om
-katalogen innehåller konffiler, sökvägar som ägs av andra paket, lokalt
-skapade sökvägar, eller om paketet skall nedgraderas.
+Om en riktig katalog byts mot en symbolisk lÃ¤nk mÃ¥ste du se till att
+katalogen tas bort innan uppackningen. Detta kan fÃ¶rst verka vara en enkel
+Ã¤ndring av \fBpreinst\fP\-skriptet, men det kommer leda till vissa problem om
+katalogen innehÃ¥ller konffiler, sÃ¶kvÃ¤gar som Ã¤gs av andra paket, lokalt
+skapade sÃ¶kvÃ¤gar, eller om paketet skall nedgraderas.
 .P
-Ett elegant byte kan implementeras genom att lägga in följande skalkod i
+Ett elegant byte kan implementeras genom att lÃ¤gga in fÃ¶ljande skalkod i
 paketskripten \fBpreinst\fP, \fBpostinst\fP och \fBpostrm\fP:
 .P
     dpkg\-maintscript\-helper dir_to_symlink \e
-        \fIsökväg\fP \fInytt\-mål\fP \fItidigare\-version\fP \fIpaket\fP \-\- "$@"
+        \fIsÃ¶kvÃ¤g\fP \fInytt\-mÃ¥l\fP \fItidigare\-version\fP \fIpaket\fP \-\- "$@"
 .P
-\fIsökväg\fP är det absoluta namnet på den gamla katalogen (sökvägen kommer
-vara en symbolisk länk när installationen är färdig) och \fInytt\-mål\fP är
-målet på den nya symboliska länken i \fIsökväg\fP. Den kan antingen vara
-absolut eller relativ till katalogen som innehåller \fIsökväg\fP.
+\fIsÃ¶kvÃ¤g\fP Ã¤r det absoluta namnet pÃ¥ den gamla katalogen (sÃ¶kvÃ¤gen kommer
+vara en symbolisk lÃ¤nk nÃ¤r installationen Ã¤r fÃ¤rdig) och \fInytt\-mÃ¥l\fP Ã¤r
+mÃ¥let pÃ¥ den nya symboliska lÃ¤nken i \fIsÃ¶kvÃ¤g\fP. Den kan antingen vara
+absolut eller relativ till katalogen som innehÃ¥ller \fIsÃ¶kvÃ¤g\fP.
 .P
 Aktuell implementation: I \fBpreinst\fP kontrolleras om katalogen finns, inte
-innehåller konffiler, sökvägar som ägs av andra paket, eller lokalt skapade
-sökvägar, om inte så kommer den lämnas kvar, annars byts namnet ut mot
-\fIsökväg\fP\fB.dpkg\-backup\fP och en tom samlingsplatskatalog skapas i \fIsökväg\fP,
-markerad med en fil så att dpkg kan hålla ordning på den. Vid konfigurering
-slutför \fBpostinst\fP växlingen om \fIsökväg\fP\fB.dpkg\-backup\fP fortfarande är en
-katalog och \fIsökväg\fP är samlingsplatskatalogen; den tar bort
-märkningsfilen, flyttar nyligen skapade filer inuti samlingskatalogen till
-målet för den symboliska länken \fInytt\-mål\fP/, ersätter den nu tomma
-samlingskatalogen \fIsökväg\fP med en symbolisk länk till \fInytt\-mål\fP och tar
-bort \fIsökväg\fP\fB.dpkg\-backup\fP. Vid avbruten uppgradering eller installation
-byter \fBpostrm\fP tillbaka namnet från \fIsökväg\fP\fB.dpkg\-backup\fP till \fIsökväg\fP
-om så behövs.
+innehÃ¥ller konffiler, sÃ¶kvÃ¤gar som Ã¤gs av andra paket, eller lokalt skapade
+sÃ¶kvÃ¤gar, om inte sÃ¥ kommer den lÃ¤mnas kvar, annars byts namnet ut mot
+\fIsÃ¶kvÃ¤g\fP\fB.dpkg\-backup\fP och en tom samlingsplatskatalog skapas i \fIsÃ¶kvÃ¤g\fP,
+markerad med en fil sÃ¥ att dpkg kan hÃ¥lla ordning pÃ¥ den. Vid konfigurering
+slutfÃ¶r \fBpostinst\fP vÃ¤xlingen om \fIsÃ¶kvÃ¤g\fP\fB.dpkg\-backup\fP fortfarande Ã¤r en
+katalog och \fIsÃ¶kvÃ¤g\fP Ã¤r samlingsplatskatalogen; den tar bort
+mÃ¤rkningsfilen, flyttar nyligen skapade filer inuti samlingskatalogen till
+mÃ¥let fÃ¶r den symboliska lÃ¤nken \fInytt\-mÃ¥l\fP/, ersÃ¤tter den nu tomma
+samlingskatalogen \fIsÃ¶kvÃ¤g\fP med en symbolisk lÃ¤nk till \fInytt\-mÃ¥l\fP och tar
+bort \fIsÃ¶kvÃ¤g\fP\fB.dpkg\-backup\fP. Vid avbruten uppgradering eller installation
+byter \fBpostrm\fP tillbaka namnet frÃ¥n \fIsÃ¶kvÃ¤g\fP\fB.dpkg\-backup\fP till \fIsÃ¶kvÃ¤g\fP
+om sÃ¥ behÃ¶vs.
 .
 .SH "INTEGRERA I PAKET"
 .P
-När ett paketeringshjälpprogram används, kontrollera att det har direkt
-integrering med \fBdpkg\-maintscript\-helper\fP, något som kan göra ditt liv
+NÃ¤r ett paketeringshjÃ¤lpprogram anvÃ¤nds, kontrollera att det har direkt
+integrering med \fBdpkg\-maintscript\-helper\fP, nÃ¥got som kan gÃ¶ra ditt liv
 enklare. Se till exempel \fBdh_installdeb\fP(1).
 .P
-Givet att \fBdpkg\-maintscript\-helper\fP används i \fBpreinst\fP så innebär detta
-villkorslöst att ett förhandsberoende ("pre\-dependency") krävs för att
-försäkra att den nödvändiga versionen av \fBdpkg\fP redan har packats upp. Den
-version som krävs beror på vilket kommando som används, för \fBrm_conffile\fP
-och \fBmv_conffile\fP är det 1.15.7.2, för \fBsymlink_to_dir\fP och
-\fBdir_to_symlnk\fP är det 1.17.14:
+Givet att \fBdpkg\-maintscript\-helper\fP anvÃ¤nds i \fBpreinst\fP sÃ¥ innebÃ¤r detta
+villkorslÃ¶st att ett fÃ¶rhandsberoende ("pre\-dependency") krÃ¤vs fÃ¶r att
+fÃ¶rsÃ¤kra att den nÃ¶dvÃ¤ndiga versionen av \fBdpkg\fP redan har packats upp. Den
+version som krÃ¤vs beror pÃ¥ vilket kommando som anvÃ¤nds, fÃ¶r \fBrm_conffile\fP
+och \fBmv_conffile\fP Ã¤r det 1.15.7.2, fÃ¶r \fBsymlink_to_dir\fP och
+\fBdir_to_symlnk\fP Ã¤r det 1.17.14:
 .P
     \fBPre\-Depends:\fP dpkg (>= 1.17.14)
 .P
-Men i många fall är operationen som utförs av programmet inte kritiskt för
-paketet, och istället för att använda ett förhandsberoende kan vi anropa
-programmet endast om vi vet att det nödvändiga kommandot stöds av den nu
+Men i mÃ¥nga fall Ã¤r operationen som utfÃ¶rs av programmet inte kritiskt fÃ¶r
+paketet, och istÃ¤llet fÃ¶r att anvÃ¤nda ett fÃ¶rhandsberoende kan vi anropa
+programmet endast om vi vet att det nÃ¶dvÃ¤ndiga kommandot stÃ¶ds av den nu
 installerade \fBdpkg\fP:
 .P
     if dpkg\-maintscript\-helper supports \fIkommando\fP; then
         dpkg\-maintscript\-helper \fIkommando\fP ...
     fi
 .P
-Kommandot \fBsupports\fP returnerar 0 vid framgång, annars 1. Kommandot
-\fBsupports\fP kontrollerar om miljövariablerna som sätts av dpkg och som krävs
-av skriptet är närvarande, och kommer anse det som ett fel om
-miljövariablerna inte är tillräckliga.
-.SH "SE ÄVEN"
+Kommandot \fBsupports\fP returnerar 0 vid framgÃ¥ng, annars 1. Kommandot
+\fBsupports\fP kontrollerar om miljÃ¶variablerna som sÃ¤tts av dpkg och som krÃ¤vs
+av skriptet Ã¤r nÃ¤rvarande, och kommer anse det som ett fel om
+miljÃ¶variablerna inte Ã¤r tillrÃ¤ckliga.
+.SH "SE Ã„VEN"
 .ad l
 .nh
 \fBdh_installdeb\fP(1).
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

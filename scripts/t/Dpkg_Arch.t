@@ -13,13 +13,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use Test::More tests => 42;
-
 use strict;
 use warnings;
 
+use Test::More tests => 64;
+
 use_ok('Dpkg::Arch', qw(debarch_to_debtriplet debarch_to_multiarch
-                        debarch_eq debarch_is debarch_is_wildcard));
+                        debarch_eq debarch_is debarch_is_wildcard
+                        debarch_is_illegal
+                        debarch_to_cpuattrs
+                        debarch_list_parse
+                        debtriplet_to_debarch gnutriplet_to_debarch
+                        get_host_gnu_type
+                        get_valid_arches));
 
 my @tuple_new;
 my @tuple_ref;
@@ -82,5 +88,47 @@ ok(debarch_is_wildcard('any-amd64'), 'any-<cpu> is a wildcard');
 ok(debarch_is_wildcard('gnu-any-any'), '<abi>-any-any is a wildcard');
 ok(debarch_is_wildcard('any-linux-any'), 'any-<os>-any is a wildcard');
 ok(debarch_is_wildcard('any-any-amd64'), 'any-any-<cpu> is a wildcard');
+
+ok(!debarch_is_illegal('0'), '');
+ok(!debarch_is_illegal('a'), '');
+ok(!debarch_is_illegal('amd64'), '');
+ok(!debarch_is_illegal('!arm64'), '');
+ok(!debarch_is_illegal('kfreebsd-any'), '');
+ok(debarch_is_illegal('!amd64!arm'), '');
+ok(debarch_is_illegal('arch%name'), '');
+ok(debarch_is_illegal('-any'), '');
+ok(debarch_is_illegal('!'), '');
+
+my @arch_new;
+my @arch_ref;
+
+@arch_ref = qw(amd64 !arm64 linux-i386 !kfreebsd-any);
+@arch_new = debarch_list_parse('amd64  !arm64   linux-i386 !kfreebsd-any');
+is_deeply(\@arch_new, \@arch_ref, 'parse valid arch list');
+
+eval { @arch_new = debarch_list_parse('!amd64!arm64') };
+ok($@, 'parse concatenated arches failed');
+
+is(debarch_to_cpuattrs(undef), undef, 'undef cpu attrs');
+is_deeply([ debarch_to_cpuattrs('amd64') ], [ qw(64 little) ], 'amd64 cpu attrs');
+
+is(debtriplet_to_debarch(undef, undef, undef), undef, 'undef debtriplet');
+is(debtriplet_to_debarch('gnu', 'linux', 'amd64'), 'amd64', 'known debtriplet');
+is(debtriplet_to_debarch('unknown', 'unknown', 'unknown'), undef, 'unknown debtriplet');
+
+is(gnutriplet_to_debarch(undef), undef, 'undef gnutriplet');
+is(gnutriplet_to_debarch('unknown-unknown-unknown'), undef, 'unknown gnutriplet');
+is(gnutriplet_to_debarch('x86_64-linux-gnu'), 'amd64', 'known gnutriplet');
+
+is(scalar get_valid_arches(), 489, 'expected amount of known architectures');
+
+{
+    local $ENV{CC} = 'false';
+    is(get_host_gnu_type(), '', 'CC does not support -dumpmachine');
+
+    $ENV{CC} = 'echo CC';
+    is(get_host_gnu_type(), 'CC -dumpmachine',
+       'CC does not report expected synthetic result for -dumpmachine');
+}
 
 1;

@@ -1,8 +1,8 @@
 .\" dpkg manual page - dpkg-gencontrol(1)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright Â© 2006, 2012-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2006, 2012-2013, 2015 Guillem Jover <guillem@debian.org>
 .\" Copyright Â© 2007-2008 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -31,93 +31,93 @@ dpkg\-gencontrol \- skapa Debians kontrollfiler
 \fBdpkg\-gencontrol\fP [\fIflagga\fP...]
 .
 .SH BESKRIVNING
-\fBdpkg\-gencontrol\fP läser information från ett uppackat Debiankällkodsträd
-och genererar en binärpaketsstyrfil (som standard
-debian/tmp/DEBIAN/control). Relationsfälten kommer att förenklas.
+\fBdpkg\-gencontrol\fP lÃ¤ser information frÃ¥n ett uppackat DebiankÃ¤llkodstrÃ¤d
+och genererar en binÃ¤rpaketsstyrfil (som standard
+debian/tmp/DEBIAN/control). RelationsfÃ¤lten kommer att fÃ¶renklas.
 .sp
-Fälten \fBPre\-Depends\fP, \fBDepends\fP, \fBRecommends\fP och \fBSuggests\fP förenklas
-därmed, i den följden, genom att ta bort beroenden som programmet vet
-tillhandahålls av starkare beroenden som redan tolkats. Det kommer även ta
-bort eventuella egenberoenden (programmet tar bort alla beroenden som är
-uppfyllda när den nuvarande versionen av paketet är installerat). Logiskt
-behålls snittet av multipla beroenden på samma paket. Ordningsföljden mellan
-beroendena behålls så långt som möjligt: om ett beroende måste tas bort på
-grund av att ett beroende återkommer senare i fältet kommer det nya
-beroendet att ta platsen från det som ersattes.
+FÃ¤lten \fBPre\-Depends\fP, \fBDepends\fP, \fBRecommends\fP och \fBSuggests\fP fÃ¶renklas
+dÃ¤rmed, i den fÃ¶ljden, genom att ta bort beroenden som programmet vet
+tillhandahÃ¥lls av starkare beroenden som redan tolkats. Det kommer Ã¤ven ta
+bort eventuella egenberoenden (programmet tar bort alla beroenden som Ã¤r
+uppfyllda nÃ¤r den nuvarande versionen av paketet Ã¤r installerat). Logiskt
+behÃ¥lls snittet av multipla beroenden pÃ¥ samma paket. OrdningsfÃ¶ljden mellan
+beroendena behÃ¥lls sÃ¥ lÃ¥ngt som mÃ¶jligt: om ett beroende mÃ¥ste tas bort pÃ¥
+grund av att ett beroende Ã¥terkommer senare i fÃ¤ltet kommer det nya
+beroendet att ta platsen frÃ¥n det som ersattes.
 .sp
-Övriga relationsfält (\fBEnhances\fP, \fBConflicts\fP, \fBBreaks\fP, \fBReplaces\fP och
-\fBProvides\fP) förenklas även individuellt genom att beräkna unionen av de
-olika beroendena när ett paket förekommer flera gånger i samma fält.
+Ã–vriga relationsfÃ¤lt (\fBEnhances\fP, \fBConflicts\fP, \fBBreaks\fP, \fBReplaces\fP och
+\fBProvides\fP) fÃ¶renklas Ã¤ven individuellt genom att berÃ¤kna unionen av de
+olika beroendena nÃ¤r ett paket fÃ¶rekommer flera gÃ¥nger i samma fÃ¤lt.
 .sp
-\fBdpkg\-gencontrol\fP lägger dessutom till en post för binärpaketet i
+\fBdpkg\-gencontrol\fP lÃ¤gger dessutom till en post fÃ¶r binÃ¤rpaketet i
 \fBdebian/files\fP.
 .
 .SH FLAGGOR
 .TP 
 \fB\-v\fP\fIversion\fP
-Sätter versionsnumret på binärpaketet som skall skapas.
+SÃ¤tter versionsnumret pÃ¥ binÃ¤rpaketet som skall skapas.
 .TP 
-\fB\-V\fP\fInamn\fP\fB=\fP\fIvärde\fP
-Ställer in en utdatasubstitueringsvariabel. Se \fBdeb\-substvars\fP(5) för en
+\fB\-V\fP\fInamn\fP\fB=\fP\fIvÃ¤rde\fP
+StÃ¤ller in en utdatasubstitueringsvariabel. Se \fBdeb\-substvars\fP(5) fÃ¶r en
 beskrivning av utdatasubstituering.
 .TP 
 \fB\-T\fP\fIsubstvars\-fil\fP
-Läs substitutionsvariabler från \fIsubstvars\-fil\fP; standard är
-\fBdebian/substvars\fP. Flaggan kan användas flera gånger för att läsa
-substitutionsvariabler från flera filer.
+Read substitution variables in \fIsubstvars\-file\fP; the default is
+\fBdebian/substvars\fP.  This option can be used multiple times to read
+substitution variables from multiple files (since dpkg 1.15.6).
 .TP 
-\fB\-D\fP\fIfält\fP\fB=\fP\fIvärde\fP
-Ersätt eller lägg till ett fält i den genererade control\-filen.
+\fB\-D\fP\fIfÃ¤lt\fP\fB=\fP\fIvÃ¤rde\fP
+ErsÃ¤tt eller lÃ¤gg till ett fÃ¤lt i den genererade control\-filen.
 .TP 
-\fB\-U\fP\fIfält\fP
-Ta bort ett fält ur den genererade control\-filen.
+\fB\-U\fP\fIfÃ¤lt\fP
+Ta bort ett fÃ¤lt ur den genererade control\-filen.
 .TP 
 \fB\-c\fP\fIcontrol\-fil\fP
-Anger huvudkällkodskontrollfilen som information skall läsas
-från. Standardvärdet är \fBdebian/control\fP.
+Anger huvudkÃ¤llkodskontrollfilen som information skall lÃ¤sas
+frÃ¥n. StandardvÃ¤rdet Ã¤r \fBdebian/control\fP.
 .TP 
-\fB\-l\fP\fIändringsloggfil\fP
-Anger ändringsloggfilen som information skall läsas från. Standardvärdet är
+\fB\-l\fP\fIÃ¤ndringsloggfil\fP
+Anger Ã¤ndringsloggfilen som information skall lÃ¤sas frÃ¥n. StandardvÃ¤rdet Ã¤r
 \fBdebian/changelog\fP.
 .TP 
 \fB\-f\fP\fIfillistfil\fP
-Läs eller skriv listan över filer som skall sändas in här, istället för att
-använda \fBdebian/file\fP.
+LÃ¤s eller skriv listan Ã¶ver filer som skall sÃ¤ndas in hÃ¤r, istÃ¤llet fÃ¶r att
+anvÃ¤nda \fBdebian/file\fP.
 .TP 
-\fB\-F\fP\fIändringsloggformat\fP
-Anger format på ändringsloggen. Se \fBdpkg\-parsechangelog\fP(1) för information
+\fB\-F\fP\fIÃ¤ndringsloggformat\fP
+Anger format pÃ¥ Ã¤ndringsloggen. Se \fBdpkg\-parsechangelog\fP(1) fÃ¶r information
 om alternativa format.
 .TP 
 \fB\-p\fP\fIpaket\fP
-Skapa information för det binära paketet \fIpaket\fP. Om källkodens control\-fil
-bara innehåller ett binärpaket behöver inte flaggan anges. I alla andra fall
-är det nödvändigt att välja vilket binärpakets information som skall skapas.
+Skapa information fÃ¶r det binÃ¤ra paketet \fIpaket\fP. Om kÃ¤llkodens control\-fil
+bara innehÃ¥ller ett binÃ¤rpaket behÃ¶ver inte flaggan anges. I alla andra fall
+Ã¤r det nÃ¶dvÃ¤ndigt att vÃ¤lja vilket binÃ¤rpakets information som skall skapas.
 .TP 
 \fB\-n\fP\fIfilnamn\fP
-Anta att filnamnet för paketet skalla vara \fIfilnamn\fP istället för det
+Anta att filnamnet fÃ¶r paketet skalla vara \fIfilnamn\fP istÃ¤llet fÃ¶r det
 normala paket_version_ark.deb\-filnamnet.
 .TP 
 \fB\-is\fP, \fB\-ip\fP, \fB\-isp\fP
-Dessa flaggor ignoreras för kompatibilitet med äldre versioner av dpkg:s
-byggskript men avråds numera ifrån. De användes tidigare för att tala om för
-\fBdpkg\-gencontrol\fP att inkludera Section\- och Priority\-fälten i
-control\-filen. Detta är numera standardbeteendet. Om du vill återskapa det
-gamla beteendet kan du använda flaggan \fB\-U\fP för att ta bort fälten från
+Dessa flaggor ignoreras fÃ¶r kompatibilitet med Ã¤ldre versioner av dpkg:s
+byggskript men avrÃ¥ds numera ifrÃ¥n. De anvÃ¤ndes tidigare fÃ¶r att tala om fÃ¶r
+\fBdpkg\-gencontrol\fP att inkludera Section\- och Priority\-fÃ¤lten i
+control\-filen. Detta Ã¤r numera standardbeteendet. Om du vill Ã¥terskapa det
+gamla beteendet kan du anvÃ¤nda flaggan \fB\-U\fP fÃ¶r att ta bort fÃ¤lten frÃ¥n
 control\-filen.
 .TP 
 \fB\-P\fP\fIpaketbyggkatalog\fP
-Talar om för \fBdpkg\-source\fP att paketet byggs i \fIpaketbyggkatalog\fP i
-stället för \fBdebian/tmp\fP. Värdet används för att bestämma standardvärdet
-för substitueringsvariabeln och control\-filsfältet \fBInstalled\-Size\fP (med
-hjälp av \fBdu\fP), samt för att välja standardplacering av utdatafilen.
+Talar om fÃ¶r \fBdpkg\-source\fP att paketet byggs i \fIpaketbyggkatalog\fP i
+stÃ¤llet fÃ¶r \fBdebian/tmp\fP. VÃ¤rdet anvÃ¤nds fÃ¶r att bestÃ¤mma standardvÃ¤rdet
+fÃ¶r substitueringsvariabeln och control\-filsfÃ¤ltet \fBInstalled\-Size\fP (med
+hjÃ¤lp av \fBdu\fP), samt fÃ¶r att vÃ¤lja standardplacering av utdatafilen.
 .TP 
 \fB\-O\fP[\fIfilnamn\fP]
-Skriv control\-filen på standard ut (eller \fIfilnamn\fP, om angivet), i stället
-för till \fBdebian/tmp/DEBIAN/control\fP (eller
-\fIpaketbyggkatalog\fP\fB/DEBIAN/control\fP om \fB\-P\fP användes).
+Print the control file to standard output (or \fIfilename\fP if specified,
+since dpkg 1.17.2), rather than to \fBdebian/tmp/DEBIAN/control\fP (or
+\fIpackage\-build\-dir\fP\fB/DEBIAN/control\fP if \fB\-P\fP was used).
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Visar hjälpskärm och avslutar.
+Visar hjÃ¤lpskÃ¤rm och avslutar.
 .TP 
 \fB\-\-version\fP
 Visar version och avslutar.
@@ -125,12 +125,17 @@ Visar version och avslutar.
 .SH FILER
 .TP 
 \fBdebian/control\fP
-Huvudkällkodskontrollinformationsfil, vilken innehåller versionsoberoende
-information om källkodspaketet och de binärpaket som kan skapas från det.
+HuvudkÃ¤llkodskontrollinformationsfil, vilken innehÃ¥ller versionsoberoende
+information om kÃ¤llkodspaketet och de binÃ¤rpaket som kan skapas frÃ¥n det.
 .TP 
 \fBdebian/files\fP
-Listan över genererade filer som ingår i insändningen som
-skapas. \fBdpkg\-gencontrol\fP lägger till de förutsatta filnamnen på
-binärpaketen vars control\-filer det genererar här.
-.SH ÖVERSÄTTNING
+Listan Ã¶ver genererade filer som ingÃ¥r i insÃ¤ndningen som
+skapas. \fBdpkg\-gencontrol\fP lÃ¤gger till de fÃ¶rutsatta filnamnen pÃ¥
+binÃ¤rpaketen vars control\-filer det genererar hÃ¤r.
+.SH "SE Ã„VEN"
+.ad l
+.nh
+\fBdeb\-substvars\fP(5), \fBdeb\-src\-control\fP(5), \fBdeb\-changelog\fP(5),
+\fBdeb\-control\fP(5).
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

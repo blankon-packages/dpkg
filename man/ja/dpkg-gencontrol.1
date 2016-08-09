@@ -1,8 +1,8 @@
 .\" dpkg manual page - dpkg-gencontrol(1)
 .\"
-.\" Copyright © 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright © 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright © 2000 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright © 2006, 2012-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright © 2006, 2012-2013, 2015 Guillem Jover <guillem@debian.org>
 .\" Copyright © 2007-2008 Raphaël Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -23,16 +23,16 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-gencontrol 1 2013\-09\-06 "Debian Project" "dpkg �桼�ƥ���ƥ�"
-.SH ̾��
-dpkg\-gencontrol \- Debian ����ե����������
+.TH dpkg\-gencontrol 1 2013\-09\-06 "Debian Project" "dpkg ユーティリティ"
+.SH 名前
+dpkg\-gencontrol \- Debian 制御ファイルの生成
 .
-.SH ��
+.SH 書式
 \fBdpkg\-gencontrol\fP [\fIoption\fP...]
 .
-.SH ����
-\fBdpkg\-gencontrol\fP ��Ÿ�����줿 Debian �������ĥ꡼���������ɤ߼�ꡢ�Х��ʥ�ѥå������� control �ե�����
-(�ǥե���ȤǤ� debian/tmp/DEBIAN/control) ���������롣�����β����ǡ���Ϣ����ե�����ɤ�ñ�㲽��Ԥ���
+.SH 説明
+\fBdpkg\-gencontrol\fP は展開された Debian ソースツリーから情報を読み取り、バイナリパッケージの control ファイル
+(デフォルトでは debian/tmp/DEBIAN/control) を生成する。生成の過程で、関連するフィールドの単純化も行う。
 .sp
 Thus \fBPre\-Depends\fP, \fBDepends\fP, \fBRecommends\fP and \fBSuggests\fP are
 simplified in this order by removing dependencies which are known to be true
@@ -49,45 +49,46 @@ and \fBProvides\fP)  are also simplified individually by computing the union of
 the various dependencies when a package is listed multiple times in the
 field.
 .sp
-\fBdpkg\-gencontrol\fP �� \fBdebian/files\fP �ؤΥХ��ʥ�ѥå������Υ���ȥ��ɲä�Ԥ���
+\fBdpkg\-gencontrol\fP は \fBdebian/files\fP へのバイナリパッケージのエントリ追加も行う。
 .
-.SH ���ץ����
+.SH オプション
 .TP 
 \fB\-v\fP\fIversion\fP
-���������Х��ʥ�ѥå������ΥС�������ֹ�����ꤹ�롣
+生成されるバイナリパッケージのバージョン番号を設定する。
 .TP 
 \fB\-V\fP\fIname\fP\fB=\fP\fIvalue\fP
-�ѿ������ꤹ�롣���ϻ����ִ��˴ؤ���ܺ٤ϡ�\fBdeb\-substvars\fP(5) �򻲾ȤΤ��ȡ�
+変数を設定する。出力時の置換に関する詳細は、\fBdeb\-substvars\fP(5) を参照のこと。
 .TP 
 \fB\-T\fP\fIsubstvars\-file\fP
-�ѿ�������� \fIsubstvars\-file\fP �����ɤ߼�롣�ǥե���Ȥ� \fBdebian/substvars\fP
-�Ǥ��롣���Υ��ץ�����ʣ�������ꤹ�뤳�Ȥǡ�ʣ���Υե����뤫���ѿ��ִ���������ɤ߼�뤳�Ȥ��Ǥ��롣
+Read substitution variables in \fIsubstvars\-file\fP; the default is
+\fBdebian/substvars\fP.  This option can be used multiple times to read
+substitution variables from multiple files (since dpkg 1.15.6).
 .TP 
 \fB\-D\fP\fIfield\fP\fB=\fP\fIvalue\fP
-��������ե�����Υե�����ɤ��񤭤⤷�����ɲä��롣
+出力制御ファイルのフィールドを上書きもしくは追加する。
 .TP 
 \fB\-U\fP\fIfield\fP
-��������ե�����Υե�����ɤ������롣
+出力制御ファイルのフィールドを削除する。
 .TP 
 \fB\-c\fP\fIcontrol\-file\fP
-������ɤ߼�긵�Ȥʤ��ʥ���������ե��������ꤹ�롣�ǥե���Ȥ� \fBdebian/control\fP��
+情報の読み取り元となる主なソース制御ファイルを指定する。デフォルトは \fBdebian/control\fP。
 .TP 
 \fB\-l\fP\fIchangelog\-file\fP
-������ɤ߼�긵�Ȥʤ� changelog �ե��������ꤹ�롣�ǥե���Ȥ� \fBdebian/changelog\fP��
+情報の読み取り元となる changelog ファイルを指定する。デフォルトは \fBdebian/changelog\fP。
 .TP 
 \fB\-f\fP\fIfiles\-list\-file\fP
-\fBdebian/files\fP ������ˤ��Υե�����˵��ܤ��줿�ե�����Υꥹ�Ȥ��ɤ߽񤭤��롣
+\fBdebian/files\fP の代わりにこのファイルに記載されたファイルのリストを読み書きする。
 .TP 
 \fB\-F\fP\fIchangelog\-format\fP
-changelog �ե�����Υե����ޥåȤ���ꤹ�롣�����ǽ�ʥե����ޥåȤˤĤ��Ƥξ���ϡ�\fBdpkg\-parsechangelog\fP(1)
-�򻲾ȤΤ��ȡ�
+changelog ファイルのフォーマットを指定する。指定可能なフォーマットについての情報は、\fBdpkg\-parsechangelog\fP(1)
+を参照のこと。
 .TP 
 \fB\-p\fP\fIpackage\fP
-�Х��ʥ�ѥå����� \fIpackage\fP
-�ξ�����������롣����������ե������ñ��ΥХ��ʥ�ѥå��������������ܤ���Ƥ�����硢���Υ��ץ����Ͼ�ά���Ƥ�褤������ʳ��ξ��ϡ��ɤΥХ��ʥ�ѥå������ξ�����������뤫�����򤹤��ǡ����Υ��ץ�����Բķ�Ǥ��롣
+バイナリパッケージ \fIpackage\fP
+の情報を生成する。ソース制御ファイルに単一のバイナリパッケージだけが記載されていた場合、このオプションは省略してもよい。それ以外の場合は、どのバイナリパッケージの情報を生成するかを選択する上で、このオプションが不可欠である。
 .TP 
 \fB\-n\fP\fIfilename\fP
-�̾�� package_version_arch.deb �Ȥ����ե�����̾�ǤϤʤ����ѥå������Υե�����̾�� \fIfilename\fP �Ȥ��롣
+通常の package_version_arch.deb というファイル名ではなく、パッケージのファイル名を \fIfilename\fP とする。
 .TP 
 \fB\-is\fP, \fB\-ip\fP, \fB\-isp\fP
 These options are ignored for compatibility with older versions of the dpkg
@@ -98,37 +99,42 @@ behaviour you can use the \fB\-U\fP option to delete the fields from the control
 file.
 .TP 
 \fB\-P\fP\fIpackage\-build\-dir\fP
-\fBdpkg\-source\fP ���Ф��ơ��ѥå������� \fBdebian/tmp\fP �ǤϤʤ� \fIpackage\-build\-dir\fP
-��ǥӥ�ɤ���褦�����ꤹ�롣�����ͤ� \fBInstalled\-Size\fP �ѿ�������ե�����ե�����ɤ��ͤΥǥե�����ͤ� (\fBdu\fP ���Ѥ���)
-���Ф���ݤ��Ѥ�����¾�����ϥե�����Υǥե���Ȥξ��Ȥ��Ƥ��Ѥ����롣
+\fBdpkg\-source\fP に対して、パッケージを \fBdebian/tmp\fP ではなく \fIpackage\-build\-dir\fP
+内でビルドするように設定する。この値は \fBInstalled\-Size\fP 変数や制御ファイルフィールドの値のデフォルト値を (\fBdu\fP を用いて)
+算出する際に用いられる他、出力ファイルのデフォルトの場所としても用いられる。
 .TP 
 \fB\-O\fP[\fIfilename\fP]
-Print the control file to standard output (or \fIfilename\fP if specified),
-rather than to \fBdebian/tmp/DEBIAN/control\fP (or
+Print the control file to standard output (or \fIfilename\fP if specified,
+since dpkg 1.17.2), rather than to \fBdebian/tmp/DEBIAN/control\fP (or
 \fIpackage\-build\-dir\fP\fB/DEBIAN/control\fP if \fB\-P\fP was used).
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-������ˡ��ɽ�����ƽ�λ���롣
+利用方法を表示して終了する。
 .TP 
 \fB\-\-version\fP
-�С����������ɽ�����ƽ�λ���롣
+バージョン情報を表示して終了する。
 .
-.SH �ե�����
+.SH ファイル
 .TP 
 \fBdebian/control\fP
-�礿�륽�����������ե�����Ǥ��ꡢ������ǽ�ʥ������ѥå���������ӥХ��ʥ�ѥå������˴ؤ���С���������¸�ξ�����󶡤��롣
+主たるソース制御情報ファイルであり、生成可能なソースパッケージおよびバイナリパッケージに関するバージョン非依存の情報を提供する。
 .TP 
 \fBdebian/files\fP
-���åץ����ɤν����ΰ�����ʤ����������줿�ե�����Υꥹ�ȡ�\fBdpkg\-gencontrol\fP
-�ϡ�����ե���������������Х��ʥ�ѥå������Υե�����̾���ɲä��롣
-.SH ������
-�ⶶ �� <monyo@monyo.com>.
-���� �� <kise@fuyuneko.jp>.
-�ظ� ���� <sekido@mbox.kyoto-inet.or.jp>.
-��ë ��Ÿ <nabe@debian.or.jp>.
-��߷ ˾ <nabetaro@debian.or.jp>.
-���� �� <ishikawa@linux.or.jp>.
-���� ʸ�� <ukai@debian.or.jp>.
-���� ��ͺ <nakano@apm.seikei.ac.jp>.
-.SH ��������
+アップロードの準備の一部をなす、生成されたファイルのリスト。\fBdpkg\-gencontrol\fP
+は、制御ファイルを生成したバイナリパッケージのファイル名を追加する。
+.SH 関連項目
+.ad l
+.nh
+\fBdeb\-substvars\fP(5), \fBdeb\-src\-control\fP(5), \fBdeb\-changelog\fP(5),
+\fBdeb\-control\fP(5).
+.SH 翻訳者
+高橋 基信 <monyo@monyo.com>.
+喜瀬 浩 <kise@fuyuneko.jp>.
+関戸 幸一 <sekido@mbox.kyoto-inet.or.jp>.
+鍋谷 栄展 <nabe@debian.or.jp>.
+倉澤 望 <nabetaro@debian.or.jp>.
+石川 睦 <ishikawa@linux.or.jp>.
+鵜飼 文敏 <ukai@debian.or.jp>.
+中野 武雄 <nakano@apm.seikei.ac.jp>.
+.SH 翻訳校正
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

@@ -23,40 +23,39 @@
 .\"*******************************************************************
 .TH deb\-shlibs 5 2012\-02\-08 Debianprojektet dpkg\-verktygen
 .SH NAMN
-deb\-shlibs \- Debians informationsfil för delade bibliotek
+deb\-shlibs \- Debians informationsfil fÃ¶r delade bibliotek
 .
 .SH BESKRIVNING
 .PP
 \fBshlibs\fP\-filer skapar en koppling mellan biblioteksnamn och versioner
-(\fIsonamn\fP) till beroenden som är lämpliga för en paketstyrfil. Den har en
-post per rad. Blanka rader är \fBinte\fP tillåtna. Rader som inleds med ett
-\fB#\fP\-tecken anses vara kommentarer, och ignoreras. Alla andra rader måste
-vara på formatet
+(\fIsonamn\fP) till beroenden som Ã¤r lÃ¤mpliga fÃ¶r en paketstyrfil. Den har en
+post per rad. Blanka rader Ã¤r \fBinte\fP tillÃ¥tna. Rader som inleds med ett
+\fB#\fP\-tecken anses vara kommentarer, och ignoreras. Alla andra rader mÃ¥ste
+vara pÃ¥ formatet
 .IP
 [\fItyp\fP\fB:\fP] \fIbibliotek\fP \fIversion\fP \fIberoenden\fP
 .PP
-Fälten \fIbibliotek\fP och \fIversion\fP avdelas med blanktecken medan fältet
-\fIberoenden\fP sträcker sig till slutet av raden. Fältet \fItyp\fP är frivilligt
-och behövs vanligtvis inte.
+FÃ¤lten \fIbibliotek\fP och \fIversion\fP avdelas med blanktecken medan fÃ¤ltet
+\fIberoenden\fP strÃ¤cker sig till slutet av raden. FÃ¤ltet \fItyp\fP Ã¤r frivilligt
+och behÃ¶vs vanligtvis inte.
 .PP
-Fältet \fIdependencies\fP har samma syntax som fältet \fBDepends\fP i en
-binär\-kontrollfil, se \fBdeb\-control\fP(5). Se även Debians policyhandbok för
-ytterligare detaljer.
+The \fIdependencies\fP field has the same syntax as the \fBDepends\fP field in a
+binary control file, see \fBdeb\-control\fP(5).
 .
 .SH EXEMPEL
 .PP
-\fBshlibs\fP\-filen för ett typiskt bibliotekspaket, som heter \fIlibcrunch1\fP och
-som innehåller ett bibliotek vars sonamn är \fIlibcrunch.so.1\fP, kan se ut så
-här:
+\fBshlibs\fP\-filen fÃ¶r ett typiskt bibliotekspaket, som heter \fIlibcrunch1\fP och
+som innehÃ¥ller ett bibliotek vars sonamn Ã¤r \fIlibcrunch.so.1\fP, kan se ut sÃ¥
+hÃ¤r:
 .IP
 libcrunch 1 libcrunch1 (>= 1.2\-1)
 .PP
-Fältet \fIberoenden\fP måste ange den senaste versionen av paketet som lade
-till nya symboler i biblioteket: i exemplet ovan lades nya symboler till i
-version 1.2 av \fIlibcrunch\fP. Det är inte den enda orsaken till att beroenden
-kan behöva snävas in; återigen, se Debians policymanual för detaljer.
+The \fIdependencies\fP must mention the most recent version of the package that
+added new symbols to the library: in the above example, new symbols were
+added to version 1.2 of \fIlibcrunch\fP.  This is not the only reason the
+dependencies might need to be tightened.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 \fBdeb\-control\fP(5), \fBdpkg\-shlibdeps\fP(1), \fBdeb\-symbols\fP(5).
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

@@ -22,40 +22,40 @@
 .\"*******************************************************************
 .TH dpkg\-mergechangelogs 1 "14 de agosto del 2011" "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
-dpkg\-mergechangelogs \- Fusión a partir de tres versiones («3\-way merge») de
-ficheros «debian/changelog»
+dpkg\-mergechangelogs \- FusiÃ³n a partir de tres versiones (Â«3\-way mergeÂ») de
+ficheros Â«debian/changelogÂ»
 .
 .SH SINOPSIS
-\fBdpkg\-mergechangelogs\fP [\fIopción\fP...] \fIantiguo\fP \fInuevo\-a\fP \fInuevo\-b\fP
+\fBdpkg\-mergechangelogs\fP [\fIopciÃ³n\fP...] \fIantiguo\fP \fInuevo\-a\fP \fInuevo\-b\fP
 [\fIsalida\fP]
 .
-.SH DESCRIPCIÓN
+.SH DESCRIPCIÃ“N
 .P
 Este programa usa las tres versiones proporcionadas del registro de cambios
-de Debian para generar un fichero de registro de cambios («changelog»)
+de Debian para generar un fichero de registro de cambios (Â«changelogÂ»)
 fusionado. El registro de cambios resultante se guarda en el fichero
-\fIsalida\fP, o se mostrará por la salida estándar en caso de no introducir tal
-parámetro.
+\fIsalida\fP, o se mostrarÃ¡ por la salida estÃ¡ndar en caso de no introducir tal
+parÃ¡metro.
 .P
-Cada entrada se identifica por su número de versión y, asumiendo que no
-entran en conflicto, se fusionarán en el orden correcto (por orden
-decreciente del número de versión). Cuando se usa \fB\-\-merge\-prereleases\fP, se
-omitirá el número de versión tras la última tilde, de forma que «1.0\-1~exp1»
-y «1.0\-1~exp5» se tomarán como la misma entrada. Cuando la misma versión
-está disponible en \fInuevo\-a\fP y \fInuevo\-b\fP, se intentará una fusión estándar
-de las líneas de las tres versiones (sólo si esta disponible el módulo
-«Algorithm::Merge» \[em] parte del paquete «libalgorithm\-merge\-perl» \[em],
-de no ser así, obtendrá un conflicto global en el contenido de la entrada).
+Cada entrada se identifica por su nÃºmero de versiÃ³n y, asumiendo que no
+entran en conflicto, se fusionarÃ¡n en el orden correcto (por orden
+decreciente del nÃºmero de versiÃ³n). Cuando se usa \fB\-\-merge\-prereleases\fP, se
+omitirÃ¡ el nÃºmero de versiÃ³n tras la Ãºltima tilde, de forma que Â«1.0\-1~exp1Â»
+y Â«1.0\-1~exp5Â» se tomarÃ¡n como la misma entrada. Cuando la misma versiÃ³n
+estÃ¡ disponible en \fInuevo\-a\fP y \fInuevo\-b\fP, se intentarÃ¡ una fusiÃ³n estÃ¡ndar
+de las lÃ­neas de las tres versiones (sÃ³lo si esta disponible el mÃ³dulo
+Â«Algorithm::MergeÂ» \[em] parte del paquete Â«libalgorithm\-merge\-perlÂ» \[em],
+de no ser asÃ­, obtendrÃ¡ un conflicto global en el contenido de la entrada).
 .
 .SH OPCIONES
 .TP 
-\fB\-\-merge\-prereleases\fP, \fB\-m\fP
-Elimina la parte tras la última virgulilla en el número de versión al
-realizar una comparación para identificar si dos entradas son la misma o no.
+\fB\-m\fP, \fB\-\-merge\-prereleases\fP
+Elimina la parte tras la Ãºltima virgulilla en el nÃºmero de versiÃ³n al
+realizar una comparaciÃ³n para identificar si dos entradas son la misma o no.
 .sp
-Es útil cuando siempre se usa la misma entrada en el registro de cambios,
-pero aumenta el número de versión regularmente. Por ejemplo, puede tener
-«2.3\-1~exp1», «2.3\-1~exp2»... hasta la publicación oficial «2.3\-1», teniendo
+Es Ãºtil cuando siempre se usa la misma entrada en el registro de cambios,
+pero aumenta el nÃºmero de versiÃ³n regularmente. Por ejemplo, puede tener
+Â«2.3\-1~exp1Â», Â«2.3\-1~exp2Â»... hasta la publicaciÃ³n oficial Â«2.3\-1Â», teniendo
 todas la misma entrada en el registro de cambios, pero que ha evolucionado
 con el tiempo.
 .TP 
@@ -63,32 +63,32 @@ con el tiempo.
 Muestra el modo de uso y termina.
 .TP 
 \fB\-\-version\fP
-Muestra la versión y termina.
+Muestra la versiÃ³n y termina.
 .
 .SH LIMITACIONES
 .P
-Se perderá durante la fusión todo lo que «Dpkg::Changelog» no analice. Esto
-puede incluir cosas como «modelines» de vim, comentarios donde no deberían
+Se perderÃ¡ durante la fusiÃ³n todo lo que Â«Dpkg::ChangelogÂ» no analice. Esto
+puede incluir cosas como Â«modelinesÂ» de vim, comentarios donde no deberÃ­an
 estar, etc.
 .
-.SH "INTEGRACIÓN CON GIT"
+.SH "INTEGRACIÃ“N CON GIT"
 .P
 Si desea utilizar este programa para fusionar ficheros de registro de
-cambios de Debian en un repositorio git primero tendrá que registrar un
-nuevo «merge driver» en \fB.git/config\fP o \fB~/.gitconfig\fP:
+cambios de Debian en un repositorio git primero tendrÃ¡ que registrar un
+nuevo Â«merge driverÂ» en \fB.git/config\fP o \fB~/.gitconfig\fP:
 .P
  [merge "dpkg\-mergechangelogs"]
      name = debian/changelog merge driver
      driver = dpkg\-mergechangelogs \-m %O %A %B %A
 .P
-Después tendrá que definir el «merge attribute» para el fichero
-«debian/changelog» bien en \fB.gitattributes\fP en el mismo repositorio, o en
+DespuÃ©s tendrÃ¡ que definir el Â«merge attributeÂ» para el fichero
+Â«debian/changelogÂ» bien en \fB.gitattributes\fP en el mismo repositorio, o en
 \&\fB.git/info/attributes\fP:
 .P
  debian/changelog merge=dpkg\-mergechangelogs
 .SH TRADUCTOR
 Rudy Godoy <rudy@kernel\-panik.org>,
-Rubén Porras <nahoo@inicia.es>,
+RubÃ©n Porras <nahoo@inicia.es>,
 Bruno Barrera C. <bruno.barrera@igloo.cl>,
 Carlos Izquierdo <gheesh@ertis.net>,
 Esteban Manchado y
@@ -96,5 +96,5 @@ NOK.
 Debian L10n Spanish <debian\-l10n\-spanish@lists.debian.org>.
 .br
 Revisiones por Santiago Vila <sanvila@unex.es>,
-Javier Fernández\-Sanguino, Rubén Porras,
+Javier FernÃ¡ndez\-Sanguino, RubÃ©n Porras,
 Luis Uribe y Omar Campagne.

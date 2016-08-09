@@ -27,9 +27,9 @@ deb\-split \- formato dei pacchetti binari multiparte Debian
 \fInomefile\fP\fB.deb\fP
 .SH DESCRIZIONE
 Il formato \fB.deb\fP multiparte viene utilizzato per suddividere pacchetti
-grandi in pezzi più piccoli per facilitare il trasporto su supporti piccoli.
+grandi in pezzi piÃ¹ piccoli per facilitare il trasporto su supporti piccoli.
 .SH FORMATO
-Il file è un archivio \fBar\fP con un valore magico di \fB!<arch>\fP. I
+Il file Ã¨ un archivio \fBar\fP con un valore magico di \fB!<arch>\fP. I
 nomi dei file possono terminare con una sbarra (a partire da dpkg 1.15.6).
 .PP
 Il primo elemento si chiama \fBdebian\-split\fP e contiene una serie di righe,
@@ -48,8 +48,8 @@ La dimensione totale del pacchetto.
 .IP \(bu
 La dimensione massima di una parte.
 .IP \(bu
-Il numero della parte attuale, seguito da una sbarra («/») e dal numero
-totale di parti (ad esempio «1/10»).
+Il numero della parte attuale, seguito da una sbarra (Â«/Â») e dal numero
+totale di parti (ad esempio Â«1/10Â»).
 .IP \(bu
 L'architettura del pacchetto (a partire da dpkg 1.16.1).
 .PP
@@ -57,8 +57,8 @@ I programmi che leggono archivi multiparte devono essere pronti ad un
 aumento del numero minore di versione del formato e alla presenza di righe
 aggiuntive e dovrebbero ignorarle quando appropriato.
 .PP
-Se è cambiato il numero di versione principale, è stata fatta una modifica
-incompatibile e il programma dovrebbe fermarsi. Se non è così, il programma
+Se Ã¨ cambiato il numero di versione principale, Ã¨ stata fatta una modifica
+incompatibile e il programma dovrebbe fermarsi. Se non Ã¨ cosÃ¬, il programma
 dovrebbe poter continuare senza problemi, a meno di non incontrare un
 elemento inaspettato nell'archivio (tranne alla fine), come descritto in
 seguito.

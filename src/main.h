@@ -2,8 +2,8 @@
  * dpkg - main program for package management
  * main.h - external definitions for this program
  *
- * Copyright © 1995 Ian Jackson <ian@chiark.greenend.org.uk>
- * Copyright © 2006,2008-2014 Guillem Jover <guillem@debian.org>
+ * Copyright © 1995 Ian Jackson <ijackson@chiark.greenend.org.uk>
+ * Copyright © 2006, 2008-2015 Guillem Jover <guillem@debian.org>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,14 +27,18 @@
 
 /* These two are defined in filesdb.h. */
 struct fileinlist;
-struct filenamenode_queue;
 struct filenamenode;
 
 enum pkg_istobe {
+	/** Package is to be left in a normal state. */
 	PKG_ISTOBE_NORMAL,
+	/** Package is to be removed. */
 	PKG_ISTOBE_REMOVE,
+	/** Package is to be installed, configured or triggered. */
 	PKG_ISTOBE_INSTALLNEW,
+	/** Package is to be deconfigured. */
 	PKG_ISTOBE_DECONFIGURE,
+	/** Package is to be checked for Pre-Depends satisfiability. */
 	PKG_ISTOBE_PREINSTALL,
 };
 
@@ -137,6 +141,7 @@ extern int fc_conff_ask;
 extern int fc_badverify;
 extern int fc_badversion;
 extern int fc_unsafe_io;
+extern int fc_script_chrootless;
 
 extern bool abort_processing;
 extern int errabort;
@@ -148,15 +153,15 @@ struct invoke_hook {
 	const char *command;
 };
 
+struct invoke_list {
+	struct invoke_hook *head, **tail;
+};
+
 /* from archives.c */
 
 int archivefiles(const char *const *argv);
 void process_archive(const char *filename);
 bool wanttoinstall(struct pkginfo *pkg);
-
-struct fileinlist *
-filenamenode_queue_push(struct filenamenode_queue *queue,
-                        struct filenamenode *namenode);
 
 /* from update.c */
 
@@ -236,10 +241,8 @@ bool force_breaks(struct deppossi *possi);
 bool force_depends(struct deppossi *possi);
 bool force_conflicts(struct deppossi *possi);
 void conffile_mark_obsolete(struct pkginfo *pkg, struct filenamenode *namenode);
-void oldconffsetflags(const struct conffile *searchconff);
-void ensure_pathname_nonexisting(const char *pathname);
-int secure_unlink(const char *pathname);
-int secure_unlink_statted(const char *pathname, const struct stat *stab);
+void pkg_conffiles_mark_old(struct pkginfo *pkg);
+bool find_command(const char *prog);
 void checkpath(void);
 
 struct filenamenode *namenodetouse(struct filenamenode *namenode,
@@ -269,6 +272,12 @@ bool dir_is_used_by_pkg(struct filenamenode *namenode, struct pkginfo *pkg,
 bool dir_has_conffiles(struct filenamenode *namenode, struct pkginfo *pkg);
 
 void log_action(const char *action, struct pkginfo *pkg, struct pkgbin *pkgbin);
+
+/* From selinux.c */
+
+void dpkg_selabel_load(void);
+void dpkg_selabel_set_context(const char *matchpath, const char *path, mode_t mode);
+void dpkg_selabel_close(void);
 
 /* from trigproc.c */
 

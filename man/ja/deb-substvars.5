@@ -1,7 +1,8 @@
 .\" dpkg manual page - deb-substvars(5)
 .\"
-.\" Copyright © 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright © 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright © 2000 Wichert Akkerman <wakkerma@debian.org>
+.\" Copyright © 2006-2009,2012-2015 Guillem Jover <guillem@debian.org>
 .\" Copyright © 2009-2010 Raphaël Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -22,36 +23,36 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-substvars 5 2009\-07\-15 "Debian Project" "dpkg �桼�ƥ���ƥ�"
-.SH ̾��
-deb\-substvars \- Debian �������ˤ������ѿ�
+.TH deb\-substvars 5 2015\-01\-20 "Debian Project" "dpkg ユーティリティ"
+.SH 名前
+deb\-substvars \- Debian ソースにおける変数
 .
-.SH ��
+.SH 書式
 substvars
 .
-.SH ����
-\fBdpkg\-source\fP, \fBdpkg\-gencontrol\fP, \fBdpkg\-genchanges\fP ����������
-(\fBdpkg\-source\fP �ѤΥ���������ե����� \fB.dsc\fP ��\fBdpkg\-gencontrol\fP �� \fBdpkg\-genchanges\fP
-��ɸ����Ϥ�) �񤭽Ф��ݤˡ��ѿ����ִ����Ԥ��롣
+.SH 説明
+\fBdpkg\-source\fP, \fBdpkg\-gencontrol\fP, \fBdpkg\-genchanges\fP が制御情報を
+(\fBdpkg\-source\fP 用のソース制御ファイル \fB.dsc\fP 、\fBdpkg\-gencontrol\fP や \fBdpkg\-genchanges\fP
+の標準出力に) 書き出す際に、変数の置換が行われる。
 
-�ѿ����ִ������ս�� \fB${\fP\fI�ѿ�̾\fP\fB}\fP
-�Ȥ��������ˤʤäƤ��롣�ѿ�̾�ˤϱѿ������ϥ��ե󡢥��������ѤǤ��뤬����Ƭʸ���ϱѿ����Ǥ���ɬ�פ����롣�ѿ����ִ��ϡ��ִ������פˤʤ�ޤǺƵ�Ū�˲��٤Ǥ�Ԥ��롣����ϡ��ִ���Υե�����ɤ���ʸ���Ф��ơ������ִ��оݤ��ʤ����γ�ǧ���Ԥ��뤳�Ȥ��̣���롣
+変数が置換される箇所は \fB${\fP\fI変数名\fP\fB}\fP
+という形式になっている。変数名には英数字、ハイフン、コロンを使用できるが、先頭文字は英数字である必要がある。変数の置換は、置換が不要になるまで再帰的に何度でも行われる。これは、置換後のフィールドの全文に対して、再度置換対象がないかの確認が行われることを意味する。
 
-�ִ������٤ƴ�λ������ǡ�ʸ���� \fB${}\fP (������ִ��оݤǤϤʤ�) �� \fB$\fP ������֤��������롣
+置換がすべて完了した後で、文字列 \fB${}\fP (これは置換対象ではない) が \fB$\fP 記号に置き換えられる。
 
-�ѿ����ִ��ϡ����٤Ƥ�����ե�����ɤ��Ф��ƹԤ��뤬���ե�����ɤˤ�äƤ��ѿ����ִ���������Υӥ���ʳ����Ѥ������Τ����롣���Τ��ᡢ\fBPackage\fP,
-\fBSource\fP, \fBArchitecture\fP �ե�����ɤ��ѿ����Ѥ��ƤϤʤ�ʤ���
+変数の置換は、すべての制御フィールドに対して行われるが、フィールドによっては変数が置換される前のビルド段階で用いられるものがある。そのため、\fBPackage\fP,
+\fBSource\fP, \fBArchitecture\fP フィールドで変数を用いてはならない。
 
-�ѿ����ִ��ϡ��ƥե�����ɤ����Ϥ��졢�ڤ�Ф��줿������Ƥ��Ф��ƹԤ��롣���Τ��ᡢ�ִ�������̤�ʣ���Ԥˤ錄����⡢���Ԥθ�˥��ڡ�����ޤ�Ƥ���ɬ�פϤʤ�������ϡ��ִ����줿�ѿ������Ƥ��ե�����ɤ�Ÿ�������ݤ˰���Ū�˹Ԥ��롣�㤨��
-"foo is bar.${Newline}foo is great." �Ȥ������Ƥ� \fB${Description}\fP
-�Ȥ����ѿ��˳�Ǽ����Ƥ��ꡢ�ե�����ɤ����Ƥ��ʲ��Τ褦�ˤʤäƤ�����硢
+変数の置換は、各フィールドが解析され、切り出された後の内容に対して行われる。そのため、置換した結果が複数行にわたる場合も、改行の後にスペースを含めておく必要はない。これは、置換された変数の内容がフィールドに展開される際に暗黙的に行われる。例えば
+"foo is bar.${Newline}foo is great." という内容が \fB${Description}\fP
+という変数に格納されており、フィールドの内容が以下のようになっていた場合、
 
  Description: foo application
   ${Description}
   .
   More text.
 
-�ִ���η�̤ϼ��Τ褦�ˤʤ�:
+置換後の結果は次のようになる:
 
  Description: foo application
   foo is bar.
@@ -59,78 +60,87 @@ substvars
   .
   More text.
 
-���̥��ץ���� \fB\-V\fP �ˤ���ѿ������ꤹ�뤳�Ȥ���ǽ�Ǥ��롣debian/substvars �ե����� (�⤷���� \fB\-T\fP
-���ץ����ǻ��ꤷ���ե�������) �����ꤷ�Ƥ�褤�����Υե�����ˤ� \fIname\fP\fB=\fP\fIvalue\fP
-�����ιԤ��鹽�����롣�����ζ���ʸ��������ԡ�\fB#\fP ���椫��Ϥޤ�� (�����ȹ�) ��̵�뤵��롣
+共通オプション \fB\-V\fP により変数を設定することが可能である。debian/substvars ファイル (もしくは \fB\-T\fP
+オプションで指定したファイル中) で設定してもよい。このファイルには \fIname\fP\fB=\fP\fIvalue\fP
+形式の行から構成する。行末の空白文字、空白行、\fB#\fP 記号から始まる行 (コメント行) は無視される。
 
-����¾�ˡ��ʲ���ɸ���ѿ�����Ѥ��뤳�Ȥ��Ǥ���:
+その他に、以下の標準変数を使用することができる:
 .TP 
 \fBArch\fP
-���ߥӥ�ɤ��Ƥ��륢�����ƥ����� (\fBdpkg \-\-print\-architecture\fP ���ץ������)��
+The current host architecture (i.e. the architecture the package is being
+built for, the equivalent of \fBDEB_HOST_ARCH\fP).
 .TP 
 \fBsource:Version\fP
-�������ѥå������ΥС������
+ソースパッケージのバージョン
 .TP 
 \fBsource:Upstream\-Version\fP
-���åץ��ȥ꡼��Υ������ѥå������ΥС������Debian �� epoch ��¸�ߤ��Ƥ����硢�����ޤޤ�롣
+アップストリームのソースパッケージのバージョン、Debian の epoch が存在している場合、それも含まれる。
 .TP 
 \fBbinary:Version\fP
-�Х��ʥ�ѥå������ΥС������ (binNMU �ʤɤξ�硢source:Version �Ȱۤʤ뤳�Ȥ⤢��)
+バイナリパッケージのバージョン (binNMU などの場合、source:Version と異なることもある)
 .TP 
 \fBSource\-Version\fP
-�������ѥå������ΥС������ (changelog
-�ե�������)�������ѿ��ϡ�̾���Τ�ɽ���ʤ��ʤäƤ��ޤäƤ��뤿�ᡢ\fB�ѻ�ͽ��\fP�Ǥ��롣���Ӥ˱����� \fBsource:Version\fP�⤷����
-\fBbinary:Version\fP ����Ѥ��뤳�ȡ�
+ソースパッケージのバージョン (changelog
+ファイルより)。この変数は、名が体を表さなくなってしまっているため、\fB廃止予定\fPである。用途に応じて \fBsource:Version\fPもしくは
+\fBbinary:Version\fP を使用すること。
 .TP 
 \fBInstalled\-Size\fP
-�ѥå������ˤ�ꥤ�󥹥ȡ��뤵���ե�����ι�ץ������������ѿ����ͤ�control
-�ե������Ŭ�ڤʥե�����ɤˤ�Ŭ�Ѥ��졢�����ե�����ɤ��ͤ��񤭤��롣�����ѿ������ꤵ��Ƥ��ʤ��ä���硢\fBdpkg\-gencontrol\fP
-�ϥǥե�����ͤȤ��� \fBdu \-k debian/tmp\fP ���ͤ����ꤹ�롣
+The approximate total size of the package's installed files. This value is
+copied into the corresponding control file field; setting it will modify the
+value of that field. If this variable is not set \fBdpkg\-gencontrol\fP will
+compute the default value by accumulating the size of each regular file and
+symlink rounded to 1 KiB used units, and a baseline of 1 KiB for any other
+filesystem object type.
+
+\fBNote:\fP Take into account that this can only ever be an approximation, as
+the actual size used on the installed system will depend greatly on the
+filesystem used and its parameters, which might end up using either more or
+less space than the specified in this field.
 .TP 
 \fBExtra\-Size\fP
-�ѥå������Υ��󥹥ȡ�������ɲä��Ѥ�����ǥ������ΰ衣�����ѿ������ꤵ��Ƥ���ȡ�\fBInstalled\-Size\fP �ѿ�����
-(����Ū�����ꤵ�줿��Τ����ǥե�����ͤ������ʤ�) �����ѿ����ͤ�­�����ͤ� control �ե������
-\fBInstalled\-Size\fP�ե�����ɤ�Ŭ�Ѥ���롣
+パッケージのインストール時に追加で用いられるディスク領域。この変数が設定されていると、\fBInstalled\-Size\fP 変数の値
+(明示的に設定されたものか、デフォルト値かは問わない) に本変数の値を足した値が control ファイルの
+\fBInstalled\-Size\fPフィールドに適用される。
 .TP 
 \fBF:\fP\fIfieldname\fP
-\fIfieldname\fP �Ȥ����ե������ (��ʸ���ǻ��ꤹ��ɬ�פ�����) ���͡������ѿ��ϡ�Ÿ������ս������Ū�˻��ꤹ��Ȥ����ʾ�ΰ�̣������ʤ���
+\fIfieldname\fP というフィールド (大文字で指定する必要がある) の値。この変数は、展開する箇所を明示的に指定するという以上の意味を持たない。
 .TP 
 \fBFormat\fP
-�������ѥå������󥰥�����ץȤˤ�ä���������� \fB.changes\fP
-�ե�����Υե����ޥåȤΥС�����󡣤����ѿ������ꤹ��ȡ�\fB.changes\fP �ե������ \fBFormat\fP �ե�����ɤ����Ƥ��ѹ�����롣
+ソースパッケージングスクリプトによって生成される \fB.changes\fP
+ファイルのフォーマットのバージョン。この変数を設定すると、\fB.changes\fP ファイルの \fBFormat\fP フィールドの内容も変更される。
 .TP 
 \fBNewline\fP, \fBSpace\fP, \fBTab\fP
-�������ѿ��ϡ��ơ��б�����ʸ���򼨤���
+これらの変数は、各々対応する文字を示す。
 .TP 
 \fBshlibs:\fP\fIdependencyfield\fP
-���η�����̾���ΤĤ����ѿ��ϡ�\fBdpkg\-shlibdeps\fP �ˤ����������롣
+この形式の名前のついた変数は、\fBdpkg\-shlibdeps\fP により生成される。
 .TP 
 \fBdpkg:Upstream\-Version\fP
-dpkg �Υ��åץ��ȥ꡼��ΥС������
+dpkg のアップストリームのバージョン
 .TP 
 \fBdpkg:Version\fP
-dpkg �δ����ʥС������ɽ��
+dpkg の完全なバージョン表記
 .LP
-�ѿ����������Ƥ��ʤ��ˤ⤫����餺���Ȥ���Ƥ�����ϡ��ͤȤ��ƶ�ʸ�������ꤵ���ȤȤ�ˡ��ٹ���������롣
+変数が定義されていないにもかかわらず参照されている場合は、値として空文字列が想定されるとともに、警告が生成される。
 .
-.SH �ե�����
+.SH ファイル
 .TP 
 \fBdebian/substvars\fP
-�ѿ�����Ӥ����ͤΥꥹ�ȡ�
+変数およびその値のリスト。
 .
-.SH ��Ϣ����
+.SH 関連項目
 .ad l
 .nh
 \fBdpkg\fP(1), \fBdpkg\-genchanges\fP(1), \fBdpkg\-gencontrol\fP(1),
 \fBdpkg\-shlibdeps\fP(1), \fBdpkg\-source\fP(1).
-.SH ������
-�ⶶ �� <monyo@monyo.com>.
-���� �� <kise@fuyuneko.jp>.
-�ظ� ���� <sekido@mbox.kyoto-inet.or.jp>.
-��ë ��Ÿ <nabe@debian.or.jp>.
-��߷ ˾ <nabetaro@debian.or.jp>.
-���� �� <ishikawa@linux.or.jp>.
-���� ʸ�� <ukai@debian.or.jp>.
-���� ��ͺ <nakano@apm.seikei.ac.jp>.
-.SH ��������
+.SH 翻訳者
+高橋 基信 <monyo@monyo.com>.
+喜瀬 浩 <kise@fuyuneko.jp>.
+関戸 幸一 <sekido@mbox.kyoto-inet.or.jp>.
+鍋谷 栄展 <nabe@debian.or.jp>.
+倉澤 望 <nabetaro@debian.or.jp>.
+石川 睦 <ishikawa@linux.or.jp>.
+鵜飼 文敏 <ukai@debian.or.jp>.
+中野 武雄 <nakano@apm.seikei.ac.jp>.
+.SH 翻訳校正
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

@@ -1,7 +1,7 @@
 .\" dpkg manual page - deb-old(5)
 .\"
 .\" Copyright Â© 1995 Raul Miller
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -30,18 +30,18 @@ deb\-old \- formato vecchio stile dei pacchetti binari Debian
 \fInomefile\fP\fB.deb\fP
 .
 .SH DESCRIZIONE
-Il formato \fB.deb\fP è il formato del file dei pacchetti binari Debian. Questa
+Il formato \fB.deb\fP Ã¨ il formato del file dei pacchetti binari Debian. Questa
 pagina di manuale descrive il \fBvecchio\fP formato, usato prima di Debian
 0.93. Vedere \fBdeb\fP(5) per i dettagli sul nuovo formato.
 .
 .SH FORMATO
-Il file è composto da due righe di testo ASCII con informazioni sul formato,
+Il file Ã¨ composto da due righe di testo ASCII con informazioni sul formato,
 seguite da due file ustar compressi con gzip e concatenati.
 .PP
-La prima riga è il numero di versione del formato espresso con 8 cifre ed è
+La prima riga Ã¨ il numero di versione del formato espresso con 8 cifre ed Ã¨
 \fB0.939000\fP per tutti gli archivi nel formato vecchio.
 .PP
-La seconda riga è una stringa decimale (senza zeri iniziali) che fornisce la
+La seconda riga Ã¨ una stringa decimale (senza zeri iniziali) che fornisce la
 lunghezza del primo file tar compresso con gzip.
 .PP
 Ciascuna di queste righe termina con un singolo carattere di ritorno a capo.
@@ -50,14 +50,13 @@ Il primo file tar contiene le informazioni di controllo, in forma di una
 serie di file ordinari. Il file \fBcontrol\fP deve essere presente dato che
 contiene le informazioni principali di controllo.
 .PP
-In alcuni archivi molto vecchi, i file nel file tar di controllo possono
-essere opzionalmente in una sottodirectory \fBDEBIAN\fP. In tal caso, la
-sottodirectory \fBDEBIAN\fP è anch'essa nel file tar di controllo e
-quest'ultimo ha in quella directory solamente file. In modo opzionale il
-file tar di controllo può contenere un elemento per «\fB.\fP», cioè la
-directory corrente.
+In some very old archives, the files in the control tarfile may optionally
+be in a \fBDEBIAN\fP subdirectory. In that case, the \fBDEBIAN\fP subdirectory
+will be in the control tarfile too, and the control tarfile will have only
+files in that directory. Optionally the control tarfile may contain an entry
+for \(oq\fB.\fP\(cq, that is, the current directory.
 .PP
-Il secondo file tar compresso con gpiz è l'archivio del file system che
+Il secondo file tar compresso con gpiz Ã¨ l'archivio del file system che
 contiene i nomi di percorso relativi alla directory root del sistema su cui
 devono essere installati. I nomi di percorso non terminano con sbarre.
 .

@@ -28,44 +28,43 @@ deb\-override \- Fichero de sustituciones de archivo de Debian
 .SH SINOPSIS
 override
 .
-.SH DESCRIPCIÓN
-Mientras que la mayoría de la información acerca de los paquetes se
-encuentra en el fichero de control parte de esta información se debe
-rellenar por los encargados de planificar la distribución, en lugar de los
-responsables de los paquetes, ofreciendo así una mayor consistencia
-global. Esta información se encuentra en el fichero «override»
-(sustitución).
+.SH DESCRIPCIÃ“N
+Mientras que la mayorÃ­a de la informaciÃ³n acerca de los paquetes se
+encuentra en el fichero de control parte de esta informaciÃ³n se debe
+rellenar por los encargados de planificar la distribuciÃ³n, en lugar de los
+responsables de los paquetes, ofreciendo asÃ­ una mayor consistencia
+global. Esta informaciÃ³n se encuentra en el fichero Â«overrideÂ»
+(sustituciÃ³n).
 .PP
-El fichero «override» tiene un formato simple, delimitado por espacios en
+El fichero Â«overrideÂ» tiene un formato simple, delimitado por espacios en
 blanco. Se permiten comentarios precedidos de \fB#\fP.
 .PP
 .in +5
-\fIpaquete\fP \fIprioridad\fP \fIsección\fP [\fIinformación\-del\-mantenedor\fP]
+\fIpaquete\fP \fIprioridad\fP \fIsecciÃ³n\fP [\fIinformaciÃ³n\-del\-mantenedor\fP]
 .in -5
 .PP
-\fIpaquete\fP El nombre del paquete. Se ignorarán las entradas en el fichero
-«override» de paquetes no encontrados en el árbol de paquetes binarios.
+\fIpaquete\fP El nombre del paquete. Se ignorarÃ¡n las entradas en el fichero
+Â«overrideÂ» de paquetes no encontrados en el Ã¡rbol de paquetes binarios.
 .PP
-\fIprioridad\fP y \fIsección\fP se corresponden con sus respectivos campos de
-control disponibles en el «.deb». Los valores permitidos se listan en el
-Manual de Normas de Debian.
+\fIpriority\fP and \fIsection\fP correspond to the respective control fields
+available in the .deb. The allowed values are specific to each distribution
+archive.
 .PP
-De estar presente \fIinformación\-del\-mantenedor\fP, puede ser el nombre del
-responsable de un «override» incondicional, o bien \fIantiguo\-mantenedor\fP
-\fB=>\fP \fInuevo\-mantenedor\fP para hacer una sustitución.
+De estar presente \fIinformaciÃ³n\-del\-mantenedor\fP, puede ser el nombre del
+responsable de un Â«overrideÂ» incondicional, o bien \fIantiguo\-mantenedor\fP
+\fB=>\fP \fInuevo\-mantenedor\fP para hacer una sustituciÃ³n.
 .PP
-Puede encontrar los ficheros «override» que se usan para hacer las listas
-«Packages» oficiales en el directorio «\fIindices\fP» de cualquier réplica de
+Puede encontrar los ficheros Â«overrideÂ» que se usan para hacer las listas
+Â«PackagesÂ» oficiales en el directorio Â«\fIindices\fPÂ» de cualquier rÃ©plica de
 Debian.
 .
-.SH "VÉASE TAMBIÉN"
+.SH "VÃ‰ASE TAMBIÃ‰N"
 .ad l
 .nh
-\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1),
-\fB/usr/share/doc/debian\-policy/policy.html/index.html\fP.
+\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1).
 .SH TRADUCTOR
 Rudy Godoy <rudy@kernel\-panik.org>,
-Rubén Porras <nahoo@inicia.es>,
+RubÃ©n Porras <nahoo@inicia.es>,
 Bruno Barrera C. <bruno.barrera@igloo.cl>,
 Carlos Izquierdo <gheesh@ertis.net>,
 Esteban Manchado y
@@ -73,5 +72,5 @@ NOK.
 Debian L10n Spanish <debian\-l10n\-spanish@lists.debian.org>.
 .br
 Revisiones por Santiago Vila <sanvila@unex.es>,
-Javier Fernández\-Sanguino, Rubén Porras,
+Javier FernÃ¡ndez\-Sanguino, RubÃ©n Porras,
 Luis Uribe y Omar Campagne.

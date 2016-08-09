@@ -1,7 +1,8 @@
 .\" dpkg manual page - deb-substvars(5)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
+.\" Copyright Â© 2006-2009,2012-2015 Guillem Jover <guillem@debian.org>
 .\" Copyright Â© 2009-2010 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -22,7 +23,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-substvars 5 "15 luglio 2009" "Progetto Debian" "utilità dpkg"
+.TH deb\-substvars 5 2015\-01\-20 "Progetto Debian" "utilitÃ  dpkg"
 .SH NOME
 deb\-substvars \- variabili sostituite nei sorgenti Debian
 .
@@ -37,45 +38,45 @@ per quanto riguarda \fBdpkg\-source\fP e sullo standard output per
 variabili nel file di output.
 
 Una sostituzione di variabile ha la forma \fB${\fP\fInome\-variabile\fP\fB}\fP. I nomi
-di variabile sono formati da caratteri alfanumerici, trattini («\-») e due
-punti («:») e iniziano con un carattere alfanumerico. Le sostituzioni di
-variabili vengono eseguite ripetutamente fino a che non ne rimangono più; il
+di variabile sono formati da caratteri alfanumerici, trattini (Â«\-Â») e due
+punti (Â«:Â») e iniziano con un carattere alfanumerico. Le sostituzioni di
+variabili vengono eseguite ripetutamente fino a che non ne rimangono piÃ¹; il
 testo completo del campo dopo la sostituzione viene analizzato di nuovo per
 cercare nuove sostituzioni.
 
 Una volta fatte tutte le sostituzioni, ciascuna occorrenza della stringa
-\fB${}\fP (che non è una sostituzione permessa) viene sostituita da un
+\fB${}\fP (che non Ã¨ una sostituzione permessa) viene sostituita da un
 carattere \fB$\fP.
 
 Sebbene la sostituzione delle variabili viene fatta in tutti i campi di
 controllo, alcuni di tali campi sono usati e necessari durante la
-compilazione, quando la sostituzione non è ancora avvenuta. Questo è il
+compilazione, quando la sostituzione non Ã¨ ancora avvenuta. Questo Ã¨ il
 motivo per cui non si possono usare variabili nei campi \fBPackage\fP,
 \fBSource\fP e \fBArchitecture\fP.
 
 La sostituzione delle variabili avviene nel contenuto dei campi dopo che
-sono stati analizzati, perciò se si desidera che una variabile si estenda su
-più righe non si deve aggiungere uno spazio dopo il ritorno a capo. Ciò
+sono stati analizzati, perciÃ² se si desidera che una variabile si estenda su
+piÃ¹ righe non si deve aggiungere uno spazio dopo il ritorno a capo. CiÃ²
 viene fatto implicitamente quando il campo viene prodotto in output. Per
-esempio, se la variabile \fB${Description}\fP è impostata a «pinco è
-questo.${Newline}pinco è quest'altro.» e se si ha il campo seguente:
+esempio, se la variabile \fB${Description}\fP Ã¨ impostata a Â«pinco Ã¨
+questo.${Newline}pinco Ã¨ quest'altro.Â» e se si ha il campo seguente:
 
  Description: applicazione pinco
   ${Description}
   .
   Altro testo.
 
-Il risultato è:
+Il risultato Ã¨:
 
  Description: applicazione pinco
-  pinco è questo.
-  pinco è quest'altro.
+  pinco Ã¨ questo.
+  pinco Ã¨ quest'altro.
   .
   Altro testo.
 
 Le variabili possono essere impostate usando l'opzione comune \fB\-V\fP. Possono
 anche essere specificate nel file \fBdebian/substvars\fP (o qualsiasi altro
-file venga specificato usando l'opzione \fB\-T\fP). Il file è formato da righe
+file venga specificato usando l'opzione \fB\-T\fP). Il file Ã¨ formato da righe
 nella forma \fInome\fP\fB=\fP\fIvalore\fP. Gli spazi bianchi alla fine di ogni riga,
 le righe vuote e le righe che iniziano con un simbolo \fB#\fP (commenti)
 vengono ignorati.
@@ -83,7 +84,8 @@ vengono ignorati.
 In aggiunta, sono disponibili le seguenti variabili standard:
 .TP 
 \fBArch\fP
-L'attuale architettura di compilazione (da \fBdpkg \-\-print\-architecture\fP).
+The current host architecture (i.e. the architecture the package is being
+built for, the equivalent of \fBDEB_HOST_ARCH\fP).
 .TP 
 \fBsource:Version\fP
 La versione del pacchetto sorgente.
@@ -93,20 +95,26 @@ La versione del pachetto sorgente originale, inclusa l'epoca di versione
 Debian se presente.
 .TP 
 \fBbinary:Version\fP
-La versione del pacchetto binario (che può essere diversa da source:Version
+La versione del pacchetto binario (che puÃ² essere diversa da source:Version
 ad esempio in un NMU binario).
 .TP 
 \fBSource\-Version\fP
-La versione del pacchetto sorgente (dal file changelog). Questa variabile è
-ora \fBdeprecata\fP dato che il suo significato è diverso dalla sua funzione;
-usare \fBsource:Version\fP o \fBbinary:Version\fP a seconda delle necessità.
+La versione del pacchetto sorgente (dal file changelog). Questa variabile Ã¨
+ora \fBdeprecata\fP dato che il suo significato Ã¨ diverso dalla sua funzione;
+usare \fBsource:Version\fP o \fBbinary:Version\fP a seconda delle necessitÃ .
 .TP 
 \fBInstalled\-Size\fP
-La dimensione totale dei file installati del pacchetto. Questo valore viene
-copiato nel campo corrispondente del file di controllo; impostandolo si
-modifica il valore di tale campo. Se questa variabile non è impostata
-\fBdpkg\-gencontrol\fP viene usato \fBdu \-k debian/tmp\fP per trovare il valore
-predefinito.
+The approximate total size of the package's installed files. This value is
+copied into the corresponding control file field; setting it will modify the
+value of that field. If this variable is not set \fBdpkg\-gencontrol\fP will
+compute the default value by accumulating the size of each regular file and
+symlink rounded to 1 KiB used units, and a baseline of 1 KiB for any other
+filesystem object type.
+
+\fBNote:\fP Take into account that this can only ever be an approximation, as
+the actual size used on the installed system will depend greatly on the
+filesystem used and its parameters, which might end up using either more or
+less space than the specified in this field.
 .TP 
 \fBExtra\-Size\fP
 Lo spazio su disco aggiuntivo usato quando il pacchetto viene installato. Se
@@ -130,7 +138,7 @@ Queste variabili contengono ciascuna il carattere corrispondente: nuova
 riga, spazio e tabulazione.
 .TP 
 \fBshlibs:\fP\fIcampodipendenza\fP
-L'impostazione di variabili con nomi in questa forma è generata da
+L'impostazione di variabili con nomi in questa forma Ã¨ generata da
 \fBdpkg\-shlibdeps\fP.
 .TP 
 \fBdpkg:Upstream\-Version\fP
@@ -139,7 +147,7 @@ La versione originale di dpkg.
 \fBdpkg:Version\fP
 La versione completa di dpkg.
 .LP
-Se viene fatto riferimento a una variabile ma questa non è definita, viene
+Se viene fatto riferimento a una variabile ma questa non Ã¨ definita, viene
 generato un avvertimento e viene assunto un valore vuoto.
 .
 .SH FILE

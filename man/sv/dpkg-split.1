@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-split(1)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2011 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -23,98 +23,98 @@
 .\"*******************************************************************
 .TH dpkg\-split 1 2011\-07\-04 Debianprojektet dpkg\-verktygen
 .SH NAMN
-dpkg\-split \- Verktyg för att dela/slå ihop Debianpaket
+dpkg\-split \- Verktyg fÃ¶r att dela/slÃ¥ ihop Debianpaket
 .
 .SH SYNOPS
-\fBdpkg\-split\fP [\fIflaggor\fP...] \fIåtgärd\fP
+\fBdpkg\-split\fP [\fIflaggor\fP...] \fIÃ¥tgÃ¤rd\fP
 .
 .SH BESKRIVNING
-\fBdpkg\-split\fP delar upp binära Debianpaketfiler i mindre delar och slår
-samman dem igen, för att göra det möjligt att lagra stora paketfiler på små
+\fBdpkg\-split\fP delar upp binÃ¤ra Debianpaketfiler i mindre delar och slÃ¥r
+samman dem igen, fÃ¶r att gÃ¶ra det mÃ¶jligt att lagra stora paketfiler pÃ¥ smÃ¥
 media, till exempel disketter.
 
-Programmet kan köras manuellt med flaggorna \fB\-\-split\fP, \fB\-\-join\fP och
+Programmet kan kÃ¶ras manuellt med flaggorna \fB\-\-split\fP, \fB\-\-join\fP och
 \fB\-\-info\fP.
 
-Det har även ett automatiskt läge, vilket aktiveras med flaggan \fB\-\-auto\fP. I
-det läget hanterar det en kö av delar som setts men ännu inte återställts,
-och återställer en paketfil när den sett alla dess delar. Flaggorna
-\fB\-\-listq\fP and \fB\-\-discard\fP gör det möjligt att hantera kön.
+Det har Ã¤ven ett automatiskt lÃ¤ge, vilket aktiveras med flaggan \fB\-\-auto\fP. I
+det lÃ¤get hanterar det en kÃ¶ av delar som setts men Ã¤nnu inte Ã¥terstÃ¤llts,
+och Ã¥terstÃ¤ller en paketfil nÃ¤r den sett alla dess delar. Flaggorna
+\fB\-\-listq\fP and \fB\-\-discard\fP gÃ¶r det mÃ¶jligt att hantera kÃ¶n.
 
-Alla funktioner för uppdelning, sammanslagning och köande visar informativa
-meddelanden på standard ut; dessa kan ignoreras.
+Alla funktioner fÃ¶r uppdelning, sammanslagning och kÃ¶ande visar informativa
+meddelanden pÃ¥ standard ut; dessa kan ignoreras.
 .
 .SH KOMMANDON
 .TP 
 \fB\-s\fP, \fB\-\-split\fP \fIhelt\-arkiv\fP [\fIprefix\fP]
-Delar ett ensamt binärt Debianpaket i flera delar.
+Delar ett ensamt binÃ¤rt Debianpaket i flera delar.
 
-Delarna namnges som \fIprefix\fP\fB.\fP\fIN\fP\fBof\fP\fIM\fP\fB.deb\fP där \fIN\fP är numret på
-delen, räknat från 1, och \fIM\fP är det totala antalet delar (båda angivna
+Delarna namnges som \fIprefix\fP\fB.\fP\fIN\fP\fBof\fP\fIM\fP\fB.deb\fP dÃ¤r \fIN\fP Ã¤r numret pÃ¥
+delen, rÃ¤knat frÃ¥n 1, och \fIM\fP Ã¤r det totala antalet delar (bÃ¥da angivna
 decimalt).
 
-Om inget \fIprefix\fP ges tas filnamnet för \fIhelt\-arkiv\fP, inklusive
+Om inget \fIprefix\fP ges tas filnamnet fÃ¶r \fIhelt\-arkiv\fP, inklusive
 katalognamn, med den avslutande \fB.deb\fP borttagen.
 .TP 
 \fB\-j\fP, \fB\-\-join\fP \fIdel\fP...
-Slår samman de olika paketdelarna, och återskapar den ursprungliga filen som
-den såg ut innan den delades.
+SlÃ¥r samman de olika paketdelarna, och Ã¥terskapar den ursprungliga filen som
+den sÃ¥g ut innan den delades.
 
-Delfilerna som ges som argument måste alla vara delar av exakt samma
-ursprungliga binärfil. Varje måste finnas exakt en gång i argumentlistan,
-men de behöver inte listas i ordning.
+Delfilerna som ges som argument mÃ¥ste alla vara delar av exakt samma
+ursprungliga binÃ¤rfil. Varje mÃ¥ste finnas exakt en gÃ¥ng i argumentlistan,
+men de behÃ¶ver inte listas i ordning.
 
-Delarna måste naturligtvis alla ha genererats med samma delstorlek när
-uppdelningen skedde, vilket betyder att de vanligtvis måste ha genererats
-vid samma körning av \fBdpkg\-split \-\-split\fP.
+Delarna mÃ¥ste naturligtvis alla ha genererats med samma delstorlek nÃ¤r
+uppdelningen skedde, vilket betyder att de vanligtvis mÃ¥ste ha genererats
+vid samma kÃ¶rning av \fBdpkg\-split \-\-split\fP.
 
-Delarnas filnamn är inte signifikanta för sammanslagningsproceduren.
+Delarnas filnamn Ã¤r inte signifikanta fÃ¶r sammanslagningsproceduren.
 
-Förvalt namn på utdatafilen är \fIpaket\fP\fB_\fP\fIversion\fP\fB_\fP\fIark\fP\fB.deb\fP.
+FÃ¶rvalt namn pÃ¥ utdatafilen Ã¤r \fIpaket\fP\fB_\fP\fIversion\fP\fB_\fP\fIark\fP\fB.deb\fP.
 
 .TP 
 \fB\-I\fP, \fB\-\-info\fP \fIdel\fP...
-Skriver ut information, i människoläsbar form, om delfilerna som
-anges. Argument som inte är delar av binärpaket resulterar i ett meddelande
-som talar om detta (men fortfarande på standard ut).
+Skriver ut information, i mÃ¤nniskolÃ¤sbar form, om delfilerna som
+anges. Argument som inte Ã¤r delar av binÃ¤rpaket resulterar i ett meddelande
+som talar om detta (men fortfarande pÃ¥ standard ut).
 .TP 
-\fB\-a\fP, \fB\-\-auto \-o\fP\fI fullständig\-utdata del\fP
-Köa automatiskt delarna och återskapa paketet om möjligt.
+\fB\-a\fP, \fB\-\-auto \-o\fP\fI fullstÃ¤ndig\-utdata del\fP
+KÃ¶a automatiskt delarna och Ã¥terskapa paketet om mÃ¶jligt.
 
-Den \fIdel\fP som anges undersöks och jämförs med andra delar av samma paket
-(om sådana existerar) i kön av delar av paket.
+Den \fIdel\fP som anges undersÃ¶ks och jÃ¤mfÃ¶rs med andra delar av samma paket
+(om sÃ¥dana existerar) i kÃ¶n av delar av paket.
 
-Om alla delar av ett paket av vilket \fIdel\fP är en del av är tillgängliga
-kommer paketet att återskapas och skrivas till \fIfullständig\-utdata\fP (vilken
-vanligtvis inte redan bör existera, även om det inte vore ett fel om det
+Om alla delar av ett paket av vilket \fIdel\fP Ã¤r en del av Ã¤r tillgÃ¤ngliga
+kommer paketet att Ã¥terskapas och skrivas till \fIfullstÃ¤ndig\-utdata\fP (vilken
+vanligtvis inte redan bÃ¶r existera, Ã¤ven om det inte vore ett fel om det
 gjorde det).
 
-Om inte kommer \fIdel\fP att kopieras till kön och \fIfullständig\-utdata\fP skapas
+Om inte kommer \fIdel\fP att kopieras till kÃ¶n och \fIfullstÃ¤ndig\-utdata\fP skapas
 inte.
 
-Om \fIdel\fP inte är en del av ett delat binärpaket kommer \fBdpkg\-split\fP att
-avsluta med returvärde \fB1\fP; om något annat fel uppstår avslutar det med
-returvärde \fB2\fP.
+Om \fIdel\fP inte Ã¤r en del av ett delat binÃ¤rpaket kommer \fBdpkg\-split\fP att
+avsluta med returvÃ¤rde \fB1\fP; om nÃ¥got annat fel uppstÃ¥r avslutar det med
+returvÃ¤rde \fB2\fP.
 
-Flaggan \fB\-\-output\fP eller \fB\-o\fP måste ges då \fB\-\-auto\fPanvänds.  (Om detta
+Flaggan \fB\-\-output\fP eller \fB\-o\fP mÃ¥ste ges dÃ¥ \fB\-\-auto\fPanvÃ¤nds.  (Om detta
 inte vore ett krav skulle det anropande programmet inte veta vilken
-utdatafil som förväntades.)
+utdatafil som fÃ¶rvÃ¤ntades.)
 .TP 
 \fB\-l\fP, \fB\-\-listq\fP
-Listar innehållet i kön över paket att återställa.
+Listar innehÃ¥llet i kÃ¶n Ã¶ver paket att Ã¥terstÃ¤lla.
 
-För varje paketfil för vilken delar finns i kön visas i utdata namnet på
-paketet, antal delar i kön, och det totala antalet byte som är lagrade i
-kön.
+FÃ¶r varje paketfil fÃ¶r vilken delar finns i kÃ¶n visas i utdata namnet pÃ¥
+paketet, antal delar i kÃ¶n, och det totala antalet byte som Ã¤r lagrade i
+kÃ¶n.
 .TP 
 \fB\-d\fP, \fB\-\-discard\fP [\fIpaket\fP...]
-Kastar bort delar från kön över de som väntar på återstående delar av paket.
+Kastar bort delar frÃ¥n kÃ¶n Ã¶ver de som vÃ¤ntar pÃ¥ Ã¥terstÃ¥ende delar av paket.
 
-Om inget \fIpaket\fP anges töms kön helt; om paket anges kastas bara delar för
+Om inget \fIpaket\fP anges tÃ¶ms kÃ¶n helt; om paket anges kastas bara delar fÃ¶r
 de(t) paket som anges.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Visar hjälpskärm och avslutar.
+Visar hjÃ¤lpskÃ¤rm och avslutar.
 .TP 
 \fB\-\-version\fP
 Visar version och avslutar.
@@ -122,68 +122,69 @@ Visar version och avslutar.
 .SH FLAGGOR
 .TP 
 \fB\-\-depotdir\fP\fI katalog\fP
-Anger en alternativ katalog för kön av delar som väntar på automatisk
-sammanslagning. Förvalet är \fB/var/lib/dpkg\fP.
+Anger en alternativ katalog fÃ¶r kÃ¶n av delar som vÃ¤ntar pÃ¥ automatisk
+sammanslagning. FÃ¶rvalet Ã¤r \fB/var/lib/dpkg\fP.
 .TP 
 \fB\-S\fP, \fB\-\-partsize\fP \fIkibibyte\fP
-Anger maximal storlek vid delning, i kibibyte (1024 byte). Förval är 450
+Anger maximal storlek vid delning, i kibibyte (1024 byte). FÃ¶rval Ã¤r 450
 KiB.
 .TP 
-\fB\-o\fP, \fB\-\-output\fP \fIfullständig\-utdata\fP
-Anger filnamnet för utdata vid sammanslagning.
+\fB\-o\fP, \fB\-\-output\fP \fIfullstÃ¤ndig\-utdata\fP
+Anger filnamnet fÃ¶r utdata vid sammanslagning.
 
-Används istället för förvalet vid manuell sammanslagning (\fB\-\-join\fP) och
-krävs för automatisk köa\-eller\-sammanslå (\fB\-\-auto\fP).
+AnvÃ¤nds istÃ¤llet fÃ¶r fÃ¶rvalet vid manuell sammanslagning (\fB\-\-join\fP) och
+krÃ¤vs fÃ¶r automatisk kÃ¶a\-eller\-sammanslÃ¥ (\fB\-\-auto\fP).
 .TP 
 \fB\-Q\fP, \fB\-\-npquiet\fP
-Vid automatisk köa\-eller\-sammanslå skriver \fBdpkg\-split\fP normalt ett
-meddelande om den matas med en \fIdel\fP som inte är en binär paketdel. Denna
-flagga undertrycker meddelandet, vilket gör det möjligt för program såsom
-\fBdpkg\fP att hantera både delade och odelade paket utan att producera
+Vid automatisk kÃ¶a\-eller\-sammanslÃ¥ skriver \fBdpkg\-split\fP normalt ett
+meddelande om den matas med en \fIdel\fP som inte Ã¤r en binÃ¤r paketdel. Denna
+flagga undertrycker meddelandet, vilket gÃ¶r det mÃ¶jligt fÃ¶r program sÃ¥som
+\fBdpkg\fP att hantera bÃ¥de delade och odelade paket utan att producera
 felaktiga meddelanden.
 .TP 
 \fB\-\-msdos\fP
 Tvingar utdatafilnamn skapade av \fB\-\-split\fP att vara msdos\-kompatibla.
 
-Misshandlar prefixet \- antingen förvalet taget från indatafilnamnet, eller
-det som angetts som argument: alfanumeriska tecken görs till gemener,
-plustecken ersätts med \fBx\fP och alla andra tecken kastas.
+Misshandlar prefixet \- antingen fÃ¶rvalet taget frÃ¥n indatafilnamnet, eller
+det som angetts som argument: alfanumeriska tecken gÃ¶rs till gemener,
+plustecken ersÃ¤tts med \fBx\fP och alla andra tecken kastas.
 
-Resultatet trunkeras så långt som möjligt, och filnamn på formen
+Resultatet trunkeras sÃ¥ lÃ¥ngt som mÃ¶jligt, och filnamn pÃ¥ formen
 \fIprefixN\fP\fBof\fP\fIM\fP\fB.deb\fP genereras.
 .
-.SH RETURVÄRDE
+.SH RETURVÃ„RDE
 .TP 
 \fB0\fP
-Den efterfrågade delningen, sammanslagningen eller annan åtgärd
-lyckades. \fB\-\-info\fP\-kommandon lyckas även om indatafilen inte är en del av
-ett binärpaket.
+Den efterfrÃ¥gade delningen, sammanslagningen eller annan Ã¥tgÃ¤rd
+lyckades. \fB\-\-info\fP\-kommandon lyckas Ã¤ven om indatafilen inte Ã¤r en del av
+ett binÃ¤rpaket.
 .TP 
 \fB1\fP
 Uppkommer endast med \fB\-\-auto\fP och anger att \fIdel\fPfilen inte var en del av
-ett binärpaket.
+ett binÃ¤rpaket.
 .TP 
 \fB2\fP
-Något har gått fel, till exempel ett systemanrop, att en fil såg ut som en
-paketdel men var trasig, ett användningsfel, eller något annat problem.
+Fatal or unrecoverable error due to invalid command\-line usage, a file that
+looked like a package part file but was corrupted, or interactions with the
+system, such as accesses to the database, memory allocations, etc.
 .
 .SH FILER
 .TP 
 \fB/var/lib/dpkg/parts\fP
-Förvald kö\-katalog för delfiler som väntar på automatisk sammanslagning.
+FÃ¶rvald kÃ¶\-katalog fÃ¶r delfiler som vÃ¤ntar pÃ¥ automatisk sammanslagning.
 
-Filnamnen som används i katalogen är i ett internt format för \fBdpkg\-split\fP
-och är knappast användbara för andra program, och hur som helst kan inte
-formatet på filnamnen litas på.
+Filnamnen som anvÃ¤nds i katalogen Ã¤r i ett internt format fÃ¶r \fBdpkg\-split\fP
+och Ã¤r knappast anvÃ¤ndbara fÃ¶r andra program, och hur som helst kan inte
+formatet pÃ¥ filnamnen litas pÃ¥.
 .
 .SH PROGRAMFEL
-Kompletta detaljer för paket i kön kan inte fås utan att själv gräva i
-kö\-katalogen.
+Kompletta detaljer fÃ¶r paket i kÃ¶n kan inte fÃ¥s utan att sjÃ¤lv grÃ¤va i
+kÃ¶\-katalogen.
 
-Det finns inget lätt sätta att testa om en fil som kan vara en del av ett
-binärpaket faktiskt är det.
+Det finns inget lÃ¤tt sÃ¤tta att testa om en fil som kan vara en del av ett
+binÃ¤rpaket faktiskt Ã¤r det.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg\-deb\fP(1), \fBdpkg\fP(1).
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

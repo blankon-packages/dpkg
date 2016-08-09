@@ -34,7 +34,7 @@ EXTRA_DIST = \
 	doc/README.feature-removal-schedule \
 	doc/coding-style.txt \
 	doc/frontend.txt \
-	doc/lcov-inject \
+	doc/lcov-inject.pl \
 	doc/triggers.txt \
 	debian/changelog \
 	debian/compat \
@@ -98,7 +98,7 @@ LCOV_CAPTURE_OPTS = $(LCOV_OPTS) --no-recursion \
 	-d $(top_builddir)/lib/dpkg \
 	-d $(top_builddir)/src \
 	-d $(top_builddir)/utils
-LCOV_INJECT = $(PERL) -i $(top_srcdir)/doc/lcov-inject
+LCOV_INJECT = $(PERL) -i $(top_srcdir)/doc/lcov-inject.pl
 
 coverage: all
 	: # Remove coverage data from any previous run
@@ -135,6 +135,7 @@ coverage-clean:
 	rm -rf doc/coverage/
 	find -name '*.gcno' -o -name '*.gcda' -o \
 	     -name '*.gcov' -o -name '*.lcov' | xargs rm -f
+	$(MAKE) -C scripts $@
 else
 coverage:
 	@echo "Need to reconfigure with --enable-coverage"
@@ -143,12 +144,24 @@ coverage-clean:
 endif
 
 test_scripts = \
-	test/pod.t \
-	test/critic.t \
+	t/pod.t \
+	t/pod-spell.t \
+	t/pod-coverage.t \
+	t/synopsis.t \
+	t/minimum-version.t \
+	t/syntax.t \
+	t/strict.t \
+	t/critic.t \
 	$(nil)
 
 test_data = \
-	test/critic/perlcriticrc \
+	t/critic/perlcriticrc \
+	$(nil)
+
+# We need to use absolute paths here due to strict.t invoking a sub-perl,
+# while changing dir to source dir on out-of-tree builds.
+TEST_ENV_VARS = \
+	DPKG_DATADIR=$(abs_top_srcdir) \
 	$(nil)
 
 include $(top_srcdir)/check.am
@@ -172,6 +185,7 @@ dist-hook:
 				exit 1 ; \
 			fi ; \
 		done ; \
+		XDG_CONFIG_HOME= HOME= \
 		git log -C --stat 1.15.0.. >$(distdir)/ChangeLog; \
 	fi
 

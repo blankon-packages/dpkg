@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-trigger(1)
 .\"
-.\" Copyright Â© 2008-2011 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2008-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -25,65 +25,79 @@
 dpkg\-trigger \- Herramienta de disparador de paquete
 .
 .SH SINOPSIS
-\fBdpkg\-trigger\fP [\fIopción\fP...] \fInombre\-disparador\fP
+\fBdpkg\-trigger\fP [\fIopciÃ³n\fP...] \fInombre\-disparador\fP
 .br
-\fBdpkg\-trigger\fP [\fIopción\fP...] \fIorden\fP
+\fBdpkg\-trigger\fP [\fIopciÃ³n\fP...] \fIorden\fP
 .
-.SH DESCRIPCIÓN
+.SH DESCRIPCIÃ“N
 \fBdpkg\-trigger\fP es una herramienta para activar disparadores
-intencionadamente y revisar su compatibilidad con la versión de \fBdpkg\fP en
-ejecución.
+intencionadamente y revisar su compatibilidad con la versiÃ³n de \fBdpkg\fP en
+ejecuciÃ³n.
 .PP
 Se puede utilizar mediante scripts del desarrollador en situaciones
 complejas y condicionales en las que los ficheros de disparadores, o la
-declaración de la directiva \fBactivate\fP en el fichero de control, no son
-suficientemente informativos. También se puede utilizar para comprobaciones
+declaraciÃ³n de la directiva \fBactivate\fP en el fichero de control, no son
+suficientemente informativos. TambiÃ©n se puede utilizar para comprobaciones
 y administradores de sistemas (pero tenga en cuenta que \fBdpkg\-trigger\fP no
-accionará los disparadores).
+accionarÃ¡ los disparadores).
 .PP
 La sintaxis no reconocida de nombres de activadores son un error para
 \fBdpkg\-trigger\fP.
 .
-.SH ÓRDENES
+.SH Ã“RDENES
 .TP 
 \fB\-\-check\-supported\fP
-Revisa si la versión de \fBdpkg\fP en ejecución es compatible con disparadores
-(habitualmente ejecutados mediante un script «postinst»). Finaliza con \fB0\fP
+Revisa si la versiÃ³n de \fBdpkg\fP en ejecuciÃ³n es compatible con disparadores
+(habitualmente ejecutados mediante un script Â«postinstÂ»). Finaliza con \fB0\fP
 si \fBdpkg\fP es compatible con los disparadores, o \fB1\fP con un mensaje de
-error por la salida estándar en caso de fallo. Por otra parte, en general es
-mejor activar sólo el disparador deseado con \fBdpkg\-trigger\fP.
+error por la salida estÃ¡ndar en caso de fallo. Por otra parte, en general es
+mejor activar sÃ³lo el disparador deseado con \fBdpkg\-trigger\fP.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
 Muestra el modo de uso y termina.
 .TP 
 \fB\-\-version\fP
-Muestra la versión y termina.
+Muestra la versiÃ³n y termina.
 .
 .SH OPCIONES
 .TP 
 \fB\-\-admindir=\fP\fIdirectorio\fP
-Cambia el directorio con la base de datos de \fBdpkg\fP. Por omisión es
+Cambia el directorio con la base de datos de \fBdpkg\fP. Por omisiÃ³n es
 \fI/var/lib/dpkg\fP.
 .TP 
 \fB\-\-by\-package=\fP\fIpaquete\fP
 Invalida la espera al inicio del disparador (habitualmente definido con
-\fBdpkg\fP a través de la variable de entorno \fBDPKG_MAINTSCRIPT_PACKAGE\fP en
+\fBdpkg\fP a travÃ©s de la variable de entorno \fBDPKG_MAINTSCRIPT_PACKAGE\fP en
 los scripts del desarrollador, nombrando el paquete al que el script
-pertenece. Este es el comportamiento por omisión.)
+pertenece. Este es el comportamiento por omisiÃ³n.)
 .TP 
 \fB\-\-no\-await\fP
-Esta opción define que la ejecución al paquete T (de existir) no necesita
+Esta opciÃ³n define que la ejecuciÃ³n al paquete T (de existir) no necesita
 esperar al procesamiento de este disparador; el paquete(s) interesado no se
-añade a la lista de espera del procesado del disparador, sin cambiar el
-estado de T. Puede que se considere que T está instalado aunque no se haya
+aÃ±ade a la lista de espera del procesado del disparador, sin cambiar el
+estado de T. Puede que se considere que T estÃ¡ instalado aunque no se haya
 procesado el disparador.
 .TP 
 \fB\-\-await\fP
-This option does the inverse of \fB\-\-no\-await\fP. It is currently the default
-behavior.
+This option does the inverse of \fB\-\-no\-await\fP (since dpkg 1.17.21).  It is
+currently the default behavior.
 .TP 
 \fB\-\-no\-act\fP
 Realiza un simulacro sin cambios en el sistema.
+.
+.SH "ESTADOS DE SALIDA"
+.TP 
+\fB0\fP
+The requested action was successfully performed.  Or a check or assertion
+command returned true.
+.TP 
+\fB1\fP
+A check or assertion command returned false.
+.TP 
+\fB2\fP
+Fatal or unrecoverable error due to invalid command\-line usage, or
+interactions with the system, such as accesses to the database, memory
+allocations, etc.
 .
 .SH ENTORNO
 .TP 
@@ -91,11 +105,11 @@ Realiza un simulacro sin cambios en el sistema.
 If set and the \fB\-\-admindir\fP option has not been specified, it will be used
 as the \fBdpkg\fP data directory.
 .
-.SH "VÉASE TAMBIÉN"
+.SH "VÃ‰ASE TAMBIÃ‰N"
 \fBdpkg\fP(1), \fBdeb\-triggers\fP(5), \fB/usr/share/doc/dpkg\-dev/triggers.txt.gz\fP.
 .SH TRADUCTOR
 Rudy Godoy <rudy@kernel\-panik.org>,
-Rubén Porras <nahoo@inicia.es>,
+RubÃ©n Porras <nahoo@inicia.es>,
 Bruno Barrera C. <bruno.barrera@igloo.cl>,
 Carlos Izquierdo <gheesh@ertis.net>,
 Esteban Manchado y
@@ -103,5 +117,5 @@ NOK.
 Debian L10n Spanish <debian\-l10n\-spanish@lists.debian.org>.
 .br
 Revisiones por Santiago Vila <sanvila@unex.es>,
-Javier Fernández\-Sanguino, Rubén Porras,
+Javier FernÃ¡ndez\-Sanguino, RubÃ©n Porras,
 Luis Uribe y Omar Campagne.

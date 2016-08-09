@@ -1,6 +1,7 @@
 .\" dpkg manual page - deb-symbols(5)
 .\"
 .\" Copyright Â© 2007-2012 RaphaÃ«l Hertzog <hertzog@debian.org>
+.\" Copyright Â© 2011, 2013-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -24,63 +25,68 @@
 .SH BEZEICHNUNG
 deb\-symbols \- Debians erweiterte Informationsdatei von Laufzeitbibliotheken
 .
-.SH ÜBERSICHT
+.SH ÃœBERSICHT
 symbols
 .
 .SH BESCHREIBUNG
-Das Format eines Eintrags für eine erweiterte Abhängigkeitsinformation einer
-Laufzeitbibliothek (»shared library«) lautet:
+Die Symboldateien werden in Debian\-BinÃ¤rpaketen ausgeliefert. Deren Format
+ist eine Teilmenge der Vorlagensymboldateien, die von \fBdpkg\-gensymbols\fP(1)
+in Debian\-Quellpaketen verwandt wird.
+.P
+Das Format eines Eintrags fÃ¼r eine erweiterte AbhÃ¤ngigkeitsinformation einer
+Laufzeitbibliothek (Â»shared libraryÂ«) lautet:
 .PP
-\fIBibliotheks\-Soname Hauptabhängigkeitsvorlage\fP
+\fIBibliotheks\-Soname HauptabhÃ¤ngigkeitsvorlage\fP
 .br
-[| \fIalternative\-Abhängigkeitsvorlage\fP]
+[| \fIalternative\-AbhÃ¤ngigkeitsvorlage\fP]
 .br
-[?]
+[â€¦]
 .br
 [* \fIFeldname\fP: \fIFeldwert\fP]
 .br
-[?]
- \fISymbol\fP \fIMinimalversion\fP [\fIKennung\-der\-Abhängigkeitsvorlage\fP]
+[â€¦]
+ \fISymbol\fP \fIMinimalversion\fP [\fIKennung\-der\-AbhÃ¤ngigkeitsvorlage\fP]
 .P
 Der \fIBibliotheks\-Soname\fP ist genau der Wert des SONAME\-Feldes, wie er von
-\fBobjdump\fP(1) exportiert wird. Eine \fIAbhängigkeitsvorlage\fP ist eine
-Abhängigkeit, in der \fI#MINVER#\fP dynamisch entweder von einer
-Versionsprüfung der Art »(>= \fIMinimalversion\fP)« oder durch nichts
-ersetzt wird, falls eine nicht\-versionierte Abhängigkeit als ausreichend
+\fBobjdump\fP(1) exportiert wird. Eine \fIAbhÃ¤ngigkeitsvorlage\fP ist eine
+AbhÃ¤ngigkeit, in der \fI#MINVER#\fP dynamisch entweder von einer
+VersionsprÃ¼fung der Art \(lq(>= \fIMinimalversion\fP)\(rq oder durch nichts
+ersetzt wird, falls eine nicht\-versionierte AbhÃ¤ngigkeit als ausreichend
 erachtet wird.
 .P
-Jedem exportierten \fISymbol\fP (aufgeführt als \fIName\fP@\fIVersion\fP, mit
-\fIVersion\fP als »Base«, falls die Bibliothek nicht versioniert ist) wird eine
-\fIMinimalversion\fP seiner Abhängigkeitsvorlage zugeordnet (die
-Hauptabhängigkeitsvorlage wird immer verwandt und wird am Ende mit der
-abhängigen, in \fIid\-of\-dependency\-template\fP referenzierten Vorlage (falls
-vorhanden) kombiniert) Die erste alternative Abhängigkeitsvorlage wird mit 1
+Jedem exportierten \fISymbol\fP (aufgefÃ¼hrt als \fIName\fP@\fIVersion\fP, mit
+\fIVersion\fP als \(lqBase\(rq, falls die Bibliothek nicht versioniert ist)
+wird eine \fIMinimalversion\fP seiner AbhÃ¤ngigkeitsvorlage zugeordnet (die
+HauptabhÃ¤ngigkeitsvorlage wird immer verwandt und wird am Ende mit der
+abhÃ¤ngigen, in \fIid\-of\-dependency\-template\fP referenzierten Vorlage (falls
+vorhanden) kombiniert) Die erste alternative AbhÃ¤ngigkeitsvorlage wird mit 1
 nummeriert, die zweite mit 2 usw.
 .P
-Jeder Eintrag für eine Bibliothek kann auch einige Felder mit
+Jeder Eintrag fÃ¼r eine Bibliothek kann auch einige Felder mit
 Metainformationen enthalten. Diese Felder werden in Zeilen gespeichert, die
-mit einem Stern beginnen. Derzeit sind die einzig gültigen Felder:
+mit einem Stern beginnen. Derzeit sind die einzig gÃ¼ltigen Felder:
 .TP 
 \fBBuild\-Depends\-Package\fP
-Es gibt den Namen des »\-dev«\-Pakets an, das der Bibliothek zugeordnet ist,
-und wird von \fBdpkg\-shlibdeps\fP verwandt, um sicherzustellen, dass die
-erstellte Abhängigkeit mindestens genauso strikt ist wie die zugehörige
-Bau\-Abhängigkeit.
+Es gibt den Namen des \(lq\-dev\(rq\-Pakets an, das der Bibliothek zugeordnet
+ist, und wird von \fBdpkg\-shlibdeps\fP verwandt, um sicherzustellen, dass die
+erstellte AbhÃ¤ngigkeit mindestens genauso strikt ist wie die zugehÃ¶rige
+Bau\-AbhÃ¤ngigkeit (seit Dpkg 1.14.13).
 .TP 
 \fBIgnore\-Blacklist\-Groups\fP
-Es gibt in einer durch Leerzeichen getrennten Liste an, welche
+Es gibt in einer durch Leerraumzeichen getrennten Liste an, welche
 Blacklist\-Gruppen ignoriert werden sollten, so dass Symbole, die in diesen
-Gruppen enthalten sind, in die Ausgabedatei aufgenommen werden. Dies sollte
-nur für Toolchain\-Pakete notwendig sein, die solche Symbole in Blacklists
-bereitstellen. Die verfügbaren Gruppen sind systemabhängig, für ELF\- und
-GNU\-basierte Systeme sind dies \fBaeabi\fP und \fBgomp\fP.
+Gruppen enthalten sind, in die Ausgabedatei aufgenommen werden (seit Dpkg
+1.17.6). Dies sollte nur fÃ¼r Toolchain\-Pakete notwendig sein, die solche
+Symbole in Blacklists bereitstellen. Die verfÃ¼gbaren Gruppen sind
+systemabhÃ¤ngig, fÃ¼r ELF\- und GNU\-basierte Systeme sind dies \fBaeabi\fP und
+\fBgomp\fP.
 .SH BEISPIELE
 .SS "Einfache Symboldatei"
 .PP
 libftp.so.3 libftp3 #MINVER#
  DefaultNetbuf@Base 3.1\-1\-6
  FtpAccess@Base 3.1\-1\-6
- [?]
+ [â€¦]
 .SS "Fortgeschrittene Symboldatei"
 .PP
 libGL.so.1 libgl1
@@ -89,15 +95,15 @@ libGL.so.1 libgl1
 .br
 * Build\-Depends\-Package: libgl1\-mesa\-dev
  publicGlSymbol@Base 6.3\-1
- [?]
+ [â€¦]
  implementationSpecificSymbol@Base 6.5.2\-7 1
- [?]
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+ [â€¦]
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 \fBhttps://wiki.debian.org/Projects/ImprovedDpkgShlibdeps\fP

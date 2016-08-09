@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-trigger(1)
 .\"
-.\" Copyright © 2008-2011 Guillem Jover <guillem@debian.org>
+.\" Copyright © 2008-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -21,74 +21,88 @@
 .\"
 .\"*******************************************************************
 .TH dpkg\-trigger 1 2011\-08\-14 "Debian Project" "dpkg suite"
-.SH ̾��
-dpkg\-trigger \- �ѥå������ȥꥬ�桼�ƥ���ƥ�
+.SH 名前
+dpkg\-trigger \- パッケージトリガユーティリティ
 .
-.SH ��
+.SH 書式
 \fBdpkg\-trigger\fP [\fIoption\fP...] \fItrigger\-name\fP
 .br
 \fBdpkg\-trigger\fP [\fIoption\fP...] \fIcommand\fP
 .
-.SH ����
-\fBdpkg\-trigger\fP �ϡ��ȥꥬ������Ū��ͭ���������ꡢ\fBdpkg\fP �μ¹Ի��ˡ��ȥꥬ�Υ��ݡ��Ȥ�����å������ꤹ��ġ���Ǥ��롣
+.SH 説明
+\fBdpkg\-trigger\fP は、トリガを明示的に有効化したり、\fBdpkg\fP の実行時に、トリガのサポートをチェックしたりするツールである。
 .PP
-����ϡ��ե�����ȥꥬ��������줿
-\fBͭ��������\fP�ȥꥬ����ե�����Υǥ��쥯�ƥ��֤��Խ�ʬ�Ǥ���褦�ʡ�ʣ���Ǿ���դ���Ƚ���Ԥ��褦�ʾ��ˡ����ƥʥ�����ץȤˤ�äƻ��Ѥ���롣�ޤ�������ϥƥ��Ȼ��䥷���ƥ�����Ԥ������ѤǤ���
-(��������\fBdpkg\-trigger\fP �ϥȥꥬ���Τ�¹Ԥ����ΤǤϤʤ����Ȥ�����)��
+これは、ファイルトリガや宣言された
+\fB有効化した\fPトリガ制御ファイルのディレクティブが不十分であるような、複雑で条件付きの判定を行うような場合に、メンテナスクリプトによって使用される。また、これはテスト時やシステム管理者からも使用できる
+(ただし、\fBdpkg\-trigger\fP はトリガ自体を実行するものではないことに注意)。
 .PP
-�ȥꥬ̾��ʸˡ��ǧ������ʤ��ä���硢\fBdpkg\-trigger\fP �ϥ��顼�Ȥʤ롣
+トリガ名の文法が認識されなかった場合、\fBdpkg\-trigger\fP はエラーとなる。
 .
-.SH ���ޥ��
+.SH コマンド
 .TP 
 \fB\-\-check\-supported\fP
-�¹���� \fBdpkg\fP ���ȥꥬ�򥵥ݡ��Ȥ��Ƥ��뤫������å����� (�̾盧���postinst ����ƤӽФ����)���ȥꥬ��¹Բ�ǽ��
-\fBdpkg\fP ���¹���ξ��ϡ� \fB0\fP ���ֵѤ��졢����ʳ��ξ��� \fB1\fP
-���ֵѤ����ȤȤ�ˡ�ɸ�२�顼���Ϥ˥��顼��å����������Ϥ���롣�����������̤λȤ����Ȥ��Ƥϡ�ñ��\fBdpkg\-trigger\fP
-���Ѥ��ƻ��Ѥ������ȥꥬ��ͭ�������뤳�Ȥ�˾�ޤ�����
+実行中の \fBdpkg\fP がトリガをサポートしているかをチェックする (通常これはpostinst から呼び出される)。トリガを実行可能な
+\fBdpkg\fP が実行中の場合は、 \fB0\fP が返却され、それ以外の場合は \fB1\fP
+が返却されるとともに、標準エラー出力にエラーメッセージが出力される。ただし、普通の使い方としては、単に\fBdpkg\-trigger\fP
+を用いて使用したいトリガを有効化することが望ましい。
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-������ˡ��ɽ�����ƽ�λ���롣
+利用方法を表示して終了する。
 .TP 
 \fB\-\-version\fP
-�С����������ɽ�����ƽ�λ���롣
+バージョン情報を表示して終了する。
 .
-.SH ���ץ����
+.SH オプション
 .TP 
 \fB\-\-admindir=\fP\fIdir\fP
-\fBdpkg\fP �ǡ����١����ΰ��֤��ѹ����롣�ǥե���Ȥΰ��֤� \fI/var/lib/dpkg\fP �Ǥ��롣
+\fBdpkg\fP データベースの位置を変更する。デフォルトの位置は \fI/var/lib/dpkg\fP である。
 .TP 
 \fB\-\-by\-package=\fP\fIpackage\fP
-�ȥꥬ���Ե�����ѥå�����̾ (�̾���ƥʥ�����ץȤ� \fBDPKG_MAINTSCRIPT_PACKAGE\fP �Ķ��ѿ����̤��� \fBdpkg\fP
-�ˤ�äƥ�����ץȤ��ޤޤ��ѥå�����̾�����ꤵ�졢�ǥե���ȤǤ���̾�����Ѥ�����) ���񤭤��롣
+トリガを待機するパッケージ名 (通常メンテナスクリプトの \fBDPKG_MAINTSCRIPT_PACKAGE\fP 環境変数を通じて \fBdpkg\fP
+によってスクリプトが含まれるパッケージ名に設定され、デフォルトでこの名前が用いられる) を上書きする。
 .TP 
 \fB\-\-no\-await\fP
-���Υ��ץ����ϡ��ƤӽФ�¦�Υѥå����� T (�⤷�����) �������Υȥꥬ�ν������Ե�����ɬ�פ��ʤ��褦�����ꤹ�롣����ϡ���Ϣ�ѥå����� I �� T
-�Υȥꥬ�����Ԥ��ꥹ�Ȥ��ɲä��줺��T �Υ��ơ��������ѹ�����ʤ����Ȥ��̣���롣I �Υȥꥬ��������λ���Ƥ��ʤ����Ǥ��äƤ⡢T
-�ϥ��󥹥ȡ��뤵�줿�ȸ��ʤ���롣
+このオプションは、呼び出し側のパッケージ T (もしあれば) が、このトリガの処理を待機する必要がないように設定する。これは、関連パッケージ I が T
+のトリガ処理待ちリストに追加されず、T のステータスも変更されないことを意味する。I のトリガ処理が完了していない場合であっても、T
+はインストールされたと見なされる。
 .TP 
 \fB\-\-await\fP
-This option does the inverse of \fB\-\-no\-await\fP. It is currently the default
-behavior.
+This option does the inverse of \fB\-\-no\-await\fP (since dpkg 1.17.21).  It is
+currently the default behavior.
 .TP 
 \fB\-\-no\-act\fP
-�ƥ����ѡ��ºݤˤϤ����ʤ��ѹ���Ԥ�ʤ���
+テスト用、実際にはいかなる変更も行わない。
 .
-.SH �Ķ��ѿ�
+.SH 終了ステータス
+.TP 
+\fB0\fP
+The requested action was successfully performed.  Or a check or assertion
+command returned true.
+.TP 
+\fB1\fP
+A check or assertion command returned false.
+.TP 
+\fB2\fP
+Fatal or unrecoverable error due to invalid command\-line usage, or
+interactions with the system, such as accesses to the database, memory
+allocations, etc.
+.
+.SH 環境変数
 .TP 
 \fBDPKG_ADMINDIR\fP
 If set and the \fB\-\-admindir\fP option has not been specified, it will be used
 as the \fBdpkg\fP data directory.
 .
-.SH ��Ϣ����
+.SH 関連項目
 \fBdpkg\fP(1), \fBdeb\-triggers\fP(5), \fB/usr/share/doc/dpkg\-dev/triggers.txt.gz\fP
-.SH ������
-�ⶶ �� <monyo@monyo.com>.
-���� �� <kise@fuyuneko.jp>.
-�ظ� ���� <sekido@mbox.kyoto-inet.or.jp>.
-��ë ��Ÿ <nabe@debian.or.jp>.
-��߷ ˾ <nabetaro@debian.or.jp>.
-���� �� <ishikawa@linux.or.jp>.
-���� ʸ�� <ukai@debian.or.jp>.
-���� ��ͺ <nakano@apm.seikei.ac.jp>.
-.SH ��������
+.SH 翻訳者
+高橋 基信 <monyo@monyo.com>.
+喜瀬 浩 <kise@fuyuneko.jp>.
+関戸 幸一 <sekido@mbox.kyoto-inet.or.jp>.
+鍋谷 栄展 <nabe@debian.or.jp>.
+倉澤 望 <nabetaro@debian.or.jp>.
+石川 睦 <ishikawa@linux.or.jp>.
+鵜飼 文敏 <ukai@debian.or.jp>.
+中野 武雄 <nakano@apm.seikei.ac.jp>.
+.SH 翻訳校正
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

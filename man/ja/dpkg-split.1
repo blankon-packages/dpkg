@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-split(1)
 .\"
-.\" Copyright © 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright © 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright © 2011 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -21,147 +21,149 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-split 1 2011\-07\-04 "Debian Project" "dpkg �桼�ƥ���ƥ�"
-.SH ̾��
-dpkg\-split \- Debian �ѥå��������������֤�ʬ��/����ġ���
+.TH dpkg\-split 1 2011\-07\-04 "Debian Project" "dpkg ユーティリティ"
+.SH 名前
+dpkg\-split \- Debian パッケージアーカイブの分割/統合ツール
 .
-.SH ��
+.SH 書式
 \fBdpkg\-split\fP [\fIoption\fP...] \fIcommand\fP
 .
-.SH ����
-\fBdpkg\-split\fP �� Debian
-�Х��ʥ�ѥå������Υե�����򾮤����ѡ��Ȥ�ʬ�䤷���ꡢ������������礷���ꤹ��ġ���Ǥ��ꡢ�ե��åԡ��ǥ������Τ褦�����̤ξ��������ξ�ˡ����������礭���ѥå������ե�������ݴɤǤ���褦�ˤ��롣
+.SH 説明
+\fBdpkg\-split\fP は Debian
+バイナリパッケージのファイルを小さいパートに分割したり、それらを再度統合したりするツールであり、フロッピーディスクのような容量の小さい媒体上に、サイズの大きいパッケージファイルを保管できるようにする。
 
-����ϡ�\fB\-\-split\fP, \fB\-\-join\fP, \fB\-\-info\fP ���ץ������ư�ǻ��ꤹ�뤳�Ȥˤ��Ԥ��롣
+これは、\fB\-\-split\fP, \fB\-\-join\fP, \fB\-\-info\fP オプションを手動で指定することにより行われる。
 
-\fBdpkg\-split\fP �ˤ� \fB\-\-auto\fP
-���ץ����ˤ��¹Ԥ���뼫ư�⡼�ɤ�����äƤ��롣��ư�⡼�ɤǤϡ�¸�ߤ��Ƥ��뤬�ޤ����礵��Ƥ��ʤ��ѡ��ȤΥ��塼��������뤳�Ȥǡ����٤ƤΥѡ��Ȥ���ǧ�Ǥ��������Ǥ��������礹�롣���塼�δ����ϡ�\fB\-\-listq\fP
-����� \fB\-\-discard\fP ���ץ����ǹԤ����Ȥ��Ǥ��롣
+\fBdpkg\-split\fP には \fB\-\-auto\fP
+オプションにより実行される自動モードも備わっている。自動モードでは、存在しているがまだ統合されていないパートのキューを管理することで、すべてのパートが確認できた時点でそれらを統合する。キューの管理は、\fB\-\-listq\fP
+および \fB\-\-discard\fP オプションで行うことができる。
 
-ʬ�䡢���硢���塼���󥰽����Τ�����⡢ɸ����Ϥ�ͭ�Ѥʥ�å���������Ϥ��롣������̵�뤷�Ƥ�����ʤ���
+分割、統合、キューイング処理のいずれも、標準出力に有用なメッセージを出力する。これらは無視しても問題ない。
 .
-.SH ���ޥ��
+.SH コマンド
 .TP 
 \fB\-s\fP, \fB\-\-split\fP \fIcomplete\-archive\fP [\fIprefix\fP]
-ñ��� Debian �Х��ʥ�ѥå���������Ĥ��Υѡ��Ȥ�ʬ�䤹�롣
+単一の Debian バイナリパッケージを幾つかのパートに分割する。
 
-�ƥѡ��Ȥϡ�\fIprefix\fP\fB.\fP\fIN\fP\fBof\fP\fIM\fP\fB.deb\fP �Τ褦��̾�Ť����롣�����ǡ�\fIN\fP �� 1
-����Ϥޤ�ѡ����ֹ�Ǥ��ꡢ\fIM\fP �ϥѡ��Ȥ������Ǥ��� (������� 10 �ʿ��Ǥ���)��
+各パートは、\fIprefix\fP\fB.\fP\fIN\fP\fBof\fP\fIM\fP\fB.deb\fP のように名づけられる。ここで、\fIN\fP は 1
+から始まるパート番号であり、\fIM\fP はパートの総数である (いずれも 10 進数である)。
 
-\fIprefix\fP �����ꤵ��Ƥ��ʤ����ϡ�\fIcomplete\-archive\fP �ե�����̾�����ǥ��쥯�ȥ���ʬ��ޤ���Ѥ����뤬��������
-\&\fB.deb\fP ��ʬ�Ϻ������롣
+\fIprefix\fP が指定されていない場合は、\fIcomplete\-archive\fP ファイル名が、ディレクトリ部分も含めて用いられるが、末尾の
+\&\fB.deb\fP 部分は削除される。
 .TP 
 \fB\-j\fP, \fB\-\-join\fP \fIpart\fP...
-�ѥå������ե�����Υѡ��ȷ����󤷤ơ�ʬ�����Υ��ꥸ�ʥ�ե���������礹�롣
+パッケージファイルのパート群を集約して、分割前のオリジナルファイルに統合する。
 
-�����Ȥ��ƻ��ꤵ�줿�ƥѡ��ȤΥե�����ϡ����ꥸ�ʥ�ΥХ��ʥ�ե�����Τ��٤ƤΥѡ��Ȥ�ޤ�Ǥ��뤳�ȡ��ѡ��Ȥ���֤��¤٤ƻ��ꤹ��ɬ�פϤʤ�����Ʊ���ѡ��ȤΥե������ʣ������ꤹ�뤳�ȤϤǤ��ʤ���
+引数として指定された各パートのファイルは、オリジナルのバイナリファイルのすべてのパートを含んでいること。パートを順番に並べて指定する必要はないが、同じパートのファイルを複数回指定することはできない。
 
-�ƥѡ��Ȥ�ʬ����˻��ꤵ�줿��������Ʊ��Ǥ���ɬ�פ����롣����ϡ��̾�ƥѡ��Ȥ�ñ��� \fBdpkg\-split \-\-split\fP
-�μ¹Ԥ�����������뤳�Ȥ��̣���롣
+各パートは分割時に指定されたサイズが同一である必要がある。これは、通常各パートが単一の \fBdpkg\-split \-\-split\fP
+の実行から生成されることを意味する。
 
-�ѡ��ȤΥե�����̾�ϡ���������ˤ����ƽ��פǤϤʤ���
+パートのファイル名は、統合処理において重要ではない。
 
-�������줿�ե�����ϡ��ǥե���Ȥ� \fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarch\fP\fB.deb\fP �Ȥ����ե�����̾�ˤʤ롣
+生成されたファイルは、デフォルトで \fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarch\fP\fB.deb\fP というファイル名になる。
 
 .TP 
 \fB\-I\fP, \fB\-\-info\fP \fIpart\fP...
-�ѡ��ȤΥե�����˴ؤ�������ͤ��ɤߤ䤹��������ɽ�����롣�Х��ʥ�ѥå������Υѡ��Ȱʳ��Υե����뤬�����ǻ��ꤵ�줿���ϡ�������Ŧ�����å�������
-(ɸ����Ϥ�) �����ɽ�����롣
+パートのファイルに関する情報を人が読みやすい形式で表示する。バイナリパッケージのパート以外のファイルが引数で指定された場合は、それを指摘するメッセージを
+(標準出力に) 代わりに表示する。
 .TP 
 \fB\-a\fP, \fB\-\-auto \-o\fP \fIcomplete\-output part\fP
-��ưŪ�˥ѡ��Ȥ򥭥塼���󥰤��ơ���ǽ�Ǥ���Хѥå�����������礹�롣
+自動的にパートをキューイングして、可能であればパッケージを再統合する。
 
-\fIpart\fP �ǻ��ꤵ�줿�ѡ��Ȥ��������졢Ʊ���ѥå������ե�����Υѡ��ȤΥ��塼�ˤ���ѥå��������̤Υѡ��� (�⤷�����) ����Ӥ���롣
+\fIpart\fP で指定されたパートが検査され、同じパッケージファイルのパートのキューにあるパッケージの別のパート (もしあれば) と比較される。
 
-\fIpart\fP ��°����ѥå������ե�����Τ��٤ƤΥѡ��Ȥ����Ѳ�ǽ�ʾ�硢�ѥå����������礵�졢\fIcomplete\-output\fP �˽񤭽Ф����
-(�ե����뤬��¸�ξ��⥨�顼�ȤϤʤ�ʤ������̾�Ͽ侩����ʤ�)��
+\fIpart\fP が属するパッケージファイルのすべてのパートが利用可能な場合、パッケージは統合され、\fIcomplete\-output\fP に書き出される
+(ファイルが既存の場合もエラーとはならないが、通常は推奨されない)。
 
-����ʳ��ξ�硢\fIpart\fP �����塼�˥��ԡ����졢\fIcomplete\-output\fP �Ϻ�������ʤ���
+それ以外の場合、\fIpart\fP がキューにコピーされ、\fIcomplete\-output\fP は作成されない。
 
-\fIpart\fP ��ʬ�䤵�줿�Х��ʥ�ѥå������Υѡ��Ȱʳ��ξ�硢\fBdpkg\-split\fP ������� \fB1\fP
-�ǽ�λ���롣���餫�Υȥ�֥뤬ȯ��������硢����� \fB2\fP �ǽ�λ���롣
+\fIpart\fP が分割されたバイナリパッケージのパート以外の場合、\fBdpkg\-split\fP は戻り値 \fB1\fP
+で終了する。何らかのトラブルが発生した場合、戻り値 \fB2\fP で終了する。
 
-\fB\-\-auto\fP ����Ѥ����硢\fB\-\-output\fP �⤷���� \fB\-o\fP ���ץ�������ꤹ�뤳��
-(�����ɬ�ܤˤ��ʤ��ȡ��ƤӽФ����ץ�����ब���ϥե�����̾���Τ�Ѥ��ʤ��ʤäƤ��ޤ�)��
+\fB\-\-auto\fP を使用する場合、\fB\-\-output\fP もしくは \fB\-o\fP オプションも指定すること
+(これを必須にしないと、呼び出したプログラムが出力ファイル名を知る術がなくなってしまう)。
 .TP 
 \fB\-l\fP, \fB\-\-listq\fP
-���礵���ѥå������Υ��塼�����Ƥ����ɽ�����롣
+統合されるパッケージのキューの内容を一覧表示する。
 
-���塼�˥ѡ��Ȥ�¸�ߤ��Ƥ���ƥѥå������ե�����ˤĤ��ơ��ѥå�����̾�ȥ��塼�ˤ���ѡ��ȡ����塼�˳�Ǽ����Ƥ���Х��ȿ������Ϥ���롣
+キューにパートが存在している各パッケージファイルについて、パッケージ名とキューにあるパート、キューに格納されているバイト数が出力される。
 .TP 
 \fB\-d\fP, \fB\-\-discard\fP [\fIpackage\fP...]
-�ѥå������λĤ�Υѡ��Ȥ�·���ޤǥ��塼�˳�Ǽ����Ƥ���ѡ��Ȥ򥭥塼���������롣
+パッケージの残りのパートが揃うまでキューに格納されているパートをキューから削除する。
 
-\fIpackage\fP �����ꤵ��ʤ��ä���硢���塼�ϴ����˾õ��롣���餫�Υѥå����������ꤵ�줿��硢���Υѥå������Υѡ��ȤΤߤ��������롣
+\fIpackage\fP が指定されなかった場合、キューは完全に消去される。何らかのパッケージが指定された場合、そのパッケージのパートのみが削除される。
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-������ˡ��ɽ�����ƽ�λ���롣
+利用方法を表示して終了する。
 .TP 
 \fB\-\-version\fP
-�С����������ɽ�����ƽ�λ���롣
+バージョン情報を表示して終了する。
 .
-.SH ���ץ����
+.SH オプション
 .TP 
 \fB\-\-depotdir\fP\fI directory\fP
-��ưŪ��������ԤäƤ���ѡ��ȤΥ��塼���֤���Ƥ���ǥ��쥯�ȥ����ꤹ�롣�ǥե���Ȥ� \fB/var/lib/dpkg\fP �Ǥ��롣
+自動的な統合を待っているパートのキューが置かれているディレクトリを指定する。デフォルトは \fB/var/lib/dpkg\fP である。
 .TP 
 \fB\-S\fP, \fB\-\-partsize\fP \fIkibibytes\fP
-�ե�����ʬ��κݤΥѡ��Ȥκ��祵������ kibibyte (1024 byte) ñ�̤ǻ��ꤹ�롣�ǥե���Ȥ� 450 KiB �Ǥ��롣
+ファイル分割の際のパートの最大サイズを kibibyte (1024 byte) 単位で指定する。デフォルトは 450 KiB である。
 .TP 
 \fB\-o\fP, \fB\-\-output\fP \fIcomplete\-output\fP
-����κݤν��ϥե�����̾����ꤹ�롣
+統合の際の出力ファイル名を指定する。
 
-����ϡ�(\fB\-\-join\fP �ˤ��) ��ư����κݤΥǥե���ȤΥե�����̾��ͥ�褹�롣�ޤ���(\fB\-\-auto\fP �ˤ��)
-��ư�ǤΥ��塼���󥰤��������κݤˤ�ɬ�ܤǤ��롣
+これは、(\fB\-\-join\fP による) 手動統合の際のデフォルトのファイル名に優先する。また、(\fB\-\-auto\fP による)
+自動でのキューイングおよび統合の際には必須である。
 .TP 
 \fB\-Q\fP, \fB\-\-npquiet\fP
-��ư�ǤΥ��塼���󥰤�������礬�Ԥ���ݡ�\fBdpkg\-split\fP ���̾�Х��ʥ�ѥå������Υѡ��ȤǤʤ� \fIpart\fP
-�����ꤵ���ȥ�å���������Ϥ��뤬�����Υ��ץ����ˤ���å��������޻ߤ��졢\fBdpkg\fP
-�Τ褦�ʥץ�����ब�ѥå�������ʬ�������򰷤��ݤˡ�;�פʥ�å���������Ϥ��뤳�Ȥ��򤱤��롣
+自動でのキューイングおよび統合が行われる際、\fBdpkg\-split\fP は通常バイナリパッケージのパートでない \fIpart\fP
+が指定されるとメッセージを出力するが、このオプションによりメッセージが抑止され、\fBdpkg\fP
+のようなプログラムがパッケージの分割や統合を扱う際に、余計なメッセージを出力することが避けられる。
 .TP 
 \fB\-\-msdos\fP
-\fB\-\-split\fP �������������ϥե�����̾�Ȥ��� MS\-DOS �ߴ��Υե�����̾�������롣
+\fB\-\-split\fP で生成される出力ファイル名として MS\-DOS 互換のファイル名を強制する。
 
-����ˤ�ꡢ���ϥե�����̾�����������줿�ǥե�����ͤ� prefix�������Ȥ��ƻ��ꤵ�줿 prefix
-������⤬�ڤ�ͤ���롣�ѿ����Ͼ�ʸ���ˤ��졢�ץ饹����� \fBx\fP ���֤�������졢����¾��ʸ�����˴�����롣
+これにより、入力ファイル名から生成されたデフォルト値の prefix、引数として指定された prefix
+いずれもが切り詰められる。英数字は小文字にされ、プラス記号は \fBx\fP に置き換えられ、その他の文字は破棄される。
 
-ɬ�פ��ڤ�ͤ᤬�Ԥ�줿��̤Ȥ��ơ�\fIprefixN\fP\fBof\fP\fIM\fP\fB.deb\fP �����Υե�����̾����������롣
+必要な切り詰めが行われた結果として、\fIprefixN\fP\fBof\fP\fIM\fP\fB.deb\fP 形式のファイル名が生成される。
 .
-.SH ��λ���ơ�����
+.SH 終了ステータス
 .TP 
 \fB0\fP
-�׵ᤵ�줿ʬ�䡢���硢����¾�Υ��ޥ�ɤ�����������\fB\-\-info\fP
-���ޥ�ɤϥե����뤬�Х��ʥ�ѥå������Υѡ��ȤǤʤ��ä�����ޤᡢ�����Ȥ��ƥ�����Ȥ��롣
+要求された分割、統合、その他のコマンドは成功した。\fB\-\-info\fP
+コマンドはファイルがバイナリパッケージのパートでなかった場合も含め、成功としてカウントする。
 .TP 
 \fB1\fP
-\fB\-\-auto\fP �ξ��Τ�ȯ������\fIpart\fP �ե����뤬�Х��ʥ�ѥå������Υѡ��ȤǤϤʤ��ä����Ȥ򼨤���
+\fB\-\-auto\fP の場合のみ発生し、\fIpart\fP ファイルがバイナリパッケージのパートではなかったことを示す。
 .TP 
 \fB2\fP
-���餫�Υȥ�֥뤬ȯ������������ˤϥ����ƥॳ����μ��ԡ��ե�����ϥѥå������Υѡ��ȤΤ褦��������Ƥ�����硢ʸˡ���顼�ʤɤ��ޤޤ�롣
+Fatal or unrecoverable error due to invalid command\-line usage, a file that
+looked like a package part file but was corrupted, or interactions with the
+system, such as accesses to the database, memory allocations, etc.
 .
-.SH �ե�����
+.SH ファイル
 .TP 
 \fI/var/lib/dpkg/parts\fP
-�ѡ��Ȥ�������ե����뤬��ư������Ե�����ǥե���ȤΥ��塼�ǥ��쥯�ȥꡣ
+パートを構成するファイルが自動統合を待機するデフォルトのキューディレクトリ。
 
-���Υǥ��쥯�ȥ���Υե�����̾�� \fBdpkg\-split\fP
-�����������ȤʤäƤ��ꡢ����¾�Υץ�����फ�黲�Ȥ���뤳�Ȥ����ꤷ�Ƥ��ʤ��������ʤ����ե�����̾�η����˰�¸���٤��ǤϤʤ���
+このディレクトリ内のファイル名は \fBdpkg\-split\fP
+の内部形式となっており、その他のプログラムから参照されることを想定していない。いかなる場合もファイル名の形式に依存すべきではない。
 .
-.SH �Х�
-���塼�ˤ���ѥå������ξܺ٤ϡ����塼�ǥ��쥯�ȥ��ʬ��Ĵ�٤ʤ��¤��ǧ���뤳�Ȥ��Ǥ��ʤ���
+.SH バグ
+キューにあるパッケージの詳細は、キューディレクトリを自分で調べない限り確認することができない。
 
-�ե����뤬�Х��ʥ�ѥå������Υѡ��Ȥ��ɤ������ñ�˳�ǧ������ʤ�¸�ߤ��ʤ���
+ファイルがバイナリパッケージのパートかどうかを簡単に確認する手段が存在しない。
 .
-.SH ��Ϣ����
+.SH 関連項目
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg\-deb\fP(1), \fBdpkg\fP(1).
-.SH ������
-�ⶶ �� <monyo@monyo.com>.
-���� �� <kise@fuyuneko.jp>.
-�ظ� ���� <sekido@mbox.kyoto-inet.or.jp>.
-��ë ��Ÿ <nabe@debian.or.jp>.
-��߷ ˾ <nabetaro@debian.or.jp>.
-���� �� <ishikawa@linux.or.jp>.
-���� ʸ�� <ukai@debian.or.jp>.
-���� ��ͺ <nakano@apm.seikei.ac.jp>.
-.SH ��������
+.SH 翻訳者
+高橋 基信 <monyo@monyo.com>.
+喜瀬 浩 <kise@fuyuneko.jp>.
+関戸 幸一 <sekido@mbox.kyoto-inet.or.jp>.
+鍋谷 栄展 <nabe@debian.or.jp>.
+倉澤 望 <nabetaro@debian.or.jp>.
+石川 睦 <ishikawa@linux.or.jp>.
+鵜飼 文敏 <ukai@debian.or.jp>.
+中野 武雄 <nakano@apm.seikei.ac.jp>.
+.SH 翻訳校正
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

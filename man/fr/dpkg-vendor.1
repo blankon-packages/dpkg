@@ -22,54 +22,54 @@
 .\"*******************************************************************
 .TH dpkg\-vendor 1 10\-11\-2011 "Projet Debian" "suite dpkg"
 .SH NOM
-dpkg\-vendor \- récupére les informations sur les éditeurs de distribution
+dpkg\-vendor \- rÃ©cupÃ©re les informations sur les Ã©diteurs de distribution
 .
 .SH SYNOPSIS
 \fBdpkg\-vendor\fP [\fIoption\fP...] \fIcommande\fP
 .
 .SH DESCRIPTION
-\fBdpkg\-vendor\fP est un outil qui permet de récupérer des informations sur les
-éditeurs («\ vendors\ ») de distributions référencés dans
+\fBdpkg\-vendor\fP est un outil qui permet de rÃ©cupÃ©rer des informations sur les
+Ã©diteurs (Â«\ vendors\ Â») de distributions rÃ©fÃ©rencÃ©s dans
 \fB/etc/dpkg/origins\fP. \fB/etc/dpkg/origins/default\fP contient l'information
-relative à l'éditeur actuellement utilisé.
+relative Ã  l'Ã©diteur actuellement utilisÃ©.
 .
 .SH COMMANDES
 .TP 
-\fB\-\-is\fP\fI éditeur\fP
-Retourne \fB0\fP si l'éditeur est \fIéditeur\fP. Retourne une valeur non nulle
-dans le cas contraire.
+\fB\-\-is\fP\fI Ã©diteur\fP
+Exits with \fB0\fP if the current vendor is \fIvendor\fP. Otherwise exits with
+\fB1\fP.
 .TP 
-\fB\-\-derives\-from\fP\fI éditeur\fP
-Retourne \fB0\fP si la distribution de l'éditeur actuel est une distribution
-dérivée de \fIéditeur\fP. Le champ \fBParent\fP est utilisé pour parcourir tous
-les ancêtres de l'éditeur actuel.
+\fB\-\-derives\-from\fP\fI Ã©diteur\fP
+Exits with \fB0\fP if the current vendor distribution is a derivative of
+\fIvendor\fP, otherwise exits with \fB1\fP.  It uses the \fBParent\fP field to browse
+all ancestors of the current vendor.
 .TP 
 \fB\-\-query\fP\fI champ\fP
-Affiche sur la sortie standard la valeur du champ spécifique \fIchamp\fP de
-l'éditeur actuel.
+Affiche sur la sortie standard la valeur du champ spÃ©cifique \fIchamp\fP de
+l'Ã©diteur actuel.
 .TP 
 \fB\-\-help\fP
 Affiche un message d'aide puis quitte.
 .TP 
 \fB\-\-version\fP
-Affiche le numéro de version puis quitte.
+Affiche le numÃ©ro de version puis quitte.
 .
 .SH OPTIONS
 .TP 
-\fB\-\-vendor\fP\fI éditeur\fP
-Suppose que l'éditeur actuel est \fIéditeur\fP au lieu d'utiliser la variable
+\fB\-\-vendor\fP\fI Ã©diteur\fP
+Suppose que l'Ã©diteur actuel est \fIÃ©diteur\fP au lieu d'utiliser la variable
 \fBDEB_VENDOR\fP ou \fB/etc/dpkg/origins/default\fP.
 .
 .SH ENVIRONNEMENT
 .TP 
 \fBDEB_VENDOR\fP
-Ce réglage définit l'éditeur («\ vendor\ ») actuel. Si cette valeur est vide,
-le contenu du fichier \fB/etc/dpkg/origins/default\fP est utilisé.
+Ce rÃ©glage dÃ©finit l'Ã©diteur (Â«\ vendor\ Â») actuel. Si cette valeur est vide,
+le contenu du fichier \fB/etc/dpkg/origins/default\fP est utilisÃ©.
 .
 .SH "VOIR AUSSI"
 \fBdeb\-origin\fP(5).
 .SH TRADUCTION
 Ariel VARDI <ariel.vardi@freesbee.fr>, 2002.
 Philippe Batailler, 2006.
-Nicolas François, 2006.
-Veuillez signaler toute erreur à <debian\-l10n\-french@lists.debian.org>.
+Nicolas FranÃ§ois, 2006.
+Veuillez signaler toute erreur Ã  <debian\-l10n\-french@lists.debian.org>.

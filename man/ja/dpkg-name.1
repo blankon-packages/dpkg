@@ -1,7 +1,7 @@
 .\" dpkg manual page - dpkg-name(1)
 .\"
 .\" Copyright Â© 1995-1996 Erick Branderhorst
-.\" Copyright Â© 2007-2012 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2007-2013, 2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -21,85 +21,91 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-name 1 2012\-04\-15 "Debian Project" "dpkg ¥æ¡¼¥Æ¥£¥ê¥Æ¥£"
-.SH Ì¾Á°
-dpkg\-name \- Debian ¥Ñ¥Ã¥±¡¼¥¸¤ò´°Á´¥Ñ¥Ã¥±¡¼¥¸Ì¾¤Ë¥ê¥Í¡¼¥à
+.TH dpkg\-name 1 2012\-04\-15 "Debian Project" "dpkg ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£"
+.SH åå‰
+dpkg\-name \- Debian ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã‚’å®Œå…¨ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸åã«ãƒªãƒãƒ¼ãƒ 
 .
-.SH ½ñ¼°
+.SH æ›¸å¼
 \fBdpkg\-name\fP [\fIoption\fP...] [\fB\-\-\fP] \fIfile\fP...
 .
-.SH ÀâÌÀ
+.SH èª¬æ˜
 .PP
-¤³¤Î¥Ş¥Ë¥å¥¢¥ë¥Ú¡¼¥¸¤Ç¤Ï¡¢\fBdpkg\-name\fP ¥·¥§¥ë¥¹¥¯¥ê¥×¥È¤Ë¤Ä¤¤¤ÆÀâÌÀ¤¹¤ë¡£¤³¤ì¤Ï¡¢\fBDebian\fP
-¥Ñ¥Ã¥±¡¼¥¸¤ò´°Á´¥Ñ¥Ã¥±¡¼¥¸Ì¾¤Ë¡¢´ÊÃ±¤ËÊÑ¹¹¤¹¤ëÊıË¡¤òÄó¶¡¤¹¤ë¡£´°Á´¥Ñ¥Ã¥±¡¼¥¸Ì¾¤È¤Ï¡¢¥Ñ¥Ã¥±¡¼¥¸¤Î control ¥Õ¥¡¥¤¥ë¤Ç»ØÄê¤µ¤ì¤¿
+ã“ã®ãƒãƒ‹ãƒ¥ã‚¢ãƒ«ãƒšãƒ¼ã‚¸ã§ã¯ã€\fBdpkg\-name\fP ã‚·ã‚§ãƒ«ã‚¹ã‚¯ãƒªãƒ—ãƒˆã«ã¤ã„ã¦èª¬æ˜ã™ã‚‹ã€‚ã“ã‚Œã¯ã€\fBDebian\fP
+ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã‚’å®Œå…¨ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸åã«ã€ç°¡å˜ã«å¤‰æ›´ã™ã‚‹æ–¹æ³•ã‚’æä¾›ã™ã‚‹ã€‚å®Œå…¨ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸åã¨ã¯ã€ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã® control ãƒ•ã‚¡ã‚¤ãƒ«ã§æŒ‡å®šã•ã‚ŒãŸ
 \fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarchitecture\fP\fB.\fP\fIpackage\-type\fP
-¤È¤¤¤¦·Á¼°¤Ç¤¢¤ë¡£¥Õ¥¡¥¤¥ëÌ¾¤Î \fIversion\fP
-ÉôÊ¬¤Ï¡¢¥¢¥Ã¥×¥¹¥È¥ê¡¼¥à¤Î¥Ğ¡¼¥¸¥ç¥ó¾ğÊó¤ËÂ³¤­¡¢¥ª¥×¥·¥ç¥ó¤Ç¥Ï¥¤¥Õ¥ó¤ª¤è¤Ó¥ê¥Ó¥¸¥ç¥ó¾ğÊó¤¬Â³¤¤¤¿¤â¤Î¤Ç¤¢¤ë¡£\fIpackage\-type\fP
-ÉôÊ¬¤Ï¡¢Package\-Type ¥Õ¥£¡¼¥ë¥É¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤ì¤Ğ¤½¤ÎÆâÍÆ¤¬ÍÑ¤¤¤é¤ì¤ë¡£¥Ç¥Õ¥©¥ë¥È¤Ï \fBdeb\fP ¤Ç¤¢¤ë¡£
+ã¨ã„ã†å½¢å¼ã§ã‚ã‚‹ã€‚ãƒ•ã‚¡ã‚¤ãƒ«åã® \fIversion\fP
+éƒ¨åˆ†ã¯ã€ã‚¢ãƒƒãƒ—ã‚¹ãƒˆãƒªãƒ¼ãƒ ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ã«ç¶šãã€ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§ãƒã‚¤ãƒ•ãƒ³ãŠã‚ˆã³ãƒªãƒ“ã‚¸ãƒ§ãƒ³æƒ…å ±ãŒç¶šã„ãŸã‚‚ã®ã§ã‚ã‚‹ã€‚\fIpackage\-type\fP
+éƒ¨åˆ†ã¯ã€Package\-Type ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒè¨­å®šã•ã‚Œã¦ã„ã‚Œã°ãã®å†…å®¹ãŒç”¨ã„ã‚‰ã‚Œã‚‹ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯ \fBdeb\fP ã§ã‚ã‚‹ã€‚
 .
-.SH ¥ª¥×¥·¥ç¥ó
+.SH ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 .TP 
 \fB\-a\fP, \fB\-\-no\-architecture\fP
-¥ê¥Í¡¼¥à¸å¤Î¥Õ¥¡¥¤¥ëÌ¾¤Ë¥¢¡¼¥­¥Æ¥¯¥Á¥ã¾ğÊó¤ò´Ş¤á¤Ê¤¤¡£
+ãƒªãƒãƒ¼ãƒ å¾Œã®ãƒ•ã‚¡ã‚¤ãƒ«åã«ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£æƒ…å ±ã‚’å«ã‚ãªã„ã€‚
 .TP 
 \fB\-k\fP, \fB\-\-symlink\fP
-¥Õ¥¡¥¤¥ëÌ¾¤Î¥ê¥Í¡¼¥à½èÍı¤È¤·¤Æ¡¢¥Õ¥¡¥¤¥ë¤ò°ÜÆ°¤¹¤ëÂå¤ï¤ê¤Ë¥·¥ó¥Ü¥ê¥Ã¥¯¥ê¥ó¥¯¤òºîÀ®¤¹¤ë¡£
+ãƒ•ã‚¡ã‚¤ãƒ«åã®ãƒªãƒãƒ¼ãƒ å‡¦ç†ã¨ã—ã¦ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç§»å‹•ã™ã‚‹ä»£ã‚ã‚Šã«ã‚·ãƒ³ãƒœãƒªãƒƒã‚¯ãƒªãƒ³ã‚¯ã‚’ä½œæˆã™ã‚‹ã€‚
 .TP 
 \fB\-o\fP, \fB\-\-overwrite\fP
-¥ê¥Í¡¼¥à¸å¤Î¥Õ¥¡¥¤¥ëÌ¾¤ÈÆ±Ì¾¤Î¥Õ¥¡¥¤¥ë¤¬¤¢¤ì¤Ğ¡¢¾å½ñ¤­¤¹¤ë¡£
+ãƒªãƒãƒ¼ãƒ å¾Œã®ãƒ•ã‚¡ã‚¤ãƒ«åã¨åŒåã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Œã°ã€ä¸Šæ›¸ãã™ã‚‹ã€‚
 .TP 
 \fB\-s\fP, \fB\-\-subdir\fP [\fIdir\fP]
-¥ê¥Í¡¼¥à¤·¤¿¥Õ¥¡¥¤¥ë¤ò¥µ¥Ö¥Ç¥£¥ì¥¯¥È¥ê¤Ë°ÜÆ°¤¹¤ë¡£°ú¿ô¤Ç»ØÄê¤µ¤ì¤¿¥Ç¥£¥ì¥¯¥È¥ê¤¬Â¸ºß¤¹¤ë¾ì¹ç¡¢¥Ñ¥Ã¥±¡¼¥¸¤ÎÀ©¸æ¾ğÊó¤Î¥»¥¯¥·¥ç¥ó¥Õ¥£¡¼¥ë¥É¤«¤éÆÀ¤é¤ì¤¿¥¿¡¼¥²¥Ã¥È¥Ç¥£¥ì¥¯¥È¥ê¤ÎÂå¤ï¤ê¤Ë¤½¤Î¥Ç¥£¥ì¥¯¥È¥ê¤Ë¥Õ¥¡¥¤¥ë¤ò°ÜÆ°¤¹¤ë¡£ÄÌ¾ï¡¢¥¿¡¼¥²¥Ã¥È¥Ç¥£¥ì¥¯¥È¥ê¤Ï
-`unstable/binary\-\fIarchitecture\fP/\fIsection\fP' ¤Ç¤¢¤ë¡£À©¸æ¾ğÊó¤Ë¤³¤Î¥»¥¯¥·¥ç¥ó¤¬¤Ê¤¤¾ì¹ç¤Ï
-`no\-section' ¤È¤ß¤Ê¤µ¤ì¤ë¡£¤³¤Î¾ì¹ç¡¢`non\-free' ¤ä `contrib' ¥»¥¯¥·¥ç¥ó¤Î»ş¤ÈÆ±ÍÍ¤Ë¥¿¡¼¥²¥Ã¥È¥Ç¥£¥ì¥¯¥È¥ê¤Ï
-`\fIsection\fP/binary\-\fIarchitecture\fP' ¤È¤Ê¤ë¡£¥»¥¯¥·¥ç¥ó¥Õ¥£¡¼¥ë¥É¤ÏÉ¬¿Ü¤Ç¤Ï¤Ê¤¤¤¿¤á¡¢Â¿¤¯¤Î¥Ñ¥Ã¥±¡¼¥¸¤¬
-`no\-section' ¤Ë¤Ê¤Ã¤Æ¤·¤Ş¤¦¤À¤í¤¦¡£¤³¤Î¥ª¥×¥·¥ç¥ó¤ÏÃí°Õ¤·¤Æ»ÈÍÑ¤¹¤ë¤³¤È¡£¤³¤Îµ¡Ç½¤Ï´°À®ÅÙ¤¬Äã¤¤¤Î¤Ç¡¢»È¤¦»ş¤ÏÃí°Õ¤¹¤ë¤³¤È¡£
+Files will be moved into a subdirectory. If the directory given as argument
+exists the files will be moved into that directory otherwise the name of the
+target directory is extracted from the section field in the control part of
+the package. The target directory will be
+\(Founstable/binary\-\fIarchitecture\fP/\fIsection\fP\(Fc.  If the section is not
+found in the control, then \fBno\-section\fP is assumed, and in this case, as
+well as for sections \fBnon\-free\fP and \fBcontrib\fP the target directory is
+\(Fo\fIsection\fP/binary\-\fIarchitecture\fP\(Fc.  The section field is not
+required so a lot of packages will find their way to the \fBno\-section\fP
+area.  Use this option with care, it's messy.
 .TP 
 \fB\-c\fP, \fB\-\-create\-dir\fP
 This option can used together with the \fB\-s\fP option. If a target directory
 isn't found it will be created automatically.  \fBUse this option with care.\fP
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-ÍøÍÑÊıË¡¤òÉ½¼¨¤·¤Æ½ªÎ»¤¹¤ë¡£
+åˆ©ç”¨æ–¹æ³•ã‚’è¡¨ç¤ºã—ã¦çµ‚äº†ã™ã‚‹ã€‚
 .TP 
 \fB\-v\fP, \fB\-\-version\fP
-¥Ğ¡¼¥¸¥ç¥ó¾ğÊó¤òÉ½¼¨¤·¤Æ½ªÎ»¤¹¤ë¡£
+ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ã‚’è¡¨ç¤ºã—ã¦çµ‚äº†ã™ã‚‹ã€‚
 .
-.SH ¥Ğ¥°
+.SH ãƒã‚°
 Some packages don't follow the name structure
 \fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarchitecture\fP\fB.deb\fP.  Packages renamed by
 \fBdpkg\-name\fP will follow this structure. Generally this will have no impact
 on how packages are installed by \fBdselect\fP(1)/\fBdpkg\fP(1), but other
 installation tools might depend on this naming structure.
 .
-.SH Îã
+.SH ä¾‹
 .TP 
 \fBdpkg\-name bar\-foo.deb\fP
-¥Õ¥¡¥¤¥ë `bar\-foo.deb' ¤¬ bar\-foo_1.0\-2_i386.deb ¤Î¤è¤¦¤ÊÌ¾Á°¤Ë¥ê¥Í¡¼¥à¤µ¤ì¤ë (¼Âºİ¤Ë¤É¤¦¤Ê¤ë¤«¤Ï
-`bar\-foo.deb' ¤ÎÀ©¸æ¾ğÊó¤Ë°ÍÂ¸¤¹¤ë)¡£
+The file \fBbar\-foo.deb\fP will be renamed to bar\-foo_1.0\-2_i386.deb or
+something similar (depending on whatever information is in the control part
+of \fBbar\-foo.deb\fP).
 .TP 
 \fBfind /root/debian/ \-name \(aq*.deb\(aq | xargs \-n 1 dpkg\-name \-a\fP
-All files with the extension `deb' in the directory /root/debian and its
+All files with the extension \fBdeb\fP in the directory /root/debian and its
 subdirectory's will be renamed by \fBdpkg\-name\fP if required into names with
 no architecture information.
 .TP 
 \fBfind \-name \(aq*.deb\(aq | xargs \-n 1 dpkg\-name \-a \-o \-s \-c\fP
-\fB¤ä¤Ã¤Æ¤Ï¤¤¤±¤Ê¤¤!\fP Â¿¤¯¤Î¥Ñ¥Ã¥±¡¼¥¸¤Ï¥»¥¯¥·¥ç¥ó¾ğÊó¤ò¤â¤Ã¤Æ¤¤¤Ê¤¤¤Î¤Ç¡¢¥¢¡¼¥«¥¤¥Ö¤¬¤°¤Á¤ã¤°¤Á¤ã¤Ë¤Ê¤Ã¤Æ¤·¤Ş¤¦¤À¤í¤¦¡£\fB¤ä¤Ã¤Æ¤Ï¤¤¤±¤Ê¤¤!\fP
+\fBã‚„ã£ã¦ã¯ã„ã‘ãªã„!\fP å¤šãã®ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã¯ã‚»ã‚¯ã‚·ãƒ§ãƒ³æƒ…å ±ã‚’ã‚‚ã£ã¦ã„ãªã„ã®ã§ã€ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ãŒãã¡ã‚ƒãã¡ã‚ƒã«ãªã£ã¦ã—ã¾ã†ã ã‚ã†ã€‚\fBã‚„ã£ã¦ã¯ã„ã‘ãªã„!\fP
 .TP 
 \fBdpkg\-deb \-\-build debian\-tmp && dpkg\-name \-o \-s .. debian\-tmp.deb\fP
-¤³¤ì¤Ï¿·¤·¤¤¥Ñ¥Ã¥±¡¼¥¸¤òºî¤ë»ş¤Ë»È¤¦¤³¤È¤¬¤Ç¤­¤ë¡£
+ã“ã‚Œã¯æ–°ã—ã„ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã‚’ä½œã‚‹æ™‚ã«ä½¿ã†ã“ã¨ãŒã§ãã‚‹ã€‚
 .
-.SH ´ØÏ¢¹àÌÜ
+.SH é–¢é€£é …ç›®
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg\fP(1), \fBdpkg\-deb\fP(1), \fBfind\fP(1),
 \fBxargs\fP(1).
-.SH ËİÌõ¼Ô
-¹â¶¶ ´ğ¿® <monyo@monyo.com>.
-´îÀ¥ ¹À <kise@fuyuneko.jp>.
-´Ø¸Í ¹¬°ì <sekido@mbox.kyoto-inet.or.jp>.
-ÆéÃ« ±ÉÅ¸ <nabe@debian.or.jp>.
-ÁÒß· Ë¾ <nabetaro@debian.or.jp>.
-ÀĞÀî ËÓ <ishikawa@linux.or.jp>.
-±­»ô Ê¸ÉÒ <ukai@debian.or.jp>.
-ÃæÌî ÉğÍº <nakano@apm.seikei.ac.jp>.
-.SH ËİÌõ¹»Àµ
+.SH ç¿»è¨³è€…
+é«˜æ©‹ åŸºä¿¡ <monyo@monyo.com>.
+å–œç€¬ æµ© <kise@fuyuneko.jp>.
+é–¢æˆ¸ å¹¸ä¸€ <sekido@mbox.kyoto-inet.or.jp>.
+é‹è°· æ „å±• <nabe@debian.or.jp>.
+å€‰æ¾¤ æœ› <nabetaro@debian.or.jp>.
+çŸ³å· ç¦ <ishikawa@linux.or.jp>.
+éµœé£¼ æ–‡æ• <ukai@debian.or.jp>.
+ä¸­é‡ æ­¦é›„ <nakano@apm.seikei.ac.jp>.
+.SH ç¿»è¨³æ ¡æ­£
 Debian JP Documentation ML <debian-doc@debian.or.jp>.

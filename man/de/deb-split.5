@@ -22,19 +22,19 @@
 .\"*******************************************************************
 .TH deb\-split 5 2012\-04\-09 Debian\-Projekt Debian
 .SH BEZEICHNUNG
-deb\-split \- mehrteiliges Debian\-Binärpaketformat
-.SH ÜBERSICHT
+deb\-split \- mehrteiliges Debian\-BinÃ¤rpaketformat
+.SH ÃœBERSICHT
 \fIDateiname\fP\fB.deb\fP
 .SH BESCHREIBUNG
-Das mehrteilige \fB.deb\fP\-Format wird zum Aufteilen von großen Paketen in
-kleinere Stücke zur Erleichterung des Transports auf kleinen Medien
+Das mehrteilige \fB.deb\fP\-Format wird zum Aufteilen von groÃŸen Paketen in
+kleinere StÃ¼cke zur Erleichterung des Transports auf kleinen Medien
 verwandt.
 .SH FORMAT
 Die Datei ist ein \fBar\fP\-Archiv mit einer magischen Zahl von
 \fB!<arch>\fP. Der Dateiname kann (seit Dpkg 1.15.6) mit einem
-Schrägstrich abschließen.
+SchrÃ¤gstrich abschlieÃŸen.
 .PP
-Das erste Mitglied heißt \fBdebian\-split\fP und enthält eine Reihe von Zeilen,
+Das erste Mitglied heiÃŸt \fBdebian\-split\fP und enthÃ¤lt eine Reihe von Zeilen,
 getrennt durch Leerzeilen. Derzeit sind acht Zeilen vorhanden:
 .IP \(bu 4
 Die Formatversionsnummer, zum Zeitpunkt der Erstellung dieser Handbuchseite
@@ -46,39 +46,39 @@ Die Paketversion.
 .IP \(bu
 Die Md5sum des Pakets.
 .IP \(bu
-Die Gesamtgröße des Pakets.
+Die GesamtgrÃ¶ÃŸe des Pakets.
 .IP \(bu
-Die maximale Teilegröße
+Die maximale TeilegrÃ¶ÃŸe
 .IP \(bu
-Die aktuelle Teilenummer, gefolgt von einem Schrägstrich und der
+Die aktuelle Teilenummer, gefolgt von einem SchrÃ¤gstrich und der
 Gesamtanzahl an Teilen (wie in \(oq1/10\(cq).
 .IP \(bu
 Die Paketarchitektur (seit Dpkg 1.16.1).
 .PP
 Programme, die mehrteilige Archive lesen, sollten darauf vorbereitet sein,
-dass sich die Unterversionsnummer erhöht und dass zusätzliche Zeilen
-vorhanden sein können, und sollten diese ignorieren, falls dies der Fall
+dass sich die Unterversionsnummer erhÃ¶ht und dass zusÃ¤tzliche Zeilen
+vorhanden sein kÃ¶nnen, und sollten diese ignorieren, falls dies der Fall
 ist.
 .PP
-Falls sich die Hauptversionsnummer geändert hat, wurde eine inkompatible
-Änderung durchgeführt und das Programm sollte sich beenden. Falls dies nicht
-der Fall ist, dann sollte das Programm sicher fortfahren können, es sei
+Falls sich die Hauptversionsnummer geÃ¤ndert hat, wurde eine inkompatible
+Ã„nderung durchgefÃ¼hrt und das Programm sollte sich beenden. Falls dies nicht
+der Fall ist, dann sollte das Programm sicher fortfahren kÃ¶nnen, es sei
 denn, ein unerwartetes Mitglied ist im Archiv (abgesehen vom Ende) gefunden
 worden, wie unten beschrieben.
 .PP
-Das zweite, letzte benötigte Mitglied heißt \fBdata.\fP\fIN\fP, wobei \fIN\fP die
-Teilnummer angibt. Es enthält die rohen Daten des Teils.
+Das zweite, letzte benÃ¶tigte Mitglied heiÃŸt \fBdata.\fP\fIN\fP, wobei \fIN\fP die
+Teilnummer angibt. Es enthÃ¤lt die rohen Daten des Teils.
 .PP
-Diese Mitglieder müssen in genau dieser Reihenfolge auftauchen. Aktuelle
-Implementationen sollten zusätzliche Mitglieder nach \fBdata.\fP\fIN\fP
-ignorieren. Weitere Mitglieder könnten in der Zukunft definiert werden und
-werden (falls möglich) nach diesen drei platziert.
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+Diese Mitglieder mÃ¼ssen in genau dieser Reihenfolge auftauchen. Aktuelle
+Implementationen sollten zusÃ¤tzliche Mitglieder nach \fBdata.\fP\fIN\fP
+ignorieren. Weitere Mitglieder kÃ¶nnten in der Zukunft definiert werden und
+werden (falls mÃ¶glich) nach diesen drei platziert.
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 \fBdeb\fP(5), \fBdpkg\-split\fP(1).

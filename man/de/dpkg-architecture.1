@@ -2,7 +2,7 @@
 .\"
 .\" Copyright Â© 2005 Marcus Brinkmann <brinkmd@debian.org>
 .\" Copyright Â© 2005 Scott James Remnant <scott@netsplit.com>
-.\" Copyright Â© 2006-2014 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2006-2015 Guillem Jover <guillem@debian.org>
 .\" Copyright Â© 2009-2012 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -27,26 +27,26 @@
 .SH BEZEICHNUNG
 dpkg\-architecture \- Architektur zum Paketbau setzen und bestimmen
 .
-.SH ÜBERSICHT
-\fBdpkg\-architecture\fP [\fIOption\fP ?] [\fIBefehl\fP]
+.SH ÃœBERSICHT
+\fBdpkg\-architecture\fP [\fIOption\fP â€¦] [\fIBefehl\fP]
 .PP
 .
 .SH BESCHREIBUNG
-\fBdpkg\-architecture\fP stellt eine Möglichkeit bereit, die Rechner\-Architektur
-für den Paketbau zu bestimmen und zu setzen.
+\fBdpkg\-architecture\fP stellt eine MÃ¶glichkeit bereit, die Rechner\-Architektur
+fÃ¼r den Paketbau zu bestimmen und zu setzen.
 .PP
-Die Bau\-Architektur wird immer über einen externen Aufruf an \fBdpkg\fP(1)
-bestimmt und kann nicht auf der Kommandozeile gesetzt werden.
+Die Bau\-Architektur wird immer Ã¼ber einen externen Aufruf an \fBdpkg\fP(1)
+bestimmt und kann nicht auf der Befehlszeile gesetzt werden.
 .PP
-Sie können die Host\-Architektur (Wirt\-Architektur) spezifizieren, indem Sie
+Sie kÃ¶nnen die Host\-Architektur (Wirt\-Architektur) spezifizieren, indem Sie
 eine oder beide der Optionen \fB\-\-host\-arch\fP oder \fB\-\-host\-type\fP
-verwenden. Der Standardwert wird über einen externen Aufruf an \fBgcc\fP(1)
+verwenden. Der Standardwert wird Ã¼ber einen externen Aufruf an \fBgcc\fP(1)
 ermittelt oder ist identisch mit der Bauarchitektur, falls sowohl \fBCC\fP als
-auch Gcc nicht verfügbar sind. Einer von \fB\-\-host\-arch\fP oder \fB\-\-host\-type\fP
+auch Gcc nicht verfÃ¼gbar sind. Einer von \fB\-\-host\-arch\fP oder \fB\-\-host\-type\fP
 ist ausreichend, der Wert des anderen wird auf einen brauchbaren Wert
-gesetzt. Tatsächlich ist es oft besser, nur einen der beiden anzugeben, da
-\fBdpkg\-architecture\fP Sie warnen wird, falls Ihre Wahl nicht mit dem
-Standardwert übereinstimmt.
+gesetzt. TatsÃ¤chlich ist es oft besser, nur einen der beiden anzugeben, da
+\fB\%dpkg\-architecture\fP Sie warnen wird, falls Ihre Wahl nicht mit dem
+Standardwert Ã¼bereinstimmt.
 .
 .SH BEFEHLE
 .TP 
@@ -55,19 +55,19 @@ Zeige die Umgebungsvariablen, eine pro Zeile, in dem Format
 \fIVARIABLE=Wert\fP. Dies ist die Standardaktion.
 .TP 
 \fB\-e\fP, \fB\-\-equal\fP \fIArchitektur\fP
-Überprüfe auf Gleichheit der Architekturen (seit Dpkg 1.13.13). Es prüft die
+ÃœberprÃ¼fe auf Gleichheit der Architekturen (seit Dpkg 1.13.13). Es prÃ¼ft die
 aktuelle oder angegebene Debian\-Host\-Architektur mit \fIArchitektur\fP auf
 Gleichheit. Diese Aktion expandiert nicht die Architektur\-Platzhalter
 (Wildcards). Der Befehl beendet sich mit einem Exit\-Status von 0, falls eine
-Übereinstimmung besteht, andernfalls mit 1.
+Ãœbereinstimmung besteht, andernfalls mit 1.
 
 .TP 
 \fB\-i\fP, \fB\-\-is\fP \fIArchitektur\-Platzhalter\fP
-Überprüfe auf Gleichheit der Architekturen (seit Dpkg 1.13.13). Es prüft die
+ÃœberprÃ¼fe auf Gleichheit der Architekturen (seit Dpkg 1.13.13). Es prÃ¼ft die
 aktuelle oder angegebene Debian\-Host\-Architektur mit
 \fIArchitektur\-Platzhalter\fP, nachdem dieser zu einem Architektur\-Platzhalter
-expandiert wurde und prüft, ob sie passen. Der Befehl beendet sich mit einem
-Exit\-Status von 0, falls eine Übereinstimmung besteht, andernfalls mit 1.
+expandiert wurde und prÃ¼ft, ob sie passen. Der Befehl beendet sich mit einem
+Exit\-Status von 0, falls eine Ãœbereinstimmung besteht, andernfalls mit 1.
 .TP 
 \fB\-q\fP, \fB\-\-query\fP \fIVariablenname\fP
 Zeige den Wert einer einzelnen Variablen an.
@@ -77,17 +77,17 @@ Zeige einen Export\-Befehl. Dies kann dazu verwendet werden, um
 Umgebungsvariablen mittels eval zu setzen.
 .TP 
 \fB\-u\fP, \fB\-\-print\-unset\fP
-Ähnlich wie \fB\-\-print\-unset\fP, gebe einen Export\-Befehl aus, der alle
-Variablen löscht.
+Ã„hnlich wie \fB\-\-print\-unset\fP, gebe einen Export\-Befehl aus, der alle
+Variablen lÃ¶scht.
 .TP 
 \fB\-c\fP, \fB\-\-command\fP \fIBefehl\fP
-Führe einen \fIBefehl\fP in einer Umgebung aus, in der alle Variablen auf die
+FÃ¼hre einen \fIBefehl\fP in einer Umgebung aus, in der alle Variablen auf die
 festgelegten Werte gesetzt sind.
 .TP 
 \fB\-L\fP, \fB\-\-list\-known\fP
-Gib eine Liste von gültigen Architekturnamen aus. Möglicherweise durch eine
+Gib eine Liste von gÃ¼ltigen Architekturnamen aus. MÃ¶glicherweise durch eine
 oder mehrere der Abgleich\-Optionen \fB\-\-match\-wildcard\fP, \fB\-\-match\-bits\fP oder
-\fB\-\-match\-endian\fP eingeschränkt (seit Dpkg 1.17.14).
+\fB\-\-match\-endian\fP eingeschrÃ¤nkt (seit Dpkg 1.17.14).
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
 Zeige den Bedienungshinweis und beende.
@@ -104,54 +104,62 @@ Setzt die Debian\-Host\-Architektur.
 Setzt den Host\-GNU\-Systemtyp.
 .TP 
 \fB\-A\fP, \fB\-\-target\-arch\fP \fIArchitektur\fP
-Setzt die Ziel\-Debian\-Architektur. Dies wird nur beim Bau einer
-Cross\-Toolchain und zum Bau von Code für die Ziel\-Architektur benötigt. Die
-Cross\-Toolchain wird auf der Bauarchitektur gebaut und läuft dann auf der
-Host\-Architektur.
+Setzt die Ziel\-Debian\-Architektur (seit Dpkg 1.17.14).
 .TP 
 \fB\-T\fP, \fB\-\-target\-type\fP \fIGNU\-Systemtyp\fP
-Setzt den Ziel\-GNU\-Systemtyp.
+Setzt den Ziel\-GNU\-Systemtyp (seit Dpkg 1.17.14).
 .TP 
 \fB\-W\fP, \fB\-\-match\-wildcard\fP \fIArchitektur\-Platzhalter\fP
-Begrenzt die mit \fB\-\-list\-known\fP aufgeführten Architekturen auf solche, die
+Begrenzt die mit \fB\-\-list\-known\fP aufgefÃ¼hrten Architekturen auf solche, die
 auf den angegebenen Architektur\-Platzhalter passen (seit Dpkg 1.17.14).
 .TP 
 \fB\-B\fP, \fB\-\-match\-bits\fP \fIArchitektur\-Bits\fP
-Begrenzt die mit \fB\-\-list\-known\fP aufgeführten Architekturen auf solche mit
+Begrenzt die mit \fB\-\-list\-known\fP aufgefÃ¼hrten Architekturen auf solche mit
 den angegebenen CPU\-Bits (seit Dpkg 1.17.14). Entweder \fB32\fP oder \fB64\fP.
 .TP 
 \fB\-E\fP, \fB\-\-match\-endian\fP \fIArchitektur\-Endianness\fP
-Begrenzt die mit \fB\-\-list\-known\fP aufgeführten Architekturen auf solche mit
+Begrenzt die mit \fB\-\-list\-known\fP aufgefÃ¼hrten Architekturen auf solche mit
 der angegebenen Endianness (seit Dpkg 1.17.14). Entweder \fBlittle\fP oder
 \fBbig\fP.
 .TP 
 \fB\-f\fP, \fB\-\-force\fP
 Existierende Umgebungsvariablen mit dem gleichen Namen wie vom Skript
-verwendet werden nicht überschrieben (d.h. sie werden von
-\fBdpkg\-architecture\fP verwendet), es sei denn, die »force«\-Markierung ist
-gesetzt. Dies erlaubt es dem Benutzer einen Wert zu überschreiben, selbst
-wenn der Aufruf von \fBdpkg\-architecture\fP tief in einem anderen Skript
-versteckt ist (beispielsweise \fBdpkg\-buildpackage\fP(1)).
+verwendet werden nicht Ã¼berschrieben (d.h. sie werden von
+\fB\%dpkg\-architecture\fP verwendet), es sei denn, die Â»forceÂ«\-Markierung ist
+gesetzt. Dies erlaubt es dem Benutzer einen Wert zu Ã¼berschreiben, selbst
+wenn der Aufruf von \fB\%dpkg\-architecture\fP tief in einem anderen Skript
+versteckt ist (beispielsweise \fB\%dpkg\-buildpackage\fP(1)).
 .
-.SH AUSDRÜCKE
+.SH AUSDRÃœCKE
 .IP Baumaschine 4
 Die Maschine, auf der das Paket gebaut wird.
 .IP Host\-Maschine 4
-Die Maschine, für die das Paket gebaut ist.
+Die Maschine, fÃ¼r die das Paket gebaut ist.
 .IP Ziel\-Maschine 4
-Die Maschine, für die der Compiler baut.
+Die Maschine, fÃ¼r die der Compiler baut. Dies wird nur beim Bau einer
+Cross\-Toolchain und zum Bau von Code fÃ¼r die Ziel\-Architektur benÃ¶tigt. Die
+Cross\-Toolchain wird auf der Bauarchitektur gebaut und lÃ¤uft dann auf der
+Host\-Architektur.
 .IP Debian\-Architektur 4
-Die Debian\-Architektur\-Zeichenkette, die den binären Baum im FTP\-Archiv
+Die Debian\-Architektur\-Zeichenkette, die den binÃ¤ren Baum im FTP\-Archiv
 spezifiziert. Beispiele: i386, sparc, hurd\-i386.
-.IP Architektur\-Platzhalter 4
-Ein Architektur\-Platzhalter ist eine spezielle Architektur\-Zeichenkette, die
-auf jede reale Architektur, die ein Teil davon ist, passt. Die allgemeine
-Form ist <Kern>\-<CPU>. Beispiele: linux\-any, any\-i386,
-hurd\-any.
+.IP Debian\-Architektur\-Platzhalter 4
+Ein Debian\-Architektur\-Platzhalter ist eine spezielle
+Architektur\-Zeichenkette, die auf jede reale Architektur, die ein Teil davon
+ist, passt. Die allgemeine Form ist <Kern>\-<CPU>. Beispiele:
+linux\-any, any\-i386, hurd\-any.
 .IP GNU\-Systemtyp 4
 Eine Architektur\-Spezifikations\-Zeichenkette besteht aus zwei, durch einen
-Bindestrich getrennten Teilen: CPU und System. Beispiele: i386\-linux\-gnu,
-sparc\-linux\-gnu, i386\-gnu, x86_64\-netbsd.
+Bindestrich getrennten Teilen: CPU und System. Beispiele: i586\-linux\-gnu,
+sparc\-linux\-gnu, i686\-gnu, x86_64\-netbsd.
+.IP Multiarch\-Tripel 4
+Der bereinigte GNU\-Systemtyp, wird fÃ¼r Dateipfade verwandt. Dieses Tripel
+Ã¤ndert sich auch nicht, wenn das zugrundeliegende ISA erhÃ¶ht wird, so dass
+die daraus resultierenden Pfade dauerhaft stabil bleiben. Derzeit ist der
+einzige Unterschied zum GNU\-Sytemtyp, dass der CPU\-Anteil fÃ¼r i386\-basierte
+Systeme immer i386 lautet. Beispiele: i386\-linux\-gnu,
+x86_64\-linux\-gnu. Beispielpfade: /lib/powerpc64le\-linux\-gnu/,
+/usr/lib/i386\-kfreebsd\-gnu/.
 .
 .SH VARIABLEN
 Die folgenden Variablen werden von \fBdpkg\-architecture\fP gesetzt:
@@ -162,7 +170,7 @@ Der Debian\-Systemname der Baumaschine. (Seit Dpkg 1.13.2).
 .IP \fBDEB_BUILD_ARCH_CPU\fP 4
 Der Debian\-CPU\-Name der Baumaschine. (Seit Dpkg 1.13.2).
 .IP \fBDEB_BUILD_ARCH_BITS\fP 4
-Die Zeigergröße der Baumaschine in Bits. (Seit Dpkg 1.15.4).
+Die ZeigergrÃ¶ÃŸe der Baumaschine in Bits. (Seit Dpkg 1.15.4).
 .IP \fBDEB_BUILD_ARCH_ENDIAN\fP 4
 Die Endianness der Baumaschine (little/big; seit Dpkg 1.15.4).
 .IP \fBDEB_BUILD_GNU_CPU\fP 4
@@ -172,7 +180,7 @@ Der System\-Teil von \fBDEB_BUILD_GNU_TYPE\fP.
 .IP \fBDEB_BUILD_GNU_TYPE\fP 4
 Der GNU\-Systemtyp der Baumaschine.
 .IP \fBDEB_BUILD_MULTIARCH\fP 4
-Der klargestellte GNU\-Systemtyp der Baumaschine, wird für Dateisystempfade
+Der klargestellte GNU\-Systemtyp der Baumaschine, wird fÃ¼r Dateisystempfade
 benutzt.
 .IP \fBDEB_HOST_ARCH\fP 4
 Die Debian\-Architektur der Host\-Maschine.
@@ -181,7 +189,7 @@ Der Debian\-Systemname der Host\-Maschine. (Seit Dpkg 1.13.2).
 .IP \fBDEB_HOST_ARCH_CPU\fP 4
 Der Debian\-CPU\-Name der Host\-Maschine. (Seit Dpkg 1.13.2).
 .IP \fBDEB_HOST_ARCH_BITS\fP 4
-Die Zeigergröße der Host\-Maschine in Bits. (Seit Dpkg 1.15.4).
+Die ZeigergrÃ¶ÃŸe der Host\-Maschine in Bits. (Seit Dpkg 1.15.4).
 .IP \fBDEB_HOST_ARCH_ENDIAN\fP 4
 Die Endianness der Host\-Maschine (little/big; seit Dpkg 1.15.4).
 .IP \fBDEB_HOST_GNU_CPU\fP 4
@@ -191,7 +199,7 @@ Der System\-Teil von \fBDEB_HOST_GNU_TYPE\fP.
 .IP \fBDEB_HOST_GNU_TYPE\fP 4
 Der GNU\-Systemtyp der Host\-Maschine.
 .IP \fBDEB_HOST_MULTIARCH\fP 4
-Der klargestellte GNU\-Systemtyp der Host\-Maschine, wird für Dateisystempfade
+Der klargestellte GNU\-Systemtyp der Host\-Maschine, wird fÃ¼r Dateisystempfade
 benutzt. (Seit Dpkg 1.16.0).
 .IP \fBDEB_TARGET_ARCH\fP 4
 Die Debian\-Architektur der Ziel\-Maschine (seit Dpkg 1.17.14).
@@ -200,7 +208,7 @@ Der Debian\-Systemname der Ziel\-Maschine. (Seit Dpkg 1.17.14).
 .IP \fBDEB_TARGET_ARCH_CPU\fP 4
 Der Debian\-CPU\-Name der Ziel\-Maschine. (Seit Dpkg 1.17.14).
 .IP \fBDEB_TARGET_ARCH_BITS\fP 4
-Die Zeigergröße der Ziel\-Maschine in Bits. (Seit Dpkg 1.17.14).
+Die ZeigergrÃ¶ÃŸe der Ziel\-Maschine in Bits. (Seit Dpkg 1.17.14).
 .IP \fBDEB_TARGET_ARCH_ENDIAN\fP 4
 Die Endianness der Ziel\-Maschine (little/big; seit Dpkg 1.17.14).
 .IP \fBDEB_TARGET_GNU_CPU\fP 4
@@ -210,14 +218,14 @@ Der System\-Teil von \fBDEB_TARGET_GNU_TYPE\fP. (Seit Dpkg 1.17.14).
 .IP \fBDEB_TARGET_GNU_TYPE\fP 4
 Der GNU\-Systemtyp der Ziel\-Maschine. (Seit Dpkg 1.17.14).
 .IP \fBDEB_TARGET_MULTIARCH\fP 4
-Der klargestellte GNU\-Systemtyp der Ziel\-Maschine, wird für Dateisystempfade
+Der klargestellte GNU\-Systemtyp der Ziel\-Maschine, wird fÃ¼r Dateisystempfade
 benutzt. (Seit Dpkg 1.17.14).
 .
 .SH DATEIEN
 .SS Architekturtabellen
-Alle diese Dateien müssen vorhanden sein, damit \fBdpkg\-architecture\fP
+Alle diese Dateien mÃ¼ssen vorhanden sein, damit \fBdpkg\-architecture\fP
 funktioniert. Ihr Ort kann zur Laufzeit mit der Umgebungsvariable
-\fBDPKG_DATADIR\fP überschrieben werden.
+\fBDPKG_DATADIR\fP Ã¼berschrieben werden.
 .TP 
 \fI/usr/share/dpkg/cputable\fP
 Tabelle der bekannten CPU\-Namen und Abbildungen auf ihre GNU\-Namen.
@@ -229,7 +237,10 @@ GNU\-Namen.
 \fI/usr/share/dpkg/triplettable\fP
 Abbildung zwischen den Debian\-Architektur\-Tripletts und den
 Debian\-Architekturnamen.
-.SS Paketierungsunterstützung
+.TP 
+\fI/usr/share/dpkg/abitable\fP
+Tabelle von Debian\-Architektur\-ABI\-Attributs\-AuÃŸerkraftsetzungen.
+.SS PaketierungsunterstÃ¼tzung
 .TP 
 \fI/usr/share/dpkg/architecture.mk\fP
 Makefile\-Schnipsel, das alle Variablen, die \fBdpkg\-architecture\fP ausgibt,
@@ -237,20 +248,20 @@ korrekt setzt und exportiert (seit Dpkg 1.16.1).
 .
 .SH BEISPIELE
 \fBdpkg\-buildpackage\fP akzeptiert die \fB\-a\fP\-Option und gibt dies an
-\fBdpkg\-architecture\fP weiter. Weitere Beispiele:
+\fB\%dpkg\-architecture\fP weiter. Weitere Beispiele:
 .IP
 CC=i386\-gnu\-gcc dpkg\-architecture \-c debian/rules build
 .IP
 eval \`dpkg\-architecture \-u\`
 .PP
-Überprüfe, ob die aktuelle oder angegebene Host\-Architektur identisch zu
+ÃœberprÃ¼fe, ob die aktuelle oder angegebene Host\-Architektur identisch zu
 einer Architektur ist:
 .IP
 dpkg\-architecture \-elinux\-alpha
 .IP
 dpkg\-architecture \-amips \-elinux\-mips
 .PP
-Überprüfe, ob die aktuelle oder angegebene Host\-Architektur ein Linux\-System
+ÃœberprÃ¼fe, ob die aktuelle oder angegebene Host\-Architektur ein Linux\-System
 ist:
 .IP
 dpkg\-architecture \-ilinux\-any
@@ -262,9 +273,9 @@ Die Umgebungsvariablen, die von \fBdpkg\-architecture\fP gesetzt werden, werden
 an \fIdebian/rules\fP als Make\-Variablen weitergegeben (lesen Sie hierzu die
 Make\-Dokumentation). Allerdings sollten Sie sich nicht auf diese verlassen,
 da damit der manuelle Aufruf des Skripts verhindert wird. Stattdessen
-sollten Sie sie immer mit \fBdpkg\-architecture\fP mit der \fB\-q\fP\-Option
+sollten Sie sie immer mit \fB\%dpkg\-architecture\fP mit der \fB\-q\fP\-Option
 initialisieren. Hier sind einige Beispiele, die auch zeigen, wie sie die
-Cross\-Kompilierungs\-Unterstützung in Ihrem Paket verbessern können:
+Cross\-Kompilierungs\-UnterstÃ¼tzung in Ihrem Paket verbessern kÃ¶nnen:
 .PP
 Ermitteln des GNU\-Systemtyps und dessen Weiterleitung an ./configure:
 .PP
@@ -279,28 +290,28 @@ else
   confflags += \-\-build=$(DEB_BUILD_GNU_TYPE) \e
                \-\-host=$(DEB_HOST_GNU_TYPE)
 endif
-[?]
+[â€¦]
 \&./configure $(confflags)
 .fi
 .RE
 .PP
-Etwas nur für eine bestimmte Architektur erledigen:
+Etwas nur fÃ¼r eine bestimmte Architektur erledigen:
 .PP
 .RS 4
 .nf
 DEB_HOST_ARCH ?= $(shell dpkg\-architecture \-qDEB_HOST_ARCH)
 
 ifeq ($(DEB_HOST_ARCH),alpha)
-  [?]
+  [â€¦]
 endif
 .fi
 .RE
 .PP
-oder, falls Sie nur den CPU\- oder OS\-Typ überprüfen müssen, verwenden Sie
+oder, falls Sie nur den CPU\- oder OS\-Typ Ã¼berprÃ¼fen mÃ¼ssen, verwenden Sie
 die \fBDEB_HOST_ARCH_CPU\fP\- oder \fBDEB_HOST_ARCH_OS\fP\-Variablen.
 .PP
 Beachten Sie, dass Sie sich auch auf ein externes Makefile\-Schnipsel
-abstützen können, um alle Variablen, die \fBdpkg\-architecture\fP bereitstellen
+abstÃ¼tzen kÃ¶nnen, um alle Variablen, die \fBdpkg\-architecture\fP bereitstellen
 kann, korrekt zu setzen:
 .PP
 .RS 4
@@ -308,23 +319,23 @@ kann, korrekt zu setzen:
 include /usr/share/dpkg/architecture.mk
 
 ifeq ($(DEB_HOST_ARCH),alpha)
-  [?]
+  [â€¦]
 endif
 .fi
 .RE
 .PP
 Auf jeden Fall sollten Sie niemals \fBdpkg \-\-print\-architecture\fP verwenden,
-um die Architekturinformationen während eines Paketbaus zu erhalten.
+um die Architekturinformationen wÃ¤hrend eines Paketbaus zu erhalten.
 .
 .SH BEMERKUNGEN
-Alle langen Befehle und Optionennamen sind seit Dpkg 1.17.17 verfügbar.
+Alle langen Befehle und Optionennamen sind seit Dpkg 1.17.17 verfÃ¼gbar.
 .
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 \fBdpkg\-buildpackage\fP(1), \fBdpkg\-cross\fP(1).

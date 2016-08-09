@@ -1,7 +1,8 @@
 .\" dpkg manual page - deb-substvars(5)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
+.\" Copyright Â© 2006-2009,2012-2015 Guillem Jover <guillem@debian.org>
 .\" Copyright Â© 2009-2010 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -22,50 +23,50 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-substvars 5 2009\-07\-15 Debian\-Projekt dpkg\-Hilfsprogramme
+.TH deb\-substvars 5 2015\-01\-20 Debian\-Projekt dpkg\-Hilfsprogramme
 .SH BEZEICHNUNG
 deb\-substvars \- Substitutionsvariablen in Debian\-Quellen
 .
-.SH ÜBERSICHT
+.SH ÃœBERSICHT
 substvars
 .
 .SH BESCHREIBUNG
 Bevor \fBdpkg\-source\fP, \fBdpkg\-gencontrol\fP und \fBdpkg\-genchanges\fP ihre
-Steuerinformationen (zu der Quellsteuer\-Datei \fB.dsc\fP für \fBdpkg\-source\fP und
-zu der Standardausgabe für \fBdpkg\-gencontrol\fP und \fBdpkg\-genchanges\fP)
-schreiben, führen sie einige Variablensubstitutionen in der Ausgabedatei
+Steuerinformationen (zu der Quell\-control\-Datei \fB.dsc\fP fÃ¼r \fBdpkg\-source\fP
+und zu der Standardausgabe fÃ¼r \fBdpkg\-gencontrol\fP und \fBdpkg\-genchanges\fP)
+schreiben, fÃ¼hren sie einige Variablensubstitutionen in der Ausgabedatei
 durch.
 
 Eine Variablensubstitution hat die Form
 \fB${\fP\fIVariablenname\fP\fB}\fP. Variablennamen bestehen aus alphanumerischen
 Zeichen (womit sie auch beginnen), Gedankenstrichen und
-Doppelpunkten. Variablensubstitutionen werden wiederholt durchgeführt, bis
-keine übrig geblieben sind; der komplette Text des Feldes nach der
-Substitution wird erneut auf weitere Substitutionen geprüft.
+Doppelpunkten. Variablensubstitutionen werden wiederholt durchgefÃ¼hrt, bis
+keine Ã¼brig geblieben sind; der komplette Text des Feldes nach der
+Substitution wird erneut auf weitere Substitutionen geprÃ¼ft.
 
 Nachdem alle Substitutionen erfolgt sind, wird jedes Auftreten der
 Zeichenkette \fB${}\fP (die keine erlaubte Substitution ist) durch das
 \fB$\fP\-Zeichen ersetzt.
 
-Obwohl die Variablensubstitution bei allen Feldern der Steuerdatei
-vorgenommen wird, werden einige dieser Felder während des Bauens benötigt
-und verwendet, wenn die Substitution noch nicht erfolgt ist. Daher können
+Obwohl die Variablensubstitution bei allen Feldern der control\-Datei
+vorgenommen wird, werden einige dieser Felder wÃ¤hrend des Bauens benÃ¶tigt
+und verwendet, wenn die Substitution noch nicht erfolgt ist. Daher kÃ¶nnen
 Sie Variablen nicht in den Feldern \fBPackage\fP, \fBSource\fP und \fBArchitecture\fP
 verwenden.
 
 Variablenersetzung erfolgt am Inhalt der Felder, nachdem sie geparst
-(ausgewertet) wurden. Falls Sie eine Variable über mehrere Zeilen
-expandieren möchten, müssen Sie nach dem Zeilenumbruch daher kein
-Leerzeichen einfügen. Dies passiert bei der Ausgabe des Feldes implizit. Ist
-beispielsweise die Variable \fB${Description}\fP auf »foo ist bar.${Newline}foo
-ist super.« gesetzt und Sie haben das folgende Feld:
+(ausgewertet) wurden. Falls Sie eine Variable Ã¼ber mehrere Zeilen
+expandieren mÃ¶chten, mÃ¼ssen Sie nach dem Zeilenumbruch daher kein
+Leerzeichen einfÃ¼gen. Dies passiert bei der Ausgabe des Feldes implizit. Ist
+beispielsweise die Variable \fB${Description}\fP auf Â»foo ist bar.${Newline}foo
+ist super.Â« gesetzt und Sie haben das folgende Feld:
 
  Description: foo application
   ${Description}
   .
   Weiterer Text.
 
-Dann wird dies zu Folgenden führen:
+Dann wird dies zu Folgenden fÃ¼hren:
 
  Description: foo application
   foo ist bar.
@@ -73,26 +74,27 @@ Dann wird dies zu Folgenden führen:
   .
   Weiterer Text.
 
-Variablen können über die allgemeine \fB\-V\fP\-Option gesetzt werden. Sie können
-auch in der \fBdebian/substvars\fP (bzw. in der über die Option \fB\-T\fP gesetzten
+Variablen kÃ¶nnen Ã¼ber die allgemeine \fB\-V\fP\-Option gesetzt werden. Sie kÃ¶nnen
+auch in der \fBdebian/substvars\fP (bzw. in der Ã¼ber die Option \fB\-T\fP gesetzten
 Datei) angegeben werden. Diese Datei besteht auch Zeilen der Form
-\fIName\fP\fB=\fP\fIWert\fP. Leerzeichen am Zeilenende, leere Zeilen und Zeilen, die
-mit dem \fB#\fP\-Symbol starten (Kommentare) werden ignoriert.
+\fIName\fP\fB=\fP\fIWert\fP. Leerraumzeichen am Zeilenende, leere Zeilen und Zeilen,
+die mit dem \fB#\fP\-Symbol starten (Kommentare) werden ignoriert.
 
-Zusätzlich sind die folgenden Standardvariablen verfügbar:
+ZusÃ¤tzlich sind die folgenden Standardvariablen verfÃ¼gbar:
 .TP 
 \fBArch\fP
-Die aktuelle Bau\-Architektur (von \fBdpkg \-\-print\-architecture\fP).
+Die aktuelle Host\-Architektur (d.h. die Architektur, fÃ¼r die das Paket
+gebaut wird, das Ã„quivalent zu \fBDEB_HOST_ARCH\fP).
 .TP 
 \fBsource:Version\fP
 Die Quellpaket\-Version.
 .TP 
 \fBsource:Upstream\-Version\fP
-Die Paketversion der Originalautoren, einschließlich der Epoche der
+Die Paketversion der Originalautoren, einschlieÃŸlich der Epoche der
 Debian\-Version, falls vorhanden.
 .TP 
 \fBbinary:Version\fP
-Die Binärpaketversion (die z.B. in einem binNMU von source:Version abweichen
+Die BinÃ¤rpaketversion (die z.B. in einem binNMU von source:Version abweichen
 kann).
 .TP 
 \fBSource\-Version\fP
@@ -101,28 +103,34 @@ Die Quellpaketversion (aus der changelog\-Datei). Diese Variable ist jetzt
 Sie \fBsource:Version\fP oder \fBbinary:Version\fP wo zutreffend.
 .TP 
 \fBInstalled\-Size\fP
-Die Gesamtgröße der vom Paket installierten Dateien. Dieser Wert wird in das
-entsprechende Feld der »control«\-Datei kopiert; wird es gesetzt, verändert
-es den Wert dieses Feldes. Falls diese Variable nicht gesetzt ist, wird
-\fBdpkg\-gencontrol\fP »\fBdu \-k debian/tmp\fP« verwenden, um den Standardwert zu
-ermitteln.
+Die ungefÃ¤hre GesamtgrÃ¶ÃŸe der vom Paket installierten Dateien. Dieser Wert
+wird in das entsprechende Feld der Â»controlÂ«\-Datei kopiert; wird es gesetzt,
+verÃ¤ndert es den Wert dieses Feldes. Falls diese Variable nicht gesetzt ist,
+wird \fBdpkg\-gencontrol\fP den Vorgabewert berechnen, indem es die GrÃ¶ÃŸen jeder
+regulÃ¤ren Datei und jedes Symlinks (gerundet auf 1 KiB) aufsammelt und einen
+Grundwert von 1 KiB fÃ¼r aller anderen Dateisystemobjekttypen verwendet.
+
+\fBHinweis\fP: Beachten Sie, dass dies stets nur ein SchÃ¤tzwert sein kann, da
+die tatsÃ¤chliche GrÃ¶ÃŸe im installierten System stark vom verwandten
+Dateisystem und seinen Parametern abhÃ¤ngt. Daher kann es am Ende mehr oder
+weniger als in diesem Feld angegebenen Platz belegen.
 .TP 
 \fBExtra\-Size\fP
-Zusätzlicher Plattenplatz, der verwendet wird, wenn das Paket installiert
+ZusÃ¤tzlicher Plattenplatz, der verwendet wird, wenn das Paket installiert
 ist. Falls diese Variable gesetzt ist, wird dieser Wert zu der
 \fBInstalled\-Size\fP\-Variablen hinzuaddiert (egal ob sie explizit gesetzt oder
 der Standardwert verwendet wird), bevor sie in das Feld \fBInstalled\-Size\fP
-der »control«\-Datei kopiert wird.
+der Â»controlÂ«\-Datei kopiert wird.
 .TP 
 \fBF:\fP\fIFeldname\fP
 Der Wert des Ausgabefeldes \fIFeldname\fP (der in der kanonischen
-Groß\-/Kleinschreibung angegeben werden muss). Das Setzen dieser Variablen
+GroÃŸ\-/Kleinschreibung angegeben werden muss). Das Setzen dieser Variablen
 hat nur einen Effekt an den Stellen, wo diese explizit expandiert werden.
 .TP 
 \fBFormat\fP
 Die Formatversion der \fB.changes\fP\-Datei, die von dieser Version der
 Quellpaketierskripte erstellt wird. Falls Sie diese Variable setzen, werden
-die Inhalte des \fBFormat\fP\-Feldes in der \fB.changes\fP\-Datei auch geändert.
+die Inhalte des \fBFormat\fP\-Feldes in der \fB.changes\fP\-Datei auch geÃ¤ndert.
 .TP 
 \fBNewline\fP, \fBSpace\fP, \fBTab\fP
 Diese Variablen enthalten das jeweils korrespondieren Zeichen
@@ -146,12 +154,12 @@ wird es eine Warnung erstellen und ein leerer Wert wird angenommen.
 \fBdebian/substvars\fP
 Liste von Substitutionsvariablen und \-werten.
 .
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 .ad l

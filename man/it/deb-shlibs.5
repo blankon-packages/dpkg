@@ -21,7 +21,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-shlibs 5 "8 febbraio 2012" "Progetto Debian" "utilità dpkg"
+.TH deb\-shlibs 5 "8 febbraio 2012" "Progetto Debian" "utilitÃ  dpkg"
 .SH NOME
 deb\-shlibs \- file di informazioni sulle librerie condivise Debian
 .
@@ -36,26 +36,24 @@ ignorate; tutte le altre righe devono essere nel formato
 [\fItipo\fP\fB:\fP] \fIlibreria\fP \fIversione\fP \fIdipendenze\fP
 .PP
 I campi \fIlibreria\fP e \fIversione\fP sono delimitati da spazi bianchi, ma il
-campo \fIdipendenze\fP si estende fino alla fine della riga. Il campo \fItipo\fP è
+campo \fIdipendenze\fP si estende fino alla fine della riga. Il campo \fItipo\fP Ã¨
 opzionale e normalmente non necessario.
 .PP
-Il campo \fIdipendenze\fP ha la stessa sintassi del campo \fBDepends\fP in un file
-di controllo binario; vedere \fBdeb\-control\fP(5). Vedere anche il manuale
-Debian Policy per ulteriori dettagli.
+The \fIdependencies\fP field has the same syntax as the \fBDepends\fP field in a
+binary control file, see \fBdeb\-control\fP(5).
 .
 .SH ESEMPI
 .PP
 Il file \fBshlibs\fP per un tipico pacchetto di libreria, chiamato
-\fIlibcrunch1\fP, che fornisce una libreria il cui soname è \fIlibcrunch.so.1\fP,
+\fIlibcrunch1\fP, che fornisce una libreria il cui soname Ã¨ \fIlibcrunch.so.1\fP,
 potrebbe essere
 .IP
 libcrunch 1 libcrunch1 (>= 1.2\-1)
 .PP
-Le \fIdipendenze\fP devono indicare la versione più recente del pacchetto che
-ha aggiunto nuovi simboli alla libreria: nell'esempio di cui sopra, sono
-stati aggiunti nuovi simboli alla versione 1.2 di \fIlibcrunch\fP. Questa non è
-l'unica ragione per cui può essere necessario restringere le dipendenze;
-anche in questo caso per i dettagli vedere il manuale Debian Policy.
+The \fIdependencies\fP must mention the most recent version of the package that
+added new symbols to the library: in the above example, new symbols were
+added to version 1.2 of \fIlibcrunch\fP.  This is not the only reason the
+dependencies might need to be tightened.
 .
 .SH "VEDERE ANCHE"
 \fBdeb\-control\fP(5), \fBdpkg\-shlibdeps\fP(1), \fBdeb\-symbols\fP(5).

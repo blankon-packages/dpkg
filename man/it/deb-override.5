@@ -21,7 +21,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH deb\-override 5 "14 agosto 2011" "Progetto Debian" "utilità dpkg"
+.TH deb\-override 5 "14 agosto 2011" "Progetto Debian" "utilitÃ  dpkg"
 .SH NOME
 deb\-override \- file override degli archivi Debian
 .
@@ -30,7 +30,7 @@ override
 .
 .SH DESCRIZIONE
 Sebbene la maggior parte delle informazioni su un pacchetto possono essere
-trovate nel file di controllo, alcune sono gestite centralmente da chi è
+trovate nel file di controllo, alcune sono gestite centralmente da chi Ã¨
 responsabile della distribuzione, invece che dal manutentore, per aumentare
 la coerenza globale. Queste informazioni si trovano nel file override.
 .PP
@@ -38,19 +38,19 @@ Il file override ha un semplice formato delimitato da spazi bianchi. Sono
 permessi i commenti, indicati con un carattere \fB#\fP.
 .PP
 .in +5
-\fIpacchetto\fP \fIpriorità\fP \fIsezione\fP [\fIinfomanutentore\fP]
+\fIpacchetto\fP \fIprioritÃ \fP \fIsezione\fP [\fIinfomanutentore\fP]
 .in -5
 .PP
-\fIpacchetto\fP è il nome del pacchetto. Le voci nel file override per
+\fIpacchetto\fP Ã¨ il nome del pacchetto. Le voci nel file override per
 pacchetti che non si trovano nell'albero dei pacchetti binari vengono
 ignorate.
 .PP
-\fIpriorità\fP e \fIsezione\fP corrispondono ai rispettivi campi di controllo
-disponibili nel file .deb. I valori permessi sono elencati nella Debian
-Policy.
+\fIpriority\fP and \fIsection\fP correspond to the respective control fields
+available in the .deb. The allowed values are specific to each distribution
+archive.
 .PP
-\fIinfomanutentore\fP, se presente, può essere il nome del manutentore per una
-sovrascrittura incondizionata del valore, oppure può essere in forma
+\fIinfomanutentore\fP, se presente, puÃ² essere il nome del manutentore per una
+sovrascrittura incondizionata del valore, oppure puÃ² essere in forma
 \fIvecchiomanutentore\fP \fB=>\fP \fInuovomanutentore\fP per effettuare una
 sostituzione.
 .PP
@@ -60,5 +60,4 @@ essere trovati nella directory \fIindices\fP di ogni mirror Debian.
 .SH "VEDERE ANCHE"
 .ad l
 .nh
-\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1),
-\fB/usr/share/doc/debian\-policy/policy.html/index.html\fP.
+\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1).

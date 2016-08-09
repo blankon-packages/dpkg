@@ -2,7 +2,7 @@
 .\"
 .\" Copyright Â© 2007-2011 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\" Copyright Â© 2009-2010 Modestas Vainius <modestas@vainius.eu>
-.\" Copyright Â© 2012-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2012-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-gensymbols 1 2013\-09\-06 Debianprojektet dpkg\-verktygen
+.TH dpkg\-gensymbols 1 2014\-12\-29 Debianprojektet dpkg\-verktygen
 .SH NAMN
 dpkg\-gensymbols \- generera symbolfiler (information om delade bibliotek)
 .
@@ -30,14 +30,14 @@ dpkg\-gensymbols \- generera symbolfiler (information om delade bibliotek)
 \fBdpkg\-gensymbols\fP [\fIflagga\fP...]
 .
 .SH BESKRIVNING
-\fBdpkg\-gensymbols\fP söker genom en temporärt byggträd (som standard
+\fBdpkg\-gensymbols\fP sÃ¶ker genom en temporÃ¤rt byggtrÃ¤d (som standard
 debian/tmp) efter bibliotek och skapar en \fIsymbols\fP\-fil som beskriver
-dem. Denna fil kommer sedan, såvida den inte är tom, att installeras i
-DEBIAN\-underkatalogen i byggträdet så att den hamnar i styrinformationen i
+dem. Denna fil kommer sedan, sÃ¥vida den inte Ã¤r tom, att installeras i
+DEBIAN\-underkatalogen i byggtrÃ¤det sÃ¥ att den hamnar i styrinformationen i
 paketet.
 .P
-När dessa filer skapas, används ett par symbolfiler från paketansvariga som
-indata. Programmet söker efter följande filer (och använder den första det
+NÃ¤r dessa filer skapas, anvÃ¤nds ett par symbolfiler frÃ¥n paketansvariga som
+indata. Programmet sÃ¶ker efter fÃ¶ljande filer (och anvÃ¤nder den fÃ¶rsta det
 finner):
 .IP \(bu 4
 debian/\fIpaket\fP.symbols.\fIarkitektur\fP
@@ -48,205 +48,221 @@ debian/\fIpaket\fP.symbols
 .IP \(bu 4
 debian/symbols
 .P
-Dessa filer är i huvudsak intressanta för att kunna tillhandahålla den
+Dessa filer Ã¤r i huvudsak intressanta fÃ¶r att kunna tillhandahÃ¥lla den
 minimala version associerad med varje symbol i biblioteken. Detta motsvarar
-normalt den första version av paketet som tillhandahöll symbolen, men det
-kan manuellt inkrementeras av de ansvariga om symbolens ABI utökas med
-bibehållen bakåtkompatibilitet. Det är den ansvarigas ansvar att hålla dessa
-filer àjourförda och korrekta, men \fBdpkg\-gensymbols\fP kan hjälpa till med
+normalt den fÃ¶rsta version av paketet som tillhandahÃ¶ll symbolen, men det
+kan manuellt inkrementeras av de ansvariga om symbolens ABI utÃ¶kas med
+bibehÃ¥llen bakÃ¥tkompatibilitet. Det Ã¤r den ansvarigas ansvar att hÃ¥lla dessa
+filer Ã jourfÃ¶rda och korrekta, men \fBdpkg\-gensymbols\fP kan hjÃ¤lpa till med
 detta.
 .P
-När den genererade symbolfilen skiljer sig mot den version som
-tillhandahållits av de paketansvariga kommer \fBdpkg\-gensymbols\fP att skriva
-ut en differens mellan de två versionerna. Om ändringarna är för stora
+NÃ¤r den genererade symbolfilen skiljer sig mot den version som
+tillhandahÃ¥llits av de paketansvariga kommer \fBdpkg\-gensymbols\fP att skriva
+ut en differens mellan de tvÃ¥ versionerna. Om Ã¤ndringarna Ã¤r fÃ¶r stora
 kommer programmet dessutom att misslyckas (du kan justera hur stora
-ändringar du kan tolerera, se flaggan \fB\-c\fP).
-.SH "UNDERHÅLLA SYMBOLFILER"
-Symbolfilerna är bara riktigt nyttiga om de motsvarar hur paketet har
-utvecklats över flera versioner. De paketansvariga måste därför uppdatera
-dem varje gång en ny symbol läggs till så att dess associerade minimala
-version motsvarar verkligheten. Diffarna som finns i byggloggarna kan
-användas som startpunkt, men paketansvariga måste dessutom se till att
-beteendet på dessa symboler inte på något sätt har ändrat sig på ett sådant
-sätt att något som använder symbolerna och länkar mot den nya versionen
-slutar fungera med den gamla versionen. I de flesta fall kan differensfilen
-appliceras direkt på filen debian/\fIpaket\fP. Med det i åtanke så behövs det
-oftast ytterligare justeringar: det rekommenderas att skippa
-Debianrevisionen från det minimala versionsnummer så att den
-bakåtanpassningar med ett lägre versionsnummer, men från samma
-uppströmsversion, fortfarande uppfyller de genererade beroendena. Om
-Debianrevisionen inte kan tas bort på grund av att en symbol faktiskt lades
-till av en Debianspecifik ändring så bör ett "~" läggs till i slutet av
-versionen.
+Ã¤ndringar du kan tolerera, se flaggan \fB\-c\fP).
+.SH "UNDERHÃ…LLA SYMBOLFILER"
+The symbols files are really useful only if they reflect the evolution of
+the package through several releases. Thus the maintainer has to update them
+every time that a new symbol is added so that its associated minimal version
+matches reality.  The diffs contained in the build logs can be used as a
+starting point, but the maintainer, additionally, has to make sure that the
+behaviour of those symbols has not changed in a way that would make anything
+using those symbols and linking against the new version, stop working with
+the old version.  In most cases, the diff applies directly to the
+debian/\fIpackage\fP.symbols file. That said, further tweaks are usually
+needed: it's recommended for example to drop the Debian revision from the
+minimal version so that backports with a lower version number but the same
+upstream version still satisfy the generated dependencies.  If the Debian
+revision can't be dropped because the symbol really got added by the Debian
+specific change, then one should suffix the version with \(oq\fB~\fP\(cq.
 .P
-Innan man applicerar en patch på symbolfilen bör de ansvariga dubbelchecka
-att den är korrekt. Publicerade symboler bör inte försvinna, så patchen bör
-ideellt sett bara lägga till nya rader.
+Innan man applicerar en patch pÃ¥ symbolfilen bÃ¶r de ansvariga dubbelchecka
+att den Ã¤r korrekt. Publicerade symboler bÃ¶r inte fÃ¶rsvinna, sÃ¥ patchen bÃ¶r
+ideellt sett bara lÃ¤gga till nya rader.
 .P
-Obsevera att du kan skriva kommentarer i symbols\-filer: alla rader med "#"
-som första tecken är kommentarer, såvida inte det börjar med "#include" (se
-stycket \fBAnvända inkluderingar\fP). Rader som börjar med "#MISSING:" är
-speciella kommentarer som dokumenterar symboler som har försvunnit.
+Note that you can put comments in symbols files: any line with \(oq#\(cq as
+the first character is a comment except if it starts with \(oq#include\(cq
+(see section \fBUsing includes\fP).  Lines starting with \(oq#MISSING:\(cq are
+special comments documenting symbols that have disappeared.
 .P
-Glöm inte att kontrollera om de gamla symbolversionerna måste ökas. Det
-finns inget sätt för \fBdpkg\-gensymbols\fP att varna om detta. Att blint
-applicera diffen eller utgå från att inget har ändrats om diffen är tom,
-utan att se efter sådana ändringar, kan leda till att paket med lösa
-beroenden kan deklarera att de fungerar med äldre paket de inte kan fungera
-tillsammans med. Detta kommer introducera svårfunna problem vid (delvisa)
+GlÃ¶m inte att kontrollera om de gamla symbolversionerna mÃ¥ste Ã¶kas. Det
+finns inget sÃ¤tt fÃ¶r \fBdpkg\-gensymbols\fP att varna om detta. Att blint
+applicera diffen eller utgÃ¥ frÃ¥n att inget har Ã¤ndrats om diffen Ã¤r tom,
+utan att se efter sÃ¥dana Ã¤ndringar, kan leda till att paket med lÃ¶sa
+beroenden kan deklarera att de fungerar med Ã¤ldre paket de inte kan fungera
+tillsammans med. Detta kommer introducera svÃ¥rfunna problem vid (delvisa)
 uppgraderingar.{
-.SS "Använda #PACKAGE#\-substituering"
+.SS "AnvÃ¤nda #PACKAGE#\-substituering"
 .P
-I några sällsynta fall skiljer sig namnet på biblioteket mellan
-arkitekturer. För att undvika att hårdkoda namnet på paketet i symbolfilen
-kan du använda markören \fI#PACKAGE#\fP. Den ersätts av det faktiska
-paketnamnet när symbolfilen installeras. Till skillnad från
-\fI#MINVER#\fP\-markören kommer \fI#PACKAGE#\fP aldrig att dyka upp i en symbolfil
-i ett binärpaket.
-.SS "Använda symboltaggar"
+I nÃ¥gra sÃ¤llsynta fall skiljer sig namnet pÃ¥ biblioteket mellan
+arkitekturer. FÃ¶r att undvika att hÃ¥rdkoda namnet pÃ¥ paketet i symbolfilen
+kan du anvÃ¤nda markÃ¶ren \fI#PACKAGE#\fP. Den ersÃ¤tts av det faktiska
+paketnamnet nÃ¤r symbolfilen installeras. Till skillnad frÃ¥n
+\fI#MINVER#\fP\-markÃ¶ren kommer \fI#PACKAGE#\fP aldrig att dyka upp i en symbolfil
+i ett binÃ¤rpaket.
+.SS "AnvÃ¤nda symboltaggar"
 .P
-Symboltaggning är nyttigt för att markera symboler som är speciella på något
-sätt. Alla symboler kan ha ett godtyckligt antal taggar associerade med
-sig. Medan alla taggar tolkas och lagras är det bara ett par av dem som
-förstås av \fBdpkg\-gensymbols\fP och som utlöser specialhantering av
-symbolerna. Se undersymbolen \fBStandardsymboltaggar\fP för mer information om
+Symboltaggning Ã¤r nyttigt fÃ¶r att markera symboler som Ã¤r speciella pÃ¥ nÃ¥got
+sÃ¤tt. Alla symboler kan ha ett godtyckligt antal taggar associerade med
+sig. Medan alla taggar tolkas och lagras Ã¤r det bara ett par av dem som
+fÃ¶rstÃ¥s av \fBdpkg\-gensymbols\fP och som utlÃ¶ser specialhantering av
+symbolerna. Se undersymbolen \fBStandardsymboltaggar\fP fÃ¶r mer information om
 dessa taggar.
 .P
-Taggarna anges precis före symbolnamnet (inga blanksteg tillåts mellan). Den
-börjar alltid med en vänsterparentes \fB(\fP, slutar med en högerparentes \fB)\fP,
-och måste innehålla minst en tagg. Ytterligare taggar avdelas med tecknet
-\fB|\fP. En tagg kan ha ett värde, vilket separeras från taggnamnet med tecknet
-\fB=\fP. Taggnamn och värden kan vara godtyckliga strängar, förutom att de inte
-kan innehålla de speciella tecknen \fB)\fP \fB|\fP \fB=\fP. Symbolnamn som följer en
-taggangivelse kan, om så önskas, citeras med antingen \fB'\fP eller \fB"\fP för
-att tillåta blanksteg. Om inga taggar anges för symbolen tolkas dock
-citattecken som en del av symbolnamnet, vilket fortsätter till det första
+Taggarna anges precis fÃ¶re symbolnamnet (inga blanksteg tillÃ¥ts mellan). Den
+bÃ¶rjar alltid med en vÃ¤nsterparentes \fB(\fP, slutar med en hÃ¶gerparentes \fB)\fP,
+och mÃ¥ste innehÃ¥lla minst en tagg. Ytterligare taggar avdelas med tecknet
+\fB|\fP. En tagg kan ha ett vÃ¤rde, vilket separeras frÃ¥n taggnamnet med tecknet
+\fB=\fP. Taggnamn och vÃ¤rden kan vara godtyckliga strÃ¤ngar, fÃ¶rutom att de inte
+kan innehÃ¥lla de speciella tecknen \fB)\fP \fB|\fP \fB=\fP. Symbolnamn som fÃ¶ljer en
+taggangivelse kan, om sÃ¥ Ã¶nskas, citeras med antingen \fB'\fP eller \fB"\fP fÃ¶r
+att tillÃ¥ta blanksteg. Om inga taggar anges fÃ¶r symbolen tolkas dock
+citattecken som en del av symbolnamnet, vilket fortsÃ¤tter till det fÃ¶rsta
 blanksteget.
 .P
- (tag1=jag är markerad|taggnamn med blanksteg)"taggad citerad symbol"@Bas 1.0
+ (tag1=jag Ã¤r markerad|taggnamn med blanksteg)"taggad citerad symbol"@Bas 1.0
  (optional)taggad_ociterad_symbol@Bas 1.0 1
  ociterad_symbol@Bas 1.0
 .P
-Den första symbolen i exemplet är heter \fItaggad citerad symbol\fP och har två
-taggar: \fItag1\fP med värdet \fIjag är markerad\fP och \fItaggnamn med blanksteg\fP
-som inte har något värde. Den andra symbolen heter \fItaggad_ociterad_symbol\fP
-och är bara taggad med taggen som heter \fIoptional\fP. Den sista symbolen är
-ett exempel på en normal, otaggad symbol.
+Den fÃ¶rsta symbolen i exemplet Ã¤r heter \fItaggad citerad symbol\fP och har tvÃ¥
+taggar: \fItag1\fP med vÃ¤rdet \fIjag Ã¤r markerad\fP och \fItaggnamn med blanksteg\fP
+som inte har nÃ¥got vÃ¤rde. Den andra symbolen heter \fItaggad_ociterad_symbol\fP
+och Ã¤r bara taggad med taggen som heter \fIoptional\fP. Den sista symbolen Ã¤r
+ett exempel pÃ¥ en normal, otaggad symbol.
 .P
-Eftersom symboltaggar er en utökning av formatet i \fIdeb\-symbols(5)\fP kan de
-bara användas i symbolfiler i källkodspaket (dessa filer är att anse som
-mallar som används för att bygga symbolfilerna som finns i
-binärpaketen). När \fBdpkg\-gensymbols\fP anropas utan flaggan \fB\-t\fP kommer det
+Eftersom symboltaggar er en utÃ¶kning av formatet i \fIdeb\-symbols(5)\fP kan de
+bara anvÃ¤ndas i symbolfiler i kÃ¤llkodspaket (dessa filer Ã¤r att anse som
+mallar som anvÃ¤nds fÃ¶r att bygga symbolfilerna som finns i
+binÃ¤rpaketen). NÃ¤r \fBdpkg\-gensymbols\fP anropas utan flaggan \fB\-t\fP kommer det
 att mata ut symbolfiler kompatibla med \fBdeb\-symbols\fP(5)\-formatet: det
-hanterar symboler helt beroende på vad som beskrivs av standardtaggarna och
-tar bort alla taggar från utdata. I mall\-läge (\fB\-t\fP) kommer däremot alla
-symboler och deras taggar (både standard och okända) att behållas i utdata
-och skrivas i sin originalform så som de lästes in.
+hanterar symboler helt beroende pÃ¥ vad som beskrivs av standardtaggarna och
+tar bort alla taggar frÃ¥n utdata. I mall\-lÃ¤ge (\fB\-t\fP) kommer dÃ¤remot alla
+symboler och deras taggar (bÃ¥de standard och okÃ¤nda) att behÃ¥llas i utdata
+och skrivas i sin originalform sÃ¥ som de lÃ¤stes in.
 .SS Standardsymboltaggar
 .TP 
 \fBoptional\fP
-En symbol markerad som valfri (optional) kan försvinna från bibliotektet när
-som helst och kommer aldrig göra så att \fBdpkg\-gensymbols\fP
-misslyckas. Försvunna symboler kommer dock fortfarande visas som saknade
-(MISSING) i differensen för varje ny paketversion. Detta beteende fungerar
-som en påminnelse för de paketansvariga om att symbolen måste tas bort från
-symbolfilen eller läggas tillbaka till biblioteket. När en valfri symbol som
-tidigare markerats som saknad (MISSING) plötsligt dyker upp igen i en senare
-version kommer den att uppgraderas tillbaka till befintligstatus
-("existing") med den minsta tillgängliga versionen oförändrad.
+A symbol marked as optional can disappear from the library at any time and
+that will never cause \fBdpkg\-gensymbols\fP to fail. However, disappeared
+optional symbols will continuously appear as MISSING in the diff in each new
+package revision.  This behaviour serves as a reminder for the maintainer
+that such a symbol needs to be removed from the symbol file or readded to
+the library. When the optional symbol, which was previously declared as
+MISSING, suddenly reappears in the next revision, it will be upgraded back
+to the \(lqexisting\(rq status with its minimum version unchanged.
 
-Taggen är användbar för symboler som är privata och vars försvinnande inte
-gör att ABI:et går sönder. De flesta C++\-mallinstansieringar faller till
-exempel in under denna kategori. Som andra taggar kan den här även ha ett
-godtyckligt värde: det kan användas för att indikera varför symbolen är att
+Taggen Ã¤r anvÃ¤ndbar fÃ¶r symboler som Ã¤r privata och vars fÃ¶rsvinnande inte
+gÃ¶r att ABI:et gÃ¥r sÃ¶nder. De flesta C++\-mallinstansieringar faller till
+exempel in under denna kategori. Som andra taggar kan den hÃ¤r Ã¤ven ha ett
+godtyckligt vÃ¤rde: det kan anvÃ¤ndas fÃ¶r att indikera varfÃ¶r symbolen Ã¤r att
 anse som valfri.
 .TP 
-\fBarch=\fP\fIarkitekturlista\fP
-Denna tag gör det möjligt att begränsa vilken uppsättning arkitekturer
-symbolen är tänkt att finnas för. När symbollistan uppdateras med symboler
-som upptäcks i biblioteket behandlas alla arkitekturspecifika symboler som
-inte gäller den aktuella värdarkitekturen som om de inte fanns. Om en
-arkitekturspecifik symbol som motsvarar den aktuella värdarkitekturen inte
-existerar i biblioteket gäller de vanliga reglerna för saknade symboler, och
-kan få \fBdpkg\-gensymbols\fP att misslyckas. Å andra sidan, om en
-arkitekturspecifik symbol hittas där den inte var menad att finnas (då den
-aktuella värdarkitekturen inte är listad i taggen), görs den
-arkitekturneutral (dvs. "arch"\-taggen tas bort och symbolen kommer finnas
-med i differensen på grund av denna ändring), men den anses inte som ny.
+\fBarch=\fP\fIarchitecture\-list\fP
+.TQ
+\fBarch\-bits=\fP\fIarchitecture\-bits\fP
+.TQ
+\fBarch\-endian=\fP\fIarchitecture\-endianness\fP
+These tags allow one to restrict the set of architectures where the symbol
+is supposed to exist. The \fBarch\-bits\fP and \fBarch\-endian\fP tags are supported
+since dpkg 1.18.0. When the symbols list is updated with the symbols
+discovered in the library, all arch\-specific symbols which do not concern
+the current host architecture are treated as if they did not exist. If an
+arch\-specific symbol matching the current host architecture does not exist
+in the library, normal procedures for missing symbols apply and it may cause
+\fBdpkg\-gensymbols\fP to fail. On the other hand, if the arch\-specific symbol
+is found when it was not supposed to exist (because the current host
+architecture is not listed in the tag or does not match the endianness and
+bits), it is made arch neutral (i.e. the arch, arch\-bits and arch\-endian
+tags are dropped and the symbol will appear in the diff due to this change),
+but it is not considered as new.
 
-I det vanliga icke\-mall\-läget skrivs endast de arkitekturspecifika symboler
-som motsvarar den aktuella värdarkitekturen till symbolfilen. Å andra sidan
-skrivs alla arkitekturspecifika symboler (inklusive de från andra
-arkitekturer) till symbolfilen i mall\-läget.
+I det vanliga icke\-mall\-lÃ¤get skrivs endast de arkitekturspecifika symboler
+som motsvarar den aktuella vÃ¤rdarkitekturen till symbolfilen. Ã… andra sidan
+skrivs alla arkitekturspecifika symboler (inklusive de frÃ¥n andra
+arkitekturer) till symbolfilen i mall\-lÃ¤get.
 
-Formatet på \fIarkitekturlista\fP är detsamma som det som används i
-\fBBuild\-Depends\fP\-fältet i \fIdebian/control\fP (bortsett från de omslutande
-hakparenteserna []). Den första symbolen från listan nedan, till exempel,
-kommer endast att tas med på arkitekturerna alpha, valfri\-amd64, ia64, den
-andra bara på linux\-arkitekturer medan den tredje tas med överallt förutom
-på armel.
+The format of \fIarchitecture\-list\fP is the same as the one used in the
+\fBBuild\-Depends\fP field of \fIdebian/control\fP (except the enclosing square
+brackets []). For example, the first symbol from the list below will be
+considered only on alpha, any\-amd64 and ia64 architectures, the second only
+on linux architectures, while the third one anywhere except on armel.
 
- (arch=alpha any\-amd64 ia64)a_64bit_specific_symbol@Base 1.0
+ (arch=alpha any\-amd64 ia64)64bit_specific_symbol@Base 1.0
  (arch=linux\-any)linux_specific_symbol@Base 1.0
  (arch=!armel)symbol_armel_does_not_have@Base 1.0
+
+The \fIarchitecture\-bits\fP is either \fB32\fP or \fB64\fP.
+
+ (arch\-bits=32)32bit_specific_symbol@Base 1.0
+ (arch\-bits=64)64bit_specific_symbol@Base 1.0
+
+The \fIarchitecture\-endianness\fP is either \fBlittle\fP or \fBbig\fP.
+
+ (arch\-endian=little)little_endian_specific_symbol@Base 1.0
+ (arch\-endian=big)big_endian_specific_symbol@Base 1.0
+
+Multiple restrictions can be chained.
+
+ (arch\-bits=32|arch\-endian=little)32bit_le_symbol@Base 1.0
 .TP 
 \fBignore\-blacklist\fP
-dpkg\-gensymbols har en intern svartlista över symboler som inte skall
-förekomma i symbolfiler eftersom de oftast bara är sidoeffekter från
-implementationsdetaljer i verktygskedjan. Om du, av någon orsak, verkligen
-vill att en av dessa symboler skall tas med i symbolfilen måste du tagga
-symbolen med \fBignore\-blacklist\fP. Det kan vara nödvändigt för
-lågnivå\-verktygskedjebibliotek som libgcc.
+dpkg\-gensymbols har en intern svartlista Ã¶ver symboler som inte skall
+fÃ¶rekomma i symbolfiler eftersom de oftast bara Ã¤r sidoeffekter frÃ¥n
+implementationsdetaljer i verktygskedjan. Om du, av nÃ¥gon orsak, verkligen
+vill att en av dessa symboler skall tas med i symbolfilen mÃ¥ste du tagga
+symbolen med \fBignore\-blacklist\fP. Det kan vara nÃ¶dvÃ¤ndigt fÃ¶r
+lÃ¥gnivÃ¥\-verktygskedjebibliotek som libgcc.
 .TP 
 \fBc++\fP
-Betecknar \fIc++\fP\-symbolmönster. Se stycket \fBAnvända symbolmönster\fP nedan.
+Betecknar \fIc++\fP\-symbolmÃ¶nster. Se stycket \fBAnvÃ¤nda symbolmÃ¶nster\fP nedan.
 .TP 
 \fBsymver\fP
-Anger \fIsymver\fP (symbolversion)\-symbolmönstret. Se stycket \fBAnvända
-symbolmönster\fP nedan.
+Anger \fIsymver\fP (symbolversion)\-symbolmÃ¶nstret. Se stycket \fBAnvÃ¤nda
+symbolmÃ¶nster\fP nedan.
 .TP 
 \fBregex\fP
-Anger \fIregex\fP\-symbolmönstret. Se stycket \fIAnvända symbolmönster\fP nedan.
-.SS "Använda symbolmönster"
+Anger \fIregex\fP\-symbolmÃ¶nstret. Se stycket \fIAnvÃ¤nda symbolmÃ¶nster\fP nedan.
+.SS "AnvÃ¤nda symbolmÃ¶nster"
 .P
-Till skillnad från vanliga symbolspecifikationer kan ett mönster täcka flera
-faktiska symboler från biblioteket. \fBdpkg\-gensymbols\fP kommer försöka matcha
-varje mönster mot varje faktisk symbol som \fIinte\fP har en motsvarande
-specifik symbol definierad i symbolfilen. Så fort det första mönster som
+Till skillnad frÃ¥n vanliga symbolspecifikationer kan ett mÃ¶nster tÃ¤cka flera
+faktiska symboler frÃ¥n biblioteket. \fBdpkg\-gensymbols\fP kommer fÃ¶rsÃ¶ka matcha
+varje mÃ¶nster mot varje faktisk symbol som \fIinte\fP har en motsvarande
+specifik symbol definierad i symbolfilen. SÃ¥ fort det fÃ¶rsta mÃ¶nster som
 motsvarar symbolen hittas kommer alla dess taggar och egenskaper att
-användas som en basspecifikation för symbolen. Om inget mönster motsvarar
+anvÃ¤ndas som en basspecifikation fÃ¶r symbolen. Om inget mÃ¶nster motsvarar
 symbolen kommer den att tolkas som ny.
 
-Ett mönster anses som tappat om det inte motsvarar några symboler i
-biblioteket. Som standard kommer detta få \fBdpkg\-genchanges\fP att misslyckas
-om \fB\-c1\fP eller högre anges. Om ett sådant misslyckande inte är önskvärt kan
-mönstret dock märkas med taggen \fIoptional\fP. Om mönstret då inte motsvarar
-någonting kommer det bara dyka upp i differensen som saknas
-(MISSING). Mönstret kan dessutom, precis som andra symboler, begränsas till
-specifika arkitekturer med hjälp av \fIarch\fP\-taggen. Se stycket
-\fBStandardsymboltaggar\fP ovan för mer information.
+Ett mÃ¶nster anses som tappat om det inte motsvarar nÃ¥gra symboler i
+biblioteket. Som standard kommer detta fÃ¥ \fBdpkg\-genchanges\fP att misslyckas
+om \fB\-c1\fP eller hÃ¶gre anges. Om ett sÃ¥dant misslyckande inte Ã¤r Ã¶nskvÃ¤rt kan
+mÃ¶nstret dock mÃ¤rkas med taggen \fIoptional\fP. Om mÃ¶nstret dÃ¥ inte motsvarar
+nÃ¥gonting kommer det bara dyka upp i differensen som saknas
+(MISSING). MÃ¶nstret kan dessutom, precis som andra symboler, begrÃ¤nsas till
+specifika arkitekturer med hjÃ¤lp av \fIarch\fP\-taggen. Se stycket
+\fBStandardsymboltaggar\fP ovan fÃ¶r mer information.
 
-Mönster är en utökning av \fBdeb\-symbols(5)\fP\-formatet och är därför endast
-tillåtna i symbolfilmallar. Syntax för angivelse av mönster skiljer sig inte
-från den för en specifik symbol. Symbolnamnsdelen av specifikationen
-fungerar dock som ett uttryck som skall jämföras mot \fInamn@version\fP för den
-faktiska symbolen. För att skilja mellan olika sorters mönster, taggas
-mönster normalt med en speciell tagg.
+MÃ¶nster Ã¤r en utÃ¶kning av \fBdeb\-symbols(5)\fP\-formatet och Ã¤r dÃ¤rfÃ¶r endast
+tillÃ¥tna i symbolfilmallar. Syntax fÃ¶r angivelse av mÃ¶nster skiljer sig inte
+frÃ¥n den fÃ¶r en specifik symbol. Symbolnamnsdelen av specifikationen
+fungerar dock som ett uttryck som skall jÃ¤mfÃ¶ras mot \fInamn@version\fP fÃ¶r den
+faktiska symbolen. FÃ¶r att skilja mellan olika sorters mÃ¶nster, taggas
+mÃ¶nster normalt med en speciell tagg.
 
-För närvarande stöder \fBdpkg\-gensymbols\fP tre grundläggande mönstertyper:
+FÃ¶r nÃ¤rvarande stÃ¶der \fBdpkg\-gensymbols\fP tre grundlÃ¤ggande mÃ¶nstertyper:
 .TP  3
 \fBc++\fP
-Detta mönster anges med taggen \fIc++\fP. Den matchar enbart C++\-symboler med
+Detta mÃ¶nster anges med taggen \fIc++\fP. Den matchar enbart C++\-symboler med
 deras avmanglade symbolnamn (som det skrivs ut av
-\fBc++filt\fP(1)\-verktyget). Det här mönstret är väldigt nyttigt för att matcha
+\fBc++filt\fP(1)\-verktyget). Det hÃ¤r mÃ¶nstret Ã¤r vÃ¤ldigt nyttigt fÃ¶r att matcha
 symboler vars manglade namn kan skilja sig mellan olika arkitekturer, medan
-deras avmanglade namn är desamma. En grupp dylika symboler är
-\fIicke\-virtuella "thunks"\fP som har arkitekturspecifika offsetvärden inbyggda
-i sina manglade namn. En vanlig instans av detta fall är en virtuell
-destruktör som under diamantarv behöver en icke\-virtuell
-"thunk"\-symbol. Även om till exempel ZThn8_N3NSB6ClassDD1Ev@Base på
-32\-bitarsarkitekturer troligtvis är _ZThn16_N3NSB6ClassDD1Ev@Base
-på64\-bitarsarkitekturer, så kan de matchas med ett enda \fIc++\fP\-mönster:
+deras avmanglade namn Ã¤r desamma. En grupp dylika symboler Ã¤r
+\fIicke\-virtuella "thunks"\fP som har arkitekturspecifika offsetvÃ¤rden inbyggda
+i sina manglade namn. En vanlig instans av detta fall Ã¤r en virtuell
+destruktÃ¶r som under diamantarv behÃ¶ver en icke\-virtuell
+"thunk"\-symbol. Ã„ven om till exempel ZThn8_N3NSB6ClassDD1Ev@Base pÃ¥
+32\-bitarsarkitekturer troligtvis Ã¤r _ZThn16_N3NSB6ClassDD1Ev@Base
+pÃ¥64\-bitarsarkitekturer, sÃ¥ kan de matchas med ett enda \fIc++\fP\-mÃ¶nster:
 .RS
 .PP
 libdummy.so.1 libdummy1 #MINVER#
@@ -254,24 +270,24 @@ libdummy.so.1 libdummy1 #MINVER#
  (c++)"non\-virtual thunk to NSB::ClassD::~ClassD()@Base" 1.0
  [...]
 .P
-Det avmanglade namnet ovan kan hämtas genom att utföra följande kommando:
+Det avmanglade namnet ovan kan hÃ¤mtas genom att utfÃ¶ra fÃ¶ljande kommando:
 .PP
  $ echo '_ZThn8_N3NSB6ClassDD1Ev@Base' | c++filt
 .P
-Observera att även om det manglade namnet per definition är unikt i
-biblioteket gäller inte detta för avmanglade namn. Flera distinkta verkliga
-symboler kan ha samma avmanglade namn. Det gäller till exempel för
-icke\-virtuella "thunk"\-symboler i konfigurationer med komplexa arv eller för
-de flesta konstruktörer och destruktörer (eftersom g++ normalt genererar två
-symboler för dem). Eftersom dessa kollisioner sker på ABI\-nivån bör de dock
-inte sänka kvaliteten på symbolfilen.
+Observera att Ã¤ven om det manglade namnet per definition Ã¤r unikt i
+biblioteket gÃ¤ller inte detta fÃ¶r avmanglade namn. Flera distinkta verkliga
+symboler kan ha samma avmanglade namn. Det gÃ¤ller till exempel fÃ¶r
+icke\-virtuella "thunk"\-symboler i konfigurationer med komplexa arv eller fÃ¶r
+de flesta konstruktÃ¶rer och destruktÃ¶rer (eftersom g++ normalt genererar tvÃ¥
+symboler fÃ¶r dem). Eftersom dessa kollisioner sker pÃ¥ ABI\-nivÃ¥n bÃ¶r de dock
+inte sÃ¤nka kvaliteten pÃ¥ symbolfilen.
 .RE
 .TP 
 \fBsymver\fP
-Detta mönster anges med taggen \fIsymver\fP. Välunderhållna bibliotek har
-versionshanterade symboler där varje version motsvarar uppströmsversionen
-där symbolen lades till. Om det är fallet kan du använda ett
-\fIsymver\fP\-möster för att matcha alla symboler som matchar den specifika
+Detta mÃ¶nster anges med taggen \fIsymver\fP. VÃ¤lunderhÃ¥llna bibliotek har
+versionshanterade symboler dÃ¤r varje version motsvarar uppstrÃ¶msversionen
+dÃ¤r symbolen lades till. Om det Ã¤r fallet kan du anvÃ¤nda ett
+\fIsymver\fP\-mÃ¶ster fÃ¶r att matcha alla symboler som matchar den specifika
 versionen. Till exempel:
 .RS
 .PP
@@ -283,24 +299,24 @@ libc.so.6 libc6 #MINVER#
 .PP
 Alla symboler associerade med versionerna GLIBC_2.0 och GLIBC_2.7 kommer
 leda till den minimal version 2.0 respektive 2.7, med undantag av symbolen
-access@GLIBC_2.0. Den sistnämnda kommer leda till ett minsta beroende på
-libc6 version 2.2 trots att den motsvarar mönstret
-"(symver)GLIBC_2.0"\-mönstret, eftersom specifika symboler gäller före
-mönster.
+access@GLIBC_2.0. Den sistnÃ¤mnda kommer leda till ett minsta beroende pÃ¥
+libc6 version 2.2 trots att den motsvarar mÃ¶nstret
+"(symver)GLIBC_2.0"\-mÃ¶nstret, eftersom specifika symboler gÃ¤ller fÃ¶re
+mÃ¶nster.
 .P
-Observera att även om den gamla sortens jokerteckenmönster (anges med
-"*@version" i symbolnamnfältet) fortfarande stöds så rekommenderas de inte
-längre i och med den nya sortens syntax "(symver|optional)version". Till
-exempel bör "*@GLIBC_2.0 2.0" skrivas som "(symver|optional)GLIBC_2.0 2.0"
-om samma beteende behövs.
+Observera att Ã¤ven om den gamla sortens jokerteckenmÃ¶nster (anges med
+"*@version" i symbolnamnfÃ¤ltet) fortfarande stÃ¶ds sÃ¥ rekommenderas de inte
+lÃ¤ngre i och med den nya sortens syntax "(symver|optional)version". Till
+exempel bÃ¶r "*@GLIBC_2.0 2.0" skrivas som "(symver|optional)GLIBC_2.0 2.0"
+om samma beteende behÃ¶vs.
 .RE
 .TP 
 \fBregex\fP
-Mönster med reguljära uttryck anges med taggen \fIregex\fP. De matchar med det
-reguljära uttrycket på perl\-form som anges i symbolnamnsfältet. Ett
-reguljärt uttryck matchar som det står, glöm därför inte att inleda det med
+MÃ¶nster med reguljÃ¤ra uttryck anges med taggen \fIregex\fP. De matchar med det
+reguljÃ¤ra uttrycket pÃ¥ perl\-form som anges i symbolnamnsfÃ¤ltet. Ett
+reguljÃ¤rt uttryck matchar som det stÃ¥r, glÃ¶m dÃ¤rfÃ¶r inte att inleda det med
 tecknet \fI^\fP, annars kommer det matcha godtycklig del av den verkliga
-symbolens \fInamn@version\fP\-sträng. Till exempel:
+symbolens \fInamn@version\fP\-strÃ¤ng. Till exempel:
 .RS
 .PP
 libdummy.so.1 libdummy1 #MINVER#
@@ -308,61 +324,61 @@ libdummy.so.1 libdummy1 #MINVER#
  (regex|optional)"private" 1.0
 .P
 Symboler som "mystack_new@Base", "mystack_push@Base", "mystack_pop@Base"
-osv. kommer att träffas av det första mönstret medan t.ex
-"ng_mystack_new@Base" inte gör det. Det andra mönstret motsvarar alla
-symbolen som innehåller strängen "private" i sina namn och träffar kommer
-att ärva \fIoptional\fP\-taggen från mönstret.
+osv. kommer att trÃ¤ffas av det fÃ¶rsta mÃ¶nstret medan t.ex
+"ng_mystack_new@Base" inte gÃ¶r det. Det andra mÃ¶nstret motsvarar alla
+symbolen som innehÃ¥ller strÃ¤ngen "private" i sina namn och trÃ¤ffar kommer
+att Ã¤rva \fIoptional\fP\-taggen frÃ¥n mÃ¶nstret.
 .RE
 .P
-Grundläggande mönster som anges ovan kan kombineras där det är vettigt. I så
-fall behandlas de i den ordning taggarna anges. Till exempel kommer både
+GrundlÃ¤ggande mÃ¶nster som anges ovan kan kombineras dÃ¤r det Ã¤r vettigt. I sÃ¥
+fall behandlas de i den ordning taggarna anges. Till exempel kommer bÃ¥de
 .PP
  (c++|regex)"^NSA::ClassA::Private::privmethod\ed\e(int\e)@Base" 1.0
  (regex|c++)N3NSA6ClassA7Private11privmethod\edEi@Base 1.0
 .P
-att träffa symbolerna "_ZN3NSA6ClassA7Private11privmethod1Ei@Base" och
-"_ZN3NSA6ClassA7Private11privmethod2Ei@Base". När det första mönstret
-jämförs avmanglas först symbolen som en C++\-symbol, varefter det avmanglade
-namnet jämförs med det reguljära uttrycket. När det andra mönstret jämförs,
-å andra sidan, jämförs det reguljära uttrycket mot det råa symbolnamnet,
-varefter symbolen testas för att se om det är av C++\-typ genom att försöka
-avmangla det. Om ett grundläggande mönster misslyckas kommer hela uttrycket
-att misslyckas. Därför kommer, till exempel
-"__N3NSA6ClassA7Private11privmethod\edEi@Base" inte att träffas av något av
-mönstrena eftersom det inte är en giltig C++\-symbol.
+att trÃ¤ffa symbolerna "_ZN3NSA6ClassA7Private11privmethod1Ei@Base" och
+"_ZN3NSA6ClassA7Private11privmethod2Ei@Base". NÃ¤r det fÃ¶rsta mÃ¶nstret
+jÃ¤mfÃ¶rs avmanglas fÃ¶rst symbolen som en C++\-symbol, varefter det avmanglade
+namnet jÃ¤mfÃ¶rs med det reguljÃ¤ra uttrycket. NÃ¤r det andra mÃ¶nstret jÃ¤mfÃ¶rs,
+Ã¥ andra sidan, jÃ¤mfÃ¶rs det reguljÃ¤ra uttrycket mot det rÃ¥a symbolnamnet,
+varefter symbolen testas fÃ¶r att se om det Ã¤r av C++\-typ genom att fÃ¶rsÃ¶ka
+avmangla det. Om ett grundlÃ¤ggande mÃ¶nster misslyckas kommer hela uttrycket
+att misslyckas. DÃ¤rfÃ¶r kommer, till exempel
+"__N3NSA6ClassA7Private11privmethod\edEi@Base" inte att trÃ¤ffas av nÃ¥got av
+mÃ¶nstrena eftersom det inte Ã¤r en giltig C++\-symbol.
 .P
-I allmänhet delas alla mönster in i två grupper. alias (grundläggande \fIc++\fP
-och \fIsymver\fP) och generella mönster (\fIregex\fP, samtliga kombinationer av
-multipla grundläggande mönster). Det går snabbt att träffa grundläggande
-aliasbaserade mönster (O(1)) medan generella mönster är O(N) (N \- antal
-generella mönster) för varje symbol. Det rekommenderas därför inte att
-använda för många generella mönster.
+I allmÃ¤nhet delas alla mÃ¶nster in i tvÃ¥ grupper. alias (grundlÃ¤ggande \fIc++\fP
+och \fIsymver\fP) och generella mÃ¶nster (\fIregex\fP, samtliga kombinationer av
+multipla grundlÃ¤ggande mÃ¶nster). Det gÃ¥r snabbt att trÃ¤ffa grundlÃ¤ggande
+aliasbaserade mÃ¶nster (O(1)) medan generella mÃ¶nster Ã¤r O(N) (N \- antal
+generella mÃ¶nster) fÃ¶r varje symbol. Det rekommenderas dÃ¤rfÃ¶r inte att
+anvÃ¤nda fÃ¶r mÃ¥nga generella mÃ¶nster.
 .P
-När flera mönster träffar samma verkliga symbol föredras alias (först
-\fIc++\fP, sedan \fIsymver\fP) framför generella mönster. Generella mönster
-träffas i den ordning de upptäcktes i symbolfilmallen fram till den första
-lyckade träffen. Observera dock att manuell omsortering av poster i
-mallfilen inte rekommenderas då \fBdpkg\-gensymbols\fP genererar differensfiler
-baserad på den alfanumeriska sorteringsordningen av dess namn.
-.SS "Använda inkluderingar"
+NÃ¤r flera mÃ¶nster trÃ¤ffar samma verkliga symbol fÃ¶redras alias (fÃ¶rst
+\fIc++\fP, sedan \fIsymver\fP) framfÃ¶r generella mÃ¶nster. Generella mÃ¶nster
+trÃ¤ffas i den ordning de upptÃ¤cktes i symbolfilmallen fram till den fÃ¶rsta
+lyckade trÃ¤ffen. Observera dock att manuell omsortering av poster i
+mallfilen inte rekommenderas dÃ¥ \fBdpkg\-gensymbols\fP genererar differensfiler
+baserad pÃ¥ den alfanumeriska sorteringsordningen av dess namn.
+.SS "AnvÃ¤nda inkluderingar"
 .P
-När uppsättningen av exporterade symboler skiljer sig mellan arkitekturer
-kan det vara ineffektivt att använda en enda symbolfil. I dessa fall kan ett
-inkluderingsdirektiv vara nyttigt på flera sätt:
+NÃ¤r uppsÃ¤ttningen av exporterade symboler skiljer sig mellan arkitekturer
+kan det vara ineffektivt att anvÃ¤nda en enda symbolfil. I dessa fall kan ett
+inkluderingsdirektiv vara nyttigt pÃ¥ flera sÃ¤tt:
 .IP \(bu 4
 Du kan faktorisera de gemensamma delarna i en extern fil och inkludera den
-filen i din \fIpaket\fP.symbols.\fIarkitektur\fP\-fil genom att använda ett
+filen i din \fIpaket\fP.symbols.\fIarkitektur\fP\-fil genom att anvÃ¤nda ett
 inkluderingsdirektiv som detta:
 
 #include "\fIpaket\fP.symbols.common"
 .IP \(bu
-Inkluderingsdirektivet kan även taggas som alla andra symboler:
+Inkluderingsdirektivet kan Ã¤ven taggas som alla andra symboler:
 
 (tag|...|tagN)#include "fil\-att\-inkludera"
 
-Alla symboler som inkluderas från \fIfil\-att\-inkludera\fP kommer att anses som
-standard vara taggade med \fItag\fP ... \fItagN\fP. Du kan använda denna funktion
-för att skapa en gemensam \fIpaket\fP.symbols\-fil som inkluderar
+Alla symboler som inkluderas frÃ¥n \fIfil\-att\-inkludera\fP kommer att anses som
+standard vara taggade med \fItag\fP ... \fItagN\fP. Du kan anvÃ¤nda denna funktion
+fÃ¶r att skapa en gemensam \fIpaket\fP.symbols\-fil som inkluderar
 arkitekturspecifika filer:
 
   gemensam_symbol1@Base 1.0
@@ -370,121 +386,121 @@ arkitekturspecifika filer:
  (arch=!amd64 !ia64 !alpha)#include "paket.symbols.32bit"
   gemensam_symbol2@Base 1.0
 .P
-Symbolfilerna läses radvis, och inkluderingsdirektiv utförs så fort de
-upptäcks. Det betyder att innehållet i den inkluderade filen kan överstyra
-allt innehåll som förekom före inkluderingsdirektivet och att innehåll efter
-direktivet kan överstyra allt från den inkluderade filen. Alla symboler
-(även andra #include\-direktiv) i den inkluderade filen kan ange ytterligare
-taggar eller överstyra värden för de ärvda taggarna i sin
-taggspecifikation. Det finns dock inte något sätt för en symbol att ta bort
-någon av sina ärvda taggar.
+Symbolfilerna lÃ¤ses radvis, och inkluderingsdirektiv utfÃ¶rs sÃ¥ fort de
+upptÃ¤cks. Det betyder att innehÃ¥llet i den inkluderade filen kan Ã¶verstyra
+allt innehÃ¥ll som fÃ¶rekom fÃ¶re inkluderingsdirektivet och att innehÃ¥ll efter
+direktivet kan Ã¶verstyra allt frÃ¥n den inkluderade filen. Alla symboler
+(Ã¤ven andra #include\-direktiv) i den inkluderade filen kan ange ytterligare
+taggar eller Ã¶verstyra vÃ¤rden fÃ¶r de Ã¤rvda taggarna i sin
+taggspecifikation. Det finns dock inte nÃ¥got sÃ¤tt fÃ¶r en symbol att ta bort
+nÃ¥gon av sina Ã¤rvda taggar.
 .P
-En inkluderad fil kan repetera huvudraden som innehåller SONAMNet för
-biblioteket. I så fall överstyr den en eventuell huvudrad som lästs in
-tidigare. Det är vanligtvis dock bäst att undvika att duplicera
-huvudrader. Ett sätt att göra det är som följer:
+En inkluderad fil kan repetera huvudraden som innehÃ¥ller SONAMNet fÃ¶r
+biblioteket. I sÃ¥ fall Ã¶verstyr den en eventuell huvudrad som lÃ¤sts in
+tidigare. Det Ã¤r vanligtvis dock bÃ¤st att undvika att duplicera
+huvudrader. Ett sÃ¤tt att gÃ¶ra det Ã¤r som fÃ¶ljer:
 .PP
-#include "libnågonting1.symbols.common"
+#include "libnÃ¥gonting1.symbols.common"
  arkitekturspecifik_symbol@Base 1.0
 .SS "God hantering av bibliotek"
 .P
-Ett välunderhållet bibliotek har följande funktioner:
+Ett vÃ¤lunderhÃ¥llet bibliotek har fÃ¶ljande funktioner:
 .IP \(bu 4
-dess API är stabilt (publika symboler tas aldrig bort, endast nya publika
-symboler läggs till) och inkompatibla ändringar görs endast när SONAMNet
-ändras;
+dess API Ã¤r stabilt (publika symboler tas aldrig bort, endast nya publika
+symboler lÃ¤ggs till) och inkompatibla Ã¤ndringar gÃ¶rs endast nÃ¤r SONAMNet
+Ã¤ndras;
 .IP \(bu 4
-ideellt använder det en versionhanterade symboler för att upprätthålla
-ABI\-stabilitet trots interna ändringar och API\-utökningar;
+ideellt anvÃ¤nder det en versionhanterade symboler fÃ¶r att upprÃ¤tthÃ¥lla
+ABI\-stabilitet trots interna Ã¤ndringar och API\-utÃ¶kningar;
 .IP \(bu 4
-det exporterar inte privata symboler (sådana symboler kan taggas med
-"optional" för att gå runt detta).
+det exporterar inte privata symboler (sÃ¥dana symboler kan taggas med
+"optional" fÃ¶r att gÃ¥ runt detta).
 .P
-När man underhåller symbolfilen är det lätt att upptäcka symboler som dyker
-upp och försvinner. Det är svårare att upptäcka inkompatibla API\- och
-ABI\-ändringar. Den paketansvarige bör därför noggrant läsa igenom
-uppströmsändringsloggen för fall då reglerna för god hantering av bibliotek
-bryts. Om ett möjligt fel upptäcks bör uppströmsförfattaren meddelas, då det
-alltid är bättre att problemet rättas uppströms än specifikt i Debian.
+NÃ¤r man underhÃ¥ller symbolfilen Ã¤r det lÃ¤tt att upptÃ¤cka symboler som dyker
+upp och fÃ¶rsvinner. Det Ã¤r svÃ¥rare att upptÃ¤cka inkompatibla API\- och
+ABI\-Ã¤ndringar. Den paketansvarige bÃ¶r dÃ¤rfÃ¶r noggrant lÃ¤sa igenom
+uppstrÃ¶msÃ¤ndringsloggen fÃ¶r fall dÃ¥ reglerna fÃ¶r god hantering av bibliotek
+bryts. Om ett mÃ¶jligt fel upptÃ¤cks bÃ¶r uppstrÃ¶msfÃ¶rfattaren meddelas, dÃ¥ det
+alltid Ã¤r bÃ¤ttre att problemet rÃ¤ttas uppstrÃ¶ms Ã¤n specifikt i Debian.
 .SH FLAGGOR
 .TP 
 \fB\-P\fP\fIpaketbyggkatalog\fP
-Sök \fIpaketbyggkatalog\fP istället för debian/tmp.
+SÃ¶k \fIpaketbyggkatalog\fP istÃ¤llet fÃ¶r debian/tmp.
 .TP 
 \fB\-p\fP\fIpaket\fP
-Definiera paketnamnet. Krävs om mer än ett binärpaket listas i
-debian/control (eller om det inte finns någon debian/control\-fil).
+Definiera paketnamnet. KrÃ¤vs om mer Ã¤n ett binÃ¤rpaket listas i
+debian/control (eller om det inte finns nÃ¥gon debian/control\-fil).
 .TP 
 \fB\-v\fP\fIversion\fP
-Definiera paketversion. Standardvärdet är versionen som hämtas från
-debian/changelog. Krävs om programmet anropas utanför ett källkodspaketträd.
+Definiera paketversion. StandardvÃ¤rdet Ã¤r versionen som hÃ¤mtas frÃ¥n
+debian/changelog. KrÃ¤vs om programmet anropas utanfÃ¶r ett kÃ¤llkodspakettrÃ¤d.
 .TP 
 \fB\-e\fP\fIbiblioteksfil\fP
-Analyserar endast bibliotek som listats explicit istället för att hitta alla
-publika bibliotek. Du kan använda ett jokertecken för filnamn (se
-manualsidan \fBFile::Glob\fP(3perl) för detaljer) i \fIbiblioteksfil\fP för att
-träffa multipla bibliotek med ett enda argument (annars behöver du flera
+Analyserar endast bibliotek som listats explicit istÃ¤llet fÃ¶r att hitta alla
+publika bibliotek. Du kan anvÃ¤nda ett jokertecken fÃ¶r filnamn (se
+manualsidan \fBFile::Glob\fP(3perl) fÃ¶r detaljer) i \fIbiblioteksfil\fP fÃ¶r att
+trÃ¤ffa multipla bibliotek med ett enda argument (annars behÃ¶ver du flera
 \fB\-e\fP).
 .TP 
 \fB\-I\fP\fIfilnamn\fP
-Använd \fIfilnamn\fP som referensfil för att generera symbolfilen som
-integreras i själva paketet.
+AnvÃ¤nd \fIfilnamn\fP som referensfil fÃ¶r att generera symbolfilen som
+integreras i sjÃ¤lva paketet.
 .TP 
 \fB\-O\fP[\fIfilnamn\fP]
-Visa den genererade symbolfilen på standard ut eller spara som \fIfilnamn\fP om
-det anges, istället för \fBdebian/tmp/DEBIAN/symbols\fP (eller
-\fIpaketbyggkatalog\fP\fB/DEBIAN/symbols\fP om \fB\-P\fP användes). Om \fIfilnamn\fP
-redan existerar kommer dess innehåll att användas som bas för den genererade
-symbolfilen. Du kan använda den här funktionen för att uppdatera en
-symbolfil så att den motsvarar en nyare uppströmsversion av ditt bibliotek.
+Visa den genererade symbolfilen pÃ¥ standard ut eller spara som \fIfilnamn\fP om
+det anges, istÃ¤llet fÃ¶r \fBdebian/tmp/DEBIAN/symbols\fP (eller
+\fIpaketbyggkatalog\fP\fB/DEBIAN/symbols\fP om \fB\-P\fP anvÃ¤ndes). Om \fIfilnamn\fP
+redan existerar kommer dess innehÃ¥ll att anvÃ¤ndas som bas fÃ¶r den genererade
+symbolfilen. Du kan anvÃ¤nda den hÃ¤r funktionen fÃ¶r att uppdatera en
+symbolfil sÃ¥ att den motsvarar en nyare uppstrÃ¶msversion av ditt bibliotek.
 .TP 
 \fB\-t\fP
-Skriv symbolfilen i mall\-läge istället för i formatet kompatibelt med
-\fBdeb\-symbols\fP(5). Huvudskillnaden är att symbolnamn och taggar skrivs i sin
-originalform i mall\-läget, till skillnad från de efterbehandlade
+Skriv symbolfilen i mall\-lÃ¤ge istÃ¤llet fÃ¶r i formatet kompatibelt med
+\fBdeb\-symbols\fP(5). Huvudskillnaden Ã¤r att symbolnamn och taggar skrivs i sin
+originalform i mall\-lÃ¤get, till skillnad frÃ¥n de efterbehandlade
 symbolnamnen med borttagna taggar som skrivs i det kompatibla
-läget. Dessutom kan vissa symboler uteslutas när en vanlig
+lÃ¤get. Dessutom kan vissa symboler uteslutas nÃ¤r en vanlig
 \fBdeb\-symbols\fP(5)\-fil skrivs (i enlighet med tagghanteringsreglerna) medan
 alla symboler alltid skrivs till symbolfilsmallen.
 .TP 
 \fB\-c\fP\fI[0\-4]\fP
-Definiera vilka kontroller som skall utföras när den genererade symbolfilen
-jämförs med den mallfil som används som startpunkt. Som standard är nivån
-1. Genom att öka nivån utförs flera kontroller, inklusive alla kontroller på
-lägre nivå. Nivå 2 misslyckas om nya symboler har introducerats. Nivå 3
-misslyckas om några bibliotek har försvunnit. Nivå 4 misslyckas om några
+Definiera vilka kontroller som skall utfÃ¶ras nÃ¤r den genererade symbolfilen
+jÃ¤mfÃ¶rs med den mallfil som anvÃ¤nds som startpunkt. Som standard Ã¤r nivÃ¥n
+1. Genom att Ã¶ka nivÃ¥n utfÃ¶rs flera kontroller, inklusive alla kontroller pÃ¥
+lÃ¤gre nivÃ¥. NivÃ¥ 2 misslyckas om nya symboler har introducerats. NivÃ¥ 3
+misslyckas om nÃ¥gra bibliotek har fÃ¶rsvunnit. NivÃ¥ 4 misslyckas om nÃ¥gra
 bibliotek har introducerats.
 
-Värdet kan överstyras med miljövariabeln \fBDPKG_GENSYMBOLS_CHECK_LEVEL\fP.
+VÃ¤rdet kan Ã¶verstyras med miljÃ¶variabeln \fBDPKG_GENSYMBOLS_CHECK_LEVEL\fP.
 .TP 
 \fB\-q\fP
-Håll tyst och generera aldrig en differens mellan den genererade symbolfilen
-och mallfilen som användes som startpunkt eller visa varningar om
-nya/förlorade bibliotek eller nya/förlorade symboler. Den här flaggan tar
-endast bort informationsutdata, inte själva kontrolleran (se flaggan \fB\-c\fP).
+HÃ¥ll tyst och generera aldrig en differens mellan den genererade symbolfilen
+och mallfilen som anvÃ¤ndes som startpunkt eller visa varningar om
+nya/fÃ¶rlorade bibliotek eller nya/fÃ¶rlorade symboler. Den hÃ¤r flaggan tar
+endast bort informationsutdata, inte sjÃ¤lva kontrolleran (se flaggan \fB\-c\fP).
 .TP 
 \fB\-a\fP\fIarkitektur\fP
-Anta \fIarkitektur\fP som värdarkitektur vid hantering av symbolfiler. Använd
-den här flaggan för att generera en symbolfil eller differens för valfri
-arkitektur så länge dess binärer är tillgängliga.
+Anta \fIarkitektur\fP som vÃ¤rdarkitektur vid hantering av symbolfiler. AnvÃ¤nd
+den hÃ¤r flaggan fÃ¶r att generera en symbolfil eller differens fÃ¶r valfri
+arkitektur sÃ¥ lÃ¤nge dess binÃ¤rer Ã¤r tillgÃ¤ngliga.
 .TP 
 \fB\-d\fP
-Aktiverar felsökningsläge. Flera meddelanden visas för att förklara vad
-\fBdpkg\-gensymbols\fP gör.
+Aktiverar felsÃ¶kningslÃ¤ge. Flera meddelanden visas fÃ¶r att fÃ¶rklara vad
+\fBdpkg\-gensymbols\fP gÃ¶r.
 .TP 
 \fB\-V\fP
-Aktivera pratsamt läge. Den genererade symbolfilen innehåller ej längre
-rekommenderade symboler som kommentarer. I mall\-läge följs dessutom
-mönstersymboler av kommentarer som visar vilka verkliga symboler som har
-träffats av mönstret.
+Aktivera pratsamt lÃ¤ge. Den genererade symbolfilen innehÃ¥ller ej lÃ¤ngre
+rekommenderade symboler som kommentarer. I mall\-lÃ¤ge fÃ¶ljs dessutom
+mÃ¶nstersymboler av kommentarer som visar vilka verkliga symboler som har
+trÃ¤ffats av mÃ¶nstret.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Visar hjälpskärm och avslutar.
+Visar hjÃ¤lpskÃ¤rm och avslutar.
 .TP 
 \fB\-\-version\fP
 Visar version och avslutar.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 \fBhttps://people.redhat.com/drepper/symbol\-versioning\fP
 .br
 \fBhttps://people.redhat.com/drepper/goodpractice.pdf\fP
@@ -492,5 +508,5 @@ Visar version och avslutar.
 \fBhttps://people.redhat.com/drepper/dsohowto.pdf\fP
 .br
 \fBdeb\-symbols\fP(5), \fBdpkg\-shlibdeps\fP(1).
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

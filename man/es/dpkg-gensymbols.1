@@ -2,7 +2,7 @@
 .\"
 .\" Copyright Â© 2007-2011 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\" Copyright Â© 2009-2010 Modestas Vainius <modestas@vainius.eu>
-.\" Copyright Â© 2012-2013 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2012-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -22,22 +22,22 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH dpkg\-gensymbols 1 2013\-09\-06 "Proyecto Debian" "Herramientas de dpkg"
+.TH dpkg\-gensymbols 1 2014\-12\-29 "Proyecto Debian" "Herramientas de dpkg"
 .SH NOMBRE
-dpkg\-gensymbols \- Generación de ficheros «symbols» (información de
+dpkg\-gensymbols \- GeneraciÃ³n de ficheros Â«symbolsÂ» (informaciÃ³n de
 dependencia de bibliotecas compartidas)
 .
 .SH SINOPSIS
-\fBdpkg\-gensymbols\fP [\fIopción\fP...]
+\fBdpkg\-gensymbols\fP [\fIopciÃ³n\fP...]
 .
-.SH DESCRIPCIÓN
-\fBdpkg\-gensymbols\fP analiza un árbol temporal de construcción («debian/tmp»
-por omisión) en busca de bibliotecas para generar un fichero \fIsymbols\fP que
-los describa. Este fichero, si no está vacío, se instala en el subdirectorio
-«DEBIAN» del árbol de construcción, para después incluir el contenido en la
-información de control del paquete.
+.SH DESCRIPCIÃ“N
+\fBdpkg\-gensymbols\fP analiza un Ã¡rbol temporal de construcciÃ³n (Â«debian/tmpÂ»
+por omisiÃ³n) en busca de bibliotecas para generar un fichero \fIsymbols\fP que
+los describa. Este fichero, si no estÃ¡ vacÃ­o, se instala en el subdirectorio
+Â«DEBIANÂ» del Ã¡rbol de construcciÃ³n, para despuÃ©s incluir el contenido en la
+informaciÃ³n de control del paquete.
 .P
-Al generar estos ficheros, usa algunos ficheros «symbols» como entrada
+Al generar estos ficheros, usa algunos ficheros Â«symbolsÂ» como entrada
 proporcionados por el desarrollador. Busca los siguientes ficheros,
 utilizando el primero que encuentra.
 .IP \(bu 4
@@ -57,11 +57,11 @@ without breaking backwards compatibility. It's the responsibility of the
 maintainer to keep those files up\-to\-date and accurate, but
 \fBdpkg\-gensymbols\fP helps with that.
 .P
-Cuando los ficheros «symbols» generados difieren del proporcionado por el
-desarrollador, \fBdpkg\-gensymbols\fP mostrará las diferencias entre ambas
-versiones. Más aún, puede que falle si la diferencia es demasiado grande,
-(puede configurar cuanta diferencia tolerar, consulte la opción \fB\-c\fP).
-.SH "MANTENER FICHEROS «SYMBOLS»"
+Cuando los ficheros Â«symbolsÂ» generados difieren del proporcionado por el
+desarrollador, \fBdpkg\-gensymbols\fP mostrarÃ¡ las diferencias entre ambas
+versiones. MÃ¡s aÃºn, puede que falle si la diferencia es demasiado grande,
+(puede configurar cuanta diferencia tolerar, consulte la opciÃ³n \fB\-c\fP).
+.SH "MANTENER FICHEROS Â«SYMBOLSÂ»"
 The symbols files are really useful only if they reflect the evolution of
 the package through several releases. Thus the maintainer has to update them
 every time that a new symbol is added so that its associated minimal version
@@ -75,18 +75,17 @@ needed: it's recommended for example to drop the Debian revision from the
 minimal version so that backports with a lower version number but the same
 upstream version still satisfy the generated dependencies.  If the Debian
 revision can't be dropped because the symbol really got added by the Debian
-specific change, then one should suffix the version with "~".
+specific change, then one should suffix the version with \(oq\fB~\fP\(cq.
 .P
-Antes de aplicar un parche al fichero «symbols» el desarrollador debería
-revisar nuevamente que es adecuado. Se espera que los símbolos públicos no
-desaparezcan así que, idealmente, el parche sólo debería añadir líneas
+Antes de aplicar un parche al fichero Â«symbolsÂ» el desarrollador deberÃ­a
+revisar nuevamente que es adecuado. Se espera que los sÃ­mbolos pÃºblicos no
+desaparezcan asÃ­ que, idealmente, el parche sÃ³lo deberÃ­a aÃ±adir lÃ­neas
 nuevas.
 .P
-Tenga en cuenta que puede añadir comentarios en los ficheros de símbolos:
-cualquier línea que comienza con el carácter «#» es un comentario, a menos
-que empiece con «#include» (consulte la sección \fBUsar «include»\fP. Las
-líneas que comienzan con «#MISSING:» son comentarios especiales que
-documentan los símbolos que han desaparecido.
+Note that you can put comments in symbols files: any line with \(oq#\(cq as
+the first character is a comment except if it starts with \(oq#include\(cq
+(see section \fBUsing includes\fP).  Lines starting with \(oq#MISSING:\(cq are
+special comments documenting symbols that have disappeared.
 .P
 Do not forget to check if old symbol versions need to be increased.  There
 is no way \fBdpkg\-gensymbols\fP can warn about this. Blindly applying the diff
@@ -94,15 +93,15 @@ or assuming there is nothing to change if there is no diff, without checking
 for such changes, can lead to packages with loose dependencies that claim
 they can work with older packages they cannot work with. This will introduce
 hard to find bugs with (partial)  upgrades.
-.SS "Usar la sustitución de #PACKAGE#"
+.SS "Usar la sustituciÃ³n de #PACKAGE#"
 .P
-En algunos casos aislados el nombre de la biblioteca varía según la
+En algunos casos aislados el nombre de la biblioteca varÃ­a segÃºn la
 arquitectura. Puede utilizar el marcador \fI#PACKAGE#\fP para evitar incrustar
-(«hardcode») el nombre del paquete en el fichero «symbols». Se reemplazará
-por el nombre real del paquete durante la instalación de los ficheros
-«symbols». A diferencia del marcador \fI#MINVER#\fP, \fI#PACKAGE#\fP nunca
-aparecerá en un fichero «symbols» contenido en un paquete binario.
-.SS "Usar etiquetas de símbolos"
+(Â«hardcodeÂ») el nombre del paquete en el fichero Â«symbolsÂ». Se reemplazarÃ¡
+por el nombre real del paquete durante la instalaciÃ³n de los ficheros
+Â«symbolsÂ». A diferencia del marcador \fI#MINVER#\fP, \fI#PACKAGE#\fP nunca
+aparecerÃ¡ en un fichero Â«symbolsÂ» contenido en un paquete binario.
+.SS "Usar etiquetas de sÃ­mbolos"
 .P
 Symbol tagging is useful for marking symbols that are special in some way.
 Any symbol can have an arbitrary number of tags associated with it. While
@@ -110,30 +109,30 @@ all tags are parsed and stored, only some of them are understood by
 \fBdpkg\-gensymbols\fP and trigger special handling of the symbols. See
 subsection \fBStandard symbol tags\fP for reference of these tags.
 .P
-La especificación de la etiqueta aparece a continuación del nombre del
-símbolo (no se permite un espacio vacío entre estos). Siempre comienza con
-un paréntesis de apertura \fB(\fP, finaliza con un paréntesis de cierre \fB)\fP, y
+La especificaciÃ³n de la etiqueta aparece a continuaciÃ³n del nombre del
+sÃ­mbolo (no se permite un espacio vacÃ­o entre estos). Siempre comienza con
+un parÃ©ntesis de apertura \fB(\fP, finaliza con un parÃ©ntesis de cierre \fB)\fP, y
 debe contener al menos una etiqueta. Varias etiquetas se separan con un
-carácter \fB|\fP. Opcionalmente, cada etiqueta puede tener un valor separado
-del nombre de la etiqueta mediante el carácter \fB=\fP. Los nombres de etiqueta
-y valores pueden ser cadenas arbitrarias, a excepción de que no pueden
-contener ningún carácter especial: \fB)\fP, \fB|\fP y \fB=\fP. Los nombres de símbolo
-a continuación de una especificación de etiqueta se pueden entrecomillar con
-caracteres \fB'\fP o \fB"\fP, permitiendo así espacios vacíos. Por otra parte, de
-no existir ninguna etiqueta definida para el símbolo, las comillas se
-tratarán como parte del nombre del símbolo, continuando hasta el primer
+carÃ¡cter \fB|\fP. Opcionalmente, cada etiqueta puede tener un valor separado
+del nombre de la etiqueta mediante el carÃ¡cter \fB=\fP. Los nombres de etiqueta
+y valores pueden ser cadenas arbitrarias, a excepciÃ³n de que no pueden
+contener ningÃºn carÃ¡cter especial: \fB)\fP, \fB|\fP y \fB=\fP. Los nombres de sÃ­mbolo
+a continuaciÃ³n de una especificaciÃ³n de etiqueta se pueden entrecomillar con
+caracteres \fB'\fP o \fB"\fP, permitiendo asÃ­ espacios vacÃ­os. Por otra parte, de
+no existir ninguna etiqueta definida para el sÃ­mbolo, las comillas se
+tratarÃ¡n como parte del nombre del sÃ­mbolo, continuando hasta el primer
 espacio.
 .P
- (tag1=tengo una marca|nombre de etiqueta con espacio)"símbolo
+ (tag1=tengo una marca|nombre de etiqueta con espacio)"sÃ­mbolo
  entrecomillado y etiquetado"@Base 1.0
- (optional)símbolo_sin_comillas_y_etiquetado@Base 1.0 1
- símbolo_sin_etiquetar@Base 1.0
+ (optional)sÃ­mbolo_sin_comillas_y_etiquetado@Base 1.0 1
+ sÃ­mbolo_sin_etiquetar@Base 1.0
 .P
-El primer símbolo del ejemplo se llama \fIsímbolo entrecomillado y
+El primer sÃ­mbolo del ejemplo se llama \fIsÃ­mbolo entrecomillado y
 etiquetado\fP, y tiene dos etiquetas: \fItag1\fP, con el valor \fItengo una marca\fP
-y \fInombre de etiqueta con espacio\fP, que no tiene valor. El segundo símbolo
-se llama \fIsímbolo_sin_comillas_y_etiquetado\fP, y sólo tiene una etiqueta
-llamada \fIoptional\fP. El último símbolo es un ejemplo de un símbolo normal
+y \fInombre de etiqueta con espacio\fP, que no tiene valor. El segundo sÃ­mbolo
+se llama \fIsÃ­mbolo_sin_comillas_y_etiquetado\fP, y sÃ³lo tiene una etiqueta
+llamada \fIoptional\fP. El Ãºltimo sÃ­mbolo es un ejemplo de un sÃ­mbolo normal
 sin etiquetar.
 .P
 Since symbol tags are an extension of the \fBdeb\-symbols\fP(5) format, they can
@@ -146,87 +145,104 @@ requirements of their standard tags and strips all tags from the output. On
 the contrary, in template mode (\fB\-t\fP) all symbols and their tags (both
 standard and unknown ones)  are kept in the output and are written in their
 original form as they were loaded.
-.SS "Etiquetas de símbolo estándar"
+.SS "Etiquetas de sÃ­mbolo estÃ¡ndar"
 .TP 
 \fBoptional\fP
-Un símbolo marcado como opcional puede desaparecer de la biblioteca en
-cualquier momento sin causar un fallo de \fBdpkg\-gensymbols\fP. Por otra parte,
-los símbolos opcionales desaparecidos aparecerán continuamente como
-«MISSING» (ausente) en el «diff» de cada nueva revisión del paquete. Este
-comportamiento sirve como un recordatorio para el desarrollador para
-informar de la necesidad de eliminar tal símbolo del fichero «symbols», o de
-añadir éste nuevamente a la biblioteca. Cuando el símbolo opcional declarado
-previamente como «MISSING» reaparece de súbito en la siguiente revisión, se
-actualizara a un estado «existente» sin modificar la versión mínima.
+A symbol marked as optional can disappear from the library at any time and
+that will never cause \fBdpkg\-gensymbols\fP to fail. However, disappeared
+optional symbols will continuously appear as MISSING in the diff in each new
+package revision.  This behaviour serves as a reminder for the maintainer
+that such a symbol needs to be removed from the symbol file or readded to
+the library. When the optional symbol, which was previously declared as
+MISSING, suddenly reappears in the next revision, it will be upgraded back
+to the \(lqexisting\(rq status with its minimum version unchanged.
 
-Esta etiqueta es útil para aquellos símbolos privados cuya desaparición no
-rompe la ABI. Por ejemplo, la mayoría de plantillas de producción de un
-objeto definido más específicamente por medio del reemplazo de ciertas
-variables por valores («instantiation») de C++ se encuentran dentro de esta
-categoría. Al igual que con cualquier otra etiqueta, éste puede tener un
-valor arbitrario: se puede utilizar para indicar porqué el símbolo se
+Esta etiqueta es Ãºtil para aquellos sÃ­mbolos privados cuya desapariciÃ³n no
+rompe la ABI. Por ejemplo, la mayorÃ­a de plantillas de producciÃ³n de un
+objeto definido mÃ¡s especÃ­ficamente por medio del reemplazo de ciertas
+variables por valores (Â«instantiationÂ») de C++ se encuentran dentro de esta
+categorÃ­a. Al igual que con cualquier otra etiqueta, Ã©ste puede tener un
+valor arbitrario: se puede utilizar para indicar porquÃ© el sÃ­mbolo se
 considera opcional.
 .TP 
-\fBarch=\fP\fIlista\-de\-arquitecturas\fP
-Esta etiqueta permite limitar el conjunto de arquitecturas dónde se supone
-que el símbolo existe. Cuando la lista de símbolos se actualiza con los
-símbolos descubiertos en la biblioteca, todos los símbolos específicos de la
-arquitectura que no son relevantes para la arquitectura anfitrión se toman
-como no existentes. Si un símbolo específico a la arquitectura que concuerda
-con la arquitectura anfitrión presente no existe en la biblioteca, se
-aplicarán los procedimientos normales para símbolos desaparecidos, llevando
-a que \fBdpkg\-gensymbols\fP falle. Por otra parte, si el símbolo específico a
-la arquitectura se encuentra cuando se suponía que no existe (porque la
-arquitectura anfitrión presente no está listada en la etiqueta), pasa a ser
-neutral a la arquitectura (por ejemplo, se elimina la etiqueta de
-arquitectura, apareciendo el símbolo en el «diff» debido a la modificación),
-pero no se toma como un nuevo símbolo.
+\fBarch=\fP\fIarchitecture\-list\fP
+.TQ
+\fBarch\-bits=\fP\fIarchitecture\-bits\fP
+.TQ
+\fBarch\-endian=\fP\fIarchitecture\-endianness\fP
+These tags allow one to restrict the set of architectures where the symbol
+is supposed to exist. The \fBarch\-bits\fP and \fBarch\-endian\fP tags are supported
+since dpkg 1.18.0. When the symbols list is updated with the symbols
+discovered in the library, all arch\-specific symbols which do not concern
+the current host architecture are treated as if they did not exist. If an
+arch\-specific symbol matching the current host architecture does not exist
+in the library, normal procedures for missing symbols apply and it may cause
+\fBdpkg\-gensymbols\fP to fail. On the other hand, if the arch\-specific symbol
+is found when it was not supposed to exist (because the current host
+architecture is not listed in the tag or does not match the endianness and
+bits), it is made arch neutral (i.e. the arch, arch\-bits and arch\-endian
+tags are dropped and the symbol will appear in the diff due to this change),
+but it is not considered as new.
 
-Al operar en el modo por omisión (sin plantilla) sólo se escribirán al
-fichero «symbols» aquellos símbolos específicos a la arquitectura que
-coinciden con la arquitectura anfitrión. Por otra parte, en el modo
-plantilla todos los símbolos específicos a la arquitectura (incluyendo
-arquitecturas alternativas) siempre se escribirán al fichero «symbols».
+Al operar en el modo por omisiÃ³n (sin plantilla) sÃ³lo se escribirÃ¡n al
+fichero Â«symbolsÂ» aquellos sÃ­mbolos especÃ­ficos a la arquitectura que
+coinciden con la arquitectura anfitriÃ³n. Por otra parte, en el modo
+plantilla todos los sÃ­mbolos especÃ­ficos a la arquitectura (incluyendo
+arquitecturas alternativas) siempre se escribirÃ¡n al fichero Â«symbolsÂ».
 
-The format of \fIarchitecture list\fP is the same as the one used in the
+The format of \fIarchitecture\-list\fP is the same as the one used in the
 \fBBuild\-Depends\fP field of \fIdebian/control\fP (except the enclosing square
 brackets []). For example, the first symbol from the list below will be
 considered only on alpha, any\-amd64 and ia64 architectures, the second only
 on linux architectures, while the third one anywhere except on armel.
 
- (arch=alpha any\-amd64 ia64)a_64bit_símbolo_específico@Base 1.0
- (arch=linux\-any)símbolo_específico_linux@Base 1.0
- (arch=!armel)símbolo_ausente_en_armel@Base 1.0
+ (arch=alpha any\-amd64 ia64)64bit_sÃ­mbolo_especÃ­fico@Base 1.0
+ (arch=linux\-any)sÃ­mbolo_especÃ­fico_linux@Base 1.0
+ (arch=!armel)sÃ­mbolo_ausente_en_armel@Base 1.0
+
+The \fIarchitecture\-bits\fP is either \fB32\fP or \fB64\fP.
+
+ (arch\-bits=32)32bit_specific_symbol@Base 1.0
+ (arch\-bits=64)64bit_specific_symbol@Base 1.0
+
+The \fIarchitecture\-endianness\fP is either \fBlittle\fP or \fBbig\fP.
+
+ (arch\-endian=little)little_endian_specific_symbol@Base 1.0
+ (arch\-endian=big)big_endian_specific_symbol@Base 1.0
+
+Multiple restrictions can be chained.
+
+ (arch\-bits=32|arch\-endian=little)32bit_le_symbol@Base 1.0
 .TP 
 \fBignore\-blacklist\fP
-dpkg\-gensymbols tiene una lista negra interna de símbolos que no deberían
-aparecer en los ficheros «symbols», ya que habitualmente son sólo efectos
-secundarios de los detallas de implementación de la cadena de
-herramientas. Si por alguna razón desea incluir uno de esos símbolos en el
-fichero «symbols» debería etiquetar el símbolo con
+dpkg\-gensymbols tiene una lista negra interna de sÃ­mbolos que no deberÃ­an
+aparecer en los ficheros Â«symbolsÂ», ya que habitualmente son sÃ³lo efectos
+secundarios de los detallas de implementaciÃ³n de la cadena de
+herramientas. Si por alguna razÃ³n desea incluir uno de esos sÃ­mbolos en el
+fichero Â«symbolsÂ» deberÃ­a etiquetar el sÃ­mbolo con
 \fBignore\-blacklist\fP. Puede ser necesario con alguna cadena de herramientas
 de bajo nivel como libgcc.
 .TP 
 \fBc++\fP
-Denota el patrón \fIc++\fP\- Consulte la subsección a continuación \fBUsar
-patrones de símbolos\fP.
+Denota el patrÃ³n \fIc++\fP\- Consulte la subsecciÃ³n a continuaciÃ³n \fBUsar
+patrones de sÃ­mbolos\fP.
 .TP 
 \fBsymver\fP
-Denota el patrón de símbolos \fIsymver\fP (versión del símbolo). Consulte la
-sub\-sección a continuación \fBUsar patrones de símbolos\fP.
+Denota el patrÃ³n de sÃ­mbolos \fIsymver\fP (versiÃ³n del sÃ­mbolo). Consulte la
+sub\-secciÃ³n a continuaciÃ³n \fBUsar patrones de sÃ­mbolos\fP.
 .TP 
 \fBregex\fP
-Denota el patrón de símbolos \fIregex\fP (expresión regular). Consulte la
-sub\-sección a continuación \fBUsar patrones de símbolos\fP.
-.SS "Usar patrones de símbolos"
+Denota el patrÃ³n de sÃ­mbolos \fIregex\fP (expresiÃ³n regular). Consulte la
+sub\-secciÃ³n a continuaciÃ³n \fBUsar patrones de sÃ­mbolos\fP.
+.SS "Usar patrones de sÃ­mbolos"
 .P
-A diferencia de cualquier definición de símbolo estándar un patrón puede
-cubrir varios símbolos reales de la biblioteca. \fBdpkg\-gensymbols\fP intentará
-emparejar cada patrón con cada símbolo real que \fIno\fP tiene un símbolo
-específico de contrapartida definido en el fichero de símbolos. En el
-momento que se encuentre el primer patrón que coincida se usarán todas sus
-etiquetas y propiedades como un definición básica del símbolo. Si ninguno de
-los patrones encaja, el símbolo se considerará nuevo.
+A diferencia de cualquier definiciÃ³n de sÃ­mbolo estÃ¡ndar un patrÃ³n puede
+cubrir varios sÃ­mbolos reales de la biblioteca. \fBdpkg\-gensymbols\fP intentarÃ¡
+emparejar cada patrÃ³n con cada sÃ­mbolo real que \fIno\fP tiene un sÃ­mbolo
+especÃ­fico de contrapartida definido en el fichero de sÃ­mbolos. En el
+momento que se encuentre el primer patrÃ³n que coincida se usarÃ¡n todas sus
+etiquetas y propiedades como un definiciÃ³n bÃ¡sica del sÃ­mbolo. Si ninguno de
+los patrones encaja, el sÃ­mbolo se considerarÃ¡ nuevo.
 
 A pattern is considered lost if it does not match any symbol in the
 library. By default this will trigger a \fBdpkg\-gensymbols\fP failure under
@@ -244,22 +260,22 @@ the specification serves as an expression to be matched against
 \fIname@version\fP of the real symbol. In order to distinguish among different
 pattern types, a pattern will typically be tagged with a special tag.
 
-A día de hoy, \fBdpkg\-gensymbols\fP es compatible con tres tipos de patrones
-básicos:
+A dÃ­a de hoy, \fBdpkg\-gensymbols\fP es compatible con tres tipos de patrones
+bÃ¡sicos:
 .TP  3
 \fBc++\fP
-Este patrón se indica con la etiqueta \fIc++\fP. Sólo encaja con el nombre
-«demangled» de símbolos C++ (tal y como muestra la herramienta
-\fBc++filt\fP(1)). Este patrón es de utilidad para emparejar símbolos con
-nombres «mangled» que pueden variar según la arquitectura, mientras que sus
-nombres «demangled» permanecen sin cambios. Un grupo de estos símbolos son
-los \fIthunk no virtuales\fP, que tienen direcciones relativas («offsets»)
-específicas a la arquitectura integradas en sus nombres «mangled». Un
-ejemplo común de este caso es un destructor virtual, que bajo una herencia
-de diamante necesita un símbolo thunk no virtual. Por ejemplo, incluso si
-«_ZThn8_N3NSB6ClassDD1Ev@Base» en arquitecturas de 32bit es
-«_ZThn16_N3NSB6ClassDD1Ev@Base» en arquitecturas de 64bit, puede emparejarlo
-con un único patrón \fIc++\fP:
+Este patrÃ³n se indica con la etiqueta \fIc++\fP. SÃ³lo encaja con el nombre
+Â«demangledÂ» de sÃ­mbolos C++ (tal y como muestra la herramienta
+\fBc++filt\fP(1)). Este patrÃ³n es de utilidad para emparejar sÃ­mbolos con
+nombres Â«mangledÂ» que pueden variar segÃºn la arquitectura, mientras que sus
+nombres Â«demangledÂ» permanecen sin cambios. Un grupo de estos sÃ­mbolos son
+los \fIthunk no virtuales\fP, que tienen direcciones relativas (Â«offsetsÂ»)
+especÃ­ficas a la arquitectura integradas en sus nombres Â«mangledÂ». Un
+ejemplo comÃºn de este caso es un destructor virtual, que bajo una herencia
+de diamante necesita un sÃ­mbolo thunk no virtual. Por ejemplo, incluso si
+Â«_ZThn8_N3NSB6ClassDD1Ev@BaseÂ» en arquitecturas de 32bit es
+Â«_ZThn16_N3NSB6ClassDD1Ev@BaseÂ» en arquitecturas de 64bit, puede emparejarlo
+con un Ãºnico patrÃ³n \fIc++\fP:
 .RS
 .PP
 libdummy.so.1 libdummy1 #MINVER#
@@ -267,27 +283,27 @@ libdummy.so.1 libdummy1 #MINVER#
  (c++)"non\-virtual thunk to NSB::ClassD::~ClassD()@Base" 1.0
  [...]
 .P
-Puede obtener el nombre «demangled» del ejemplo anterior ejecutando la
+Puede obtener el nombre Â«demangledÂ» del ejemplo anterior ejecutando la
 siguiente orden:
 .PP
  $ echo '_ZThn8_N3NSB6ClassDD1Ev@Base' | c++filt
 .P
-Observe que aunque el nombre «mangled» sea por definición único en la
-biblioteca, no es necesariamente cierto para nombres «demangled». Puede que
-dos símbolos reales y distintos tengan el mismo nombre «demangled». Por
-ejemplo, en caso de existir símbolos thunk no virtuales en complejas
-configuraciones de herencia, o con la mayoría de constructores y
-destructores (ya que habitualmente g++ genera dos símbolos para ellos). Por
+Observe que aunque el nombre Â«mangledÂ» sea por definiciÃ³n Ãºnico en la
+biblioteca, no es necesariamente cierto para nombres Â«demangledÂ». Puede que
+dos sÃ­mbolos reales y distintos tengan el mismo nombre Â«demangledÂ». Por
+ejemplo, en caso de existir sÃ­mbolos thunk no virtuales en complejas
+configuraciones de herencia, o con la mayorÃ­a de constructores y
+destructores (ya que habitualmente g++ genera dos sÃ­mbolos para ellos). Por
 otra parte, estas colisiones aparecen al nivel de la ABI, y por ello no
-deberían degradar la calidad del fichero de símbolos.
+deberÃ­an degradar la calidad del fichero de sÃ­mbolos.
 .RE
 .TP 
 \fBsymver\fP
-La etiqueta \fIsymver\fP indica este patrón. Las bibliotecas bien mantenidas
-tienen símbolos con versión, donde cada versión corresponde con la versión
-del autor original en la que se añadió el símbolo. De ser así, puede
-utilizar un patrón \fIsymver\fP para emparejar el símbolo asociado con una
-versión en particular. Por ejemplo:
+La etiqueta \fIsymver\fP indica este patrÃ³n. Las bibliotecas bien mantenidas
+tienen sÃ­mbolos con versiÃ³n, donde cada versiÃ³n corresponde con la versiÃ³n
+del autor original en la que se aÃ±adiÃ³ el sÃ­mbolo. De ser asÃ­, puede
+utilizar un patrÃ³n \fIsymver\fP para emparejar el sÃ­mbolo asociado con una
+versiÃ³n en particular. Por ejemplo:
 .RS
 .PP
 libc.so.6 libc6 #MINVER#
@@ -296,26 +312,26 @@ libc.so.6 libc6 #MINVER#
  (symver)GLIBC_2.7 2.7
  access@GLIBC_2.0 2.2
 .PP
-Todos los símbolos asociados con las versiones «GLIBC_2.0» y «GLIBC_2.7»
-llevan a una versión mínima de 2.0 y 2.7 respectivamente, con la excepción
-del símbolo «access@GLIBC_2.0». El segundo lleva a una dependencia mínima
-sobre la versión 2.2 de libc6, a pesar de estar en el rango del patrón
-«(symver)GLIBC_2.0», debido a que los símbolos específicos tiene precedencia
+Todos los sÃ­mbolos asociados con las versiones Â«GLIBC_2.0Â» y Â«GLIBC_2.7Â»
+llevan a una versiÃ³n mÃ­nima de 2.0 y 2.7 respectivamente, con la excepciÃ³n
+del sÃ­mbolo Â«access@GLIBC_2.0Â». El segundo lleva a una dependencia mÃ­nima
+sobre la versiÃ³n 2.2 de libc6, a pesar de estar en el rango del patrÃ³n
+Â«(symver)GLIBC_2.0Â», debido a que los sÃ­mbolos especÃ­ficos tiene precedencia
 sobre los patrones.
 .P
-Tenga en cuanta que los patrones de comodín antiguos (indicados por
-«*@versio» en el campo del nombre del símbolo) son aún compatibles, aunque
+Tenga en cuanta que los patrones de comodÃ­n antiguos (indicados por
+Â«*@versioÂ» en el campo del nombre del sÃ­mbolo) son aÃºn compatibles, aunque
 han quedado obsoletos por el nuevo estilo de sintaxis
-«(symver|optional)versión». Por ejemplo, debería escribir «*@GLIBC_2.0 2.0»
-como «(symver|optional)GLIBC_2.0 2.0» si desea el mismo comportamiento.
+Â«(symver|optional)versiÃ³nÂ». Por ejemplo, deberÃ­a escribir Â«*@GLIBC_2.0 2.0Â»
+como Â«(symver|optional)GLIBC_2.0 2.0Â» si desea el mismo comportamiento.
 .RE
 .TP 
 \fBregex\fP
 Los patrones de expresiones regulares se indican con la etiqueta
-\fIregex\fP. Buscan coincidencias con la expresión regular de perl definido en
-el campo de nombre del símbolo. Una expresión regular se empareja tal cual,
+\fIregex\fP. Buscan coincidencias con la expresiÃ³n regular de perl definido en
+el campo de nombre del sÃ­mbolo. Una expresiÃ³n regular se empareja tal cual,
 por ello no olvide insertar \fI^\fP al inicio de la misma o puede que coincida
-con cualquier parte de la cadena real del símbolo \fInombre@versión\fP. Por
+con cualquier parte de la cadena real del sÃ­mbolo \fInombre@versiÃ³n\fP. Por
 ejemplo:
 .RS
 .PP
@@ -323,11 +339,11 @@ libdummy.so.1 libdummy1 #MINVER#
  (regex)"^mystack_.*@Base$" 1.0
  (regex|optional)"private" 1.0
 .P
-Los símbolos como «mystack_new@Base», «mystack_push@Base»,
-«mystack_pop@Base» y similares encajarían con el primer patrón, mientras que
-otros como «ng_mystack_new@Base» no lo harían. El segundo patrón encaja con
-todos los símbolos con «private» en su nombre, y las coincidencias heredarán
-de este patrón la etiqueta \fIoptional\fP.
+Los sÃ­mbolos como Â«mystack_new@BaseÂ», Â«mystack_push@BaseÂ»,
+Â«mystack_pop@BaseÂ» y similares encajarÃ­an con el primer patrÃ³n, mientras que
+otros como Â«ng_mystack_new@BaseÂ» no lo harÃ­an. El segundo patrÃ³n encaja con
+todos los sÃ­mbolos con Â«privateÂ» en su nombre, y las coincidencias heredarÃ¡n
+de este patrÃ³n la etiqueta \fIoptional\fP.
 .RE
 .P
 Puede combinar los patrones listados anteriormente, cuando tenga sentido. En
@@ -337,50 +353,50 @@ ambos
  (c++|regex)"^NSA::ClassA::Private::privmethod\ed\e(int\e)@Base" 1.0
  (regex|c++)N3NSA6ClassA7Private11privmethod\edEi@Base 1.0
 .P
-encaja con «_ZN3NSA6ClassA7Private11privmethod1Ei@Base» y
-«_ZN3NSA6ClassA7Private11privmethod2Ei@Base». Al comparar el primer patrón
-se «demangle» el símbolo sin procesar como símbolo C++, para después
-comparar el nombre «demangled» con la expresión regular. Por otra parte, al
-comparar el segundo patrón la expresión regular se compara con el nombre sin
-procesar del símbolo, para después confirmar si es un símbolo de C++
-mediante «demangle». Un fallo de un patrón básico lleva a un fallo de todo
-el patrón. Por ejemplo, «__N3NSA6ClassA7Private11privmethod\edEi@Base» no
-encajaría con ningún patrón porque no es un símbolo válido de C++.
+encaja con Â«_ZN3NSA6ClassA7Private11privmethod1Ei@BaseÂ» y
+Â«_ZN3NSA6ClassA7Private11privmethod2Ei@BaseÂ». Al comparar el primer patrÃ³n
+se Â«demangleÂ» el sÃ­mbolo sin procesar como sÃ­mbolo C++, para despuÃ©s
+comparar el nombre Â«demangledÂ» con la expresiÃ³n regular. Por otra parte, al
+comparar el segundo patrÃ³n la expresiÃ³n regular se compara con el nombre sin
+procesar del sÃ­mbolo, para despuÃ©s confirmar si es un sÃ­mbolo de C++
+mediante Â«demangleÂ». Un fallo de un patrÃ³n bÃ¡sico lleva a un fallo de todo
+el patrÃ³n. Por ejemplo, Â«__N3NSA6ClassA7Private11privmethod\edEi@BaseÂ» no
+encajarÃ­a con ningÃºn patrÃ³n porque no es un sÃ­mbolo vÃ¡lido de C++.
 .P
 En general, todos los patrones se dividen en dos grupos: aliases (los
-básicos \fIc++\fP y \fIsymver\fP) y patrones genéricos (\fIregex\fP, todas las
-combinaciones de varios patrones básicos). Establecer coincidencias con
-patrones basados en alias es rápido (0(1)) mientras que los patrones
-genéricos son 0(N) (N \- cuenta genérica del patrón) para cada
-símbolo. Debido a ello, se recomienda no abusar de los patrones genéricos.
+bÃ¡sicos \fIc++\fP y \fIsymver\fP) y patrones genÃ©ricos (\fIregex\fP, todas las
+combinaciones de varios patrones bÃ¡sicos). Establecer coincidencias con
+patrones basados en alias es rÃ¡pido (0(1)) mientras que los patrones
+genÃ©ricos son 0(N) (N \- cuenta genÃ©rica del patrÃ³n) para cada
+sÃ­mbolo. Debido a ello, se recomienda no abusar de los patrones genÃ©ricos.
 .P
-Los alias (primero \fIc++\fP, después \fIsymver\fP) tienen prioridad sobre los
-patrones genéricos. Éstos se emparejan por orden de aparición en la
-plantilla del fichero de símbolos hasta el primer resultado de éxito. Tenga
-en cuenta, no obstante, que no se recomienda la reorganización manual de las
-entradas en plantillas de fichero ya que \fBdpkg\-gensymbols\fP genera «diffs»
-basados en el orden alfanumérico de sus nombres.
-.SS "Usar «include»"
+Los alias (primero \fIc++\fP, despuÃ©s \fIsymver\fP) tienen prioridad sobre los
+patrones genÃ©ricos. Ã‰stos se emparejan por orden de apariciÃ³n en la
+plantilla del fichero de sÃ­mbolos hasta el primer resultado de Ã©xito. Tenga
+en cuenta, no obstante, que no se recomienda la reorganizaciÃ³n manual de las
+entradas en plantillas de fichero ya que \fBdpkg\-gensymbols\fP genera Â«diffsÂ»
+basados en el orden alfanumÃ©rico de sus nombres.
+.SS "Usar Â«includeÂ»"
 .P
-Hay casos en los que utilizar un sólo fichero de símbolos es
-contraproducente cuando el conjunto de símbolos exportados difiere según la
-arquitectura. En estos casos, una directiva «include» puede ser útil de un
+Hay casos en los que utilizar un sÃ³lo fichero de sÃ­mbolos es
+contraproducente cuando el conjunto de sÃ­mbolos exportados difiere segÃºn la
+arquitectura. En estos casos, una directiva Â«includeÂ» puede ser Ãºtil de un
 par de maneras:
 .IP \(bu 4
-Puede factorizar la parte común en algún fichero externo, e incluir ese
+Puede factorizar la parte comÃºn en algÃºn fichero externo, e incluir ese
 fichero en su fichero \fIpaquete\fP.symbols.\fIarq\fP usando una directiva
-«include» como esta:
+Â«includeÂ» como esta:
 
 #include "\fIpackages\fP.symbols.common"
 .IP \(bu
-Al igual que con cualquier símbolo, puede etiquetar la directiva «include»:
+Al igual que con cualquier sÃ­mbolo, puede etiquetar la directiva Â«includeÂ»:
 
 (etiqueta|...|etiquetaN)#include "fichero\-para\-include"
 
-Como resultado, se considerará que todos los símbolos incluidos en
-\fIfichero\-para\-include\fP están etiquetados con \fIetiqueta\fP ... \fIetiquetaN\fP
-por omisión. Puede utilizar esta característica para crear un fichero común
-\fIpackage\fP.symbols, que incluye ficheros de símbolos específicos a la
+Como resultado, se considerarÃ¡ que todos los sÃ­mbolos incluidos en
+\fIfichero\-para\-include\fP estÃ¡n etiquetados con \fIetiqueta\fP ... \fIetiquetaN\fP
+por omisiÃ³n. Puede utilizar esta caracterÃ­stica para crear un fichero comÃºn
+\fIpackage\fP.symbols, que incluye ficheros de sÃ­mbolos especÃ­ficos a la
 arquitectura.
 
   common_symbol1@Base 1.0
@@ -388,59 +404,59 @@ arquitectura.
  (arch=!amd64 !ia64 !alpha)#include "package.symbols.32bit"
   common_symbol2@Base 1.0
 .P
-Los ficheros de símbolos se leen línea a línea, y las directivas «include»
-se procesan por orden de aparición. Esto significa que el contenido del
+Los ficheros de sÃ­mbolos se leen lÃ­nea a lÃ­nea, y las directivas Â«includeÂ»
+se procesan por orden de apariciÃ³n. Esto significa que el contenido del
 fichero incluido puede sustituir cualquier contenido aparecido antes de la
-directiva «include», y que todo contenido a continuación de la directiva
-puede sustituir cualquier contenido del fichero incluido. Todo símbolo (o
-incluso otra directiva «#include») en el fichero incluido puede especificar
+directiva Â«includeÂ», y que todo contenido a continuaciÃ³n de la directiva
+puede sustituir cualquier contenido del fichero incluido. Todo sÃ­mbolo (o
+incluso otra directiva Â«#includeÂ») en el fichero incluido puede especificar
 etiquetas adicionales, o sustituir valores de las etiquetas heredadas en la
-especificación de etiqueta. Por otra parte, el símbolo no puede eliminar
+especificaciÃ³n de etiqueta. Por otra parte, el sÃ­mbolo no puede eliminar
 ninguna de las etiquetas heredadas.
 .P
-Un fichero incluido puede repetir la línea de cabecera que contiene el
-«SONAME» de la biblioteca. En tal caso, sustituye cualquier línea de
-cabecera leída anteriormente. Por otra parte, generalmente es mejor evitar
-duplicar las líneas de cabecera. A continuación puede ver una manera de
+Un fichero incluido puede repetir la lÃ­nea de cabecera que contiene el
+Â«SONAMEÂ» de la biblioteca. En tal caso, sustituye cualquier lÃ­nea de
+cabecera leÃ­da anteriormente. Por otra parte, generalmente es mejor evitar
+duplicar las lÃ­neas de cabecera. A continuaciÃ³n puede ver una manera de
 realizar esto:
 .PP
 #include "libsomething1.symbols.common"
  arch_specific_symbol@Base 1.0
-.SS "Buena gestión de bibliotecas"
+.SS "Buena gestiÃ³n de bibliotecas"
 .P
-Una biblioteca mantenida adecuadamente tiene las siguientes características:
+Una biblioteca mantenida adecuadamente tiene las siguientes caracterÃ­sticas:
 .IP \(bu 4
-su API es estable (los símbolos públicos nunca se eliminan, sino que sólo se
-añaden símbolos nuevos), y los cambios pueden introducir una
-incompatibilidad sólo cuando el «SONAME» cambia;
+su API es estable (los sÃ­mbolos pÃºblicos nunca se eliminan, sino que sÃ³lo se
+aÃ±aden sÃ­mbolos nuevos), y los cambios pueden introducir una
+incompatibilidad sÃ³lo cuando el Â«SONAMEÂ» cambia;
 .IP \(bu 4
-Idealmente, usa el versionado de símbolos para alcanzar la estabilidad de la
-ABI, a pesar de cambios internos y la extensión de la API;
+Idealmente, usa el versionado de sÃ­mbolos para alcanzar la estabilidad de la
+ABI, a pesar de cambios internos y la extensiÃ³n de la API;
 .IP \(bu 4
-No exporta símbolos privados (tales como símbolos etiquetados como
+No exporta sÃ­mbolos privados (tales como sÃ­mbolos etiquetados como
 opcionales para evitar un problema).
 .P
-Al mantener un fichero «symbols» es sencillo notar la aparición y
-desaparición de símbolos. Pero es más difícil notar cambios incompatibles en
-las API y ABI. Por ello, el responsable del paquete debería leer
+Al mantener un fichero Â«symbolsÂ» es sencillo notar la apariciÃ³n y
+desapariciÃ³n de sÃ­mbolos. Pero es mÃ¡s difÃ­cil notar cambios incompatibles en
+las API y ABI. Por ello, el responsable del paquete deberÃ­a leer
 cuidadosamente el registro de cambios de la fuente original en busca de
-casos en los que se ha roto la correcta gestión de bibliotecas. Se debería
+casos en los que se ha roto la correcta gestiÃ³n de bibliotecas. Se deberÃ­a
 notificar al autor original en caso de encontrar problemas potenciales, ya
 que un arreglo en la fuente original del software es siempre preferible a un
-arreglo específico de Debian.
+arreglo especÃ­fico de Debian.
 .SH OPCIONES
 .TP 
-\fB\-P\fP\fIdirectorio\-compilación\-paquete\fP
-Analiza \fIdirectorio\-compilación\-paquete\fP en lugar de «debian/tmp».
+\fB\-P\fP\fIdirectorio\-compilaciÃ³n\-paquete\fP
+Analiza \fIdirectorio\-compilaciÃ³n\-paquete\fP en lugar de Â«debian/tmpÂ».
 .TP 
 \fB\-p\fP\fIpaquete\fP
-Define el nombre del paquete. Es necesario si aparece más de un paquete
-binario en «debian/control» (o si no existe ningún fichero
-«debian/control»).
+Define el nombre del paquete. Es necesario si aparece mÃ¡s de un paquete
+binario en Â«debian/controlÂ» (o si no existe ningÃºn fichero
+Â«debian/controlÂ»).
 .TP 
-\fB\-v\fP\fIversión\fP
-Define la versión del paquete. El valor por omisión es la versión extraída
-de «debian/changelog». Necesario en caso de una ejecución externa al árbol
+\fB\-v\fP\fIversiÃ³n\fP
+Define la versiÃ³n del paquete. El valor por omisiÃ³n es la versiÃ³n extraÃ­da
+de Â«debian/changelogÂ». Necesario en caso de una ejecuciÃ³n externa al Ã¡rbol
 del paquete fuente.
 .TP 
 \fB\-e\fP\fIfichero\-biblioteca\fP
@@ -452,7 +468,7 @@ multiple libraries with a single argument (otherwise you need multiple
 .TP 
 \fB\-I\fP\fInombre\-fichero\fP
 Usa \fInombre\-fichero\fP como un fichero de referencia para generar el fichero
-«symbols» integrado en el mismo paquete.
+Â«symbolsÂ» integrado en el mismo paquete.
 .TP 
 \fB\-O\fP[\fIfilename\fP]
 Print the generated symbols file to standard output or to \fIfilename\fP if
@@ -472,12 +488,12 @@ Moreover, some symbols might be omitted when writing a standard
 symbols are always written to the symbol file template.
 .TP 
 \fB\-c\fP\fI[0\-4]\fP
-Define las comprobaciones a realizar al comparar el fichero «symbols»
+Define las comprobaciones a realizar al comparar el fichero Â«symbolsÂ»
 generado usando como base el fichero de plantilla. El nivel predefinido es
-1. Aumentar los niveles conlleva más comprobaciones, así como la inclusión
+1. Aumentar los niveles conlleva mÃ¡s comprobaciones, asÃ­ como la inclusiÃ³n
 de todos los niveles inferiores. El nivel 0 nunca falla. El nivel 1 falla si
-algunos símbolos han desaparecido. El nivel 2 falla si se han introducido
-símbolos nuevos. El nivel 3 falla si han desaparecido algunas
+algunos sÃ­mbolos han desaparecido. El nivel 2 falla si se han introducido
+sÃ­mbolos nuevos. El nivel 3 falla si han desaparecido algunas
 bibliotecas. El nivel 4 falla si se han introducido bibliotecas nuevas.
 
 This value can be overridden by the environment variable
@@ -490,28 +506,28 @@ libraries or new/lost symbols. This option only disables informational
 output but not the checks themselves (see \fB\-c\fP option).
 .TP 
 \fB\-a\fP\fIarquitectura\fP
-Toma \fIarquitectura\fP como la arquitectura anfitrión al procesar ficheros
-«symbols». Use esta opción para generar un fichero «symbols» o un «diff»
-para cualquier arquitectura, siempre y cuando sus binarios ya estén
+Toma \fIarquitectura\fP como la arquitectura anfitriÃ³n al procesar ficheros
+Â«symbolsÂ». Use esta opciÃ³n para generar un fichero Â«symbolsÂ» o un Â«diffÂ»
+para cualquier arquitectura, siempre y cuando sus binarios ya estÃ©n
 disponibles.
 .TP 
 \fB\-d\fP
-Activa el modo de depuración. Se muestran numerosos mensajes que explican
+Activa el modo de depuraciÃ³n. Se muestran numerosos mensajes que explican
 las acciones de \fBdpkg\-gensymbols\fP.
 .TP 
 \fB\-V\fP
-Activa el modo verboso. El fichero «symbols» generado contiene símbolos
-obsoletos en la forma de comentarios. Además, en modo plantilla los patrones
-de símbolo anteceden a los comentarios que listan los símbolos reales que
-coinciden con el patrón.
+Activa el modo verboso. El fichero Â«symbolsÂ» generado contiene sÃ­mbolos
+obsoletos en la forma de comentarios. AdemÃ¡s, en modo plantilla los patrones
+de sÃ­mbolo anteceden a los comentarios que listan los sÃ­mbolos reales que
+coinciden con el patrÃ³n.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
 Muestra el modo de uso y termina.
 .TP 
 \fB\-\-version\fP
-Muestra la versión y termina.
+Muestra la versiÃ³n y termina.
 .
-.SH "VÉASE TAMBIÉN"
+.SH "VÃ‰ASE TAMBIÃ‰N"
 \fBhttps://people.redhat.com/drepper/symbol\-versioning\fP
 .br
 \fBhttps://people.redhat.com/drepper/goodpractice.pdf\fP
@@ -521,7 +537,7 @@ Muestra la versión y termina.
 \fBdeb\-symbols\fP(5), \fBdpkg\-shlibdeps\fP(1).
 .SH TRADUCTOR
 Rudy Godoy <rudy@kernel\-panik.org>,
-Rubén Porras <nahoo@inicia.es>,
+RubÃ©n Porras <nahoo@inicia.es>,
 Bruno Barrera C. <bruno.barrera@igloo.cl>,
 Carlos Izquierdo <gheesh@ertis.net>,
 Esteban Manchado y
@@ -529,5 +545,5 @@ NOK.
 Debian L10n Spanish <debian\-l10n\-spanish@lists.debian.org>.
 .br
 Revisiones por Santiago Vila <sanvila@unex.es>,
-Javier Fernández\-Sanguino, Rubén Porras,
+Javier FernÃ¡ndez\-Sanguino, RubÃ©n Porras,
 Luis Uribe y Omar Campagne.

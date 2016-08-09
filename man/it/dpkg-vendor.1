@@ -28,20 +28,20 @@ dpkg\-vendor \- interroga informazioni sui produttori di una distribuzione
 \fBdpkg\-vendor\fP [\fIopzione\fP...] \fIcomando\fP
 .
 .SH DESCRIZIONE
-\fBdpkg\-vendor\fP Ë uno strumento per richiedere informazioni sui produttori
+\fBdpkg\-vendor\fP √® uno strumento per richiedere informazioni sui produttori
 elencati in \fB/etc/dpkg/origins\fP. \fB/etc/dpkg/origins/default\fP contiene
 informazioni sul produttore corrente.
 .
 .SH COMANDI
 .TP 
 \fB\-\-is\fP\fI produttore\fP
-Esce con stato \fB0\fP se il produttore corrente Ë \fIproduttore\fP. Altrimenti
-esce con stato diverso da zero.
+Exits with \fB0\fP if the current vendor is \fIvendor\fP. Otherwise exits with
+\fB1\fP.
 .TP 
 \fB\-\-derives\-from\fP\fI produttore\fP
-Esce con stato \fB0\fP se la distribuzione del produttore corrente Ë una
-derivata di \fIproduttore\fP, altrimenti esce con stato diverso da zero. Usa il
-campo \fBParent\fP per sfogliare tutti gli antenati del produttore corrente.
+Exits with \fB0\fP if the current vendor distribution is a derivative of
+\fIvendor\fP, otherwise exits with \fB1\fP.  It uses the \fBParent\fP field to browse
+all ancestors of the current vendor.
 .TP 
 \fB\-\-query\fP\fI campo\fP
 Stampa sullo standard output il valore del \fIcampo\fP specifico del produttore
@@ -62,8 +62,8 @@ variabile d'ambiente \fBDEB_VENDOR\fP o \fB/etc/dpkg/origins/default\fP.
 .SH AMBIENTE
 .TP 
 \fBDEB_VENDOR\fP
-Questa impostazione definisce il produttore corrente. Se non Ë impostata, il
-produttore corrente verr‡ trovato leggendo \fB/etc/dpkg/origins/default\fP.
+Questa impostazione definisce il produttore corrente. Se non √® impostata, il
+produttore corrente verr√† trovato leggendo \fB/etc/dpkg/origins/default\fP.
 .
 .SH "VEDERE ANCHE"
 \fBdeb\-origin\fP(5).

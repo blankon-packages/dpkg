@@ -5,7 +5,7 @@
 .\" Copyright Â© 2000-2001 Wichert Akkerman <wakkerma@debian.org>
 .\" Copyright Â© 2002-2003 Adam Heath <doogie@debian.org>
 .\" Copyright Â© 2004 Scott James Remnant <keybuk@debian.org>
-.\" Copyright Â© 2008-2014 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2008-2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -27,51 +27,50 @@
 .\"*******************************************************************
 .TH start\-stop\-daemon 8 26\-03\-2014 "Projet Debian" "Utilitaires de dpkg"
 .SH NOM
-start\-stop\-daemon \- lance ou arrête des démons système
+start\-stop\-daemon \- lance ou arrÃªte des dÃ©mons systÃ¨me
 .
 .SH SYNOPSIS
 \fBstart\-stop\-daemon\fP [\fIoption\fP...] \fIcommande\fP
 .
 .SH DESCRIPTION
-On se sert de \fBstart\-stop\-daemon\fP pour contrôler la création ou l'arrêt de
-processus système. En utilisant les options correspondantes,
-\fBstart\-stop\-daemon\fP peut être configuré pour trouver les exemplaires
-présents d'un processus en fonctionnement.
+On se sert de \fBstart\-stop\-daemon\fP pour contrÃ´ler la crÃ©ation ou l'arrÃªt de
+processus systÃ¨me. En utilisant les options correspondantes,
+\fBstart\-stop\-daemon\fP peut Ãªtre configurÃ© pour trouver les exemplaires
+prÃ©sents d'un processus en fonctionnement.
 .PP
-Veuillez noter qu'à moins d'utiliser \fB\-\-pid\fP ou \fB\-\-pidfile\fP, le programme
+Veuillez noter qu'Ã  moins d'utiliser \fB\-\-pid\fP ou \fB\-\-pidfile\fP, le programme
 \fBstart\-stop\-daemon\fP se comporte comme \fBkillall\fP(1). \fBstart\-stop\-daemon\fP
 recherche dans le tableau des processus tout processus qui correspond au
-nom, pid parent, uid et/ou gid du processus (si indiqué). Toute
-correspondance empêchera \fB\-\-start\fP de démarrer le démon. Tous les processus
-qui correspondent recevront le signal TERM (ou le signal indiqué par
-\fB\-\-signal\fP ou \fB\-\-retry\fP) si \fB\-\-stop\fP est indiqué. Pour les démons avec
-des processus enfant qui doivent survivre à un \fB\-\-stop\fP, il est nécessaire
-d'indiquer un fichier pid («\ pidfile\ »).
+nom, pid parent, uid et/ou gid du processus (si indiquÃ©). Toute
+correspondance empÃªchera \fB\-\-start\fP de dÃ©marrer le dÃ©mon. Tous les processus
+qui correspondent recevront le signal TERM (ou le signal indiquÃ© par
+\fB\-\-signal\fP ou \fB\-\-retry\fP) si \fB\-\-stop\fP est indiquÃ©. Pour les dÃ©mons avec
+des processus enfant qui doivent survivre Ã  un \fB\-\-stop\fP, il est nÃ©cessaire
+d'indiquer un fichier pid (Â«\ pidfile\ Â»).
 .
 .SH COMMANDES
 .TP 
-\fB\-S\fP, \fB\-\-start\fP [\fB\-\-\fP] \fIparamètres\fP
-Vérifier l'existence d'un processus particulier. Quand il existe un tel
+\fB\-S\fP, \fB\-\-start\fP [\fB\-\-\fP] \fIparamÃ¨tres\fP
+VÃ©rifier l'existence d'un processus particulier. Quand il existe un tel
 processus, \fBstart\-stop\-daemon\fP ne fait rien et se termine avec un code
-d'erreur égal à 1 (0 si \fB\-\-oknodo\fP est précisé). Quand un tel processus
-n'existe pas, un exemplaire de l'exécutable est lancé, en utilisant le
-paramètre de \fB\-\-exec\fP ou celui de \fB\-\-startas\fP si cette option est
-précisée. Tout argument donné après \fB\-\-\fP sur la ligne de commande est passé
-tel quel au programme qui doit être lancé.
+d'erreur Ã©gal Ã  1 (0 si \fB\-\-oknodo\fP est prÃ©cisÃ©). Quand un tel processus
+n'existe pas, un exemplaire de l'exÃ©cutable est lancÃ©, en utilisant le
+paramÃ¨tre de \fB\-\-exec\fP ou celui de \fB\-\-startas\fP si cette option est
+prÃ©cisÃ©e. Tout argument donnÃ© aprÃ¨s \fB\-\-\fP sur la ligne de commande est passÃ©
+tel quel au programme qui doit Ãªtre lancÃ©.
 .TP 
 \fB\-K\fP, \fB\-\-stop\fP
-Vérifier aussi l'existence d'un processus particulier. Quand un tel
-processus existe, \fBstart\-stop\-daemon\fP lui envoie le signal précisé avec
-\fB\-\-signal\fP et se termine avec un code d'erreur égal à 0. Quand un tel
+VÃ©rifier aussi l'existence d'un processus particulier. Quand un tel
+processus existe, \fBstart\-stop\-daemon\fP lui envoie le signal prÃ©cisÃ© avec
+\fB\-\-signal\fP et se termine avec un code d'erreur Ã©gal Ã  0. Quand un tel
 processus n'existe pas, \fBstart\-stop\-daemon\fP se termine avec un code
-d'erreur égal à 1 (0 si \fB\-\-oknodo\fP est précisé). Si \fB\-\-retry\fP est
-indiquée, \fBstart\-stop\-daemon\fP recherche si le processus ou les processus se
-sont bien terminés.
+d'erreur Ã©gal Ã  1 (0 si \fB\-\-oknodo\fP est prÃ©cisÃ©). Si \fB\-\-retry\fP est
+indiquÃ©e, \fBstart\-stop\-daemon\fP recherche si le processus ou les processus se
+sont bien terminÃ©s.
 .TP 
 \fB\-T\fP, \fB\-\-status\fP
-Contrôle l'existence du processus indiqué et sort avec un code de sortie
-défini par les actions des scripts d'initialisation de la LSB («\ LSB Init
-Script Actions\ »).
+Check for the existence of a specified process, and returns an exit status
+code, according to the LSB Init Script Actions (since version 1.16.1).
 .TP 
 \fB\-H\fP, \fB\-\-help\fP
 Affiche un message d'aide, puis quitte.
@@ -83,84 +82,84 @@ Affiche la version du programme, puis quitte.
 .SS "Options de correspondance"
 .TP 
 [\fB\-\-pid\fP] \fIpid\fP
-Vérifie l'existence d'un processus avec le \fIpid\fP spécifié. Le \fIpid\fP doit
-avoir un numéro supérieur à 0.
+Check for a process with the specified \fIpid\fP (since version 1.17.6).  The
+\fIpid\fP must be a number greater than 0.
 .TP 
 [\fB\-\-ppid\fP] \fIpid parent\fP
-Vérifie l'existence d'un processus avec le \fIppid\fP spécifié (pid parent). Le
-\fIppid\fP doit avoir un numéro supérieur à 0.
+Check for a process with the specified parent pid \fIppid\fP (since version
+1.17.7).  The \fIppid\fP must be a number greater than 0.
 .TP 
 \fB\-p\fP, \fB\-\-pidfile\fP \fIpid\-file\fP
-Contrôle si un processus a créé le fichier \fIfichier\-pid\fP. Note\ :
+ContrÃ´le si un processus a crÃ©Ã© le fichier \fIfichier\-pid\fP. Note\ :
 l'utilisation de l'option de correspondance seule peut provoquer des actions
-sur des processus non prévus, si l'ancien processus s'est terminé dans
-savoir retiré le \fIfichier\-pid\fP.
+sur des processus non prÃ©vus, si l'ancien processus s'est terminÃ© dans
+savoir retirÃ© le \fIfichier\-pid\fP.
 .TP 
-\fB\-x\fP, \fB\-\-exec\fP \fIexécutable\fP
-Contrôle l'existence de processus qui soient des exemplaires de cet
-\fIexécutable\fP. Le paramètre \fIexécutable\fP doit être un chemin
-absolu. Note\ :\ cela peut ne pas fonctionner avec des scripts interprétés,
-car l'exécutable sera alors l'interpréteur. Des processus en exécution au
-sein d'un environnement fermé d'exécution («\ chroot\ ») seront également
-trouvés et il peut donc être nécessaire d'ajouter d'autres restrictions de
+\fB\-x\fP, \fB\-\-exec\fP \fIexÃ©cutable\fP
+ContrÃ´le l'existence de processus qui soient des exemplaires de cet
+\fIexÃ©cutable\fP. Le paramÃ¨tre \fIexÃ©cutable\fP doit Ãªtre un chemin
+absolu. Note\ :\ cela peut ne pas fonctionner avec des scripts interprÃ©tÃ©s,
+car l'exÃ©cutable sera alors l'interprÃ©teur. Des processus en exÃ©cution au
+sein d'un environnement fermÃ© d'exÃ©cution (Â«\ chroot\ Â») seront Ã©galement
+trouvÃ©s et il peut donc Ãªtre nÃ©cessaire d'ajouter d'autres restrictions de
 correspondance.
 .TP 
 \fB\-n\fP, \fB\-\-name\fP \fInom\-de\-processus\fP
-Contrôle l'existence de processus avec \fInom\-de\-processus\fP comme nom. Le
-\fInom\-de\-processus\fP est en général le nom du fichier du processus, mais peut
-avoir été modifié par le processus lui\-même. Note\ : sur la plupart des
-systèmes, cette information est récupérée par le nom de communication du
-noyau, ce qui induit une limite de longueur assez courte (la portabilité
-impose de ne pas supposer plus de 15 caractères).
+ContrÃ´le l'existence de processus avec \fInom\-de\-processus\fP comme nom. Le
+\fInom\-de\-processus\fP est en gÃ©nÃ©ral le nom du fichier du processus, mais peut
+avoir Ã©tÃ© modifiÃ© par le processus lui\-mÃªme. Note\ : sur la plupart des
+systÃ¨mes, cette information est rÃ©cupÃ©rÃ©e par le nom de communication du
+noyau, ce qui induit une limite de longueur assez courte (la portabilitÃ©
+impose de ne pas supposer plus de 15 caractÃ¨res).
 .TP 
 \fB\-u\fP, \fB\-\-user\fP \fIidentifiant\fP|\fIuid\fP
-Contrôle l'existence de processus dont le propriétaire est \fIidentifiant\fP ou
-\fIuid\fP. Note\ : si cette option est utilisée seule, tous les processus de cet
-utilisateur seront concernés par l'action.
+ContrÃ´le l'existence de processus dont le propriÃ©taire est \fIidentifiant\fP ou
+\fIuid\fP. Note\ : si cette option est utilisÃ©e seule, tous les processus de cet
+utilisateur seront concernÃ©s par l'action.
 .
-.SS "Options génériques"
+.SS "Options gÃ©nÃ©riques"
 .TP 
 \fB\-g\fP, \fB\-\-group\fP \fIgroupe\fP|\fIgid\fP
-Modifie le \fIgroupe\fP ou le \fIgid\fP au début du processus.
+Modifie le \fIgroupe\fP ou le \fIgid\fP au dÃ©but du processus.
 .TP 
 \fB\-s\fP, \fB\-\-signal\fP \fIsignal\fP
-L'action \fB\-\-stop\fP définit le signal à envoyer au processus qui doit être
-arrêté (par défaut\ : TERM).
+L'action \fB\-\-stop\fP dÃ©finit le signal Ã  envoyer au processus qui doit Ãªtre
+arrÃªtÃ© (par dÃ©faut\ : TERM).
 .TP 
-\fB\-R\fP, \fB\-\-retry\fP \fIdurée\fP|\fIaction\-prévue\fP
-Avec l'action \fB\-\-stop\fP, \fBstart\-stop\-daemon\fP doit vérifier que les
-processus se sont terminés. Il le fait pour tous les processus
-correspondants qui tournent, jusqu'à ce qu'il n'y en ait plus. Quand le
-processus ne se termine pas, il prend d'autres mesures déterminées par
-l'\fIaction\-prévue\fP.
+\fB\-R\fP, \fB\-\-retry\fP \fIdurÃ©e\fP|\fIaction\-prÃ©vue\fP
+Avec l'action \fB\-\-stop\fP, \fBstart\-stop\-daemon\fP doit vÃ©rifier que les
+processus se sont terminÃ©s. Il le fait pour tous les processus
+correspondants qui tournent, jusqu'Ã  ce qu'il n'y en ait plus. Quand le
+processus ne se termine pas, il prend d'autres mesures dÃ©terminÃ©es par
+l'\fIaction\-prÃ©vue\fP.
 
-Si \fIdurée\fP est indiquée plutôt que \fIaction\-prévue\fP, l'action\-prévue
-\fIsignal\fP\fB/\fP\fIdurée\fP\fB/KILL/\fP\fIdurée\fP est utilisée, où \fIsignal\fP est le
-signal indiqué par \fB\-\-signal\fP.
+Si \fIdurÃ©e\fP est indiquÃ©e plutÃ´t que \fIaction\-prÃ©vue\fP, l'action\-prÃ©vue
+\fIsignal\fP\fB/\fP\fIdurÃ©e\fP\fB/KILL/\fP\fIdurÃ©e\fP est utilisÃ©e, oÃ¹ \fIsignal\fP est le
+signal indiquÃ© par \fB\-\-signal\fP.
 
-\fIaction\-prévue\fP est une liste d'au moins deux items séparés par des barres
-obliques (\fB/\fP)\ ; chaque item peut être de la forme \fB\-\fP\fIsignal\-numéro\fP ou
+\fIaction\-prÃ©vue\fP est une liste d'au moins deux items sÃ©parÃ©s par des barres
+obliques (\fB/\fP)\ ; chaque item peut Ãªtre de la forme \fB\-\fP\fIsignal\-numÃ©ro\fP ou
 de la forme [\fB\-\fP]\fIsignal\-nom\fP, ce qui demande d'envoyer ce signal\ ; ou
-bien de la forme \fIdurée,\fP ce qui demande d'attendre tant de secondes avant
+bien de la forme \fIdurÃ©e,\fP ce qui demande d'attendre tant de secondes avant
 de terminer les processus, ou bien de la forme \fBforever\fP, ce qui demande de
-répéter constamment le reste de action\-prévue, si nécessaire.
+rÃ©pÃ©ter constamment le reste de action\-prÃ©vue, si nÃ©cessaire.
 
-Quand la fin de l'action\-prévue est atteinte et que \fBforever\fP n'a pas été
-précisé, \fBstart\-stop\-daemon\fP se termine avec un code d'erreur égal à
-2. Quand une action\-prévue est indiquée, tout signal donné par \fB\-\-signal\fP
-est ignoré.
+Quand la fin de l'action\-prÃ©vue est atteinte et que \fBforever\fP n'a pas Ã©tÃ©
+prÃ©cisÃ©, \fBstart\-stop\-daemon\fP se termine avec un code d'erreur Ã©gal Ã 
+2. Quand une action\-prÃ©vue est indiquÃ©e, tout signal donnÃ© par \fB\-\-signal\fP
+est ignorÃ©.
 .TP 
 \fI\-a\fP, \fB\-\-startas\fP \fInom\-de\-chemin\fP
-Avec l'action \fB\-\-start\fP, lance le processus spécifié par
-\fInom\-de\-chemin\fP. Si rien n'est précisé, c'est par défaut l'argument donné à
+Avec l'action \fB\-\-start\fP, lance le processus spÃ©cifiÃ© par
+\fInom\-de\-chemin\fP. Si rien n'est prÃ©cisÃ©, c'est par dÃ©faut l'argument donnÃ© Ã 
 \fB\-\-exec\fP.
 .TP 
 \fB\-t\fP, \fB\-\-test\fP
-Affiche les actions qui seraient entreprises et détermine la bonne valeur de
+Affiche les actions qui seraient entreprises et dÃ©termine la bonne valeur de
 retour, mais ne fait rien.
 .TP 
 \fB\-o\fP, \fB\-\-oknodo\fP
-Retourne un code de sortie égal à 0 au lieu de 1 si rien n'est ou ne sera
+Retourne un code de sortie Ã©gal Ã  0 au lieu de 1 si rien n'est ou ne sera
 fait.
 .TP 
 \fB\-q\fP, \fB\-\-quiet\fP
@@ -168,83 +167,78 @@ N'affiche pas de messages d'information\ ; affiche seulement les messages
 d'erreur.
 .TP 
 \fB\-c\fP, \fB\-\-chuid\fP \fIidentifiant\fP|\fIuid\fP[\fB:\fP\fIgroupe\fP|\fIgid\fP]
-Change pour cet utilisateur ou «\ uid\ » avant de lancer le processus. On peut
-aussi préciser un groupe en ajoutant un \fB:\fP, puis le groupe ou un «\ gid\ »
-de la même façon qu'avec la commande «\ chown\ »
-(\fIutilisateur\fP\fB:\fP\fIgroupe\fP). Lorsqu'un utilisateur est indiqué mais pas de
-groupe alors le groupe primaire de celui\-ci est utilisé. Quand on utilise
-cette option, on doit veiller à ce que les groupes primaires ainsi que les
-groupes secondaires existent bien, même si l'option \fB\-\-group\fP n'est pas
-spécifiée. L'option \fB\-\-group\fP sert seulement pour les groupes dont
-l'utilisateur n'est pas membre (c'est comme rendre membre d'un
-groupe\-pour\-processus des utilisateurs génériques comme \fBnobody\fP).
+Change to this username/uid before starting the process. You can also
+specify a group by appending a \fB:\fP, then the group or gid in the same way
+as you would for the \fBchown\fP(1) command (\fIuser\fP\fB:\fP\fIgroup\fP).  If a user
+is specified without a group, the primary GID for that user is used.  When
+using this option you must realize that the primary and supplemental groups
+are set as well, even if the \fB\-\-group\fP option is not specified. The
+\fB\-\-group\fP option is only for groups that the user isn't normally a member
+of (like adding per process group membership for generic users like
+\fBnobody\fP).
 .TP 
 \fB\-r\fP, \fB\-\-chroot\fP \fIroot\fP
-Change de répertoire racine pour \fBroot\fP avant de lancer le
-processus. Remarquez que le «\ pidfile\ » est aussi écrit après le changement
+Change de rÃ©pertoire racine pour \fBroot\fP avant de lancer le
+processus. Remarquez que le Â«\ pidfile\ Â» est aussi Ã©crit aprÃ¨s le changement
 de racine.
 .TP 
 \fB\-d\fP, \fB\-\-chdir\fP \fIchemin\fP
-Change de répertoire pour \fIchemin\fP avant de commencer le processus. Cela
-est fait après le changement de répertoire racine si l'option
-\fB\-r\fP|\fB\-\-chroot\fP est demandée. Si rien n'est demandé, \fBstart\-stop\-daemon\fP
-changera de répertoire pour le répertoire racine avant de commencer le
+Change de rÃ©pertoire pour \fIchemin\fP avant de commencer le processus. Cela
+est fait aprÃ¨s le changement de rÃ©pertoire racine si l'option
+\fB\-r\fP|\fB\-\-chroot\fP est demandÃ©e. Si rien n'est demandÃ©, \fBstart\-stop\-daemon\fP
+changera de rÃ©pertoire pour le rÃ©pertoire racine avant de commencer le
 processus.
 .TP 
 \fB\-b\fP, \fB\-\-background\fP
-Utilisé généralement pour les programmes qui ne «\ se détachent\ » pas
-d'eux\-mêmes. Cette option oblige \fBstart\-stop\-daemon\fP à se dupliquer (fork)
-avant de lancer le processus, et l'oblige à passer en
-arrière\-plan. \fBAVERTISSEMENT\ : start\-stop\-daemon\fP ne peut pas vérifier le
-code de sortie quand, pour \fBune raison ou une autre\fP, le processus
-échoue. C'est un expédient dont on se servira seulement pour des programmes
-dont la duplication n'a pas de sens ou bien des programmes dont le code
-n'est pas adaptable pour leur ajouter cette fonctionnalité.
+Typically used with programs that don't detach on their own. This option
+will force \fBstart\-stop\-daemon\fP to fork before starting the process, and
+force it into the background.  \fBWarning: start\-stop\-daemon\fP cannot check
+the exit status if the process fails to execute for \fBany\fP reason. This is a
+last resort, and is only meant for programs that either make no sense
+forking on their own, or where it's not feasible to add the code for them to
+do this themselves.
 .TP 
 \fB\-C\fP, \fB\-\-no\-close\fP
-Ne fermer aucun descripteur de fichiers en forçant le démon à s'exécuter en
-arrière\-plan. Utilisé à des fins de débogage afin de voir ce qu'affiche le
-processus ou pour rediriger les descripteurs de fichiers pour journaliser
-l'affichage du processus. N'est pertinent que lors de l'utilisation de
-\fB\-\-background\fP.
+Do not close any file descriptor when forcing the daemon into the background
+(since version 1.16.5).  Used for debugging purposes to see the process
+output, or to redirect file descriptors to log the process output.  Only
+relevant when using \fB\-\-background\fP.
 .TP 
 \fB\-N\fP, \fB\-\-nicelevel\fP \fIint\fP
-Cela modifie la priorité du processus avant qu'il ne soit lancé.
+Cela modifie la prioritÃ© du processus avant qu'il ne soit lancÃ©.
 .TP 
-\fB\-P\fP, \fB\-\-procsched\fP \fIpolitique\fP\fB:\fP\fIpriorité\fP
-Modifie la politique du programmateur de processus («\ process scheduler
-policy\ ») et la priorité du processus avant de le démarrer. La priorité peut
-être indiquée de manière facultative avec \fB:\fP suivi de la valeur
-souhaitée. La \fIpriorité\fP par défaut est 0. Les valeurs de politiques
-actuellement gérées sont \fBother\fP, \fBfifo\fP et \fBrr\fP.
+\fB\-P\fP, \fB\-\-procsched\fP \fIpolitique\fP\fB:\fP\fIprioritÃ©\fP
+This alters the process scheduler policy and priority of the process before
+starting it (since version 1.15.0).  The priority can be optionally
+specified by appending a \fB:\fP followed by the value. The default \fIpriority\fP
+is 0. The currently supported policy values are \fBother\fP, \fBfifo\fP and \fBrr\fP.
 .TP 
-\fB\-I\fP, \fB\-\-iosched\fP \fIclasse\fP\fB:\fP\fIpriorité\fP
-Modifie la classe du programmateur d'entrée/sortie («\ IO scheduler\ ») et la
-priorité du processus avant de le démarrer. La priorité peut être indiquée
-de manière facultative avec \fB:\fP suivi de la valeur souhaitée. La
-\fIpriorité\fP par défaut est 4, sauf si \fIclasse\fP est \fBidle\fP, auquel cas
-\fIpriorité\fP sera toujours égale à 7. Les valeurs de \fIclasse\fP actuellement
-gérées sont \fBidle\fP, \fBbest\-effort\fP et \fBreal\-time\fP.
+\fB\-I\fP, \fB\-\-iosched\fP \fIclasse\fP\fB:\fP\fIprioritÃ©\fP
+This alters the IO scheduler class and priority of the process before
+starting it (since version 1.15.0).  The priority can be optionally
+specified by appending a \fB:\fP followed by the value. The default \fIpriority\fP
+is 4, unless \fIclass\fP is \fBidle\fP, then \fIpriority\fP will always be 7. The
+currently supported values for \fIclass\fP are \fBidle\fP, \fBbest\-effort\fP and
+\fBreal\-time\fP.
 .TP 
 \fB\-k\fP, \fB\-\-umask\fP \fImasque\fP
-Cela modifie le masque utilisateur du processus avant qu'il ne soit lancé.
+This sets the umask of the process before starting it (since version
+1.13.22).
 .TP 
 \fB\-m\fP, \fB\-\-make\-pidfile\fP
-Utilisé lors du lancement d'un programme qui ne crée pas son propre fichier
-identificateur «\ pid\ ». Cette option indique à \fBstart\-stop\-daemon\fP de créer
-le fichier référencé par \fB\-\-pidfile\fP et placer le «\ pid\ » dans ce fichier
-juste avant d'exécuter le processus. Il faut remarquer que ce fichier ne
-sera supprimé quand le programme s'arrête que si \fB\-\-remove\-pidfile\fP est
-utilisé. \fBNOTE\ :\fP il se peut que cette caractéristique ne marche pas dans
-tous les cas. Notamment quand le programme qui est exécuté se duplique. À
-cause de cela, cette option n'est habituellement utile que combinée avec
-l'option \fB\-\-background\fP.
+Used when starting a program that does not create its own pid file. This
+option will make \fBstart\-stop\-daemon\fP create the file referenced with
+\fB\-\-pidfile\fP and place the pid into it just before executing the
+process. Note, the file will only be removed when stopping the program if
+\fB\-\-remove\-pidfile\fP is used.  \fBNote:\fP This feature may not work in all
+cases. Most notably when the program being executed forks from its main
+process. Because of this, it is usually only useful when combined with the
+\fB\-\-background\fP option.
 .TP 
 \fB\-\-remove\-pidfile\fP
-Utilisé lors de l'arrêt d'un programme qui ne supprime pas lui\-même son
-fichier identificateur «\ pid\ ». Cette option indique à \fBstart\-stop\-daemon\fP
-de supprimer le fichier référencé par \fB\-\-pid\-file\fP après l'arrêt du
-processus.
+Used when stopping a program that does not remove its own pid file (since
+version 1.17.19).  This option will make \fBstart\-stop\-daemon\fP remove the
+file referenced with \fB\-\-pidfile\fP after terminating the process.
 .TP 
 \fB\-v\fP, \fB\-\-verbose\fP
 Affiche des messages prolixes en renseignements.
@@ -252,41 +246,41 @@ Affiche des messages prolixes en renseignements.
 .SH "CODE DE SORTIE"
 .TP 
 \fB0\fP
-L'action demandée a été effectuée. Si \fB\-\-oknodo\fP était indiqué, il est
-également possible que rien ne se soit passé. Cela peut se produire si
-\fB\-\-start\fP était indiqué et qu'un processus correspondant était déjà en
-train de s'exécuter ou si \fB\-\-stop\fP était indiqué et qu'aucun processus ne
+L'action demandÃ©e a Ã©tÃ© effectuÃ©e. Si \fB\-\-oknodo\fP Ã©tait indiquÃ©, il est
+Ã©galement possible que rien ne se soit passÃ©. Cela peut se produire si
+\fB\-\-start\fP Ã©tait indiquÃ© et qu'un processus correspondant Ã©tait dÃ©jÃ  en
+train de s'exÃ©cuter ou si \fB\-\-stop\fP Ã©tait indiquÃ© et qu'aucun processus ne
 correspondait.
 .TP 
 \fB1\fP
-Si \fB\-\-oknodo\fP n'était pas indiqué et que rien ne s'est passé.
+Si \fB\-\-oknodo\fP n'Ã©tait pas indiquÃ© et que rien ne s'est passÃ©.
 .TP 
 \fB2\fP
-Si \fB\-\-stop\fP et \fB\-\-retry\fP étaient indiqués mais que la fin de la
-planification a été atteinte et que les processus étaient toujours en cours
-d'exécution.
+Si \fB\-\-stop\fP et \fB\-\-retry\fP Ã©taient indiquÃ©s mais que la fin de la
+planification a Ã©tÃ© atteinte et que les processus Ã©taient toujours en cours
+d'exÃ©cution.
 .TP 
 \fB3\fP
 Toute autre erreur.
 .PP
-Lorsque la commande \fB\-\-status\fP est utilisée, les codes d'état suivants sont
-renvoyés\ :
+Lorsque la commande \fB\-\-status\fP est utilisÃ©e, les codes d'Ã©tat suivants sont
+renvoyÃ©s\ :
 .TP 
 \fB0\fP
-Le programme est en cours d'exécution.
+Le programme est en cours d'exÃ©cution.
 .TP 
 \fB1\fP
-Le programme n'est pas en cours d'exécution et le fichier PID existe.
+Le programme n'est pas en cours d'exÃ©cution et le fichier PID existe.
 .TP 
 \fB3\fP
-Le programme n'est pas en cours d'exécution.
+Le programme n'est pas en cours d'exÃ©cution.
 .TP 
 \fB4\fP
-Impossible de déterminer l'état du programme.
+Impossible de dÃ©terminer l'Ã©tat du programme.
 .
 .SH EXEMPLE
-Démarre le démon \fBfood\fP, à moins qu'il soit déjà en cours d'exécution (un
-processus nommé \fBfood\fP, tournant sous le nom d'utilisateur \fBfood\fP, avec un
+DÃ©marre le dÃ©mon \fBfood\fP, Ã  moins qu'il soit dÃ©jÃ  en cours d'exÃ©cution (un
+processus nommÃ© \fBfood\fP, tournant sous le nom d'utilisateur \fBfood\fP, avec un
 pid dans food.pid)\ :
 .IP
 .nf
@@ -295,15 +289,15 @@ start\-stop\-daemon \-\-start \-\-oknodo \-\-user food \-\-name food \e
 	\-\-chuid food \-\- \-\-daemon
 .fi
 .PP
-Envoie le signal \fBSIGTERM\fP à \fBfood\fP et attend durant 5 secondes son
-arrêt\ :
+Envoie le signal \fBSIGTERM\fP Ã  \fBfood\fP et attend durant 5 secondes son
+arrÃªt\ :
 .IP
 .nf
 start\-stop\-daemon \-\-stop \-\-oknodo \-\-user food \-\-name food \e
 	\-\-pidfile /run/food.pid \-\-retry 5
 .fi
 .PP
-Démonstration d'un ordonnanceur personnalisé pour l'arrêt de \fBfood\fP\ :
+DÃ©monstration d'un ordonnanceur personnalisÃ© pour l'arrÃªt de \fBfood\fP\ :
 .IP
 .nf
 start\-stop\-daemon \-\-stop \-\-oknodo \-\-user food \-\-name food \e
@@ -312,5 +306,5 @@ start\-stop\-daemon \-\-stop \-\-oknodo \-\-user food \-\-name food \e
 .SH TRADUCTION
 Ariel VARDI <ariel.vardi@freesbee.fr>, 2002.
 Philippe Batailler, 2006.
-Nicolas François, 2006.
-Veuillez signaler toute erreur à <debian\-l10n\-french@lists.debian.org>.
+Nicolas FranÃ§ois, 2006.
+Veuillez signaler toute erreur Ã  <debian\-l10n\-french@lists.debian.org>.

@@ -1,7 +1,7 @@
 .\" dpkg manual page - dpkg-name(1)
 .\"
 .\" Copyright ¬© 1995-1996 Erick Branderhorst
-.\" Copyright ¬© 2007-2012 Guillem Jover <guillem@debian.org>
+.\" Copyright ¬© 2007-2013, 2015 Guillem Jover <guillem@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -23,92 +23,92 @@
 .\"*******************************************************************
 .TH dpkg\-name 1 2012\-04\-15 "Projekt Debian" "programy pomocnicze dpkg"
 .SH NAZWA
-dpkg\-name \- zmienia nazwy pakietÛw Debiana na pe≥ne
+dpkg\-name \- zmienia nazwy pakiet√≥w Debiana na pe≈Çne
 .
-.SH SK£ADNIA
+.SH SK≈ÅADNIA
 \fBdpkg\-name\fP [\fIopcja\fP...] [\fB\-\-\fP] \fIplik\fP...
 .
 .SH OPIS
 .PP
-Ta strona podrÍcznika dokumentuje program \fBdpkg\-name\fP, ktÛry dostarcza
-prostego sposobu na zmianÍ nazw pakietÛw \fBDebiana\fP na pe≥ne nazwy
-pakietÛw. Pe≥na nazwa pakietu jest w postaci
-\fIpakiet\fP\fB_\fP\fIwersja\fP\fB_\fP\fIarchitektua\fP\fB.\fP\fItyp\-pakietu\fP, jak to okre∂lono
-w pliku kontrolnym pakietu. CzÍ∂Ê \fIwersja\fP nazwy pliku zawiera oryginaln±
-wersjÍ nadan± przez autora, po ktÛrej opcjonalnie nastÍpuje my∂lnik oraz
-informacje o wersji zmian pakietu w Debianie.CzÍ∂Ê \fItyp\-pakietu\fP pochodzi z
-odpowiedniego pola, je∂li jest obecne, lub jest rÛwna \fBdeb\fP.
+Ta strona podrƒôcznika dokumentuje program \fBdpkg\-name\fP, kt√≥ry dostarcza
+prostego sposobu na zmianƒô nazw pakiet√≥w \fBDebiana\fP na pe≈Çne nazwy
+pakiet√≥w. Pe≈Çna nazwa pakietu jest w postaci
+\fIpakiet\fP\fB_\fP\fIwersja\fP\fB_\fP\fIarchitektua\fP\fB.\fP\fItyp\-pakietu\fP, jak to okre≈õlono
+w pliku kontrolnym pakietu. Czƒô≈õƒá \fIwersja\fP nazwy pliku zawiera oryginalnƒÖ
+wersjƒô nadanƒÖ przez autora, po kt√≥rej opcjonalnie nastƒôpuje my≈õlnik oraz
+informacje o wersji zmian pakietu w Debianie.Czƒô≈õƒá \fItyp\-pakietu\fP pochodzi z
+odpowiedniego pola, je≈õli jest obecne, lub jest r√≥wna \fBdeb\fP.
 .
 .SH OPCJE
 .TP 
 \fB\-a\fP, \fB\-\-no\-architecture\fP
-Wynikowy plik nie bÍdzie mia≥ informacji o architekturze.
+Wynikowy plik nie bƒôdzie mia≈Ç informacji o architekturze.
 .TP 
 \fB\-k\fP, \fB\-\-symlink\fP
-Tworzy dowi±zanie symboliczne, zamiast przenosiÊ plik.
+Tworzy dowiƒÖzanie symboliczne, zamiast przenosiƒá plik.
 .TP 
 \fB\-o\fP, \fB\-\-overwrite\fP
-Istniej±ce pliki bÍd± nadpisane, jeøeli ich nazwy s± takie same jak nazwy
-plikÛw wynikowych.
+IstniejƒÖce pliki bƒôdƒÖ nadpisane, je≈ºeli ich nazwy sƒÖ takie same jak nazwy
+plik√≥w wynikowych.
 .TP 
 \fB\-s\fP, \fB\-\-subdir\fP [\fIkatalog\fP]
-Pliki bÍd± przeniesione do podkatalogu. Je∂li istnieje katalog podany jako
-argument tej opcji, to pliki zostan± przeniesione do tego katalogu, w
-przeciwnym wypadku nazwa katalogu docelowego jest wyodrÍbniana z pola
-Section w czÍ∂ci kontrolnej pakietu. Katalogiem docelowym bÍdzie wtedy
-"unstable/binary\-\fIarchitektura\fP/\fIsekcja\fP". Je∂li sekcja nie zostanie
-znaleziona w pliku kontrolnym, to jest przyjmowane "no\-section" i w tym
-przypadku, jak i w przypadku sekcji "non\-free" oraz "contrib", katalogiem
-docelowym bÍdzie \fIsekcja\fP/binary\-\fIarchitektura\fP". Pole kontrolne Section
-nie jest wymagane, tak wiÍc w ten sposÛb wiele pakietÛw bÍdzie umieszczonych
-w katalogu "no\-section". ProszÍ ostroønie uøywaÊ tej opcji, jest niechlujna.
+Files will be moved into a subdirectory. If the directory given as argument
+exists the files will be moved into that directory otherwise the name of the
+target directory is extracted from the section field in the control part of
+the package. The target directory will be
+\(Founstable/binary\-\fIarchitecture\fP/\fIsection\fP\(Fc.  If the section is not
+found in the control, then \fBno\-section\fP is assumed, and in this case, as
+well as for sections \fBnon\-free\fP and \fBcontrib\fP the target directory is
+\(Fo\fIsection\fP/binary\-\fIarchitecture\fP\(Fc.  The section field is not
+required so a lot of packages will find their way to the \fBno\-section\fP
+area.  Use this option with care, it's messy.
 .TP 
 \fB\-c\fP, \fB\-\-create\-dir\fP
 This option can used together with the \fB\-s\fP option. If a target directory
 isn't found it will be created automatically.  \fBUse this option with care.\fP
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Wy∂wietla informacjÍ o uøytkowaniu i koÒczy dzia≥anie.
+Wy≈õwietla informacjƒô o u≈ºytkowaniu i ko≈Ñczy dzia≈Çanie.
 .TP 
 \fB\-v\fP, \fB\-\-version\fP
-Wy∂wietla informacjÍ o wersji i pomy∂lnie koÒczy dzia≥anie.
+Wy≈õwietla informacjƒô o wersji i pomy≈õlnie ko≈Ñczy dzia≈Çanie.
 .
-.SH B£ DY
+.SH B≈ÅƒòDY
 Some packages don't follow the name structure
 \fIpackage\fP\fB_\fP\fIversion\fP\fB_\fP\fIarchitecture\fP\fB.deb\fP.  Packages renamed by
 \fBdpkg\-name\fP will follow this structure. Generally this will have no impact
 on how packages are installed by \fBdselect\fP(1)/\fBdpkg\fP(1), but other
 installation tools might depend on this naming structure.
 .
-.SH PRZYK£ADY
+.SH PRZYK≈ÅADY
 .TP 
 \fBdpkg\-name bar\-foo.deb\fP
-Nazwa pliku "bar\-foo.deb" zostanie zmieniona na bar\-foo_1.0\-2_i386.deb lub
-co∂ podobnego (w zaleøno∂ci od informacji zawartych w pliku kontrolnym
-pakietu "bar\-foo.deb").
+The file \fBbar\-foo.deb\fP will be renamed to bar\-foo_1.0\-2_i386.deb or
+something similar (depending on whatever information is in the control part
+of \fBbar\-foo.deb\fP).
 .TP 
 \fBfind /root/debian/ \-name \(aq*.deb\(aq | xargs \-n 1 dpkg\-name \-a\fP
-All files with the extension `deb' in the directory /root/debian and its
+All files with the extension \fBdeb\fP in the directory /root/debian and its
 subdirectory's will be renamed by \fBdpkg\-name\fP if required into names with
 no architecture information.
 .TP 
 \fBfind \-name \(aq*.deb\(aq | xargs \-n 1 dpkg\-name \-a \-o \-s \-c\fP
-\fBNie rÛb tego\fP. Twoje archiwum zostanie kompletnie zepsute, poniewaø wiele
-pakietÛw nie bÍdzie mia≥o informacji o sekcji. \fBNie rÛb tego\fP.
+\fBNie r√≥b tego\fP. Twoje archiwum zostanie kompletnie zepsute, poniewa≈º wiele
+pakiet√≥w nie bƒôdzie mia≈Ço informacji o sekcji. \fBNie r√≥b tego\fP.
 .TP 
 \fBdpkg\-deb \-\-build debian\-tmp && dpkg\-name \-o \-s .. debian\-tmp.deb\fP
-Moøe zostaÊ uøyte do budowania nowych pakietÛw.
+Mo≈ºe zostaƒá u≈ºyte do budowania nowych pakiet√≥w.
 .
-.SH "ZOBACZ TAKØE"
+.SH "ZOBACZ TAK≈ªE"
 \fBdeb\fP(5), \fBdeb\-control\fP(5), \fBdpkg\fP(1), \fBdpkg\-deb\fP(1), \fBfind\fP(1),
 \fBxargs\fP(1).
-.SH T£UMACZE
+.SH T≈ÅUMACZE
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br
-Bartosz FeÒski <fenio@debian.org>, 2004-2005
+Bartosz Fe≈Ñski <fenio@debian.org>, 2004-2005
 .br
 Robert Luberda <robert@debian.org>, 2006-2008
 .br
 Wiktor Wandachowicz <siryes@gmail.com>, 2008
 .br
-Micha≥ Ku≥ach <michal.kulach@gmail.com>, 2012
+Micha≈Ç Ku≈Çach <michal.kulach@gmail.com>, 2012

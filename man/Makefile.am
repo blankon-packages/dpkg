@@ -1,6 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
 dist_man_MANS = \
+	deb-changelog.5 \
+	deb-changes.5 \
+	deb-conffiles.5 \
 	deb-control.5 \
 	deb-src-control.5 \
 	deb-version.5 \
@@ -14,13 +17,14 @@ dist_man_MANS = \
 	deb-override.5 \
 	deb-extra-override.5 \
 	deb.5 \
+	deb822.5 \
 	dpkg-architecture.1 \
 	dpkg-buildflags.1 \
 	dpkg-buildpackage.1 \
 	dpkg-checkbuilddeps.1 \
 	dpkg-deb.1 \
 	dpkg-distaddfile.1 \
-	dpkg-divert.8 \
+	dpkg-divert.1 \
 	dpkg-genchanges.1 \
 	dpkg-gencontrol.1 \
 	dpkg-gensymbols.1 \
@@ -34,11 +38,13 @@ dist_man_MANS = \
 	dpkg-shlibdeps.1 \
 	dpkg-source.1 \
 	dpkg-split.1 \
-	dpkg-statoverride.8 \
+	dpkg-statoverride.1 \
 	dpkg-trigger.1 \
 	dpkg-vendor.1 \
 	dpkg.1 \
-	dpkg.cfg.5
+	dpkg.cfg.5 \
+	dsc.5 \
+	$(nil)
 
 if BUILD_DSELECT
 dist_man_MANS += \
@@ -53,7 +59,7 @@ endif
 
 if BUILD_UPDATE_ALTERNATIVES
 dist_man_MANS += \
-	update-alternatives.8
+	update-alternatives.1
 endif
 
 EXTRA_DIST = \
@@ -74,6 +80,7 @@ PO4A_V_ = $(PO4A_V_@AM_DEFAULT_V@)
 PO4A_V_0 = @echo "  PO4A   $@";
 
 PO4A_OPTS = --previous --srcdir $(srcdir) --destdir $(CURDIR) --no-backups \
+            --porefs noline,wrap --msgmerge-opt=--add-location=file \
             --package-name dpkg-man --package-version $(PACKAGE_VERSION) \
             --copyright-holder "$(PACKAGE_COPYRIGHT_HOLDER)" \
             --msgid-bugs-address $(PACKAGE_BUGREPORT)

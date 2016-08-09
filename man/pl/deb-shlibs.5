@@ -23,49 +23,47 @@
 .\"*******************************************************************
 .TH deb\-shlibs 5 2012\-02\-08 "Projekt Debian" "programy pomocnicze dpkg"
 .SH NAZWA
-deb\-shlibs \- plik z informacjami o bibliotekach wspÛ≥dzielonych w Debianie
+deb\-shlibs \- plik z informacjami o bibliotekach wsp√≥≈Çdzielonych w Debianie
 .
 .SH OPIS
 .PP
-Pliki \fBshlibs\fP odwzorowuj± nazwy i wersje (tzw. \fIsonames\fP) bibliotek
-wspÛ≥dzielonych na zaleøno∂ci odpowiednie dla pliku kontrolnego pakietu. W
-kaødej linii moøe byÊ umieszczony tylko jeden wpis. Puste linie \fInie\fP mog±
-wystÍpowaÊ. Linie zaczynaj±ce siÍ od znaku \fB#\fP s± uwaøane za komentarze i
-ignorowane. Wszystkie pozosta≥e linie musz± mieÊ nastÍpuj±cy format:
+Pliki \fBshlibs\fP odwzorowujƒÖ nazwy i wersje (tzw. \fIsonames\fP) bibliotek
+wsp√≥≈Çdzielonych na zale≈ºno≈õci odpowiednie dla pliku kontrolnego pakietu. W
+ka≈ºdej linii mo≈ºe byƒá umieszczony tylko jeden wpis. Puste linie \fInie\fP mogƒÖ
+wystƒôpowaƒá. Linie zaczynajƒÖce siƒô od znaku \fB#\fP sƒÖ uwa≈ºane za komentarze i
+ignorowane. Wszystkie pozosta≈Çe linie muszƒÖ mieƒá nastƒôpujƒÖcy format:
 .IP
-[\fItyp\fP\fB:\fP] \fIbiblioteka\fP \fIwersja\fP \fIzaleøno∂ci\fP
+[\fItyp\fP\fB:\fP] \fIbiblioteka\fP \fIwersja\fP \fIzale≈ºno≈õci\fP
 .PP
-Pola \fIbiblioteka\fP i \fIwersja\fP s± oddzielone od siebie bia≥ymi znakami
-(spacjami), a pole \fIzaleøno∂ci\fP rozci±ga siÍ do koÒca linii. Pole \fItyp\fP
+Pola \fIbiblioteka\fP i \fIwersja\fP sƒÖ oddzielone od siebie bia≈Çymi znakami
+(spacjami), a pole \fIzale≈ºno≈õci\fP rozciƒÖga siƒô do ko≈Ñca linii. Pole \fItyp\fP
 jest opcjonalne i zazwyczaj nie jest potrzebne.
 .PP
-Pole \fIzaleøno∂ci\fP ma tÍ sam± sk≥adniÍ co pole \fBDepends\fP w pliku kontrolnym
-pakietu binarnego, patrz \fBdeb\-control\fP(5). Patrz rÛwnieø Debian Policy
-Manual.
+The \fIdependencies\fP field has the same syntax as the \fBDepends\fP field in a
+binary control file, see \fBdeb\-control\fP(5).
 .
-.SH PRZYK£ADY
+.SH PRZYK≈ÅADY
 .PP
 Plik \fBshlibs\fP dla typowego pakietu z bibliotekami, nazwanego \fIlibcrunch1\fP,
-dostarczaj±cego tylko jedn± bibliotekÍ, ktÛrej soname to \fIlibcrunch.so.1\fP,
-moøe wygl±daÊ tak:
+dostarczajƒÖcego tylko jednƒÖ bibliotekƒô, kt√≥rej soname to \fIlibcrunch.so.1\fP,
+mo≈ºe wyglƒÖdaƒá tak:
 .IP
 libcrunch 1 libcrunch1 (>= 1.2\-1)
 .PP
-Pole \fIzaleøno∂ci\fP musi wymieniaÊ najnowsz± wersjÍ pakietu, w ktÛrej dodano
-nowe symbole do biblioteki: w powyøszym przyk≥adzie nowe symbole by≥y dodane
-do wersji 1.2 biblioteki  \fIlibcrunch\fP. Nie jest to jedyny powÛd,dla ktÛrego
-zaleøno∂ci mog± byÊ zawÍøane; szczegÛ≥y moøna znaleºÊ w dokumencie "Zasady
-polityki Debiana".
+The \fIdependencies\fP must mention the most recent version of the package that
+added new symbols to the library: in the above example, new symbols were
+added to version 1.2 of \fIlibcrunch\fP.  This is not the only reason the
+dependencies might need to be tightened.
 .
-.SH "ZOBACZ TAKØE"
+.SH "ZOBACZ TAK≈ªE"
 \fBdeb\-control\fP(5), \fBdpkg\-shlibdeps\fP(1), \fBdeb\-symbols\fP(5).
-.SH T£UMACZE
+.SH T≈ÅUMACZE
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br
-Bartosz FeÒski <fenio@debian.org>, 2004-2005
+Bartosz Fe≈Ñski <fenio@debian.org>, 2004-2005
 .br
 Robert Luberda <robert@debian.org>, 2006-2008
 .br
 Wiktor Wandachowicz <siryes@gmail.com>, 2008
 .br
-Micha≥ Ku≥ach <michal.kulach@gmail.com>, 2012
+Micha≈Ç Ku≈Çach <michal.kulach@gmail.com>, 2012

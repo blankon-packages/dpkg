@@ -1,7 +1,7 @@
 .\" dpkg manual page - deb-old(5)
 .\"
 .\" Copyright Â© 1995 Raul Miller
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -24,43 +24,43 @@
 .\"*******************************************************************
 .TH deb\-old 5 2011\-08\-14 Debianprojektet Debian
 .SH NAMN
-deb\-old \- Debians gamla binärpaketformat
+deb\-old \- Debians gamla binÃ¤rpaketformat
 .
 .SH SYNOPS
 \fIfilnamn\fP\fB.deb\fP
 .
 .SH BESKRIVNING
-\&\fB.deb\fP\-formatet är Debians binära paketformat. Denna manualsida beskriver
-det \fBgamla\fP formatet som används före Debian 0.93. Se \fBdeb\fP(5) för
+\&\fB.deb\fP\-formatet Ã¤r Debians binÃ¤ra paketformat. Denna manualsida beskriver
+det \fBgamla\fP formatet som anvÃ¤nds fÃ¶re Debian 0.93. Se \fBdeb\fP(5) fÃ¶r
 detaljerad information om det nya formatet.
 .
 .SH FORMAT
-Filen innehåller två rader av formatinformation som ASCII\-text, följt av två
+Filen innehÃ¥ller tvÃ¥ rader av formatinformation som ASCII\-text, fÃ¶ljt av tvÃ¥
 sammaslagna gzip\-packade ustar\-filer.
 .PP
-Den första raden i filen är formatversionsnumret utfyllt till åtta siffror,
-och är \fB0.939000\fP för alla arkiv i det gamla formatet.
+Den fÃ¶rsta raden i filen Ã¤r formatversionsnumret utfyllt till Ã¥tta siffror,
+och Ã¤r \fB0.939000\fP fÃ¶r alla arkiv i det gamla formatet.
 .PP
-Nästa rad är en decimalsträng (utan inledande nollor) som anger längden på
-den första gzip\-packade tar\-filen.
+NÃ¤sta rad Ã¤r en decimalstrÃ¤ng (utan inledande nollor) som anger lÃ¤ngden pÃ¥
+den fÃ¶rsta gzip\-packade tar\-filen.
 .PP
-Båda dessa rader avslutas med ett ensamt radbrytningstecken.
+BÃ¥da dessa rader avslutas med ett ensamt radbrytningstecken.
 .PP
-Den första tar\-filen innehåller kontrollinformationen, lagrade som ett antal
-vanliga filer. Filen \fBcontrol\fP måste finnas, eftersom den innehåller
-grundläggande kontrollinformation.
+Den fÃ¶rsta tar\-filen innehÃ¥ller kontrollinformationen, lagrade som ett antal
+vanliga filer. Filen \fBcontrol\fP mÃ¥ste finnas, eftersom den innehÃ¥ller
+grundlÃ¤ggande kontrollinformation.
 .PP
-I vissa väldigt gamla arkiv kan filerna i kontroll\-tarfilen eventuellt ligga
-i en underkatalog vid namn \fBDEBIAN\fP. Om så är fallet kommer underkatalogen
-\fBDEBIAN\fP även att finnas i kontroll\-tarfilen, och kontroll\-tarfilen kommer
-bara innehålla filer i den katalogen. Eventuellt kan kontroll\-tarfilen
-innehålla en post för "\fB.\fP", det vill säga aktuell katalog.
+In some very old archives, the files in the control tarfile may optionally
+be in a \fBDEBIAN\fP subdirectory. In that case, the \fBDEBIAN\fP subdirectory
+will be in the control tarfile too, and the control tarfile will have only
+files in that directory. Optionally the control tarfile may contain an entry
+for \(oq\fB.\fP\(cq, that is, the current directory.
 .PP
-Den andra gzip\-packade tar\-filen är filsystemsarkivet, vilken innehåller
-sökvägar relativt rotkatalogen för systemet det skall installeras
-på. Sökvägarna innehåller inte inledande snedstreck.
+Den andra gzip\-packade tar\-filen Ã¤r filsystemsarkivet, vilken innehÃ¥ller
+sÃ¶kvÃ¤gar relativt rotkatalogen fÃ¶r systemet det skall installeras
+pÃ¥. SÃ¶kvÃ¤garna innehÃ¥ller inte inledande snedstreck.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 \fBdeb\fP(5), \fBdpkg\-deb\fP(1), \fBdeb\-control\fP(5).
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

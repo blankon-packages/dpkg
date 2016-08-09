@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-distaddfile(1)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -25,44 +25,44 @@
 .SH NAZWA
 dpkg\-distaddfile \- dodaje wpisy do debian/files
 .
-.SH SK£ADNIA
+.SH SKÅADNIA
 \fBdpkg\-distaddfile\fP [\fIopcja\fP...] \fIplik sekcja priorytet\fP
 .
 .SH OPIS
-\fBdpkg\-distaddfile\fP dodaje wpis dotycz±cy podanego pliku do \fBdebian/files\fP.
+\fBdpkg\-distaddfile\fP dodaje wpis dotyczÄ…cy podanego pliku do \fBdebian/files\fP.
 
-Pobiera trzy argumenty nie bêd±ce opcjami: nazwê pliku oraz sekcjê i
+Pobiera trzy argumenty nie bÄ™dÄ…ce opcjami: nazwÄ™ pliku oraz sekcjÄ™ i
 priorytet dla pliku \fB.changes\fP.
 
-Nazwa pliku powinna byæ podana relatywnie w stosunku do katalogu, w którym
-\fBdpkg\-genchanges\fP bêdzie szuka³ plików, zazwyczaj jako \fB..\fP, raczej ni¿
-byæ ¶cie¿k± relatywn± do bie¿±cego katalogu, podczas dzia³ania
+Nazwa pliku powinna byÄ‡ podana relatywnie w stosunku do katalogu, w ktÃ³rym
+\fBdpkg\-genchanges\fP bÄ™dzie szukaÅ‚ plikÃ³w, zazwyczaj jako \fB..\fP, raczej niÅ¼
+byÄ‡ Å›cieÅ¼kÄ… relatywnÄ… do bieÅ¼Ä…cego katalogu, podczas dziaÅ‚ania
 \fBdpkg\-distaddfile\fP.
 .
 .SH OPCJE
 .TP 
-\fB\-f\fP\fIplik\-z\-list±\-plików\fP
-Czyta lub zapisuje listê plików wydania do pliku podanego jako argument tej
+\fB\-f\fP\fIplik\-z\-listÄ…\-plikÃ³w\fP
+Czyta lub zapisuje listÄ™ plikÃ³w wydania do pliku podanego jako argument tej
 opcji, zamiast do pliku \fBdebian/files\fP.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Wy¶wietla informacjê o u¿ytkowaniu i koñczy dzia³anie.
+WyÅ›wietla informacjÄ™ o uÅ¼ytkowaniu i koÅ„czy dziaÅ‚anie.
 .TP 
 \fB\-\-version\fP
-Wy¶wietla informacjê o wersji i pomy¶lnie koñczy dzia³anie.
+WyÅ›wietla informacjÄ™ o wersji i pomyÅ›lnie koÅ„czy dziaÅ‚anie.
 .
 .SH PLIKI
 .TP 
 \fBdebian/files\fP
-Lista wygenerowanych plików, które s± czê¶ci± przygotowywanego wydania. Aby
-dodaæ dodatkowe pliki, mo¿na u¿yæ \fBdpkg\-distaddfile\fP.
-.SH T£UMACZE
+Lista wygenerowanych plikÃ³w, ktÃ³re sÄ… czÄ™Å›ciÄ… przygotowywanego wydania. Aby
+dodaÄ‡ dodatkowe pliki, moÅ¼na uÅ¼yÄ‡ \fBdpkg\-distaddfile\fP.
+.SH TÅUMACZE
 Piotr Roszatycki <dexter@debian.org>, 1999
 .br
-Bartosz Feñski <fenio@debian.org>, 2004-2005
+Bartosz FeÅ„ski <fenio@debian.org>, 2004-2005
 .br
 Robert Luberda <robert@debian.org>, 2006-2008
 .br
 Wiktor Wandachowicz <siryes@gmail.com>, 2008
 .br
-Micha³ Ku³ach <michal.kulach@gmail.com>, 2012
+MichaÅ‚ KuÅ‚ach <michal.kulach@gmail.com>, 2012

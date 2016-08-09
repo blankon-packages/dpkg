@@ -1,6 +1,6 @@
 .\" dpkg manual page - dpkg-distaddfile(1)
 .\"
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -23,30 +23,30 @@
 .\"*******************************************************************
 .TH dpkg\-distaddfile 1 2012\-05\-04 Debianprojektet dpkg\-verktygen
 .SH NAMN
-dpkg\-distaddfile \- lägg till poster i debian/files
+dpkg\-distaddfile \- lÃ¤gg till poster i debian/files
 .
 .SH SYNOPS
 \fBdpkg\-distaddfile\fP [\fIflagga\fP...]\fI filnamn sektion prioritet\fP
 .
 .SH BESKRIVNING
-\fBdpkg\-distaddfile\fP lägger till en post för en namngiven fil i
+\fBdpkg\-distaddfile\fP lÃ¤gger till en post fÃ¶r en namngiven fil i
 \fBdebian/files\fP.
 
-Det tar tre argument som inte är flaggor \- filnamn, sektion och prioritet
-för \fB.changes\fP\-filen.
+Det tar tre argument som inte Ã¤r flaggor \- filnamn, sektion och prioritet
+fÃ¶r \fB.changes\fP\-filen.
 
-Filnamnet anges relativt till katalogen där \fBdpkg\-genchanges\fP förväntas
-finna filerna, normalt \fB..\fP, snarare än som en sökväg relativ till den
-aktuella katalogen när \fBdpkg\-distaddfile\fP körs.
+Filnamnet anges relativt till katalogen dÃ¤r \fBdpkg\-genchanges\fP fÃ¶rvÃ¤ntas
+finna filerna, normalt \fB..\fP, snarare Ã¤n som en sÃ¶kvÃ¤g relativ till den
+aktuella katalogen nÃ¤r \fBdpkg\-distaddfile\fP kÃ¶rs.
 .
 .SH FLAGGOR
 .TP 
 \fB\-f\fP\fIfillistfil\fP
-Läs eller skriv listan över filer som skall sändas in här, istället för att
-använda \fBdebian/file\fP.
+LÃ¤s eller skriv listan Ã¶ver filer som skall sÃ¤ndas in hÃ¤r, istÃ¤llet fÃ¶r att
+anvÃ¤nda \fBdebian/file\fP.
 .TP 
 \fB\-?\fP, \fB\-\-help\fP
-Visar hjälpskärm och avslutar.
+Visar hjÃ¤lpskÃ¤rm och avslutar.
 .TP 
 \fB\-\-version\fP
 Visar version och avslutar.
@@ -54,8 +54,8 @@ Visar version och avslutar.
 .SH FILER
 .TP 
 \fBdebian/files\fP
-Listan över genererade filer so ingår i insändningen som
-förbereds. \fBdpkg\-distaddfile\fP kan användas för att lägga till ytterligare
+Listan Ã¶ver genererade filer so ingÃ¥r i insÃ¤ndningen som
+fÃ¶rbereds. \fBdpkg\-distaddfile\fP kan anvÃ¤ndas fÃ¶r att lÃ¤gga till ytterligare
 filer.
-.SH ÖVERSÄTTNING
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

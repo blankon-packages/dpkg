@@ -31,50 +31,50 @@ dpkg\-mergechangelogs \- fusion triple de fichiers debian/changelog
 .SH DESCRIPTION
 .P
 Ce programme utilise les 3 versions fournies de journal des modifications
-(«\ changelog\ ») Debian pour créer un fichier de journalisation fusionné. Le
-résultat est placé dans le fichier \fIsortie\fP ou affiché sur la sortie
-standard si ce paramètre est omis.
+(Â«\ changelog\ Â») Debian pour crÃ©er un fichier de journalisation fusionnÃ©. Le
+rÃ©sultat est placÃ© dans le fichier \fIsortie\fP ou affichÃ© sur la sortie
+standard si ce paramÃ¨tre est omis.
 .P
-Chaque entrée est identifiée par son numéro de version. Les entrées ne sont
-pas censées entrer en conflit, mais sont simplement fusionnées dans le bon
-ordre (par numéro de version décroissant). Si l'option
-\fB\-\-merge\-prereleases\fP est utilisée, la partie de numéro de version qui suit
-le dernier caractère tilde est omise\ ;\ les versions 1.0\-1~exp1 et 1.0\-1~exp5
-sont ainsi considérées comme la même entrée. Quand la même version est
-mentionnée dans \fInouveau\-a\fP et \fInouveau\-b\fP, une fusion «\ 3\-way\ » standard
-est tentée (sous réserve que le module Algorithm::Merge soit disponible
+Chaque entrÃ©e est identifiÃ©e par son numÃ©ro de version. Les entrÃ©es ne sont
+pas censÃ©es entrer en conflit, mais sont simplement fusionnÃ©es dans le bon
+ordre (par numÃ©ro de version dÃ©croissant). Si l'option
+\fB\-\-merge\-prereleases\fP est utilisÃ©e, la partie de numÃ©ro de version qui suit
+le dernier caractÃ¨re tilde est omise\ ;\ les versions 1.0\-1~exp1 et 1.0\-1~exp5
+sont ainsi considÃ©rÃ©es comme la mÃªme entrÃ©e. Quand la mÃªme version est
+mentionnÃ©e dans \fInouveau\-a\fP et \fInouveau\-b\fP, une fusion Â«\ 3\-way\ Â» standard
+est tentÃ©e (sous rÃ©serve que le module Algorithm::Merge soit disponible
 \[em] il est fourni par le paquet libalgorithm\-merge\-perl \[em]. Dans le cas
-contraire, un conflit global est créé dans le contexte de cette entrée.
+contraire, un conflit global est crÃ©Ã© dans le contexte de cette entrÃ©e.
 .
 .SH OPTIONS
 .TP 
-\fB\-\-merge\-prereleases\fP, \fB\-m\fP
-Omet la version qui suit le dernier caractère tilde dans les numéros de
-versions, lors de la comparaison qui permet d'identifier si deux entrées
-sont les mêmes ou pas.
+\fB\-m\fP, \fB\-\-merge\-prereleases\fP
+Omet la version qui suit le dernier caractÃ¨re tilde dans les numÃ©ros de
+versions, lors de la comparaison qui permet d'identifier si deux entrÃ©es
+sont les mÃªmes ou pas.
 .sp
-Cette option est utile lorsqu'on conserve la même entrée de journal mais que
-la version est incrémentée régulièrement. Par exemple, cela permet
-d'utiliser les numéros 2.3\-1~exp1, 2.3\-1~exp2, etc. jusqu'à une publication
-officielle numérotée 2.3\-1, toutes ces versions étant considérées comme
-l'évolution dans le temps de la même version.
+Cette option est utile lorsqu'on conserve la mÃªme entrÃ©e de journal mais que
+la version est incrÃ©mentÃ©e rÃ©guliÃ¨rement. Par exemple, cela permet
+d'utiliser les numÃ©ros 2.3\-1~exp1, 2.3\-1~exp2, etc. jusqu'Ã  une publication
+officielle numÃ©rotÃ©e 2.3\-1, toutes ces versions Ã©tant considÃ©rÃ©es comme
+l'Ã©volution dans le temps de la mÃªme version.
 .TP 
 \fB\-\-help\fP
 Affiche un message d'aide puis quitte.
 .TP 
 \fB\-\-version\fP
-Affiche le numéro de version puis quitte.
+Affiche le numÃ©ro de version puis quitte.
 .
 .SH LIMITATIONS
 .P
-Tout ce qui ne peut pas être analysé par Dpkg::Changelog est perdu lors de
+Tout ce qui ne peut pas Ãªtre analysÃ© par Dpkg::Changelog est perdu lors de
 la fusion. Cela peut comprendre des lignes de mode vim, des commentaires qui
-ne sont pas censés se trouver là,\ etc.
+ne sont pas censÃ©s se trouver lÃ ,\ etc.
 .
-.SH "INTÉGRATION AVEC GIT"
+.SH "INTÃ‰GRATION AVEC GIT"
 .P
 Si vous souhaitez utiliser ce programme pour fusionner des journaux de
-modifications Debian dans un dépôt git, vous devez tout d'abord enregistrer
+modifications Debian dans un dÃ©pÃ´t git, vous devez tout d'abord enregistrer
 un nouveau pilote de fusion dans \fB.git/config\fP ou \fB~/.gitconfig\fP\ :
 .P
  [merge "dpkg\-mergechangelogs"]
@@ -82,12 +82,12 @@ un nouveau pilote de fusion dans \fB.git/config\fP ou \fB~/.gitconfig\fP\ :
      driver = dpkg\-mergechangelogs \-m %O %A %B %A
 .P
 Vous devez ensuite configurer l'attribut de fusion pour le fichier
-debian/changelog, soit dans \fB.gitattributes\fP du dépôt lui\-même, soit dans
+debian/changelog, soit dans \fB.gitattributes\fP du dÃ©pÃ´t lui\-mÃªme, soit dans
 \&\fB.git/info/attributes\fP\ :
 .P
  debian/changelog merge=dpkg\-mergechangelogs
 .SH TRADUCTION
 Ariel VARDI <ariel.vardi@freesbee.fr>, 2002.
 Philippe Batailler, 2006.
-Nicolas François, 2006.
-Veuillez signaler toute erreur à <debian\-l10n\-french@lists.debian.org>.
+Nicolas FranÃ§ois, 2006.
+Veuillez signaler toute erreur Ã  <debian\-l10n\-french@lists.debian.org>.

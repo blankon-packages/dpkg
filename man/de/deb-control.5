@@ -3,7 +3,7 @@
 .\" Copyright Â© 1995 Raul Miller, Ian Jackson, Ian Murdock
 .\" Copyright Â© 1999 Ben Collins <bcollins@debian.org>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
-.\" Copyright Â© 2007-2011, 2013 Guillem Jover <guillem@debian.org>
+.\" Copyright Â© 2007-2011, 2013-2015 Guillem Jover <guillem@debian.org>
 .\" Copyright Â© 2008-2012 RaphaÃ«l Hertzog <hertzog@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -26,113 +26,126 @@
 .\"*******************************************************************
 .TH deb\-control 5 2013\-12\-20 Debian\-Projekt Debian
 .SH BEZEICHNUNG
-deb\-control \- Dateiformat der Hauptsteuerdatei von Debian\-Paketen
+deb\-control \- Dateiformat der Hauptsteuerdatei von binÃ¤ren Debian\-Paketen
 .
-.SH ÜBERSICHT
+.SH ÃœBERSICHT
 control
 .
 .SH BESCHREIBUNG
-Jedes Debian\-Paket enthält die Hauptsteuerdatei »control«, die eine Reihe
-von Feldern oder Kommentaren (wenn die Zeile mit \fB»#«\fP beginnt)
-enthält. Jedes Feld beginnt mit einer Markierung, wie \fBPackage\fP oder
-\fBVersion\fP (Groß\-/Kleinschreibung egal), gefolgt von einem Doppelpunkt und
-dem Körper des Feldes. Felder werden nur durch die Feldmarkierungen
-abgegrenzt. Mit anderen Worten, Feldtexte können mehrere Zeilen überspannen,
-aber die Installationswerkzeuge werden im Allgemeinen die Zeilen bei der
-Verarbeitung des Feldkörpers zusammenfassen (mit Ausnahme des
-\fBDescription\fP\-Feldes, sehen Sie dazu unten).
+Jedes binÃ¤re Debian\-Paket enthÃ¤lt die Hauptsteuerdatei \fIcontrol\fP, die eine
+Reihe von Feldern enthÃ¤lt. Jedes Feld beginnt mit einer Markierung, wie
+\fBPackage\fP oder \fBVersion\fP (GroÃŸ\-/Kleinschreibung egal), gefolgt von einem
+Doppelpunkt und dem KÃ¶rper des Feldes. Felder werden nur durch die
+Feldmarkierungen abgegrenzt. Mit anderen Worten, Feldtexte kÃ¶nnen mehrere
+Zeilen Ã¼berspannen, aber die Installationswerkzeuge werden im Allgemeinen
+die Zeilen bei der Verarbeitung des FeldkÃ¶rpers zusammenfassen (mit Ausnahme
+des \fBDescription\fP\-Feldes, sehen Sie dazu unten).
 .
-.SH "NOTWENDIGE FELDER"
+.SH FELDER
 .TP 
-\fBPackage:\fP\fI Paketname\fP
+\fBPackage:\fP \fIPaketname\fP (verpflichtend)
 Der Wert dieses Feldes bestimmt den Paketnamen und wird von den meisten
 Installationswerkzeugen verwendet, um Dateinamen zu erstellen.
 .TP 
-\fBVersion:\fP\fI Versions\-Zeichenkette\fP
+\fBVersion:\fP \fIVersionszeichenkette\fP (verpflichtend)
 Typischerweise ist das die Original\-Paketversionsnummer, in der Form, die
 der Programmautor verwendet. Es kann auch eine Debian\-Revisionsnummer
-enthalten (für nicht aus Debian stammende Pakete). Das genaue Format und der
+enthalten (fÃ¼r nicht aus Debian stammende Pakete). Das genaue Format und der
 Sortieralgorithmus sind in \fBdeb\-version\fP(5) beschrieben.
 .TP 
-\fBMaintainer:\fP\fI Vollständiger\-Name\-und\-E\-Mail\fP
-Sollte in dem Format »Joe Bloggs <jbloggs@foo.com>« sein und ist
-typischerweise die Person, die das Paket erstellt hat, im Gegensatz zum
+\fBMaintainer:\fP \fIVollstÃ¤ndiger\-Name\-und\-E\-Mail\fP (empfohlen)
+Sollte in dem Format \(lqJoe Bloggs <jbloggs@foo.com>\(rq sein und
+ist typischerweise die Person, die das Paket erstellt hat, im Gegensatz zum
 Autor der Software, die paketiert wurde.
 .TP 
-\fBDescription:\fP\fI Kurzbeschreibung\fP
+\fBDescription:\fP \fIKurzbeschreibung\fP (empfohlen)
+.TQ
 \fB \fP\fILangbeschreibung\fP
 .br
 Das Format der Paketbeschreibung ist eine kurze knappe Zusammenfassung auf
-der ersten Zeile (nach dem »Description«\-Feld). Die folgenden Zeilen sollten
-als längere, detailliertere Beschreibung verwendet werden. Jede Zeile der
-Langbeschreibung muss von einem Leerzeichen begonnen werden, und Leerzeilen
-in der Langbeschreibung müssen einen einzelnen ».« hinter dem einleitenden
-Leerzeichen enthalten.
-.
-.SH "OPTIONALE FELDER"
+der ersten Zeile (nach dem Feld \fBDescription\fP). Die folgenden Zeilen
+sollten als lÃ¤ngere, detailliertere Beschreibung verwendet werden. Jede
+Zeile der Langbeschreibung muss von einem Leerzeichen begonnen werden, und
+Leerzeilen in der Langbeschreibung mÃ¼ssen einen einzelnen \(oq\fB.\fP\(cq
+hinter dem einleitenden Leerzeichen enthalten.
 .TP 
-\fBSection:\fP\fI Bereich\fP
+\fBSection:\fP\fI Sektion\fP
 Dies ist ein allgemeines Feld, das dem Paket eine Kategorie gibt, basierend
-auf der Software, die es installiert. Einige übliche Bereiche sind »utils«,
-»net«, »mail«, »text«, »x11« usw.
+auf der Software, die es installiert. Einige Ã¼bliche Sektionen sind
+\fButils\fP, \fBnet\fP, \fBmail\fP, \fBtext\fP, \fBx11\fP usw.
 .TP 
-\fBPriority:\fP\fI Priorität\fP
-Setzt die Bedeutung dieses Pakets in Bezug zu dem Gesamtsystem. Übliche
-Prioritäten sind »required«, »standard«, »optional«, »extra« usw.
+\fBPriority:\fP\fI PrioritÃ¤t\fP
+Setzt die Bedeutung dieses Pakets in Bezug zu dem Gesamtsystem. Ãœbliche
+PrioritÃ¤ten sind \fBrequired\fP, \fBstandard\fP, \fBoptional\fP, \fBextra\fP usw.
 .LP
-In Debian haben die \fBSection\fP\- und \fBPriority\fP\-Felder einen definierten
-Satz an akzeptierten Werten, basierend auf dem Richtlinien\-Handbuch. Eine
-Liste dieser Werte kann aus der neusten Version des Pakets \fBdebian\-policy\fP
-erhalten werden.
+Die Felder \fBSection\fP und \fBPriority\fP haben eine definierte Menge an Werten,
+abhÃ¤ngig von den jeweiligen Distributionsrichtlinien.
+.
+.TP 
+\fBInstalled\-Size:\fP GrÃ¶ÃŸe
+Die ungefÃ¤hre GesamtgrÃ¶ÃŸe der vom Paket installierten Dateien, in Einheiten
+von KiB.
+.
 .TP 
 \fBEssential:\fP \fByes\fP|\fBno\fP
-Dieses Feld wird normalerweise nur benötigt, wenn die Antwort \fByes\fP
-lautet. Es bezeichnet ein Paket, das für den ordnungsgemäßen Betrieb des
-Systems benötigt wird. Dpkg oder jedes andere Installationswerkzeug wird es
+Dieses Feld wird normalerweise nur benÃ¶tigt, wenn die Antwort \fByes\fP
+lautet. Es bezeichnet ein Paket, das fÃ¼r den ordnungsgemÃ¤ÃŸen Betrieb des
+Systems benÃ¶tigt wird. Dpkg oder jedes andere Installationswerkzeug wird es
 nicht erlauben, ein \fBEssential\fP\-Paket zu entfernen (zumindestens nicht ohne
-die Verwendung einer der »force«\-Optionen).
+die Verwendung einer der Â»forceÂ«\-Optionen).
 .TP 
-\fBArchitecture:\fP \fIarch\fP|\fBall\fP
-Die Architektur spezifiziert den Hardwaretyp für den dieses Paket kompiliert
-wurde. Geläufige Architekturen sind »i386«, »m68k«, »sparc«, »alpha«,
-»powerpc« usw. Beachten Sie, dass die Option \fBall\fP für Pakete gedacht ist,
-die Architektur\-unabhängig sind. Einige Beispiele hierfür sind Shell\- und
+\fBBuild\-Essential:\fP \fByes\fP|\fBno\fP
+Dieses Feld wird normalerweise nur benÃ¶tigt, wenn die Antwort \fByes\fP lautet
+und es wird typischerweise durch die Archivsoftware eingefÃ¼gt. Es vermerkt
+ein Paket, das zum Bau anderer Pakete benÃ¶tigt wird.
+.TP 
+\fBArchitecture:\fP \fIarch\fP|\fBall\fP (empfohlen)
+Die Architektur spezifiziert den Hardwaretyp fÃ¼r den dieses Paket kompiliert
+wurde. GelÃ¤ufige Architekturen sind \fBamd64\fP, \fBarmel\fP, \fBi386\fP, \fBpowerpc\fP
+usw. Beachten Sie, dass der Wert \fBall\fP fÃ¼r Pakete gedacht ist, die
+Architektur\-unabhÃ¤ngig sind. Einige Beispiele hierfÃ¼r sind Shell\- und
 Perl\-Skripte und Dokumentation.
 .TP 
 \fBOrigin:\fP\fI Name\fP
-Der Name der Distribution, aus der dieses Paket ursprünglich stammt.
+Der Name der Distribution, aus der dieses Paket ursprÃ¼nglich stammt.
 .TP 
 \fBBugs:\fP\fI URL\fP
-Die \fIURL\fP der Fehlerdatenbank für dieses Paket. Das derzeit verwendete
+Die \fIURL\fP der Fehlerdatenbank fÃ¼r dieses Paket. Das derzeit verwendete
 Format ist \fIBTS\-Art\fP\fB://\fP\fIBTS\-Adresse\fP wie in
-\fBdebbugs://bugs.debian.org\fP.
+\fB\%debbugs://bugs.debian.org\fP.
 .TP 
 \fBHomepage:\fP\fI URL\fP
 Die \fIURL\fP des Original\- (Upstream\-)Projekts.
 .TP 
 \fBTag:\fP \fI Liste\-von\-Markierungen\fP
-Liste der unterstützten Markierungen (»Tags«), die die Eigenschaften des
-Pakets beschreiben. Die Beschreibung und die Liste der unterstützten
-Markierungen kann in dem Paket \fBdebtags\fP gefunden werden.
+Liste der unterstÃ¼tzten Markierungen (Â»TagsÂ«), die die Eigenschaften des
+Pakets beschreiben. Die Beschreibung und die Liste der unterstÃ¼tzten
+Markierungen kann in dem Paket \fB\%debtags\fP gefunden werden.
 .TP 
 \fBMulti\-Arch:\fP \fBsame\fP|\fBforeign\fP|\fBallowed\fP|\fBno\fP
 Das Feld wird dazu verwandt, anzugeben, wie sich dieses Paket in einer
 Multi\-Arch\-Installation verhalten soll. Der Wert \fBsame\fP bedeutet, dass das
 Paket mit sich selbst koinstallierbar ist, aber nicht dazu verwandt werden
-darf, die Abhängigkeit eines Pakets von einer anderen Architektur mit ihm
-selbst zu erfüllen. Der Wert \fBforeign\fP bedeutet, dass das Paket nicht mit
-sich selbst koinstallierbar ist, aber es erlaubt sein soll, die Abhängigkeit
-eines Pakets von einer anderen Architektur mit ihm selbst zu erfüllen. Der
-Wert \fBallowed\fP erlaubt es invers Abhängigen in ihrem Feld »Depends«
-anzuzeigen, dass sie ein Paket von einer fremden Architektur akzeptieren,
-hat aber ansonsten keinen Effekt. Der Wert \fBno\fP ist der Standardwert, wenn
-das Feld nicht verwandt wurde. In diesem Fall wird das Feld mit einem
-expliziten Wert \fBno\fP im Allgemeinen nicht benötigt.
+darf, die AbhÃ¤ngigkeit eines Pakets von einer anderen Architektur mit ihm
+selbst zu erfÃ¼llen. Der Wert \fBforeign\fP bedeutet, dass das Paket nicht mit
+sich selbst koinstallierbar ist, aber es erlaubt sein soll, eine
+nicht\-architekurspezifizierte AbhÃ¤ngigkeit eines Pakets von einer anderen
+Architektur mit ihm selbst zu erfÃ¼llen (falls eine AbhÃ¤ngigkeit eine
+explizite Architekturspezifikation hat, wird der Wert \fBforeign\fP
+ignoriert). Der Wert \fBallowed\fP erlaubt es, invers AbhÃ¤ngigen in ihrem Feld
+\fBDepends\fP anzuzeigen, dass sie ein Paket von einer fremden Architektur
+akzeptieren, indem sie es mit \fB:any\fP spezifizieren, hat aber ansonsten
+keinen Effekt. Der Wert \fBno\fP ist der Standardwert, wenn das Feld nicht
+verwandt wurde. In diesem Fall wird das Feld mit einem expliziten Wert \fBno\fP
+im Allgemeinen nicht benÃ¶tigt.
 .TP 
-\fBSource:\fP \fI Quell\-Name\fP
-Der Name des Quellpakets, aus dem dieses Binärpaket abstammt, falls es sich
-vom Namen dieses Paketes unterscheidet.
-
+\fBSource:\fP \fIQuellname\fP [\fB(\fP\fIQuellversion\fP\fB)\fP]
+Der Name des Quellpakets, aus dem dieses BinÃ¤rpaket stammt, falls es sich
+vom Namen des Pakets selbst unterscheidet. Falls die Quellversion sich von
+der BinÃ¤rversion unterscheidet, folgt dem \fIQuellnamen\fP in Klammern eine
+\fIQuellversion\fP. Dies kann zum Beispiel bei einem rein\-binÃ¤ren, nicht
+Betreuer\-Upload passieren, oder wenn mittels \(Fo\fBdpkg\-gencontrol \-v\fP\(Fc
+eine andere BinÃ¤rversion gesetzt wird.
 .TP 
 \fBSubarchitecture:\fP \fI Wert\fP
 .TQ
@@ -140,105 +153,131 @@ vom Namen dieses Paketes unterscheidet.
 .TQ
 \fBInstaller\-Menu\-Item:\fP \fI Wert\fP
 Diese Felder werden im Debian\-Installer verwandt und werden normalerweise
-nicht benötigt. Lesen Sie /usr/share/doc/debian\-installer/devel/modules.txt
-aus dem Paket \fBdebian\-installer\fP für weitere Informationen über sie.
+nicht benÃ¶tigt. Lesen Sie /usr/share/doc/debian\-installer/devel/modules.txt
+aus dem Paket \fBdebian\-installer\fP fÃ¼r weitere Informationen Ã¼ber sie.
 
 .TP 
 \fBDepends:\fP \fI Paketliste\fP
-Liste von Paketen, die benötigt werden, damit dieses Paket eine
+Liste von Paketen, die benÃ¶tigt werden, damit dieses Paket eine
 nicht\-triviale Menge an Funktionen anbieten kann. Die
 Paketverwaltungssoftware wird es nicht erlauben, dass ein Paket installiert
-wird, falls die in seinem \fBDepends\fP\-Feld aufgeführten Pakete nicht
+wird, falls die in seinem \fBDepends\fP\-Feld aufgefÃ¼hrten Pakete nicht
 installiert sind (zumindestens nicht ohne Verwendung der
-»Force«\-Optionen). Bei einer Installation werden Postinst\-Skripte von
-Paketen, die im Feld »Depends:« aufgeführt sind, vor den Postinst\-Skripten
-der eigentlichen Pakete ausgeführt. Bei der gegenteiligen Operation, der
+Â»ForceÂ«\-Optionen). Bei einer Installation werden Postinst\-Skripte von
+Paketen, die im Feld \fBDepends\fP aufgefÃ¼hrt sind, vor den Postinst\-Skripten
+der eigentlichen Pakete ausgefÃ¼hrt. Bei der gegenteiligen Operation, der
 Paket\-Entfernung, wird das Prerm\-Skript eines Paketes vor den Prerm\-Skripten
-der Pakete ausgeführt, die im Feld »Depends:« aufgeführt sind.
+der Pakete ausgefÃ¼hrt, die im Feld \fBDepends\fP aufgefÃ¼hrt sind.
 .TP 
 \fBPre\-Depends:\fP \fI Paketliste\fP
-Liste an Paketen die installiert \fBund\fP konfiguriert sein müssen, bevor
+Liste an Paketen die installiert \fBund\fP konfiguriert sein mÃ¼ssen, bevor
 dieses Paket installiert werden kann. Dies wird normalerweise in dem Fall
-verwendet, wo dieses Paket ein anderes Paket zum Ausführen seines
-preinst\-Skriptes benötigt.
+verwendet, wo dieses Paket ein anderes Paket zum AusfÃ¼hren seines
+preinst\-Skriptes benÃ¶tigt.
 .TP 
 \fBRecommends:\fP \fI Paketliste\fP
-Liste an Paketen, die in allen, abgesehen von ungewöhnlichen, Installationen
-zusammen angefunden würden. Die Paketverwaltungssoftware wird den Benutzer
-warnen, falls er ein Paket ohne die im \fBRecommends\fP\-Feld aufgeführten
+Liste an Paketen, die in allen, abgesehen von ungewÃ¶hnlichen, Installationen
+zusammen angefunden wÃ¼rden. Die Paketverwaltungssoftware wird den Benutzer
+warnen, falls er ein Paket ohne die im \fBRecommends\fP\-Feld aufgefÃ¼hrten
 Pakete installiert.
 .TP 
 \fBSuggests:\fP \fI Paketliste\fP
 Liste an Paketen die einen Bezug zu diesem haben und vielleicht seine
-Nützlichkeit erweitern könnten, aber ohne die das zu installierende Paket
+NÃ¼tzlichkeit erweitern kÃ¶nnten, aber ohne die das zu installierende Paket
 perfekt sinnvoll ist.
 .LP
 Die Syntax der \fBDepends\fP, \fBPre\-Depends\fP, \fBRecommends\fP und
 \fBSuggests\fP\-Felder ist eine Liste von Gruppen von alternativen Paketen. Jede
-Gruppe ist eine Liste von durch vertikale Striche (oder »Pipe«\-Symbole) »|«
-getrennte Pakete. Die Gruppen werden durch Kommata getrennt. Kommata müssen
-als »UND«, vertikale Striche als »ODER« gelesen werden, wobei die vertikalen
-Striche stärker binden. Jeder Paketname wird optional gefolgt von einer
-Versionsnummer\-Spezifikation in Klammern.
+Gruppe ist eine Liste von durch vertikale Striche (oder
+\(lqPipe\(rq\-Symbole) \(oq\fB|\fP\(cq getrennte Pakete. Die Gruppen werden
+durch Kommata getrennt. Kommata mÃ¼ssen als \(lqUND\(rq, vertikale Striche
+als \(lqODER\(rq gelesen werden, wobei die vertikalen Striche stÃ¤rker
+binden. Jeder Paketname wird optional gefolgt von einer
+Architektur\-Spezifikation, die nach einem Doppelpunkt Â»:Â« angehÃ¤ngt wird,
+optional gefolgt von einer Versionsnummer\-Spezifikation in Klammern.
 .LP
-Eine Versionsnummer kann mit »>>« beginnen, in diesem Falle passen
-alle neueren Versionen, und kann die Debian\-Paketrevision (getrennt durch
-einen Bindestrich) enthalten oder auch nicht. Akzeptierte
-Versionsbeziehungen sind »>>« für größer als, »<<« für
-kleiner als, »>=« für größer als oder identisch zu, »<=« für kleiner
-als oder identisch zu und »=« für identisch zu.
+Eine Architektur\-Spezifikation kann eine echte Debian\-Architektur sein (seit
+Dpkg 1.16.5) oder \fBany\fP (seit Dpkg 1.16.2). Falls sie fehlt, ist die
+Vorgabe die aktuelle Programmpaketarchitektur. Ein echter
+Debian\-Architekturname wird genau auf diese Architektur fÃ¼r diesen
+Paketnamen passen, \fBany\fP wird auf jede Architektur fÃ¼r diesen Paketnamen
+passen, falls das Paket als \fBMulti\-Arch: allowed\fP markiert wurde.
+.LP
+Eine Versionsnummer kann mit \(oq\fB>>\fP\(cq beginnen, in diesem Falle
+passen alle neueren Versionen, und kann die Debian\-Paketrevision (getrennt
+durch einen Bindestrich) enthalten oder auch nicht. Akzeptierte
+Versionsbeziehungen sind \(oq\fB>>\fP\(cq fÃ¼r grÃ¶ÃŸer als,
+\(oq\fB<<\fP\(cq fÃ¼r kleiner als, \(oq\fB>=\fP\(cq fÃ¼r grÃ¶ÃŸer als oder
+identisch zu, \(oq\fB<=\fP\(cq fÃ¼r kleiner als oder identisch zu und
+\(oq\fB=\fP\(cq fÃ¼r identisch zu.
 .TP 
 \fBBreaks:\fP \fI Paketliste\fP
-Liste Paketen auf, die von diesem Paket beschädigt werden, zum Beispiel in
-dem sie Fehler zugänglich machen, wenn sich das andere Paket auf dieses
-Paket verlässt. Die Paketverwaltungssoftware wird es beschädigten Paketen
+Liste Paketen auf, die von diesem Paket beschÃ¤digt werden, zum Beispiel in
+dem sie Fehler zugÃ¤nglich machen, wenn sich das andere Paket auf dieses
+Paket verlÃ¤sst. Die Paketverwaltungssoftware wird es beschÃ¤digten Paketen
 nicht erlauben, sich zu konfigurieren; im Allgemeinen wird das Problem
-behoben, indem ein Upgrade des im \fBBreaks\fP\-Feld aufgeführten Pakets
-durchgeführt wird.
+behoben, indem ein Upgrade des im \fBBreaks\fP\-Feld aufgefÃ¼hrten Pakets
+durchgefÃ¼hrt wird.
 .TP 
 \fBConflicts:\fP \fI Paketliste\fP
 Liste an Paketen, die mit diesem in Konflikt stehen, beispielsweise indem
 beide Dateien den gleichen Namen enthalten. Die Paketverwaltungssoftware
 wird es nicht erlauben, Pakete, die in Konflikt stehen, gleichzeitig zu
 installieren. Zwei in Konflikt stehende Pakete sollten jeweils eine
-\fBConflicts\fP\-Zeile enthalten, die das andere Paket erwähnen.
+\fB\%Conflicts\fP\-Zeile enthalten, die das andere Paket erwÃ¤hnen.
 .TP 
 \fBReplaces:\fP \fIPaketliste\fP
 Liste an Paketen, von denen dieses Dateien ersetzt. Dies wird dazu
 verwendet, um diesem Paket zu erlauben, Dateien von einem anderen Paket zu
-ersetzen und wird gewöhnlich mit dem \fBConflicts\fP\-Feld verwendet, um die
+ersetzen und wird gewÃ¶hnlich mit dem \fBConflicts\fP\-Feld verwendet, um die
 Entfernung des anderen Paketes zu erlauben, falls dieses auch die gleichen
 Dateien wie das im Konflikt stehende Paket hat.
+.LP
+Die Syntax von \fBBreaks\fP, \fBConflicts\fP und \fBReplaces\fP ist eine Liste von
+Paketnamen, getrennt durch Kommata (und optionalen Leerraumzeichen). Im
+\fBBreaks\fP\- und \fBConflicts\fP\-Feld sollte das Komma als \(lqODER\(rq gelesen
+werden. Eine optionale Architektur\-Spezifikation kann mit der gleichen
+Syntax wie oben an den Paketnamen angehÃ¤ngt werden; der Vorgabewert ist
+allerdings \fBany\fP statt der Architektur des Programms. Eine optionale
+Version kann auch mit der gleichen Syntax wie oben fÃ¼r die \fBBreaks\fP\-,
+\fBConflicts\fP\- und \fBReplaces\fP\-Felder angegeben werden.
+.
 .TP 
 \fBProvides:\fP \fI Paketliste\fP
 Dies ist eine Liste von virtuellen Paketen, die dieses Paket
-bereitstellt. Gewöhnlich wird dies verwendet, wenn mehrere Pakete alle den
-gleichen Dienst bereitstellen. Beispielsweise können Sendmail und Exim als
+bereitstellt. GewÃ¶hnlich wird dies verwendet, wenn mehrere Pakete alle den
+gleichen Dienst bereitstellen. Beispielsweise kÃ¶nnen Sendmail und Exim als
 Mailserver dienen, daher stellen sie ein gemeinsames Paket
-(»mail\-transport\-agent«) bereit, von dem andere Pakete abhängen können. Dies
-erlaubt es Sendmail oder Exim als gültige Optionen zur Erfüllung der
-Abhängigkeit zu dienen. Dies verhindert, dass Pakete, die von einem
-E\-Mail\-Server abhängen, alle Paketnamen für alle E\-Mail\-Server wissen und
-»|« zur Unterteilung der Liste verwenden müssen.
+(\(lqmail\-transport\-agent\(rq) bereit, von dem andere Pakete abhÃ¤ngen
+kÃ¶nnen. Dies erlaubt es Sendmail oder Exim als gÃ¼ltige Optionen zur
+ErfÃ¼llung der AbhÃ¤ngigkeit zu dienen. Dies verhindert, dass Pakete, die von
+einem E\-Mail\-Server abhÃ¤ngen, alle Paketnamen fÃ¼r alle E\-Mail\-Server wissen
+und \(oq\fB|\fP\(cq zur Unterteilung der Liste verwenden mÃ¼ssen.
 .LP
-Die Syntax von \fBBreaks\fP, \fBConflicts\fP, \fBReplaces\fP und \fBProvides\fP ist eine
-Liste von Paketnamen, getrennt durch Kommata (und optionalen
-Leerzeichen). Im \fBBreaks\fP\- und \fBConflicts\fP\-Feld sollte das Komma als
-»ODER« gelesen werden. Eine optionale Version kann auch mit der gleichen
-Syntax wie oben für die \fBBreaks\fP\-, \fBConflicts\fP\- und \fBReplaces\fP\-Felder
-angegeben werden.
+Die Syntax von \fBProvides\fP ist eine Liste von Paketnamen, getrennt durch
+Kommata (und optionalen Leerraumzeichen). Eine optionale
+Architektur\-Spezifikation kann mit der gleichen Syntax wie oben an den
+Paketnamen angehÃ¤ngt werden. Falls diese fehlt, ist die Vorgabe die binÃ¤re
+Paketarchitektur. Eine optionale genaue (identisch mit) Version kann auch
+mit der gleichen Syntax wie oben angegeben werden (seit Dpkg 1.17.11
+berÃ¼cksichtigt).
 .
 .TP 
 \fBBuilt\-Using:\fP \fI Paketliste\fP
-Dieses Feld führt zusätzliche Quellpakete auf, die während des Baus des
-Binärpakets verwandt wurden. Dies dient als Hinweis für die
-Archivverwaltungssoftware, dass zusätzliche Quellpakete vorhanden bleiben
-müssen, während dieses Binärpaket betreut wird. Dieses Feld muss eine Liste
-von Quellpaketnamen enthalten, bei denen eine strenge Versionsbeziehung (=)
-angegeben ist. Beachten Sie, dass die Archivverwaltungssoftware
+Dieses Feld fÃ¼hrt zusÃ¤tzliche Quellpakete auf, die wÃ¤hrend des Baus des
+BinÃ¤rpakets verwandt wurden. Dies dient als Hinweis fÃ¼r die
+Archivverwaltungssoftware, dass zusÃ¤tzliche Quellpakete vorhanden bleiben
+mÃ¼ssen, wÃ¤hrend dieses BinÃ¤rpaket betreut wird. Dieses Feld muss eine Liste
+von Quellpaketnamen enthalten, bei denen eine strenge Versionsbeziehung
+\(oq\fB=\fP\(cq angegeben ist. Beachten Sie, dass die Archivverwaltungssoftware
 wahrscheinlich einen Upload ablehnen wird, bei dem eine
 \fBBuilt\-Using\fP\-Beziehung angegeben wurde, die innerhalb des Archivs nicht
-erfüllt werden kann.
+erfÃ¼llt werden kann.
+.
+.TP 
+\fBBuilt\-For\-Profiles:\fP\fI Profilliste\fP
+Das Feld gibt eine durch Leerraum getrennte Liste von Bauprofilen an, unter
+denen dieses Paket gebaut wurde.
 .
 .SH BEISPIEL
 .\" .RS
@@ -255,24 +294,24 @@ Pre\-Depends: libc6 (>= 2.0.105)
 Provides: rgrep
 Conflicts: rgrep
 Description: GNU grep, egrep und fgrep.
- Die GNU\-Familie der Grep\-Werkzeuge könnte die »schnellste im Westen« sein.
- GNU Grep basiert auf einem schellen »lazy\-state deterministic matcher«
- (rund zweimal so schnell wie der standardmäßige Unix\-Egrep) hybridisiert
- mit einer Boyer\-Moore\-Gosper\-Suche für eine feste Zeichenkette, die
- unmöglichen Text von der Betrachtung durch den vollen »Matcher« verhindert
+ Die GNU\-Familie der Grep\-Werkzeuge kÃ¶nnte die Â»schnellste im WestenÂ« sein.
+ GNU Grep basiert auf einem schellen Â»lazy\-state deterministic matcherÂ«
+ (rund zweimal so schnell wie der standardmÃ¤ÃŸige Unix\-Egrep) hybridisiert
+ mit einer Boyer\-Moore\-Gosper\-Suche fÃ¼r eine feste Zeichenkette, die
+ unmÃ¶glichen Text von der Betrachtung durch den vollen Â»MatcherÂ« verhindert
  ohne notwendigerweise jedes Zeichen anzuschauen. Das Ergebnis ist
  typischerweise um ein mehrfaches Schneller als Unix Grep oder Egrep.
- (Reguläre Ausdrücke, die Rückreferenzierungen enthalten, werden allerdings
+ (RegulÃ¤re AusdrÃ¼cke, die RÃ¼ckreferenzierungen enthalten, werden allerdings
  langsamer laufen.)
 .fi
 .\" .RE
 .
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 \fBdeb\fP(5), \fBdeb\-version\fP(5), \fBdebtags\fP(1), \fBdpkg\fP(1), \fBdpkg\-deb\fP(1).

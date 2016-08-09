@@ -58,10 +58,6 @@
    */
 #undef HAVE_DCGETTEXT
 
-/* Define to 1 if you have the declaration of `strnlen', and to 0 if you
-   don't. */
-#undef HAVE_DECL_STRNLEN
-
 /* Define to 1 if you have the declaration of `sys_errlist', and to 0 if you
    don't. */
 #undef HAVE_DECL_SYS_ERRLIST
@@ -137,8 +133,14 @@
 /* Define to 1 if you have the `lutimes' function. */
 #undef HAVE_LUTIMES
 
+/* xz multithreaded compression support */
+#undef HAVE_LZMA_MT
+
 /* Define to 1 if 'makedev' is declared in <sys/types.h> */
 #undef HAVE_MAKEDEV
+
+/* Define to 1 if you have the <md5.h> header file. */
+#undef HAVE_MD5_H
 
 /* Define to 1 if you have the `memcpy' function. */
 #undef HAVE_MEMCPY
@@ -272,8 +274,7 @@
 /* Acknowledge the volatility of the API. */
 #undef LIBDPKG_VOLATILE_API
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
 
 /* Name of package */
@@ -284,6 +285,9 @@
 
 /* Define to the full name of this package. */
 #undef PACKAGE_NAME
+
+/* Define the project release information, version and architecture */
+#undef PACKAGE_RELEASE
 
 /* Define to the full name and version of this package. */
 #undef PACKAGE_STRING
@@ -337,17 +341,17 @@
 /* Version number of package */
 #undef VERSION
 
-/* Define to 1 to use bz2 rather than console tool */
-#undef WITH_BZ2
+/* Define to 1 to use bz2 library rather than console tool */
+#undef WITH_LIBBZ2
 
-/* Define to 1 to use liblzma rather than console tool */
+/* Define to 1 to use lzma library rather than console tool */
 #undef WITH_LIBLZMA
 
 /* Define to 1 to compile in SELinux support */
-#undef WITH_SELINUX
+#undef WITH_LIBSELINUX
 
-/* Define to 1 to use zlib rather than console tool */
-#undef WITH_ZLIB
+/* Define to 1 to use z library rather than console tool */
+#undef WITH_LIBZ
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
@@ -360,10 +364,6 @@
 #  undef WORDS_BIGENDIAN
 # endif
 #endif
-
-/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
-   `char[]'. */
-#undef YYTEXT_POINTER
 
 /* Enable large inode numbers on Mac OS X 10.5.  */
 #ifndef _DARWIN_USE_64_BIT_INODE

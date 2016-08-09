@@ -23,41 +23,41 @@
 .\"*******************************************************************
 .TH deb\-override 5 2011\-08\-14 Debianprojektet dpkg\-verktygen
 .SH NAMN
-deb\-override \- Debianarkivets överstyrningsfil
+deb\-override \- Debianarkivets Ã¶verstyrningsfil
 .
 .SH SYNOPS
 override
 .
 .SH BESKRIVNING
-Även om huvuddelen av informationen om ett paket finns i kontrollfilen
-hanteras en del centralt av distributionstsarerna, snarare än av
-paketansvariga, för att kunna bibehålla en global konsistens. Denna
+Ã„ven om huvuddelen av informationen om ett paket finns i kontrollfilen
+hanteras en del centralt av distributionstsarerna, snarare Ã¤n av
+paketansvariga, fÃ¶r att kunna bibehÃ¥lla en global konsistens. Denna
 informationen finns i filen "override".
 .PP
-Filen override har ett enkelt blanksteg\-avdelat format. Kommentarer är
-tillåtna (markeras med ett \fB#\fP).
+Filen override har ett enkelt blanksteg\-avdelat format. Kommentarer Ã¤r
+tillÃ¥tna (markeras med ett \fB#\fP).
 .PP
 .in +5
 \fIpaket\fP \fIprioritet\fP \fIsektion\fP [\fIansvariginfo\fP]
 .in -5
 .PP
-\fIpaket\fP är namnet på paketet. Poster i filen override för paket som inte
-finns i trädet med binära paket ignoreras.
+\fIpaket\fP Ã¤r namnet pÃ¥ paketet. Poster i filen override fÃ¶r paket som inte
+finns i trÃ¤det med binÃ¤ra paket ignoreras.
 .PP
-\fIprioritet\fP och \fIsektion\fP motsvarar respektive styrfält i
-\&.deb\-filen. Tillåtna värden beskrivs i Debians policydokument.
+\fIpriority\fP and \fIsection\fP correspond to the respective control fields
+available in the .deb. The allowed values are specific to each distribution
+archive.
 .PP
-\fIansvariginfo\fP kan, om det anges, antingen vara namnet på en paketansvarig
-för en ovillkorlig överstyrning, eller \fIgammal\-ansvarig\fP \fB=>\fP
-\fIny\-ansvarig\fP för att utföra en substituering.
+\fIansvariginfo\fP kan, om det anges, antingen vara namnet pÃ¥ en paketansvarig
+fÃ¶r en ovillkorlig Ã¶verstyrning, eller \fIgammal\-ansvarig\fP \fB=>\fP
+\fIny\-ansvarig\fP fÃ¶r att utfÃ¶ra en substituering.
 .PP
-De override\-filer som används för att skapa den officiella listan över paket
-("Packages") finns i \fIindices\fP\-katalogen på alla Debianspeglar.
+De override\-filer som anvÃ¤nds fÃ¶r att skapa den officiella listan Ã¶ver paket
+("Packages") finns i \fIindices\fP\-katalogen pÃ¥ alla Debianspeglar.
 .
-.SH "SE ÄVEN"
+.SH "SE Ã„VEN"
 .ad l
 .nh
-\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1),
-\fB/usr/share/doc/debian\-policy/policy.html/index.html\fP.
-.SH ÖVERSÄTTNING
+\fBdpkg\-scanpackages\fP(1), \fBdpkg\-scansources\fP(1), \fBapt\-ftparchive\fP(1).
+.SH Ã–VERSÃ„TTNING
 Peter Krefting och Daniel Nylander.

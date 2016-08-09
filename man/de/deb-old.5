@@ -1,7 +1,7 @@
 .\" dpkg manual page - deb-old(5)
 .\"
 .\" Copyright Â© 1995 Raul Miller
-.\" Copyright Â© 1995-1996 Ian Jackson <ian@chiark.chu.cam.ac.uk>
+.\" Copyright Â© 1995-1996 Ian Jackson <ijackson@chiark.greenend.org.uk>
 .\" Copyright Â© 2000 Wichert Akkerman <wakkerma@debian.org>
 .\"
 .\" This is free software; you can redistribute it and/or modify
@@ -24,50 +24,50 @@
 .\"*******************************************************************
 .TH deb\-old 5 2011\-08\-14 Debian\-Projekt Debian
 .SH BEZEICHNUNG
-deb\-old \- Debian Binärpaketformat in alter Ausführung
+deb\-old \- Debian BinÃ¤rpaketformat in alter AusfÃ¼hrung
 .
-.SH ÜBERSICHT
+.SH ÃœBERSICHT
 \fIDateiname\fP\fB.deb\fP
 .
 .SH BESCHREIBUNG
-Das \fB.deb\fP\-Format ist das Debian Binärpaketdateiformat. Diese Handbuchseite
+Das \fB.deb\fP\-Format ist das Debian BinÃ¤rpaketdateiformat. Diese Handbuchseite
 beschreibt das \fBalte\fP Format, das vor Debian 0.93 verwendet wurde. Bitte
-lesen Sie \fBdeb\fP(5) für Details über das neue Format.
+lesen Sie \fBdeb\fP(5) fÃ¼r Details Ã¼ber das neue Format.
 .
 .SH FORMAT
 Die Datei besteht aus zwei Zeilen an Formatinformationen als ASCII\-Text,
-gefolgt von zwei aneinandergehängten ustar\-Dateien.
+gefolgt von zwei aneinandergehÃ¤ngten ustar\-Dateien.
 .PP
-Die erste Zeile ist die Formatversionsnummer, aufgefüllt auf 8 Stellen, und
-ist \fB0.939000\fP für alle Archive im alten Format.
+Die erste Zeile ist die Formatversionsnummer, aufgefÃ¼llt auf 8 Stellen, und
+ist \fB0.939000\fP fÃ¼r alle Archive im alten Format.
 .PP
-Die zweite Zeile ist eine dezimale Zeichenkette (ohne führende Nullen), die
-die Länge der ersten gzippten Tar\-Datei angibt.
+Die zweite Zeile ist eine dezimale Zeichenkette (ohne fÃ¼hrende Nullen), die
+die LÃ¤nge der ersten gzippten Tar\-Datei angibt.
 .PP
 Jede dieser Zeilen wird durch ein einzelnes Zeilenvorschubzeichen
 abgeschlossen.
 .PP
-Die erste Tar\-Datei enthält die Steuerinformationen als eine Serie von
+Die erste Tar\-Datei enthÃ¤lt die Steuerinformationen als eine Serie von
 normalen Dateien. Die Datei \fBcontrol\fP muss vorhanden sein, da sie die
-Kern\-Steuerinformationen enthält.
+Kern\-Steuerinformationen enthÃ¤lt.
 .PP
-In einigen sehr alten Archiven können die Dateien in der Steuer\-Tar\-Datei
+In einigen sehr alten Archiven kÃ¶nnen die Dateien in der Steuer\-Tar\-Datei
 optional in einem \fBDEBIAN\fP\-Unterverzeichnis sein. In diesem Fall ist das
 \fBDEBIAN\fP\-Unterverzeichnis auch in der Steuer\-Tar\-Datei, und die
 Steuer\-Tar\-Datei hat nur Dateien in diesem Verzeichnis. Optional kann die
-Steuer\-Tar\-Datei einen Eintrag für »\fB.\fP« enthalten, d.h. für das aktuelle
-Verzeichnis.
+Steuer\-Tar\-Datei einen Eintrag fÃ¼r \(oq\fB.\fP\(cq enthalten, d.h. fÃ¼r das
+aktuelle Verzeichnis.
 .PP
 Die zweite gzippte Tar\-Datei ist das Dateisystemarchiv, das Pfadnamen
 relativ zum Wurzelverzeichnis des System, auf dem installiert werden soll,
-enthält. Die Pfadnamen haben keine führenden Schrägstriche.
+enthÃ¤lt. Die Pfadnamen haben keine fÃ¼hrenden SchrÃ¤gstriche.
 .
-.SH ÜBERSETZUNG
-Die deutsche Übersetzung wurde 2004, 2006-2014 von Helge Kreutzmann
+.SH ÃœBERSETZUNG
+Die deutsche Ãœbersetzung wurde 2004, 2006-2016 von Helge Kreutzmann
 <debian@helgefjell.de>, 2007 von Florian Rehnisch <eixman@gmx.de> und
 2008 von Sven Joachim <svenjoac@gmx.de>
-angefertigt. Diese Übersetzung ist Freie Dokumentation; lesen Sie die
-GNU General Public License Version 2 oder neuer für die Kopierbedingungen.
+angefertigt. Diese Ãœbersetzung ist Freie Dokumentation; lesen Sie die
+GNU General Public License Version 2 oder neuer fÃ¼r die Kopierbedingungen.
 Es gibt KEINE HAFTUNG.
 .SH "SIEHE AUCH"
 \fBdeb\fP(5), \fBdpkg\-deb\fP(1), \fBdeb\-control\fP(5).
